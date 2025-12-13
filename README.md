@@ -3,7 +3,6 @@
 > Generate realistic user personas from your data using AI
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Licence: GPL v3](https://img.shields.io/badge/Licence-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Status: Planning](https://img.shields.io/badge/status-planning-yellow.svg)]()
 
 Persona is an AI-powered tool that generates realistic user personas from qualitative research data. It supports multiple LLM providers (OpenAI, Anthropic, Gemini) and provides an experiment-centric workflow for reproducible persona generation.
