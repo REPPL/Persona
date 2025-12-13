@@ -1,12 +1,12 @@
-# Persona
-
-> Generate realistic user personas from your data using AI
-
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Status: Planning](https://img.shields.io/badge/status-planning-yellow.svg)]()
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?logo=anthropic)](https://claude.ai/code)
 
-Persona is an AI-powered tool that generates realistic user personas from qualitative research data. It supports multiple LLM providers (OpenAI, Anthropic, Gemini) and provides an experiment-centric workflow for reproducible persona generation.
+![Persona logo](docs/assets/img/persona-logo.png)
+
+## Generate realistic user personas from your data using AI
+
+`Persona` is an AI-powered tool that generates realistic user personas from qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
 
 ## Features
 
@@ -48,14 +48,6 @@ persona generate my-experiment
 - [System Design](docs/development/planning/architecture/system-design.md)
 - [Roadmap](docs/development/roadmap/)
 - [Architecture Decisions](docs/development/decisions/adrs/)
-
-## Project Status
-
-**Current Version:** v0.1.0-planning (documentation only)
-
-This version establishes comprehensive planning documentation. Implementation begins with v0.1.0.
-
-See the [Roadmap](docs/development/roadmap/) for planned features and milestones.
 
 ## Requirements
 
@@ -163,12 +155,8 @@ See [Development Documentation](docs/development/) for contributing guidelines.
 
 ## Lineage
 
-Persona is a clean rewrite of [PersonaZero](https://github.com/REPPL/PersonaZero), applying lessons learned from the [ragd](https://github.com/REPPL/ragd) development methodology.
+Persona is a clean rewrite of [PersonaZero](https://github.com/REPPL/PersonaZero), applying lessons learned during the development of [ragd](https://github.com/REPPL/ragd).
 
 ## AI Transparency
 
-This project is developed with AI assistance. See our [AI Contributions Statement](docs/development/ai-contributions.md) for our transparency commitment.
-
-## Licence
-
-This project is licenced under the GNU General Public Licence v3.0 - see the [LICENCE](LICENCE) file for details.
+This project is developed with AI assistance. See the [AI Contributions Statement](docs/development/ai-contributions.md).
