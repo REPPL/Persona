@@ -26,8 +26,8 @@ Manual testing serves as the final verification layer in Persona's testing pyram
 | Version | Script | Theme |
 |---------|--------|-------|
 | v0.1.0 | [v0.1.0_test_script.md](v0.1.0_test_script.md) | Foundation |
-| v0.2.0 | [v0.2.0_smoke_test.md](v0.2.0_smoke_test.md) | Multi-Step Workflows |
-| v0.3.0 | [v0.3.0_smoke_test.md](v0.3.0_smoke_test.md) | Multi-Variation |
+| v0.2.0 | [v0.2.0_test_script.md](v0.2.0_test_script.md) | Multi-Step Workflows |
+| v0.3.0 | [v0.3.0_test_script.md](v0.3.0_test_script.md) | Multi-Variation |
 | v0.4.0 | [v0.4.0_test_script.md](v0.4.0_test_script.md) | Advanced Output |
 | v0.5.0 | [v0.5.0_test_script.md](v0.5.0_test_script.md) | Extensibility + SDK |
 | v0.6.0 | [v0.6.0_test_script.md](v0.6.0_test_script.md) | Security |
