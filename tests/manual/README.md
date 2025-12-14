@@ -33,6 +33,7 @@ Manual testing serves as the final verification layer in Persona's testing pyram
 | v0.6.0 | [v0.6.0_test_script.md](v0.6.0_test_script.md) | Security |
 | v0.7.0 | [v0.7.0_test_script.md](v0.7.0_test_script.md) | Batch Processing |
 | v0.8.0 | [v0.8.0_test_script.md](v0.8.0_test_script.md) | Multi-Model & Quality |
+| v0.9.0 | [v0.9.0_test_script.md](v0.9.0_test_script.md) | Logging & Monitoring |
 
 *Scripts are created when each version is implemented.*
 
