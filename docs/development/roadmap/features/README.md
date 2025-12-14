@@ -29,9 +29,45 @@ All features for Persona, organised by status.
 
 *Note: Features F-010 through F-018 are documented in the [v0.1.0 milestone](../milestones/v0.1.0.md) rather than individual specification files.*
 
-### v0.2.0+ Features
+### v0.1.0 - Additional Features
 
-See [Milestones](../milestones/) for complete feature lists by version.
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-022](planned/F-022-data-preview.md) | Data preview | Data | Planned |
+| [F-028](planned/F-028-synthetic-data-generation.md) | Synthetic data generation (demo) | Demo | Planned |
+
+### v0.2.0 - Validation (6 features)
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-019](planned/F-019-persona-validation.md) | Persona validation | Validation | Planned |
+| [F-024](planned/F-024-evidence-linking.md) | Evidence linking | Output | Planned |
+| [F-029](planned/F-029-empathy-map-input-format.md) | Empathy map input format | Data | Planned |
+| [F-030](planned/F-030-empathy-map-table-output.md) | Empathy map table output | Output | Planned |
+| [F-031](planned/F-031-workshop-data-import.md) | Workshop data import | Data | Planned |
+
+*Note: F-031 (workshop data import) is optional for v0.2.0.*
+
+### v0.3.0 - Analysis (2 features)
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-021](planned/F-021-persona-comparison.md) | Persona comparison | Analysis | Planned |
+| [F-025](planned/F-025-interactive-refinement.md) | Interactive refinement | Generation | Planned |
+
+### v0.5.0 - Templates & Export (2 features)
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-023](planned/F-023-persona-templates.md) | Persona templates | Templates | Planned |
+| [F-026](planned/F-026-export-to-persona-tools.md) | Export to persona tools | Export | Planned |
+
+### v0.7.0 - Scale (2 features)
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-020](planned/F-020-batch-data-processing.md) | Batch data processing | Data | Planned |
+| [F-027](planned/F-027-persona-clustering.md) | Persona clustering | Analysis | Planned |
 
 ## Status by Folder
 

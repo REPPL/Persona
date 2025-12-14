@@ -4,112 +4,113 @@
 
 ![Persona logo](docs/assets/img/persona-logo.png)
 
-## Generate realistic user personas from your data using AI
+> Transform your user research data into actionable personas using AI
 
-`Persona` is an AI-powered tool that generates realistic user personas from qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
+## What is Persona?
 
-## Features
+**Persona** generates detailed user personas from your research data (interviews, surveys, observations) using large language models. Instead of manually synthesising hundreds of pages of research notes, let AI identify patterns and create structured, evidence-backed personas.
 
-- **Multi-format data loading** - Support for txt, csv, json, md, yaml, and org files
-- **Multi-provider LLM support** - OpenAI, Anthropic, and Google Gemini
-- **Experiment workflow** - Organised, reproducible persona generation
-- **Cost estimation** - Know costs before running expensive operations
-- **Structured output** - JSON personas with timestamped organisation
-- **Rich CLI** - Beautiful terminal interface with progress tracking
+### Who is this for?
+
+- **UX Researchers** synthesising interview and survey data
+- **Product Managers** understanding user segments
+- **Academic Researchers** analysing qualitative data at scale
+- **Design Teams** creating data-driven personas
+
+### Why Persona?
+
+| Traditional Approach | With Persona |
+|---------------------|--------------|
+| Days of manual analysis | Minutes of processing |
+| Subjective pattern recognition | Consistent, reproducible results |
+| Limited by analyst capacity | Scales to any dataset size |
+| Persona quality varies | Evidence-linked outputs |
 
 ## Quick Start
 
-```bash
-# Install
-pip install persona
+### Prerequisites
 
-# Check system health
-persona check
+- Python 3.12 or higher
+- API key from OpenAI, Anthropic, or Google
 
-# Create an experiment
-persona create experiment
-
-# Generate personas
-persona generate my-experiment
-```
-
-## Documentation
-
-| Section | Description |
-|---------|-------------|
-| [Tutorials](docs/tutorials/) | Step-by-step learning guides |
-| [Use Cases](docs/use-cases/) | What you can do with Persona |
-| [Reference](docs/reference/) | Configuration and API reference |
-| [Development](docs/development/) | Contributing and architecture |
-
-### Key Documents
-
-- [Getting Started Tutorial](docs/tutorials/01-getting-started.md)
-- [System Design](docs/development/planning/architecture/system-design.md)
-- [Roadmap](docs/development/roadmap/)
-- [Architecture Decisions](docs/development/decisions/adrs/)
-
-## Requirements
-
-- Python 3.12+
-- API key for at least one LLM provider:
-  - OpenAI API key
-  - Anthropic API key
-  - Google AI API key
-
-## Installation
+### Installation
 
 ```bash
-# From PyPI (when released)
-pip install persona
+# Create virtual environment
+python3.12 -m venv .venv
+source .venv/bin/activate
 
-# From source (development)
+# Install from source (development)
 git clone https://github.com/REPPL/Persona.git
 cd Persona
 pip install -e ".[all]"
 ```
 
-## Basic Usage
-
-### 1. Create an Experiment
+### Your First Persona
 
 ```bash
-persona create experiment
+# 1. Verify your setup
+persona check
+
+# 2. Create an experiment
+persona create experiment "My Research"
+
+# 3. Add your data files to experiments/my-research/data/
+
+# 4. Generate personas
+persona generate my-research
 ```
 
-This creates a new experiment directory with configuration template.
+Your personas are saved as JSON and Markdown in timestamped output folders.
 
-### 2. Add Your Data
+## Features
 
-Place your research data files in the experiment's `data/` directory:
+| Feature | Benefit |
+|---------|---------|
+| **Evidence-linked personas** | Every attribute traced to your source data |
+| **Cost transparency** | Know exactly what you'll pay before generating |
+| **Multiple AI providers** | Choose OpenAI, Claude, or Gemini based on your needs |
+| **Reproducible experiments** | Re-run any generation with identical results |
+| **Works with your data** | CSV, JSON, Markdown, and more - no reformatting needed |
+| **Beautiful output** | Polished terminal UI and ready-to-share exports |
 
+## Example Output
+
+```json
+{
+  "name": "Research Rachel",
+  "age": 34,
+  "occupation": "UX Research Lead",
+  "goals": [
+    "Synthesise research faster without losing nuance",
+    "Create personas that stakeholders actually use"
+  ],
+  "pain_points": [
+    "Manual analysis takes weeks",
+    "Difficulty tracking evidence back to source data"
+  ],
+  "evidence": {
+    "goals[0]": "Interview 3, line 45: 'I spend more time writing reports than doing research'",
+    "pain_points[1]": "Survey response 12: 'I can never remember which interview a quote came from'"
+  }
+}
 ```
-experiments/my-experiment/
-├── config.yaml
-├── data/
-│   ├── interviews.txt
-│   └── survey-responses.csv
-└── outputs/
-```
 
-### 3. Configure and Generate
+## Documentation
 
-Edit `config.yaml` to specify your LLM provider and settings, then:
+| I want to... | Go to... |
+|--------------|----------|
+| Learn step-by-step | [Tutorials](docs/tutorials/) |
+| Accomplish a specific task | [How-to Guides](docs/guides/) |
+| Understand concepts | [Explanation](docs/explanation/) |
+| Look up specifications | [Reference](docs/reference/) |
 
-```bash
-persona generate my-experiment
-```
+### Key Documents
 
-### 4. Review Results
-
-Personas are saved to timestamped output folders:
-
-```
-experiments/my-experiment/outputs/
-└── 20241215_143022/
-    ├── personas.json
-    └── README.md
-```
+- [Getting Started Tutorial](docs/tutorials/01-getting-started.md)
+- [Use Cases](docs/use-cases/) - What you can do with Persona
+- [System Design](docs/development/planning/architecture/system-design.md)
+- [Roadmap](docs/development/roadmap/)
 
 ## Configuration
 
@@ -153,6 +154,15 @@ mypy src/
 
 See [Development Documentation](docs/development/) for contributing guidelines.
 
+## Comparison with Similar Tools
+
+| Tool | Approach | Persona's Advantage |
+|------|----------|---------------------|
+| Manual synthesis | Time-consuming, subjective | Faster, consistent, evidence-linked |
+| Generic LLM prompting | No structure, hallucination risk | Structured output, source validation |
+| [Persona Hub](https://github.com/tencent-ailab/persona-hub) | Pre-built synthetic personas | Generated from YOUR data |
+| [PersonaCraft](https://www.sciencedirect.com/science/article/abs/pii/S1071581925000023) | Academic methodology | Open source, CLI-first |
+
 ## Lineage
 
 Persona is a clean rewrite of [PersonaZero](https://github.com/REPPL/PersonaZero), applying lessons learned during the development of [ragd](https://github.com/REPPL/ragd).
@@ -160,3 +170,7 @@ Persona is a clean rewrite of [PersonaZero](https://github.com/REPPL/PersonaZero
 ## AI Transparency
 
 This project is developed with AI assistance. See the [AI Contributions Statement](docs/development/ai-contributions.md).
+
+---
+
+**GPLv3+** - See [LICENCE](LICENCE) for details.
