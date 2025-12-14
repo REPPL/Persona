@@ -31,6 +31,13 @@ from persona.core.config.workflow import (
     CustomWorkflowLoader,
     get_builtin_workflows,
 )
+from persona.core.config.validator import (
+    ConfigValidator,
+    ValidationResult,
+    ValidationIssue,
+    ValidationLevel,
+    validate_config,
+)
 
 __all__ = [
     # Vendor configuration
@@ -55,4 +62,10 @@ __all__ = [
     "WorkflowInfo",
     "CustomWorkflowLoader",
     "get_builtin_workflows",
+    # Configuration validation (F-055)
+    "ConfigValidator",
+    "ValidationResult",
+    "ValidationIssue",
+    "ValidationLevel",
+    "validate_config",
 ]

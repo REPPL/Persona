@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "0.4.0"
+version = "0.6.0"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -102,3 +102,10 @@ python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]  # Skip assert warnings (used in tests)
+
+[tool.bandit.assert_used]
+skips = ["*_test.py", "test_*.py"]

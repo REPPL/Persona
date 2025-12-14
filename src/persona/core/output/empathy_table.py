@@ -5,7 +5,14 @@ This module provides the EmpathyTableFormatter class for outputting
 personas in the Boag empathy map table format with five dimensions:
 Tasks, Feelings, Influences, Pain Points, and Goals.
 
-Reference: Table 1 in Lycett et al. 2025 (ISJ).
+References:
+    Boag, P. (2015). Adapting Empathy Maps for UX Design. Boagworld.
+    https://boagworld.com/usability/adapting-empathy-maps-for-ux-design/
+
+    Lycett, M., Cundle, M., Grasso, L., Meechao, K., & Reppel, A. (2025).
+    Materialising Design Fictions: Exploring Music Memorabilia in a Metaverse
+    Environment. Information Systems Journal, 35, 1662-1678.
+    https://doi.org/10.1111/isj.12600 (see Table 1 for table format).
 """
 
 from dataclasses import dataclass, field

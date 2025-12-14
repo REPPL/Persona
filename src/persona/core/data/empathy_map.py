@@ -2,10 +2,17 @@
 Empathy map data loading and validation.
 
 This module provides support for loading empathy map data from co-creation
-workshops (Boag method). Empathy maps have five dimensions: Tasks, Feelings,
-Influences, Pain Points, and Goals.
+workshops using the Boag empathy mapping method. Empathy maps have five
+dimensions: Tasks, Feelings, Influences, Pain Points, and Goals.
 
-Reference: Lycett et al. 2025, ISJ - validates this approach for persona development.
+References:
+    Boag, P. (2015). Adapting Empathy Maps for UX Design. Boagworld.
+    https://boagworld.com/usability/adapting-empathy-maps-for-ux-design/
+
+    Lycett, M., Cundle, M., Grasso, L., Meechao, K., & Reppel, A. (2025).
+    Materialising Design Fictions: Exploring Music Memorabilia in a Metaverse
+    Environment. Information Systems Journal, 35, 1662-1678.
+    https://doi.org/10.1111/isj.12600
 """
 
 from dataclasses import dataclass, field

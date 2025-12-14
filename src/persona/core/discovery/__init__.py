@@ -15,6 +15,13 @@ from persona.core.discovery.model import (
     ModelStatus,
     ModelDiscoveryResult,
 )
+from persona.core.discovery.checker import (
+    ModelChecker,
+    ModelAvailability,
+    ModelStatus as AvailabilityStatus,
+    check_model,
+    warn_if_deprecated,
+)
 
 __all__ = [
     # Vendor discovery
@@ -25,4 +32,10 @@ __all__ = [
     "ModelDiscovery",
     "ModelStatus",
     "ModelDiscoveryResult",
+    # Model availability checking (F-056)
+    "ModelChecker",
+    "ModelAvailability",
+    "AvailabilityStatus",
+    "check_model",
+    "warn_if_deprecated",
 ]
