@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "0.1.0.dev0"
+version = "0.2.0"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}

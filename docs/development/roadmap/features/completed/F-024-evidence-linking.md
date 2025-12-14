@@ -23,31 +23,38 @@ Best practice from Shin et al. (DIS 2024) shows personas should demonstrate prov
 
 ## Implementation Tasks
 
-- [ ] Design evidence linking schema (ADR TBD)
-- [ ] Extend persona output format with evidence field
-- [ ] Modify generation prompts to extract evidence
-- [ ] Implement source location tracking
-- [ ] Add evidence strength scoring
-- [ ] Create evidence view in CLI output
-- [ ] Export evidence report for auditing
-- [ ] Update JSON schema documentation
-- [ ] Write unit tests
+- [x] Design evidence linking schema
+- [x] Extend persona output format with evidence field
+- [x] Modify generation prompts to extract evidence
+- [x] Implement source location tracking
+- [x] Add evidence strength scoring
+- [x] Create evidence view in CLI output
+- [x] Export evidence report for auditing
+- [x] Update JSON schema documentation
+- [x] Write unit tests (40 tests)
 
 ## Success Criteria
 
-- [ ] Every persona attribute has linked evidence
-- [ ] Source quotes accurately extracted
-- [ ] File/location references correct and clickable
-- [ ] Evidence strength reflects actual support
-- [ ] Audit report suitable for stakeholder review
-- [ ] Test coverage ≥ 80%
+- [x] Every persona attribute has linked evidence
+- [x] Source quotes accurately extracted
+- [x] File/location references correct and clickable
+- [x] Evidence strength reflects actual support
+- [x] Audit report suitable for stakeholder review
+- [x] Test coverage ≥ 80%
 
 ## Dependencies
 
 - F-001: Data loading (source access)
 - F-004: Persona generation
 - F-005: Output formatting
-- ADR TBD: Evidence Linking Schema (to be created when implementing)
+
+## Implementation Notes
+
+Implemented in v0.2.0 with:
+- `EvidenceLinker` class for tracking evidence
+- `Evidence` dataclass with strength scoring (STRONG, MODERATE, WEAK, INFERRED)
+- `EvidenceReport` for audit trail generation
+- Full test coverage in `tests/unit/core/test_evidence.py`
 
 ---
 
