@@ -7,15 +7,10 @@ Technical specifications and API documentation for Persona.
 | Reference | Description |
 |-----------|-------------|
 | [CLI Reference](cli-reference.md) | Complete command documentation |
-| [Model Cards](model-cards.md) | LLM model capabilities and pricing |
+| [Model Cards](model-cards.md) | LLM model capabilities and pricing (2025 models) |
 | [Persona Schema](persona-schema.md) | JSON output format specification |
-
-## Planned Reference
-
-| Reference | Description | Version |
-|-----------|-------------|---------|
-| Configuration Schema | YAML configuration options | v0.1.0 |
-| Provider APIs | LLM provider specifications | v0.1.0 |
+| [Configuration Reference](configuration-reference.md) | YAML configuration options |
+| [Provider APIs](provider-apis.md) | LLM provider specifications |
 
 ## Reference Format
 
