@@ -196,6 +196,6 @@ When implementing new features:
 ## Related Documentation
 
 - [System Design](../planning/architecture/system-design.md)
-- [ADR-0002: Provider Abstraction](../decisions/adrs/ADR-0002-provider-abstraction.md)
-- [ADR-0003: Experiment-Centric Architecture](../decisions/adrs/ADR-0003-experiment-centric-architecture.md)
+- [ADR-0002: Multi-Provider Architecture](../decisions/adrs/ADR-0002-multi-provider-architecture.md)
+- [ADR-0003: Experiment-Centric Workflow](../decisions/adrs/ADR-0003-experiment-centric-workflow.md)
 

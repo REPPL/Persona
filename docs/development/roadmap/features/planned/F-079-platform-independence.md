@@ -85,5 +85,5 @@ IS_LINUX = PLATFORM == "linux"
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Installation Guide](../../../guides/installation.md)
+- [Getting Started](../../../../tutorials/01-getting-started.md)
 
