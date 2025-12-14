@@ -10,10 +10,12 @@ from persona.core.logging.experiment_logger import (
     LogLevel,
     EventType,
     log_event,
+    read_log_file,
 )
 from persona.core.logging.structured import (
     StructuredLogger,
     LogContext,
+    OutputFormat,
     configure_logging,
     get_logger,
 )
@@ -26,6 +28,7 @@ from persona.core.logging.metadata import (
     MetadataRecorder,
     GenerationMetadata,
     record_metadata,
+    calculate_checksum,
 )
 from persona.core.logging.token_usage import (
     TokenUsageLogger,
@@ -47,9 +50,11 @@ __all__ = [
     "LogLevel",
     "EventType",
     "log_event",
+    "read_log_file",
     # Structured logging (F-074)
     "StructuredLogger",
     "LogContext",
+    "OutputFormat",
     "configure_logging",
     "get_logger",
     # Progress tracking (F-075)
@@ -60,6 +65,7 @@ __all__ = [
     "MetadataRecorder",
     "GenerationMetadata",
     "record_metadata",
+    "calculate_checksum",
     # Token usage (F-077)
     "TokenUsageLogger",
     "TokenUsage",
