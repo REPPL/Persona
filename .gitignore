@@ -211,8 +211,9 @@ __marimo__/
 .work/
 
 # Persona outputs and experiments (user data)
-outputs/
-experiments/
+# Anchored to root to avoid ignoring src/persona/core/experiments/
+/outputs/
+/experiments/
 
 # macOS
 .DS_Store
