@@ -15,6 +15,23 @@ from persona.core.data.formats import (
     TextLoader,
     YAMLLoader,
 )
+from persona.core.data.empathy_map import (
+    EmpathyMap,
+    EmpathyMapDimension,
+    EmpathyMapLoader,
+    EmpathyMapValidationError,
+    EmpathyMapValidationResult,
+    ParticipantTypeMap,
+)
+from persona.core.data.workshop import (
+    WorkshopCategory,
+    PostItNote,
+    WorkshopExtractionResult,
+    WorkshopImportConfig,
+    WorkshopImporter,
+    MockVisionExtractor,
+    LLMVisionExtractor,
+)
 
 __all__ = [
     "DataLoader",
@@ -25,4 +42,19 @@ __all__ = [
     "OrgLoader",
     "TextLoader",
     "YAMLLoader",
+    # Empathy map support
+    "EmpathyMap",
+    "EmpathyMapDimension",
+    "EmpathyMapLoader",
+    "EmpathyMapValidationError",
+    "EmpathyMapValidationResult",
+    "ParticipantTypeMap",
+    # Workshop import
+    "WorkshopCategory",
+    "PostItNote",
+    "WorkshopExtractionResult",
+    "WorkshopImportConfig",
+    "WorkshopImporter",
+    "MockVisionExtractor",
+    "LLMVisionExtractor",
 ]
