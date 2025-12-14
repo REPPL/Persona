@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
@@ -14,14 +13,12 @@ from persona.core.data import DataLoader
 from persona.core.generation import GenerationPipeline, GenerationConfig
 from persona.core.output import OutputManager
 from persona.core.providers import ProviderFactory
+from persona.ui.console import get_console
 
 generate_app = typer.Typer(
     name="generate",
     help="Generate personas from data files.",
 )
-
-# Constrain output width for cleaner display
-console = Console(width=min(100, Console().width))
 
 
 @generate_app.callback(invoke_without_command=True)
@@ -101,6 +98,8 @@ def generate(
     if ctx.invoked_subcommand is not None:
         return
 
+    console = get_console()
+
     from persona import __version__
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
@@ -131,7 +130,7 @@ def generate(
     )
 
     # Show configuration
-    _show_config(config, data_path, token_count)
+    _show_config(console, config, data_path, token_count)
 
     if dry_run:
         console.print("\n[yellow]Dry run - no LLM call made.[/yellow]")
@@ -179,7 +178,7 @@ def generate(
     console.print(f"[green]✓[/green] Saved to: {output_path}")
 
     # Show summary
-    _show_result_summary(result)
+    _show_result_summary(console, result)
 
 
 def _get_api_key_env(provider: str) -> str:
@@ -193,7 +192,7 @@ def _get_api_key_env(provider: str) -> str:
     return env_vars.get(provider.lower(), f"{provider.upper()}_API_KEY")
 
 
-def _show_config(config: GenerationConfig, data_path: Path, token_count: int) -> None:
+def _show_config(console, config: GenerationConfig, data_path: Path, token_count: int) -> None:
     """Display generation configuration."""
     table = Table(title="Generation Configuration", show_header=False)
     table.add_column("Setting", style="cyan")
@@ -209,7 +208,7 @@ def _show_config(config: GenerationConfig, data_path: Path, token_count: int) ->
     console.print(table)
 
 
-def _show_result_summary(result) -> None:
+def _show_result_summary(console, result) -> None:
     """Display generation result summary."""
     console.print(f"\n[bold green]Generated {len(result.personas)} personas:[/bold green]")
 

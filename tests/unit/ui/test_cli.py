@@ -1,16 +1,25 @@
 """
-Tests for CLI functionality (F-008, F-015).
+Tests for CLI functionality (F-008, F-015, F-086).
 """
 
+import json
 import os
 import pytest
 from pathlib import Path
 from typer.testing import CliRunner
 
-from persona.ui.cli import app
+from persona.ui.cli import app, _reset_globals
 
 
 runner = CliRunner()
+
+
+@pytest.fixture(autouse=True)
+def reset_cli_globals():
+    """Reset CLI global state before each test."""
+    _reset_globals()
+    yield
+    _reset_globals()
 
 
 class TestVersionFlag:
@@ -29,6 +38,48 @@ class TestVersionFlag:
 
         assert result.exit_code == 0
         assert "Persona" in result.stdout
+
+
+class TestOutputModes:
+    """Tests for CLI output modes (F-086)."""
+
+    def test_no_color_flag_exists(self):
+        """Test --no-color flag is available."""
+        result = runner.invoke(app, ["--help"])
+
+        assert result.exit_code == 0
+        assert "--no-color" in result.stdout
+
+    def test_no_color_flag_works(self):
+        """Test --no-color flag doesn't break commands."""
+        result = runner.invoke(app, ["--no-color", "check"])
+
+        assert result.exit_code == 0
+        assert "Persona Health Check" in result.stdout
+
+    def test_quiet_flag_exists(self):
+        """Test --quiet flag is available."""
+        result = runner.invoke(app, ["--help"])
+
+        assert result.exit_code == 0
+        assert "--quiet" in result.stdout
+        assert "-q" in result.stdout
+
+    def test_quiet_flag_works(self):
+        """Test --quiet flag doesn't break commands."""
+        result = runner.invoke(app, ["--quiet", "check"])
+
+        # Quiet mode should still succeed
+        assert result.exit_code == 0
+
+    def test_no_color_env_variable(self, monkeypatch):
+        """Test NO_COLOR environment variable is respected."""
+        monkeypatch.setenv("NO_COLOR", "1")
+        result = runner.invoke(app, ["check"])
+
+        assert result.exit_code == 0
+        # Command should work with NO_COLOR set
+        assert "Persona Health Check" in result.stdout
 
 
 class TestCheckCommand:
@@ -59,6 +110,31 @@ class TestCheckCommand:
 
         assert result.exit_code == 0
         assert "Configured" in result.stdout
+
+    def test_check_json_output(self):
+        """Test check command with --json flag produces valid JSON."""
+        result = runner.invoke(app, ["check", "--json"])
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["command"] == "check"
+        assert "version" in data
+        assert data["success"] is True
+        assert "providers" in data["data"]
+        assert "anthropic" in data["data"]["providers"]
+        assert "openai" in data["data"]["providers"]
+        assert "gemini" in data["data"]["providers"]
+
+    def test_check_json_provider_structure(self):
+        """Test check --json has correct provider structure."""
+        result = runner.invoke(app, ["check", "--json"])
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        provider = data["data"]["providers"]["anthropic"]
+        assert "configured" in provider
+        assert "env_var" in provider
+        assert provider["env_var"] == "ANTHROPIC_API_KEY"
 
 
 class TestInitCommand:

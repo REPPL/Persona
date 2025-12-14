@@ -9,11 +9,11 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
 from persona.ui.commands import experiment_app, generate_app
+from persona.ui.console import get_console as _get_console
 
 app = typer.Typer(
     name="persona",
@@ -26,16 +26,44 @@ app = typer.Typer(
 app.add_typer(generate_app, name="generate")
 app.add_typer(experiment_app, name="experiment")
 
-# Constrain output width for cleaner display
-console = Console(width=min(100, Console().width))
+# Global state for console options (used by callbacks)
+_no_color: bool = False
+_quiet: bool = False
+
+
+def get_console():
+    """Get console with current global settings."""
+    return _get_console(no_color=_no_color, quiet=_quiet)
 
 
 def version_callback(value: bool) -> None:
     """Print version and exit."""
     if value:
         from persona import __version__
+        console = get_console()
         console.print(f"Persona {__version__}")
         raise typer.Exit()
+
+
+def no_color_callback(value: bool) -> None:
+    """Set no-color mode globally."""
+    global _no_color
+    # Always reset first (for test isolation), then set if True
+    _no_color = bool(value)
+
+
+def quiet_callback(value: bool) -> None:
+    """Set quiet mode globally."""
+    global _quiet
+    # Always reset first (for test isolation), then set if True
+    _quiet = bool(value)
+
+
+def _reset_globals() -> None:
+    """Reset global state (for testing)."""
+    global _no_color, _quiet
+    _no_color = False
+    _quiet = False
 
 
 @app.callback()
@@ -49,17 +77,89 @@ def main(
             help="Show version and exit.",
         ),
     ] = None,
+    no_color: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--no-color",
+            callback=no_color_callback,
+            is_eager=True,
+            help="Disable colour output.",
+        ),
+    ] = None,
+    quiet: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--quiet", "-q",
+            callback=quiet_callback,
+            is_eager=True,
+            help="Minimal output (errors and results only).",
+        ),
+    ] = None,
 ) -> None:
     """Generate realistic user personas from your data using AI."""
+    # Note: Global state is set by eager callbacks before this runs
     pass
 
 
 @app.command()
-def check() -> None:
+def check(
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
+) -> None:
     """Check Persona installation and configuration."""
+    import json
+
     from persona import __version__
     from persona.core.providers import ProviderFactory
 
+    console = get_console()
+
+    providers_config = [
+        ("anthropic", "ANTHROPIC_API_KEY"),
+        ("openai", "OPENAI_API_KEY"),
+        ("gemini", "GOOGLE_API_KEY"),
+    ]
+
+    # Gather provider status
+    provider_status = {}
+    configured_count = 0
+    for provider_name, env_var in providers_config:
+        try:
+            provider = ProviderFactory.create(provider_name)
+            is_configured = provider.is_configured()
+            provider_status[provider_name] = {
+                "configured": is_configured,
+                "env_var": env_var,
+            }
+            if is_configured:
+                configured_count += 1
+        except Exception:
+            provider_status[provider_name] = {
+                "configured": False,
+                "env_var": env_var,
+                "error": True,
+            }
+
+    if json_output:
+        # JSON output mode
+        result = {
+            "command": "check",
+            "version": __version__,
+            "success": True,
+            "data": {
+                "installation": "ok",
+                "providers": provider_status,
+            },
+        }
+        print(json.dumps(result, indent=2))
+        return
+
+    # Rich output mode
     console.print(Panel.fit(
         "[bold]Persona Health Check[/bold]",
         border_style="green",
@@ -72,23 +172,14 @@ def check() -> None:
     # Provider status
     console.print("\n[bold]Provider Status:[/bold]")
 
-    providers = [
-        ("anthropic", "ANTHROPIC_API_KEY"),
-        ("openai", "OPENAI_API_KEY"),
-        ("gemini", "GOOGLE_API_KEY"),
-    ]
-
-    configured_count = 0
-    for provider_name, env_var in providers:
-        try:
-            provider = ProviderFactory.create(provider_name)
-            if provider.is_configured():
-                console.print(f"  [green]✓[/green] {provider.name}: Configured")
-                configured_count += 1
-            else:
-                console.print(f"  [yellow]○[/yellow] {provider.name}: Not configured ({env_var})")
-        except Exception:
+    for provider_name, env_var in providers_config:
+        status = provider_status[provider_name]
+        if status.get("error"):
             console.print(f"  [red]✗[/red] {provider_name}: Error")
+        elif status["configured"]:
+            console.print(f"  [green]✓[/green] {provider_name}: Configured")
+        else:
+            console.print(f"  [yellow]○[/yellow] {provider_name}: Not configured ({env_var})")
 
     if configured_count == 0:
         console.print("\n[yellow]Warning:[/yellow] No providers configured.")
@@ -155,6 +246,7 @@ def estimate_cost(
     from persona.core.cost import CostEstimator, PricingData
     from persona.core.data import DataLoader
 
+    console = get_console()
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     estimator = CostEstimator()
@@ -241,6 +333,7 @@ def init(
     """
     from persona import __version__
 
+    console = get_console()
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     target = path or Path.cwd()

@@ -6,19 +6,16 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.experiments import ExperimentManager
+from persona.ui.console import get_console
 
 experiment_app = typer.Typer(
     name="experiment",
     help="Manage experiments.",
 )
-
-# Constrain output width for cleaner display
-console = Console(width=min(100, Console().width))
 
 
 def _get_manager(base_dir: Optional[Path] = None) -> ExperimentManager:
@@ -73,6 +70,7 @@ def create(
     """
     manager = _get_manager(base_dir)
 
+    console = get_console()
     try:
         exp = manager.create(
             name=name,
@@ -107,6 +105,7 @@ def list_experiments(
     Example:
         persona experiment list
     """
+    console = get_console()
     manager = _get_manager(base_dir)
     experiments = manager.list_experiments()
 
@@ -158,6 +157,7 @@ def show(
     Example:
         persona experiment show my-research
     """
+    console = get_console()
     manager = _get_manager(base_dir)
 
     try:
@@ -220,6 +220,7 @@ def delete(
     Example:
         persona experiment delete my-research --force
     """
+    console = get_console()
     manager = _get_manager(base_dir)
 
     if not manager.exists(name):
