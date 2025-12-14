@@ -214,6 +214,7 @@ __marimo__/
 # Anchored to root to avoid ignoring src/persona/core/experiments/
 /outputs/
 /experiments/
+/captures/
 
 # macOS
 .DS_Store
