@@ -4,6 +4,9 @@
 
 ![Persona logo](docs/assets/img/persona-logo.png)
 
+> [!NOTE]
+> Persona is under active development. If you need a working solution today, consider [Taguette](https://www.taguette.org/) for qualitative analysis or [Persona Hub](https://github.com/tencent-ailab/persona-hub) for synthetic personas.
+
 ## Generate realistic user personas from your data using AI
 
 `Persona` is an AI-powered tool that generates realistic user personas from quantitative and qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
@@ -149,7 +152,10 @@ See [Development Documentation](docs/development/) for contributing guidelines.
 |------|----------|---------------------|
 | Manual synthesis | Time-consuming, subjective | Faster, consistent, evidence-linked |
 | Generic LLM prompting | No structure, hallucination risk | Structured output, source validation |
+| [Taguette](https://www.taguette.org/) | Qualitative data analysis (tagging) | Automated persona generation |
+| [QualCoder](https://github.com/ccbogel/QualCoder) | Desktop QDA application | CLI-first, multi-provider AI |
 | [Persona Hub](https://github.com/tencent-ailab/persona-hub) | Pre-built synthetic personas | Generated from YOUR data |
+| [AI Persona Lab](https://github.com/marc-shade/ai-persona-lab) | AI chat personas with Ollama | Evidence-linked research personas |
 | [PersonaCraft](https://www.sciencedirect.com/science/article/abs/pii/S1071581925000023) | Academic methodology | Open source, CLI-first |
 
 ## Lineage
