@@ -41,16 +41,16 @@ v0.1.0
 | ID | Feature | Category |
 |----|---------|----------|
 | F-001 | Multi-format data loading | Data |
-| F-002 | Data format normalisation | Data |
-| F-003 | Multi-provider LLM support | LLM |
-| F-004 | Provider interface abstraction | LLM |
-| F-005 | Reusable prompt templates | Prompts |
-| F-006 | Single-step workflow | Workflow |
-| F-007 | Basic persona extraction | Generation |
-| F-008 | Structured JSON output | Output |
-| F-009 | Timestamped output folders | Output |
-| F-013 | Cost estimation before generation | Cost |
+| F-002 | LLM provider abstraction | LLM |
+| F-003 | Prompt templating (Jinja2) | Prompts |
+| F-004 | Persona generation pipeline | Generation |
+| F-005 | Output formatting | Output |
+| F-007 | Cost estimation | Cost |
+| F-010 | Data format normalisation | Data |
+| F-011 | Multi-provider LLM support | LLM |
+| F-013 | Timestamped output folders | Output |
 | F-014 | Model-specific pricing | Cost |
+| F-017 | Single-step workflow | Workflow |
 
 ## Related Use Cases
 

@@ -27,6 +27,8 @@ All features for Persona, organised by status.
 | F-017 | Single-step workflow | Workflow | Planned |
 | F-018 | Context-aware help | CLI | Planned |
 
+*Note: Features F-010 through F-018 are documented in the [v0.1.0 milestone](../milestones/v0.1.0.md) rather than individual specification files.*
+
 ### v0.2.0+ Features
 
 See [Milestones](../milestones/) for complete feature lists by version.
