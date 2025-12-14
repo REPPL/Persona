@@ -527,5 +527,5 @@ persona config show --merged
 - [Model Cards](model-cards.md) - Model capabilities and pricing
 - [Provider APIs](provider-apis.md) - API specifications
 - [CLI Reference](cli-reference.md) - Command-line usage
-- [F-012: Experiment Configuration](../development/roadmap/features/planned/F-012-experiment-configuration.md)
+- [F-012: Experiment Configuration](../development/roadmap/features/completed/F-012-experiment-configuration.md)
 

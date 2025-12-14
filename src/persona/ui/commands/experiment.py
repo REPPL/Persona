@@ -9,7 +9,7 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.core.experiments import ExperimentManager
+from persona.core.experiments import ExperimentManager, ExperimentEditor, RunHistory
 from persona.ui.console import get_console
 
 experiment_app = typer.Typer(
@@ -242,3 +242,564 @@ def delete(
     except Exception as e:
         console.print(f"[red]Error:[/red] {e}")
         raise typer.Exit(1)
+
+
+def _parse_set_value(value_str: str) -> tuple[str, str]:
+    """Parse a --set value like 'field=value' into (field, value)."""
+    if "=" not in value_str:
+        raise ValueError(f"Invalid format: {value_str}. Use 'field=value'")
+    field, value = value_str.split("=", 1)
+    return field.strip(), value.strip()
+
+
+@experiment_app.command("edit")
+def edit(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    set_values: Annotated[
+        Optional[list[str]],
+        typer.Option(
+            "--set",
+            "-s",
+            help="Set field value (format: field=value). Can be repeated.",
+        ),
+    ] = None,
+    add_source: Annotated[
+        Optional[list[Path]],
+        typer.Option(
+            "--add-source",
+            help="Add data source file. Can be repeated.",
+        ),
+    ] = None,
+    remove_source: Annotated[
+        Optional[list[str]],
+        typer.Option(
+            "--remove-source",
+            help="Remove data source by name. Can be repeated.",
+        ),
+    ] = None,
+    rollback: Annotated[
+        int,
+        typer.Option(
+            "--rollback",
+            help="Rollback N recent edits.",
+        ),
+    ] = 0,
+    clear_history: Annotated[
+        bool,
+        typer.Option(
+            "--clear-history",
+            help="Clear edit history.",
+        ),
+    ] = False,
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    Edit experiment configuration.
+
+    Examples:
+        # Set a single field
+        persona experiment edit my-research --set count=5
+
+        # Set nested field
+        persona experiment edit my-research --set generation.model=gpt-4o
+
+        # Set multiple fields
+        persona experiment edit my-research --set count=5 --set provider=openai
+
+        # Add data sources
+        persona experiment edit my-research --add-source ./data.csv
+
+        # Remove data source
+        persona experiment edit my-research --remove-source old-data.csv
+
+        # Rollback last edit
+        persona experiment edit my-research --rollback 1
+
+        # Clear edit history
+        persona experiment edit my-research --clear-history
+    """
+    console = get_console()
+    manager = _get_manager(base_dir)
+    editor = ExperimentEditor(manager)
+
+    # Check experiment exists
+    if not manager.exists(name):
+        console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    changes_made = False
+
+    # Handle clear history
+    if clear_history:
+        editor.clear_history(name)
+        console.print(f"[green]✓[/green] Cleared edit history for: {name}")
+        changes_made = True
+
+    # Handle rollback
+    if rollback > 0:
+        try:
+            config = editor.rollback(name, rollback)
+            if config:
+                console.print(f"[green]✓[/green] Rolled back {rollback} edit(s)")
+                changes_made = True
+            else:
+                console.print("[yellow]Nothing to rollback.[/yellow]")
+        except ValueError as e:
+            console.print(f"[red]Error:[/red] {e}")
+            raise typer.Exit(1)
+
+    # Handle set values
+    if set_values:
+        for set_value in set_values:
+            try:
+                field, value = _parse_set_value(set_value)
+                config = editor.set_field(name, field, value)
+                console.print(f"[green]✓[/green] Set {field} = {value}")
+                changes_made = True
+            except ValueError as e:
+                console.print(f"[red]Error:[/red] {e}")
+                raise typer.Exit(1)
+
+    # Handle add sources
+    if add_source:
+        for source in add_source:
+            try:
+                dest = editor.add_source(name, source)
+                console.print(f"[green]✓[/green] Added source: {source.name}")
+                changes_made = True
+            except (FileNotFoundError, ValueError) as e:
+                console.print(f"[red]Error:[/red] {e}")
+                raise typer.Exit(1)
+
+    # Handle remove sources
+    if remove_source:
+        for source in remove_source:
+            try:
+                editor.remove_source(name, source)
+                console.print(f"[green]✓[/green] Removed source: {source}")
+                changes_made = True
+            except FileNotFoundError as e:
+                console.print(f"[red]Error:[/red] {e}")
+                raise typer.Exit(1)
+
+    # If no changes requested, show current config
+    if not changes_made:
+        exp = manager.load(name)
+        sources = editor.list_sources(name)
+        history = editor.get_history(name)
+
+        console.print(Panel.fit(
+            f"[bold]Edit Experiment: {name}[/bold]",
+            border_style="cyan",
+        ))
+
+        console.print("\n[bold]Current Configuration:[/bold]")
+        console.print(f"  provider: {exp.config.provider}")
+        console.print(f"  model: {exp.config.model or 'default'}")
+        console.print(f"  workflow: {exp.config.workflow}")
+        console.print(f"  count: {exp.config.count}")
+        console.print(f"  complexity: {exp.config.complexity}")
+        console.print(f"  detail_level: {exp.config.detail_level}")
+
+        console.print(f"\n[bold]Data Sources ({len(sources)}):[/bold]")
+        if sources:
+            for source in sources:
+                console.print(f"  • {source}")
+        else:
+            console.print("  [dim]No data sources.[/dim]")
+
+        console.print(f"\n[bold]Edit History ({len(history)} entries):[/bold]")
+        if history:
+            for entry in history[-5:]:  # Show last 5
+                console.print(
+                    f"  • [{entry.timestamp.strftime('%Y-%m-%d %H:%M')}] "
+                    f"{entry.action}: {entry.field}"
+                )
+            if len(history) > 5:
+                console.print(f"  [dim]...and {len(history) - 5} more[/dim]")
+        else:
+            console.print("  [dim]No edit history.[/dim]")
+
+        console.print("\n[bold]Usage:[/bold]")
+        console.print("  persona experiment edit my-experiment --set count=5")
+        console.print("  persona experiment edit my-experiment --add-source data.csv")
+
+
+@experiment_app.command("sources")
+def list_sources(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    List data sources for an experiment.
+
+    Example:
+        persona experiment sources my-research
+    """
+    console = get_console()
+    manager = _get_manager(base_dir)
+    editor = ExperimentEditor(manager)
+
+    if not manager.exists(name):
+        console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    sources = editor.list_sources(name)
+
+    if not sources:
+        console.print("[yellow]No data sources found.[/yellow]")
+        console.print(f"Add sources with: persona experiment edit {name} --add-source <file>")
+        return
+
+    console.print(f"[bold]Data Sources for {name}:[/bold]")
+    for source in sources:
+        console.print(f"  • {source}")
+
+
+@experiment_app.command("history")
+def history(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    last: Annotated[
+        Optional[int],
+        typer.Option(
+            "--last", "-n",
+            help="Show only the last N runs.",
+        ),
+    ] = None,
+    diff: Annotated[
+        Optional[str],
+        typer.Option(
+            "--diff",
+            help="Compare two runs (format: 'id1,id2').",
+        ),
+    ] = None,
+    stats: Annotated[
+        bool,
+        typer.Option(
+            "--stats", "-s",
+            help="Show aggregate statistics.",
+        ),
+    ] = False,
+    status_filter: Annotated[
+        Optional[str],
+        typer.Option(
+            "--status",
+            help="Filter by status (completed, failed).",
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    Show run history for an experiment.
+
+    Examples:
+        # Show all runs
+        persona experiment history my-research
+
+        # Show last 5 runs
+        persona experiment history my-research --last 5
+
+        # Show statistics
+        persona experiment history my-research --stats
+
+        # Compare two runs
+        persona experiment history my-research --diff "1,3"
+
+        # Filter by status
+        persona experiment history my-research --status completed
+    """
+    import json as json_module
+
+    console = get_console()
+    manager = _get_manager(base_dir)
+    run_history = RunHistory(manager)
+
+    if not manager.exists(name):
+        if json_output:
+            print(json_module.dumps({"error": f"Experiment not found: {name}"}))
+        else:
+            console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    # Handle diff
+    if diff:
+        try:
+            parts = diff.split(",")
+            if len(parts) != 2:
+                raise ValueError("Invalid format")
+            id1, id2 = int(parts[0].strip()), int(parts[1].strip())
+
+            diff_result = run_history.diff_runs(name, id1, id2)
+
+            if json_output:
+                print(json_module.dumps(diff_result, indent=2))
+            else:
+                console.print(Panel.fit(
+                    f"[bold]Run Comparison: #{id1} vs #{id2}[/bold]",
+                    border_style="cyan",
+                ))
+
+                if diff_result["differences"]:
+                    console.print("\n[bold]Differences:[/bold]")
+                    for field, vals in diff_result["differences"].items():
+                        console.print(f"  {field}: {vals['run_1']} → {vals['run_2']}")
+                else:
+                    console.print("\n[dim]No differences found.[/dim]")
+
+                console.print("\n[bold]Delta:[/bold]")
+                for field, delta in diff_result["delta"].items():
+                    if delta != 0:
+                        sign = "+" if delta > 0 else ""
+                        if field == "cost":
+                            console.print(f"  {field}: {sign}${delta:.4f}")
+                        else:
+                            console.print(f"  {field}: {sign}{delta}")
+            return
+
+        except ValueError as e:
+            if json_output:
+                print(json_module.dumps({"error": str(e)}))
+            else:
+                console.print(f"[red]Error:[/red] {e}")
+                console.print("Use format: --diff '1,3' to compare runs #1 and #3")
+            raise typer.Exit(1)
+
+    # Handle stats
+    if stats:
+        statistics = run_history.get_statistics(name)
+
+        if json_output:
+            print(json_module.dumps(statistics.to_dict(), indent=2))
+        else:
+            console.print(Panel.fit(
+                f"[bold]Statistics for {name}[/bold]",
+                border_style="cyan",
+            ))
+
+            console.print(f"\n[bold]Runs:[/bold]")
+            console.print(f"  Total: {statistics.total_runs}")
+            console.print(f"  Completed: {statistics.completed_runs}")
+            console.print(f"  Failed: {statistics.failed_runs}")
+
+            console.print(f"\n[bold]Output:[/bold]")
+            console.print(f"  Total personas: {statistics.total_personas}")
+            console.print(f"  Avg per run: {statistics.avg_personas_per_run:.1f}")
+
+            console.print(f"\n[bold]Cost:[/bold]")
+            console.print(f"  Total: ${statistics.total_cost:.4f}")
+            console.print(f"  Avg per run: ${statistics.avg_cost_per_run:.4f}")
+
+            console.print(f"\n[bold]Tokens:[/bold]")
+            console.print(f"  Input: {statistics.total_input_tokens:,}")
+            console.print(f"  Output: {statistics.total_output_tokens:,}")
+
+            if statistics.models_used:
+                console.print(f"\n[bold]Models used:[/bold] {', '.join(statistics.models_used)}")
+            if statistics.providers_used:
+                console.print(f"[bold]Providers used:[/bold] {', '.join(statistics.providers_used)}")
+        return
+
+    # Default: show run history
+    runs = run_history.get_runs(name, last=last, status=status_filter)
+
+    if json_output:
+        output = {
+            "experiment": name,
+            "runs": [r.to_dict() for r in runs],
+        }
+        print(json_module.dumps(output, indent=2))
+        return
+
+    if not runs:
+        console.print(f"[yellow]No runs found for experiment: {name}[/yellow]")
+        return
+
+    console.print(Panel.fit(
+        f"[bold]Run History for {name}[/bold]",
+        border_style="cyan",
+    ))
+
+    table = Table()
+    table.add_column("Run", style="cyan", justify="right")
+    table.add_column("Timestamp")
+    table.add_column("Model")
+    table.add_column("Personas", justify="right")
+    table.add_column("Cost", justify="right")
+    table.add_column("Status")
+
+    for run in runs:
+        status_icon = "[green]✓[/green]" if run.status == "completed" else "[red]✗[/red]"
+        table.add_row(
+            f"#{run.run_id}",
+            run.timestamp.strftime("%Y-%m-%d %H:%M"),
+            run.model,
+            str(run.persona_count),
+            f"${run.cost:.4f}",
+            status_icon,
+        )
+
+    console.print(table)
+
+    # Summary
+    stats = run_history.get_statistics(name)
+    console.print(
+        f"\n[bold]Total:[/bold] {stats.total_runs} runs, "
+        f"{stats.total_personas} personas, ${stats.total_cost:.2f}"
+    )
+
+
+@experiment_app.command("record-run")
+def record_run(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    model: Annotated[
+        str,
+        typer.Option("--model", "-m", help="Model used."),
+    ],
+    provider: Annotated[
+        str,
+        typer.Option("--provider", "-p", help="Provider used."),
+    ],
+    personas: Annotated[
+        int,
+        typer.Option("--personas", "-n", help="Number of personas."),
+    ] = 0,
+    cost: Annotated[
+        float,
+        typer.Option("--cost", help="Cost in USD."),
+    ] = 0.0,
+    status: Annotated[
+        str,
+        typer.Option("--status", help="Run status."),
+    ] = "completed",
+    output_dir: Annotated[
+        Optional[str],
+        typer.Option("--output-dir", help="Output directory path."),
+    ] = None,
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    Record a generation run in history.
+
+    This command is typically called automatically by the generate command,
+    but can be used manually to record external runs.
+
+    Example:
+        persona experiment record-run my-research \\
+            --model gpt-4o --provider openai \\
+            --personas 3 --cost 0.45
+    """
+    console = get_console()
+    manager = _get_manager(base_dir)
+    run_history = RunHistory(manager)
+
+    if not manager.exists(name):
+        console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    run = run_history.record_run(
+        name=name,
+        model=model,
+        provider=provider,
+        persona_count=personas,
+        cost=cost,
+        status=status,
+        output_dir=output_dir or "",
+    )
+
+    console.print(f"[green]✓[/green] Recorded run #{run.run_id} for {name}")
+
+
+@experiment_app.command("clear-history")
+def clear_run_history(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    force: Annotated[
+        bool,
+        typer.Option(
+            "--force", "-f",
+            help="Skip confirmation.",
+        ),
+    ] = False,
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    Clear run history for an experiment.
+
+    Example:
+        persona experiment clear-history my-research --force
+    """
+    console = get_console()
+    manager = _get_manager(base_dir)
+    run_history = RunHistory(manager)
+
+    if not manager.exists(name):
+        console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    if not force:
+        confirm = typer.confirm(
+            f"Clear all run history for '{name}'?",
+            default=False,
+        )
+        if not confirm:
+            console.print("[yellow]Cancelled.[/yellow]")
+            raise typer.Exit(0)
+
+    run_history.clear_history(name)
+    console.print(f"[green]✓[/green] Cleared run history for {name}")

@@ -232,5 +232,5 @@ models:
 ## Related Documentation
 
 - [ADR-0006: YAML Configuration](../decisions/adrs/ADR-0006-yaml-configuration.md)
-- [F-006: Experiment Management](../roadmap/features/planned/F-006-experiment-management.md)
-- [F-011: Experiment Configuration](../roadmap/features/planned/)
+- [F-006: Experiment Management](../roadmap/features/completed/F-006-experiment-management.md)
+- [F-012: Experiment Configuration](../roadmap/features/completed/F-012-experiment-configuration.md)

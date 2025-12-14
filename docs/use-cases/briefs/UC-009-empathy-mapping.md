@@ -97,7 +97,13 @@ Structured table (following Lycett et al. 2025, Table 1):
 - [UC-005: Validate Personas](UC-005-validate-personas.md)
 - [UC-007: Custom Format](UC-007-custom-format.md)
 
-## Academic Reference
+## References
+
+### Foundational Work
+
+Boag, P. (2015). Adapting Empathy Maps for UX Design. *Boagworld*. https://boagworld.com/usability/adapting-empathy-maps-for-ux-design/
+
+### Academic Application
 
 Lycett, M., Cundle, M., Grasso, L., Meechao, K., & Reppel, A. (2025). Materialising Design Fictions: Exploring Music Memorabilia in a Metaverse Environment. *Information Systems Journal*, 35, 1662–1678. https://doi.org/10.1111/isj.12600
 

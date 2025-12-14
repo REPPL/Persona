@@ -234,5 +234,5 @@ system_prompt, user_prompt = engine.render_workflow_step(
 ## Related Documentation
 
 - [ADR-0004: Jinja2 Templating](../decisions/adrs/ADR-0004-jinja2-templating.md)
-- [F-003: Prompt Templating](../roadmap/features/planned/F-003-prompt-templating.md)
+- [F-003: Prompt Templating](../roadmap/features/completed/F-003-prompt-templating.md)
 - [System Design](../planning/architecture/system-design.md)

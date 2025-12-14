@@ -106,7 +106,7 @@ Final trace aggregates all steps.
 ## Related Documentation
 
 - [R-009: Reasoning Capture](../../research/R-009-reasoning-capture.md)
-- [F-032: Reasoning Capture](../../roadmap/features/planned/F-032-reasoning-capture.md)
+- [F-032: Reasoning Capture](../../roadmap/features/completed/F-032-reasoning-capture.md)
 - [ADR-0011: Multi-Step Workflow](ADR-0011-multi-step-workflow.md)
 - [ADR-0009: Timestamped Output Organisation](ADR-0009-timestamped-output-organisation.md)
 

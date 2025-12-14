@@ -65,5 +65,5 @@ See [R-005: CLI Design Patterns](../../research/R-005-cli-design-patterns.md) fo
 
 ## Related Documentation
 
-- [F-008: CLI Interface](../../roadmap/features/planned/F-008-cli-interface.md)
+- [F-008: CLI Interface](../../roadmap/features/completed/F-008-cli-interface.md)
 - [PersonaZero Analysis](../../lineage/personazero-analysis.md)

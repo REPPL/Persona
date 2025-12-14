@@ -571,5 +571,5 @@ persona generate \
 - [Configuration Reference](configuration-reference.md) - Configuration options
 - [G-01: Choosing a Provider](../guides/choosing-provider.md)
 - [T-04: Comparing Providers](../tutorials/04-comparing-providers.md)
-- [F-002: LLM Provider Abstraction](../development/roadmap/features/planned/F-002-llm-provider-abstraction.md)
+- [F-002: LLM Provider Abstraction](../development/roadmap/features/completed/F-002-llm-provider-abstraction.md)
 

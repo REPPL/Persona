@@ -314,15 +314,15 @@ and 89 survey responses.
 Now that you can validate personas:
 
 1. **[G-02: Preparing Data](../guides/preparing-data.md)** - Better data = better validation
-2. **[Evidence Linking](../development/roadmap/features/planned/F-024-evidence-linking.md)** - Automatic provenance
+2. **[Evidence Linking](../development/roadmap/features/completed/F-024-evidence-linking.md)** - Automatic provenance
 3. **[Reproducibility](../explanation/reproducibility.md)** - Consistent validation results
 
 ---
 
 ## Related Documentation
 
-- [F-019: Persona Validation](../development/roadmap/features/planned/F-019-persona-validation.md)
-- [F-024: Evidence Linking](../development/roadmap/features/planned/F-024-evidence-linking.md)
+- [F-019: Persona Validation](../development/roadmap/features/completed/F-019-persona-validation.md)
+- [F-024: Evidence Linking](../development/roadmap/features/completed/F-024-evidence-linking.md)
 - [UC-005: Validate Personas](../use-cases/briefs/UC-005-validate-personas.md)
 
 ## Academic References

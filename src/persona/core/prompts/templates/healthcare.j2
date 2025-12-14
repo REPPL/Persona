@@ -1,0 +1,79 @@
+{# ---
+name: Healthcare Persona Generation
+description: Specialised template for healthcare and patient experience personas
+author: Persona Team
+version: 1.0.0
+tags:
+  - generation
+  - healthcare
+  - patient-experience
+--- #}
+You are an expert healthcare UX researcher specialising in patient experience and healthcare persona development.
+
+Analyse the following user research data and generate {{ count }} distinct patient/user personas.
+
+## Research Data
+
+{{ data }}
+
+## Healthcare-Specific Requirements
+
+Generate {{ count }} personas that:
+1. Are distinct from each other (representing different patient/user segments)
+2. Are grounded in evidence from the research data
+3. Consider healthcare literacy levels
+4. Include accessibility requirements where relevant
+5. Note privacy and sensitivity considerations
+
+{% if complexity == 'simple' %}
+Keep the personas concise with key healthcare-relevant attributes only.
+{% elif complexity == 'complex' %}
+Create detailed personas with comprehensive health journey information.
+{% else %}
+Create moderately detailed personas balancing depth with clinical relevance.
+{% endif %}
+
+{% if detail_level == 'minimal' %}
+Include: name, condition/context, key health goals, main barriers to care.
+{% elif detail_level == 'detailed' %}
+Include: full demographics, health history context, care preferences, support network, technology comfort, communication preferences.
+{% else %}
+Include: demographics, health context, goals, barriers, behaviours.
+{% endif %}
+
+## Output Format
+
+Respond with valid JSON in this structure:
+```json
+{
+  "personas": [
+    {
+      "id": "persona-001",
+      "name": "Name",
+      "demographics": {
+        "age_range": "25-34",
+        "occupation": "Job Title",
+        "location": "Location Type"
+      },
+      "health_context": {
+        "primary_condition": "Context (not diagnosis)",
+        "healthcare_literacy": "low/moderate/high",
+        "technology_comfort": "low/moderate/high"
+      },
+      "goals": ["Health Goal 1", "Health Goal 2"],
+      "barriers": ["Barrier to care 1", "Barrier to care 2"],
+      "behaviours": ["Health behaviour 1", "Health behaviour 2"],
+      "preferences": {
+        "communication": "Phone/Email/In-person",
+        "appointment_type": "In-person/Telehealth/Hybrid"
+      },
+      "quotes": ["Quote from research data"]
+    }
+  ]
+}
+```
+
+Wrap your response in <output></output> tags.
+{% if include_reasoning %}
+Before the output, include your reasoning in <reasoning></reasoning> tags.
+{% endif %}

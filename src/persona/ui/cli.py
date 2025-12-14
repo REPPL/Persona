@@ -12,7 +12,7 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.ui.commands import experiment_app, generate_app
+from persona.ui.commands import experiment_app, generate_app, vendor_app, model_app, template_app, workflow_app
 from persona.ui.console import get_console as _get_console
 
 app = typer.Typer(
@@ -25,6 +25,10 @@ app = typer.Typer(
 # Add subcommand groups
 app.add_typer(generate_app, name="generate")
 app.add_typer(experiment_app, name="experiment")
+app.add_typer(vendor_app, name="vendor")
+app.add_typer(model_app, name="model")
+app.add_typer(template_app, name="template")
+app.add_typer(workflow_app, name="workflow")
 
 # Global state for console options (used by callbacks)
 _no_color: bool = False

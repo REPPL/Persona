@@ -65,5 +65,5 @@ See [R-002: Multi-Provider Abstraction](../../research/R-002-multi-provider-abst
 
 ## Related Documentation
 
-- [F-002: LLM Provider Abstraction](../../roadmap/features/planned/F-002-llm-provider-abstraction.md)
+- [F-002: LLM Provider Abstraction](../../roadmap/features/completed/F-002-llm-provider-abstraction.md)
 - [System Design](../../planning/architecture/system-design.md)

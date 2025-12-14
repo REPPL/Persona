@@ -161,5 +161,5 @@ Return a JSON array of personas, each with:
 ## Related Documentation
 
 - [ADR-0003: Experiment-Centric Workflow](../decisions/adrs/ADR-0003-experiment-centric-workflow.md)
-- [F-004: Persona Generation](../roadmap/features/planned/F-004-persona-generation.md)
+- [F-004: Persona Generation](../roadmap/features/completed/F-004-persona-generation.md)
 - [Acknowledgements](../lineage/acknowledgements.md)

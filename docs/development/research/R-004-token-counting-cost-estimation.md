@@ -199,5 +199,5 @@ config/models/
 ## Related Documentation
 
 - [ADR-0010: Cost Estimation](../decisions/adrs/ADR-0010-cost-estimation.md)
-- [F-007: Cost Estimation](../roadmap/features/planned/F-007-cost-estimation.md)
+- [F-007: Cost Estimation](../roadmap/features/completed/F-007-cost-estimation.md)
 - [R-002: Multi-Provider Abstraction](./R-002-multi-provider-abstraction.md)

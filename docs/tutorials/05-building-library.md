@@ -329,7 +329,7 @@ Now that you can manage a persona library:
 
 ## Related Documentation
 
-- [F-006: Experiment Management](../development/roadmap/features/planned/F-006-experiment-management.md)
+- [F-006: Experiment Management](../development/roadmap/features/completed/F-006-experiment-management.md)
 - [Experiment Reproducibility](../explanation/reproducibility.md)
 - [G-03: Design Integration](../guides/design-integration.md)
 

@@ -66,4 +66,4 @@ See [R-001: Structured LLM Output](../../research/R-001-structured-llm-output.md
 
 ## Related Documentation
 
-- [F-005: Output Formatting](../../roadmap/features/planned/F-005-output-formatting.md)
+- [F-005: Output Formatting](../../roadmap/features/completed/F-005-output-formatting.md)

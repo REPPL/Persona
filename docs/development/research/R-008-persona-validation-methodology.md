@@ -355,7 +355,7 @@ Extract → Consolidate → Generate → [Validate] → Output
 
 ## Related Documentation
 
-- [F-019: Persona Validation](../roadmap/features/planned/F-019-persona-validation.md)
+- [F-019: Persona Validation](../roadmap/features/completed/F-019-persona-validation.md)
 - [ADR-0019: Persona Validation Methodology](../decisions/adrs/ADR-0019-persona-validation-methodology.md) (to be created)
 - [R-003: Persona Generation Methodology](R-003-persona-generation-methodology.md)
 - [Persona Schema Reference](../../reference/persona-schema.md)

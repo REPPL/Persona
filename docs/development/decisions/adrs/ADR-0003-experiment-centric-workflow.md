@@ -45,5 +45,5 @@ experiments/
 
 ## Related Documentation
 
-- [F-006: Experiment Management](../../roadmap/features/planned/F-006-experiment-management.md)
+- [F-006: Experiment Management](../../roadmap/features/completed/F-006-experiment-management.md)
 - [UC-002: Manage Experiments](../../../use-cases/briefs/UC-002-manage-experiments.md)

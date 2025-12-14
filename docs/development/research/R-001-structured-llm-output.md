@@ -130,5 +130,5 @@ personas = client.chat.completions.create(
 ## Related Documentation
 
 - [ADR-0008: Structured JSON Output](../decisions/adrs/ADR-0008-structured-json-output.md)
-- [F-004: Persona Generation](../roadmap/features/planned/F-004-persona-generation.md)
-- [F-005: Output Formatting](../roadmap/features/planned/F-005-output-formatting.md)
+- [F-004: Persona Generation](../roadmap/features/completed/F-004-persona-generation.md)
+- [F-005: Output Formatting](../roadmap/features/completed/F-005-output-formatting.md)

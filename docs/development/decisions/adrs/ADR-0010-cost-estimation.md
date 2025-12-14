@@ -71,4 +71,4 @@ See [R-004: Token Counting & Cost Estimation](../../research/R-004-token-countin
 
 ## Related Documentation
 
-- [F-007: Cost Estimation](../../roadmap/features/planned/F-007-cost-estimation.md)
+- [F-007: Cost Estimation](../../roadmap/features/completed/F-007-cost-estimation.md)

@@ -325,6 +325,6 @@ Ready for generation: Yes
 ## Related Documentation
 
 - [T-03: Data Formats](../tutorials/03-data-formats.md)
-- [F-001: Data Loading](../development/roadmap/features/planned/F-001-data-loading.md)
-- [F-022: Data Preview](../development/roadmap/features/planned/F-022-data-preview.md)
+- [F-001: Data Loading](../development/roadmap/features/completed/F-001-data-loading.md)
+- [F-022: Data Preview](../development/roadmap/features/completed/F-022-data-preview.md)
 

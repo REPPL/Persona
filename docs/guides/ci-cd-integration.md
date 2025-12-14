@@ -435,6 +435,6 @@ cat test-output/metadata.json
 ## Related Documentation
 
 - [CLI Reference](../reference/cli-reference.md)
-- [F-020: Batch Processing](../development/roadmap/features/planned/F-020-batch-data-processing.md)
+- [F-020: Batch Processing](../development/roadmap/features/completed/F-020-batch-data-processing.md)
 - [Reproducibility](../explanation/reproducibility.md)
 

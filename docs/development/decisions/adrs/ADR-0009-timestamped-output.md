@@ -36,4 +36,4 @@ Use timestamped output folders:
 
 ## Related Documentation
 
-- [F-005: Output Formatting](../../roadmap/features/planned/F-005-output-formatting.md)
+- [F-005: Output Formatting](../../roadmap/features/completed/F-005-output-formatting.md)

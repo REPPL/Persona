@@ -221,5 +221,5 @@ persona demo --provider anthropic --model claude-3-sonnet
 
 - [T-04: Comparing Providers](../tutorials/04-comparing-providers.md)
 - [Model Cards Reference](../reference/model-cards.md)
-- [F-002: LLM Provider Abstraction](../development/roadmap/features/planned/F-002-llm-provider-abstraction.md)
+- [F-002: LLM Provider Abstraction](../development/roadmap/features/completed/F-002-llm-provider-abstraction.md)
 

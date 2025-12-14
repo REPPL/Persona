@@ -447,7 +447,7 @@ Custom fields can be added via:
 
 ## Related Documentation
 
-- [F-024: Evidence Linking](../development/roadmap/features/planned/F-024-evidence-linking.md)
+- [F-024: Evidence Linking](../development/roadmap/features/completed/F-024-evidence-linking.md)
 - [T-02: Understanding Output](../tutorials/02-understanding-output.md)
 - [How Generation Works](../explanation/how-generation-works.md)
 

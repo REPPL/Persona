@@ -376,7 +376,7 @@ New feature specification for v0.1.0 implementing this research.
 
 ## Related Documentation
 
-- [F-032: Reasoning Capture](../roadmap/features/planned/F-032-reasoning-capture.md)
+- [F-032: Reasoning Capture](../roadmap/features/completed/F-032-reasoning-capture.md)
 - [ADR-0020: Reasoning Capture Architecture](../decisions/adrs/ADR-0020-reasoning-capture-architecture.md)
 - [ADR-0011: Multi-Step Workflow](../decisions/adrs/ADR-0011-multi-step-workflow.md)
 - [ADR-0009: Timestamped Output Organisation](../decisions/adrs/ADR-0009-timestamped-output.md)

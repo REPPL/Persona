@@ -439,5 +439,5 @@ pip list >> diagnostics.txt
 
 - [Getting Started](../tutorials/01-getting-started.md)
 - [CLI Reference](../reference/cli-reference.md)
-- [F-009: Health Check](../development/roadmap/features/planned/F-009-health-check.md)
+- [F-009: Health Check](../development/roadmap/features/completed/F-009-health-check.md)
 

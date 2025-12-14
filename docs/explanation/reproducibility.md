@@ -326,5 +326,5 @@ persona compare \
 
 - [How Generation Works](how-generation-works.md)
 - [T-05: Building a Library](../tutorials/05-building-library.md)
-- [F-006: Experiment Management](../development/roadmap/features/planned/F-006-experiment-management.md)
+- [F-006: Experiment Management](../development/roadmap/features/completed/F-006-experiment-management.md)
 

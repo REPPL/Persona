@@ -247,5 +247,5 @@ src/persona/ui/cli/
 ## Related Documentation
 
 - [ADR-0005: CLI Framework](../decisions/adrs/ADR-0005-cli-framework.md)
-- [F-008: CLI Interface](../roadmap/features/planned/F-008-cli-interface.md)
+- [F-008: CLI Interface](../roadmap/features/completed/F-008-cli-interface.md)
 - [System Design](../planning/architecture/system-design.md)

@@ -149,5 +149,5 @@ User Request → Persona Core → LiteLLM (routing) → Provider SDKs
 ## Related Documentation
 
 - [ADR-0002: Multi-Provider Architecture](../decisions/adrs/ADR-0002-multi-provider-architecture.md)
-- [F-002: LLM Provider Abstraction](../roadmap/features/planned/F-002-llm-provider-abstraction.md)
+- [F-002: LLM Provider Abstraction](../roadmap/features/completed/F-002-llm-provider-abstraction.md)
 - [R-001: Structured LLM Output](./R-001-structured-llm-output.md)

@@ -66,4 +66,4 @@ See [R-007: Prompt Templating](../../research/R-007-prompt-templating.md) for co
 
 ## Related Documentation
 
-- [F-003: Prompt Templating](../../roadmap/features/planned/F-003-prompt-templating.md)
+- [F-003: Prompt Templating](../../roadmap/features/completed/F-003-prompt-templating.md)

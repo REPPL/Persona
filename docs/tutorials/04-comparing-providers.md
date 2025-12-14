@@ -302,7 +302,7 @@ Now that you can compare providers:
 
 ## Related Documentation
 
-- [F-002: LLM Provider Abstraction](../development/roadmap/features/planned/F-002-llm-provider-abstraction.md)
+- [F-002: LLM Provider Abstraction](../development/roadmap/features/completed/F-002-llm-provider-abstraction.md)
 - [Model Cards Reference](../reference/model-cards.md)
 - [G-01: Choosing a Provider](../guides/choosing-provider.md)
 
