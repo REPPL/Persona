@@ -37,6 +37,15 @@ Documented architecture and design decisions for Persona.
 | [ADR-0017](ADR-0017-testing-alongside.md) | Testing Alongside Implementation | Accepted |
 | [ADR-0018](ADR-0018-documentation-as-you-go.md) | Documentation As You Go | Accepted |
 
+### Feature Design Decisions
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| [ADR-0019](ADR-0019-persona-validation-methodology.md) | Persona Validation Methodology | Accepted |
+| [ADR-0020](ADR-0020-reasoning-capture-architecture.md) | Reasoning Capture Architecture | Accepted |
+| [ADR-0021](ADR-0021-programmatic-api.md) | Programmatic API Design | Accepted |
+| [ADR-0022](ADR-0022-interactive-cli-library.md) | Interactive CLI Library Selection | Accepted |
+
 ## ADR Format
 
 ```markdown

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "0.7.0"
+version = "0.8.0"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
     "typer>=0.9.0",
     "rich>=13.0.0",
+    "questionary>=2.0.0",
     "pyyaml>=6.0",
     "jinja2>=3.1.0",
     "pydantic>=2.0.0",

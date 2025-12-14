@@ -26,6 +26,7 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-008](./R-008-persona-validation-methodology.md) | Persona Validation Methodology | Complete | ADR-0019 |
 | [R-009](./R-009-reasoning-capture.md) | Reasoning Capture | Complete | ADR-0020 |
 | [R-010](./R-010-mvp-architecture.md) | MVP Architecture | Complete | - |
+| [R-011](./R-011-interactive-cli-libraries.md) | Interactive CLI Libraries | Complete | ADR-0022 |
 
 ## Research Methodology
 
