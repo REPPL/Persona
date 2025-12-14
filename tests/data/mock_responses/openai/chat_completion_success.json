@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-test-12345",
+  "object": "chat.completion",
+  "created": 1702000000,
+  "model": "gpt-4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<reasoning>\nStep 1: Analysing the input data containing 3 interview transcripts.\nStep 2: Identifying common themes across participants: CLI preference, documentation frustration, desire for tool consolidation.\nStep 3: Segmenting users based on roles and experience levels.\nStep 4: Synthesising persona attributes from aggregated insights.\n</reasoning>\n\n<output>\n{\n  \"personas\": [\n    {\n      \"id\": \"persona-001\",\n      \"name\": \"Alex Chen\",\n      \"demographics\": {\n        \"age_range\": \"25-34\",\n        \"occupation\": \"Software Developer\",\n        \"experience_level\": \"Mid-level\",\n        \"location\": \"Urban tech hub\"\n      },\n      \"goals\": [\n        \"Streamline daily workflow with efficient tools\",\n        \"Stay current with technology best practices\",\n        \"Reduce context switching between applications\"\n      ],\n      \"pain_points\": [\n        \"Outdated documentation wastes valuable time\",\n        \"Too many tools required for basic tasks\",\n        \"Inconsistent experiences across platforms\"\n      ],\n      \"behaviours\": [\n        \"Prefers keyboard shortcuts and CLI over GUI\",\n        \"Reads documentation before trying new tools\",\n        \"Automates repetitive tasks whenever possible\"\n      ],\n      \"quotes\": [\n        \"I just want things to work without friction.\",\n        \"Good documentation is worth its weight in gold.\"\n      ]\n    }\n  ]\n}\n</output>"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 450,
+    "completion_tokens": 320,
+    "total_tokens": 770
+  }
+}

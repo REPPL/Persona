@@ -1,0 +1,49 @@
+{
+  "survey_responses": [
+    {
+      "response_id": "R001",
+      "timestamp": "2024-01-20T10:30:00Z",
+      "satisfaction_score": 4,
+      "likelihood_to_recommend": 8,
+      "most_useful_feature": "Quick search functionality",
+      "biggest_pain_point": "Slow loading times on mobile",
+      "open_feedback": "Great product overall, but the mobile experience needs improvement. I often work on the go and find myself switching to desktop."
+    },
+    {
+      "response_id": "R002",
+      "timestamp": "2024-01-20T11:15:00Z",
+      "satisfaction_score": 5,
+      "likelihood_to_recommend": 10,
+      "most_useful_feature": "Integration with other tools",
+      "biggest_pain_point": "Initial setup complexity",
+      "open_feedback": "Once set up, this tool is amazing. The learning curve was steep but worth it. Would love more onboarding tutorials."
+    },
+    {
+      "response_id": "R003",
+      "timestamp": "2024-01-20T14:00:00Z",
+      "satisfaction_score": 3,
+      "likelihood_to_recommend": 5,
+      "most_useful_feature": "Collaboration features",
+      "biggest_pain_point": "Pricing for small teams",
+      "open_feedback": "The collaboration features are exactly what we need, but the pricing model doesn't work well for our small team of 3."
+    },
+    {
+      "response_id": "R004",
+      "timestamp": "2024-01-21T09:00:00Z",
+      "satisfaction_score": 4,
+      "likelihood_to_recommend": 7,
+      "most_useful_feature": "Automation capabilities",
+      "biggest_pain_point": "Documentation gaps",
+      "open_feedback": "Powerful automation features but sometimes hard to figure out how to use them. Better docs would help a lot."
+    },
+    {
+      "response_id": "R005",
+      "timestamp": "2024-01-21T16:30:00Z",
+      "satisfaction_score": 5,
+      "likelihood_to_recommend": 9,
+      "most_useful_feature": "Customisation options",
+      "biggest_pain_point": "No offline mode",
+      "open_feedback": "I can customise everything to fit my workflow perfectly. Only wish it worked offline for when I'm travelling."
+    }
+  ]
+}

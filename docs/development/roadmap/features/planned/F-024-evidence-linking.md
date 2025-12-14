@@ -23,7 +23,7 @@ Best practice from Shin et al. (DIS 2024) shows personas should demonstrate prov
 
 ## Implementation Tasks
 
-- [ ] Design evidence linking schema (ADR-0020)
+- [ ] Design evidence linking schema (ADR TBD)
 - [ ] Extend persona output format with evidence field
 - [ ] Modify generation prompts to extract evidence
 - [ ] Implement source location tracking
@@ -47,7 +47,7 @@ Best practice from Shin et al. (DIS 2024) shows personas should demonstrate prov
 - F-001: Data loading (source access)
 - F-004: Persona generation
 - F-005: Output formatting
-- ADR-0020: Evidence Linking Schema
+- ADR TBD: Evidence Linking Schema (to be created when implementing)
 
 ---
 
@@ -55,6 +55,5 @@ Best practice from Shin et al. (DIS 2024) shows personas should demonstrate prov
 
 - [UC-005: Validate Personas](../../../../use-cases/briefs/UC-005-validate-personas.md)
 - [F-019: Persona Validation](F-019-persona-validation.md)
-- [ADR-0020: Evidence Linking Schema](../../../decisions/adrs/ADR-0020-evidence-linking-schema.md)
-- [R-010: Persona Schema Reference](../../../../reference/persona-schema.md)
+- [Persona Schema Reference](../../../../reference/persona-schema.md)
 

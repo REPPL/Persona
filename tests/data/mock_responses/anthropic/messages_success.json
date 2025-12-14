@@ -1,0 +1,18 @@
+{
+  "id": "msg_test_12345",
+  "type": "message",
+  "role": "assistant",
+  "model": "claude-3-sonnet-20240229",
+  "content": [
+    {
+      "type": "text",
+      "text": "<thinking>\nAnalysing the provided user research data to identify patterns and create representative personas.\n\nKey observations:\n1. Developer participants prioritise efficiency and automation\n2. Designers focus on visual feedback and collaboration\n3. Product managers struggle with information synthesis\n\nI'll create personas that capture these distinct user segments.\n</thinking>\n\n<output>\n{\n  \"personas\": [\n    {\n      \"id\": \"persona-001\",\n      \"name\": \"Maya Rodriguez\",\n      \"demographics\": {\n        \"age_range\": \"30-39\",\n        \"occupation\": \"Product Manager\",\n        \"experience_level\": \"Senior\",\n        \"location\": \"Remote-first company\"\n      },\n      \"goals\": [\n        \"Efficiently synthesise user feedback from multiple sources\",\n        \"Communicate research findings to stakeholders clearly\",\n        \"Make data-driven product decisions quickly\"\n      ],\n      \"pain_points\": [\n        \"Information scattered across too many channels\",\n        \"Time-consuming manual synthesis of research\",\n        \"Difficulty translating insights into actionable items\"\n      ],\n      \"behaviours\": [\n        \"Reviews user feedback daily across multiple platforms\",\n        \"Creates synthesis documents for stakeholder meetings\",\n        \"Advocates for user needs in product discussions\"\n      ],\n      \"quotes\": [\n        \"I spend more time organising feedback than acting on it.\",\n        \"Stakeholders need the story, not just the data.\"\n      ]\n    }\n  ]\n}\n</output>"
+    }
+  ],
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "usage": {
+    "input_tokens": 380,
+    "output_tokens": 290
+  }
+}

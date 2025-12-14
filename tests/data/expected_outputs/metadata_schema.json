@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2024-01-15T14:30:22Z",
+  "experiment": "test-experiment",
+  "provider": "openai",
+  "model": "gpt-4",
+  "input_files": [
+    "interviews_small.csv"
+  ],
+  "input_tokens": 450,
+  "output_tokens": 320,
+  "total_tokens": 770,
+  "estimated_cost_usd": 0.025,
+  "actual_cost_usd": 0.023,
+  "personas_generated": 1,
+  "generation_parameters": {
+    "temperature": 0.7,
+    "max_tokens": 4096
+  }
+}

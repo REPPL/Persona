@@ -1,0 +1,4 @@
+participant_id,date,role,experience_years,transcript,key_themes
+P001,2024-01-15,Software Developer,5,"I primarily use command-line tools for my daily work. The main frustration is when documentation is outdated. I wish there was a single tool that could handle all my needs.","CLI preference, documentation issues, tool consolidation"
+P002,2024-01-16,UX Designer,3,"I need quick visual feedback when making design decisions. Our current tools are too slow for rapid prototyping. Collaboration with developers is always a challenge.","visual feedback, speed, collaboration"
+P003,2024-01-17,Product Manager,7,"Tracking user feedback across multiple channels is overwhelming. I need better ways to synthesise research findings. Stakeholder communication takes up most of my time.","feedback tracking, research synthesis, communication"

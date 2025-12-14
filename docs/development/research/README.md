@@ -23,6 +23,9 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-005](./R-005-cli-design-patterns.md) | CLI Design Patterns | Complete | ADR-0005 |
 | [R-006](./R-006-yaml-configuration-validation.md) | YAML Configuration & Validation | Complete | ADR-0006 |
 | [R-007](./R-007-prompt-templating.md) | Prompt Templating | Complete | ADR-0004 |
+| [R-008](./R-008-persona-validation-methodology.md) | Persona Validation Methodology | Complete | ADR-0019 |
+| [R-009](./R-009-reasoning-capture.md) | Reasoning Capture | Complete | ADR-0020 |
+| [R-010](./R-010-mvp-architecture.md) | MVP Architecture | Complete | - |
 
 ## Research Methodology
 

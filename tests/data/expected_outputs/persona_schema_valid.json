@@ -1,0 +1,29 @@
+{
+  "id": "persona-001",
+  "name": "Alex Chen",
+  "demographics": {
+    "age_range": "25-34",
+    "occupation": "Software Developer",
+    "experience_level": "Mid-level",
+    "location": "Urban tech hub"
+  },
+  "goals": [
+    "Streamline daily workflow with efficient tools",
+    "Stay current with technology best practices",
+    "Reduce context switching between applications"
+  ],
+  "pain_points": [
+    "Outdated documentation wastes valuable time",
+    "Too many tools required for basic tasks",
+    "Inconsistent experiences across platforms"
+  ],
+  "behaviours": [
+    "Prefers keyboard shortcuts and CLI over GUI",
+    "Reads documentation before trying new tools",
+    "Automates repetitive tasks whenever possible"
+  ],
+  "quotes": [
+    "I just want things to work without friction.",
+    "Good documentation is worth its weight in gold."
+  ]
+}

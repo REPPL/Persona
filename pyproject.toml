@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "0.1.0-planning"
+version = "0.0.0-planning"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -73,6 +73,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+markers = [
+    "real_api: marks tests requiring real API calls (deselect with '-m \"not real_api\"')",
+]
 
 [tool.coverage.run]
 source = ["src/persona"]

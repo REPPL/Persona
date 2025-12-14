@@ -1,0 +1,22 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Based on the analysis of the provided user research data, I've identified key patterns and created a representative persona.\n\n**Reasoning Process:**\n1. Reviewed 3 interview transcripts covering different roles\n2. Identified common themes: efficiency, documentation quality, tool integration\n3. Noted role-specific concerns and workflows\n4. Synthesised into a persona capturing the primary user segment\n\n<output>\n{\n  \"personas\": [\n    {\n      \"id\": \"persona-001\",\n      \"name\": \"Jordan Kim\",\n      \"demographics\": {\n        \"age_range\": \"25-34\",\n        \"occupation\": \"Full-Stack Developer\",\n        \"experience_level\": \"Mid to Senior\",\n        \"location\": \"Hybrid work environment\"\n      },\n      \"goals\": [\n        \"Maintain high productivity with minimal tool switching\",\n        \"Access reliable, up-to-date documentation\",\n        \"Integrate new tools seamlessly into existing workflow\"\n      ],\n      \"pain_points\": [\n        \"Documentation that's outdated or incomplete\",\n        \"Context switching between multiple specialised tools\",\n        \"Steep learning curves for essential software\"\n      ],\n      \"behaviours\": [\n        \"Evaluates tools based on CLI support and automation capabilities\",\n        \"Contributes to documentation when finding gaps\",\n        \"Builds custom scripts to bridge tool limitations\"\n      ],\n      \"quotes\": [\n        \"The best tool is one I don't have to think about.\",\n        \"Bad docs are worse than no docs.\"\n      ]\n    }\n  ]\n}\n</output>"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 420,
+    "candidatesTokenCount": 310,
+    "totalTokenCount": 730
+  },
+  "modelVersion": "gemini-1.5-pro"
+}

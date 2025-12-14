@@ -4,7 +4,7 @@ All features for Persona, organised by status.
 
 ## Feature Index
 
-### v0.1.0 - Foundation (18 features)
+### v0.1.0 - Foundation (19 features)
 
 | ID | Feature | Category | Status |
 |----|---------|----------|--------|
@@ -17,17 +17,15 @@ All features for Persona, organised by status.
 | [F-007](planned/F-007-cost-estimation.md) | Cost estimation | Cost | Planned |
 | [F-008](planned/F-008-cli-interface.md) | CLI interface | CLI | Planned |
 | [F-009](planned/F-009-health-check.md) | Health check command | CLI | Planned |
-| F-010 | Data format normalisation | Data | Planned |
-| F-011 | Multi-provider LLM support | LLM | Planned |
-| F-012 | Experiment configuration (YAML) | Experiments | Planned |
-| F-013 | Timestamped output folders | Output | Planned |
-| F-014 | Model-specific pricing | Cost | Planned |
-| F-015 | CLI core commands | CLI | Planned |
-| F-016 | Interactive Rich UI | CLI | Planned |
-| F-017 | Single-step workflow | Workflow | Planned |
-| F-018 | Context-aware help | CLI | Planned |
-
-*Note: Features F-010 through F-018 are documented in the [v0.1.0 milestone](../milestones/v0.1.0.md) rather than individual specification files.*
+| [F-010](planned/F-010-data-format-normalisation.md) | Data format normalisation | Data | Planned |
+| [F-011](planned/F-011-multi-provider-llm-support.md) | Multi-provider LLM support | LLM | Planned |
+| [F-012](planned/F-012-experiment-configuration.md) | Experiment configuration (YAML) | Experiments | Planned |
+| [F-013](planned/F-013-timestamped-output.md) | Timestamped output folders | Output | Planned |
+| [F-014](planned/F-014-model-specific-pricing.md) | Model-specific pricing | Cost | Planned |
+| [F-015](planned/F-015-cli-core-commands.md) | CLI core commands | CLI | Planned |
+| [F-016](planned/F-016-interactive-rich-ui.md) | Interactive Rich UI | CLI | Planned |
+| [F-017](planned/F-017-single-step-workflow.md) | Single-step workflow | Workflow | Planned |
+| [F-018](planned/F-018-context-aware-help.md) | Context-aware help | CLI | Planned |
 
 ### v0.1.0 - Additional Features
 
@@ -35,6 +33,7 @@ All features for Persona, organised by status.
 |----|---------|----------|--------|
 | [F-022](planned/F-022-data-preview.md) | Data preview | Data | Planned |
 | [F-028](planned/F-028-synthetic-data-generation.md) | Synthetic data generation (demo) | Demo | Planned |
+| [F-032](planned/F-032-reasoning-capture.md) | Reasoning capture | Observability | Planned |
 
 ### v0.2.0 - Validation (6 features)
 

@@ -64,6 +64,62 @@ High-level architecture for Persona.
 - **Models** - Capabilities, pricing, limits
 - **Workflows** - Prompt sequences, parameters
 
+## Architecture Pattern: MVP
+
+Persona follows the Model-View-Presenter (MVP) pattern for clean separation of concerns:
+
+### Model Layer (`persona/core/`)
+
+Business logic with no UI dependencies:
+
+- **Data Loading** - Load and normalise from CSV, JSON, Markdown, etc.
+- **LLM Abstraction** - Provider-agnostic LLM interface
+- **Generation Logic** - Persona synthesis algorithms
+- **Template Management** - Jinja2 prompt templates
+
+### Presenter Layer (`persona/cli/commands/`)
+
+Coordination and workflow orchestration:
+
+- **Command Handlers** - Orchestrate workflows for each CLI command
+- **Input Validation** - Parameter processing and validation
+- **Error Handling** - User feedback coordination
+
+### View Layer (`persona/cli/views/`)
+
+UI presentation with no business logic:
+
+- **Rich Output** - Console formatting and tables
+- **File Writing** - Output organisation and file creation
+- **Progress Indicators** - Status displays and spinners
+
+### MVP Benefits
+
+| Benefit | Description |
+|---------|-------------|
+| **Testable** | Mock Views to test Presenter logic in isolation |
+| **Extensible** | Add new UIs (TUI, WebUI) without changing core logic |
+| **Maintainable** | Clear boundaries for contributors |
+| **Reusable** | Python API can reuse Model and Presenter |
+
+### Implementation Guidelines
+
+When implementing new features:
+
+1. **Model Changes**: Add to `persona/core/`
+   - Pure business logic, no Rich/Typer imports
+   - Fully testable with unit tests
+
+2. **Presenter Changes**: Add to `persona/cli/commands/`
+   - Import from core, not from views
+   - Can be tested with mock views
+
+3. **View Changes**: Add to `persona/cli/views/`
+   - Output formatting only
+   - Rich-specific code, minimal logic
+
+See [R-010: MVP Architecture](../../research/R-010-mvp-architecture.md) for detailed research.
+
 ## Data Flow
 
 ```
