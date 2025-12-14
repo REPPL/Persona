@@ -210,5 +210,9 @@ __marimo__/
 .claude/
 .work/
 
+# Persona outputs and experiments (user data)
+outputs/
+experiments/
+
 # macOS
 .DS_Store

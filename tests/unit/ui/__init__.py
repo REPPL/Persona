@@ -1,3 +1,1 @@
-"""
-Unit tests for persona.ui package.
-"""
+"""Tests for UI components."""
