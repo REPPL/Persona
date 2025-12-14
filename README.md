@@ -4,11 +4,9 @@
 
 ![Persona logo](docs/assets/img/persona-logo.png)
 
-> Transform your user research data into actionable personas using AI
+## Generate realistic user personas from your data using AI
 
-## What is Persona?
-
-**Persona** generates detailed user personas from your research data (interviews, surveys, observations) using large language models. Instead of manually synthesising hundreds of pages of research notes, let AI identify patterns and create structured, evidence-backed personas.
+`Persona` is an AI-powered tool that generates realistic user personas from qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
 
 ### Who is this for?
 
