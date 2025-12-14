@@ -146,5 +146,5 @@ Document new fixtures in this README.
 
 ## Related Documentation
 
-- [Testing Guide](../../docs/development/testing.md)
+- [Testing Guide](../../docs/development/testing/)
 - [Manual Testing](../manual/README.md)

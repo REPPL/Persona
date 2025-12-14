@@ -99,7 +99,8 @@ pytest -m real_api
 
 ## Related Documentation
 
-- [Testing Guide](../docs/development/testing.md) - Comprehensive testing documentation
+- [Testing Guide](../docs/development/testing/) - Comprehensive testing documentation
+- [Synthetic Data](../docs/development/testing/synthetic_data.md) - Test data design and bias mitigation
 - [Manual Testing](manual/README.md) - Manual test procedures
 - [Test Fixtures](fixtures/README.md) - Fixture reference
 - [ADR-0017: Testing Alongside](../docs/development/decisions/adrs/ADR-0017-testing-alongside.md)

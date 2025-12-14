@@ -153,5 +153,5 @@ persona generate --from data/ --mock
 
 ## Related Documentation
 
-- [Testing Guide](../../docs/development/testing.md) - Full testing documentation
+- [Testing Guide](../../docs/development/testing/) - Full testing documentation
 - [Test Fixtures](../fixtures/README.md) - How to use test fixtures

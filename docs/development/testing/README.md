@@ -2,6 +2,14 @@
 
 Comprehensive guide to testing Persona, covering automated tests, manual testing, and contributing new tests.
 
+## Contents
+
+| Document | Description |
+|----------|-------------|
+| [Synthetic Data](synthetic_data.md) | Test data design and generation methodology |
+| [Manual Testing](../../../tests/manual/README.md) | Manual test procedures and scripts |
+| [Test Fixtures](../../../tests/fixtures/README.md) | Fixture reference and usage |
+
 ## Testing Philosophy
 
 Persona follows a testing pyramid approach with three layers:
@@ -227,34 +235,17 @@ def test_environment(env_mock_api_keys):
 
 ## Test Data
 
-### Synthetic Data
+See [Synthetic Data](synthetic_data.md) for detailed documentation on test data design.
 
-Pre-generated test data in `tests/data/synthetic/`:
+### Quick Reference
 
-| File | Description | Records |
-|------|-------------|---------|
-| `interviews_small.csv` | Interview transcripts | 3 |
-| `interviews_medium.csv` | Interview transcripts | 10 |
-| `survey_responses.json` | Survey data | 5 |
-| `user_feedback.md` | Markdown feedback | 3 entries |
-| `mixed_format/` | Multiple formats | Various |
-
-### Mock API Responses
-
-Pre-recorded API responses in `tests/data/mock_responses/`:
-
-```
-mock_responses/
-├── openai/
-│   ├── chat_completion_success.json
-│   └── error_response.json
-├── anthropic/
-│   ├── messages_success.json
-│   └── error_response.json
-└── gemini/
-    ├── generate_content_success.json
-    └── error_response.json
-```
+| File | Format | Records | Use Case |
+|------|--------|---------|----------|
+| `interviews_small.csv` | CSV | 3 | Quick tests |
+| `interviews_medium.csv` | CSV | 10 | Realistic tests |
+| `survey_responses.json` | JSON | 5 | JSON loading |
+| `user_feedback.md` | Markdown | 3 | Markdown loading |
+| `mixed_format/` | Mixed | Various | Multi-format tests |
 
 ### Creating Custom Test Data
 
@@ -292,7 +283,7 @@ Each version has a manual test script:
 4. Record results
 5. Share output with Claude for review
 
-See [Manual Testing Guide](../../tests/manual/README.md) for details.
+See [Manual Testing Guide](../../../tests/manual/README.md) for details.
 
 ## CI/CD Integration
 
@@ -361,6 +352,7 @@ pytest --pdb tests/unit/test_specific.py
 
 ## Related Documentation
 
-- [Manual Testing Guide](../../tests/manual/README.md)
-- [Test Fixtures Reference](../../tests/fixtures/README.md)
-- [ADR-0017: Testing Alongside](decisions/adrs/ADR-0017-testing-alongside.md)
+- [Synthetic Data](synthetic_data.md) - Test data design methodology
+- [Manual Testing Guide](../../../tests/manual/README.md)
+- [Test Fixtures Reference](../../../tests/fixtures/README.md)
+- [ADR-0017: Testing Alongside](../decisions/adrs/ADR-0017-testing-alongside.md)
