@@ -23,11 +23,16 @@ Manual testing serves as the final verification layer in Persona's testing pyram
 
 ## Test Scripts by Version
 
-| Version | Script | Status |
-|---------|--------|--------|
-| v0.1.0 | [v0.1.0_test_script.md](v0.1.0_test_script.md) | Pending |
-| v0.2.0 | v0.2.0_test_script.md | Not started |
-| v0.3.0 | v0.3.0_test_script.md | Not started |
+| Version | Script | Theme |
+|---------|--------|-------|
+| v0.1.0 | [v0.1.0_test_script.md](v0.1.0_test_script.md) | Foundation |
+| v0.2.0 | [v0.2.0_smoke_test.md](v0.2.0_smoke_test.md) | Multi-Step Workflows |
+| v0.3.0 | [v0.3.0_smoke_test.md](v0.3.0_smoke_test.md) | Multi-Variation |
+| v0.4.0 | [v0.4.0_test_script.md](v0.4.0_test_script.md) | Advanced Output |
+| v0.5.0 | [v0.5.0_test_script.md](v0.5.0_test_script.md) | Extensibility + SDK |
+| v0.6.0 | [v0.6.0_test_script.md](v0.6.0_test_script.md) | Security |
+| v0.7.0 | [v0.7.0_test_script.md](v0.7.0_test_script.md) | Batch Processing |
+| v0.8.0 | [v0.8.0_test_script.md](v0.8.0_test_script.md) | Multi-Model & Quality |
 
 *Scripts are created when each version is implemented.*
 
