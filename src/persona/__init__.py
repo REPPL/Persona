@@ -5,4 +5,4 @@ This package provides tools for generating user personas from qualitative
 research data such as interviews, surveys, and user feedback.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
