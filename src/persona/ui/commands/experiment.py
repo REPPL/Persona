@@ -17,7 +17,8 @@ experiment_app = typer.Typer(
     help="Manage experiments.",
 )
 
-console = Console()
+# Constrain output width for cleaner display
+console = Console(width=min(100, Console().width))
 
 
 def _get_manager(base_dir: Optional[Path] = None) -> ExperimentManager:

@@ -19,20 +19,39 @@ app = typer.Typer(
     name="persona",
     help="Generate realistic user personas from your data using AI.",
     no_args_is_help=True,
+    add_completion=False,
 )
 
 # Add subcommand groups
 app.add_typer(generate_app, name="generate")
 app.add_typer(experiment_app, name="experiment")
 
-console = Console()
+# Constrain output width for cleaner display
+console = Console(width=min(100, Console().width))
 
 
-@app.command()
-def version() -> None:
-    """Show Persona version."""
-    from persona import __version__
-    console.print(f"Persona version {__version__}")
+def version_callback(value: bool) -> None:
+    """Print version and exit."""
+    if value:
+        from persona import __version__
+        console.print(f"Persona {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--version", "-V",
+            callback=version_callback,
+            is_eager=True,
+            help="Show version and exit.",
+        ),
+    ] = None,
+) -> None:
+    """Generate realistic user personas from your data using AI."""
+    pass
 
 
 @app.command()
@@ -132,8 +151,11 @@ def estimate_cost(
         persona cost --from ./data/interviews.csv --count 5
         persona cost --tokens 10000 --model gpt-4o
     """
+    from persona import __version__
     from persona.core.cost import CostEstimator, PricingData
     from persona.core.data import DataLoader
+
+    console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     estimator = CostEstimator()
 
@@ -217,6 +239,10 @@ def init(
     Example:
         persona init ./my-project
     """
+    from persona import __version__
+
+    console.print(f"[dim]Persona {__version__}[/dim]\n")
+
     target = path or Path.cwd()
     target = target.resolve()
 

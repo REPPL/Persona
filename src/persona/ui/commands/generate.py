@@ -20,7 +20,8 @@ generate_app = typer.Typer(
     help="Generate personas from data files.",
 )
 
-console = Console()
+# Constrain output width for cleaner display
+console = Console(width=min(100, Console().width))
 
 
 @generate_app.callback(invoke_without_command=True)
@@ -99,6 +100,9 @@ def generate(
     """
     if ctx.invoked_subcommand is not None:
         return
+
+    from persona import __version__
+    console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     # Load data
     console.print(f"[bold]Loading data from:[/bold] {data_path}")

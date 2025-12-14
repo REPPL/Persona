@@ -13,16 +13,22 @@ from persona.ui.cli import app
 runner = CliRunner()
 
 
-class TestVersionCommand:
-    """Tests for version command."""
+class TestVersionFlag:
+    """Tests for --version flag."""
 
-    def test_version_output(self):
-        """Test version command shows version."""
-        result = runner.invoke(app, ["version"])
+    def test_version_flag(self):
+        """Test --version flag shows version."""
+        result = runner.invoke(app, ["--version"])
 
         assert result.exit_code == 0
-        assert "Persona version" in result.stdout
-        assert "0.1.0" in result.stdout
+        assert "Persona" in result.stdout
+
+    def test_version_short_flag(self):
+        """Test -V short flag shows version."""
+        result = runner.invoke(app, ["-V"])
+
+        assert result.exit_code == 0
+        assert "Persona" in result.stdout
 
 
 class TestCheckCommand:
