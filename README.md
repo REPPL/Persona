@@ -168,7 +168,3 @@ Persona is a clean rewrite of [PersonaZero](https://github.com/REPPL/PersonaZero
 ## AI Transparency
 
 This project is developed with AI assistance. See the [AI Contributions Statement](docs/development/ai-contributions.md).
-
----
-
-**GPLv3+** - See [LICENCE](LICENCE) for details.
