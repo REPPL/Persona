@@ -46,7 +46,7 @@ export OPENAI_API_KEY="sk-..."
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # Or Google Gemini
-export GEMINI_API_KEY="..."
+export GOOGLE_API_KEY="..."
 ```
 
 **Tip:** Add these to your shell profile (`~/.bashrc`, `~/.zshrc`) for persistence.
@@ -80,7 +80,7 @@ OpenAI      ✓ API key configured
 Create a new experiment to organise your work:
 
 ```bash
-persona create experiment
+persona experiment create
 ```
 
 You'll be prompted for:

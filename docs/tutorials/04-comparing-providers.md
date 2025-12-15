@@ -43,7 +43,7 @@ export OPENAI_API_KEY="sk-..."
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # Google (Gemini)
-export GEMINI_API_KEY="..."
+export GOOGLE_API_KEY="..."
 ```
 
 Verify all are configured:

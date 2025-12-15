@@ -14,6 +14,9 @@ from persona.core.generation import GenerationPipeline, GenerationConfig
 from persona.core.output import OutputManager
 from persona.core.providers import ProviderFactory
 from persona.ui.console import get_console
+from persona.ui.interactive import GenerateWizard, is_interactive_supported
+from persona.ui.completers import complete_provider, complete_model, complete_workflow
+from persona.ui.streaming import StreamingOutput, get_progress_handler
 
 generate_app = typer.Typer(
     name="generate",
@@ -25,14 +28,13 @@ generate_app = typer.Typer(
 def generate(
     ctx: typer.Context,
     data_path: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             "--from",
             "-f",
-            help="Path to data file or directory.",
-            exists=True,
+            help="Path to data file, directory, or experiment name.",
         ),
-    ],
+    ] = None,
     output: Annotated[
         Optional[Path],
         typer.Option(
@@ -42,37 +44,40 @@ def generate(
         ),
     ] = None,
     count: Annotated[
-        int,
+        Optional[int],
         typer.Option(
             "--count",
             "-n",
             help="Number of personas to generate.",
         ),
-    ] = 3,
+    ] = None,
     provider: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--provider",
             "-p",
             help="LLM provider to use (anthropic, openai, gemini).",
+            autocompletion=complete_provider,
         ),
-    ] = "anthropic",
+    ] = None,
     model: Annotated[
         Optional[str],
         typer.Option(
             "--model",
             "-m",
             help="Model to use (defaults to provider's default).",
+            autocompletion=complete_model,
         ),
     ] = None,
     workflow: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--workflow",
             "-w",
             help="Workflow to use (default, research, quick).",
+            autocompletion=complete_workflow,
         ),
-    ] = "default",
+    ] = None,
     experiment: Annotated[
         Optional[str],
         typer.Option(
@@ -88,20 +93,80 @@ def generate(
             help="Preview generation without calling LLM.",
         ),
     ] = False,
+    no_progress: Annotated[
+        bool,
+        typer.Option(
+            "--no-progress",
+            help="Disable progress bar and streaming output.",
+        ),
+    ] = False,
 ) -> None:
     """
     Generate personas from data files.
 
     Example:
         persona generate --from ./data/interviews.csv --count 3
+        persona generate -i  # Interactive mode
     """
     if ctx.invoked_subcommand is not None:
         return
+
+    # Check for interactive mode
+    from persona.ui.cli import is_interactive
+    if is_interactive():
+        if not is_interactive_supported():
+            console = get_console()
+            console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
+            console.print("Use explicit flags instead.")
+            raise typer.Exit(1)
+
+        wizard = GenerateWizard()
+        result = wizard.run(
+            data_path=data_path,
+            provider=provider,
+            model=model,
+            count=count,
+            workflow=workflow,
+        )
+        if result is None:
+            raise typer.Exit(0)
+
+        # Use wizard results
+        data_path = result["data_path"]
+        provider = result["provider"]
+        model = result["model"]
+        count = result["count"]
+        workflow = result["workflow"]
+    else:
+        # Non-interactive mode - require data_path
+        if data_path is None:
+            console = get_console()
+            console.print("[red]Error:[/red] --from is required.")
+            console.print("Use 'persona generate --from ./data.csv' or 'persona generate -i' for interactive mode.")
+            raise typer.Exit(1)
+
+        # Apply defaults for non-interactive mode
+        if count is None:
+            count = 3
+        if provider is None:
+            provider = "anthropic"
+        if workflow is None:
+            workflow = "default"
 
     console = get_console()
 
     from persona import __version__
     console.print(f"[dim]Persona {__version__}[/dim]\n")
+
+    # Resolve data path (supports experiment names)
+    try:
+        resolved_path = _resolve_data_path(data_path)
+        if resolved_path != data_path:
+            console.print(f"[dim]Resolved '{data_path}' → {resolved_path}[/dim]")
+        data_path = resolved_path
+    except FileNotFoundError as e:
+        console.print(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
 
     # Load data
     console.print(f"[bold]Loading data from:[/bold] {data_path}")
@@ -156,18 +221,29 @@ def generate(
         workflow=workflow,
     )
 
-    # Generate personas
-    console.print("\n[bold]Generating personas...[/bold]")
+    # Generate personas with streaming output
+    progress_handler = get_progress_handler(
+        console=console._console if hasattr(console, "_console") else console,
+        show_progress=not no_progress,
+    )
+
+    progress_callback = progress_handler.start(
+        total=config.count,
+        provider=config.provider,
+        model=config.model or llm_provider.default_model,
+    )
 
     try:
-        pipeline = GenerationPipeline(llm_provider)
-        result = pipeline.generate(
-            data=data,
-            config=config,
-            source_files=[data_path] if data_path.is_file() else list(data_path.glob("*")),
+        pipeline = GenerationPipeline()
+        pipeline.set_progress_callback(progress_callback)
+        result = pipeline.generate(config)
+        progress_handler.finish(
+            personas=result.personas,
+            input_tokens=result.input_tokens,
+            output_tokens=result.output_tokens,
         )
     except Exception as e:
-        console.print(f"[red]Error during generation:[/red] {e}")
+        progress_handler.error(str(e))
         raise typer.Exit(1)
 
     # Save output
@@ -190,6 +266,46 @@ def _get_api_key_env(provider: str) -> str:
         "google": "GOOGLE_API_KEY",
     }
     return env_vars.get(provider.lower(), f"{provider.upper()}_API_KEY")
+
+
+def _resolve_data_path(path: Path) -> Path:
+    """Resolve data path, supporting experiment names.
+
+    Allows users to specify:
+    - Direct paths: ./data/interviews.csv
+    - Experiment names: my-experiment (resolves to experiments/my-experiment/data/)
+
+    Args:
+        path: The path or experiment name provided by the user.
+
+    Returns:
+        Resolved Path to the data location.
+
+    Raises:
+        FileNotFoundError: If the path cannot be resolved.
+    """
+    # If path exists directly, use it
+    if path.exists():
+        return path
+
+    # Try as experiment name: experiments/<name>/data/
+    experiment_data_path = Path("experiments") / path / "data"
+    if experiment_data_path.exists():
+        return experiment_data_path
+
+    # Try in experiments/ directly: experiments/<name>
+    experiment_path = Path("experiments") / path
+    if experiment_path.exists():
+        return experiment_path
+
+    # Nothing found - provide helpful error message
+    raise FileNotFoundError(
+        f"Path not found: {path}\n"
+        f"Tried:\n"
+        f"  - {path}\n"
+        f"  - {experiment_data_path}\n"
+        f"  - {experiment_path}"
+    )
 
 
 def _show_config(console, config: GenerationConfig, data_path: Path, token_count: int) -> None:

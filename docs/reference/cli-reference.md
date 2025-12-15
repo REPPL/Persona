@@ -7,7 +7,9 @@ Complete command-line interface documentation for Persona.
 ```
 persona generate    Generate personas from data
 persona check       Verify installation and configuration
-persona demo        Try with sample data
+persona preview     Preview data before processing
+persona validate    Validate personas against source
+persona compare     Compare persona similarity
 persona help        Show help for any command
 ```
 
@@ -15,15 +17,29 @@ persona help        Show help for any command
 
 ### Core Commands
 
-Always visible, primary functionality.
+Primary persona generation and analysis commands.
 
 | Command | Description |
 |---------|-------------|
 | `generate` | Generate personas from data |
-| `check` | Verify installation |
-| `demo` | Try with sample data |
-| `help` | Show help |
-| `version` | Show version |
+| `preview` | Preview data before processing |
+| `validate` | Validate personas against source |
+| `compare` | Compare persona similarity |
+| `export` | Export personas to external formats |
+| `cluster` | Cluster and consolidate personas |
+| `refine` | Interactively refine personas |
+
+### Utility Commands
+
+System and configuration commands.
+
+| Command | Description |
+|---------|-------------|
+| `check` | Verify installation and providers |
+| `cost` | Estimate API costs before generation |
+| `models` | List available models with pricing |
+| `init` | Initialise a new Persona project |
+| `help` | Show help for commands |
 
 ### Experiment Commands
 
@@ -35,30 +51,11 @@ Manage experiments and projects.
 | `experiment list` | List all experiments |
 | `experiment show` | Show experiment details |
 | `experiment delete` | Delete experiment |
-| `experiment export` | Export experiment |
-
-### Persona Commands
-
-Work with generated personas.
-
-| Command | Description |
-|---------|-------------|
-| `persona list` | List generated personas |
-| `persona show` | Display persona details |
-| `persona validate` | Validate against source |
-| `persona compare` | Compare personas |
-| `persona export` | Export to external format |
-| `persona refine` | Interactively refine |
-
-### Data Commands
-
-Work with source data.
-
-| Command | Description |
-|---------|-------------|
-| `data preview` | Preview data before processing |
-| `data formats` | Show supported formats |
-| `data validate` | Validate data quality |
+| `experiment edit` | Edit experiment configuration |
+| `experiment history` | View experiment run history |
+| `experiment sources` | List data sources for an experiment |
+| `experiment record-run` | Record a generation run in history |
+| `experiment clear-history` | Clear run history for an experiment |
 
 ### Configuration Commands
 
@@ -66,10 +63,13 @@ Manage configuration.
 
 | Command | Description |
 |---------|-------------|
+| `config init` | Initialise global configuration |
 | `config show` | Show current configuration |
+| `config get` | Get a specific configuration value |
 | `config set` | Set configuration value |
-| `config provider` | Manage LLM providers |
-| `config template` | Manage prompt templates |
+| `config reset` | Reset to defaults |
+| `config path` | Show configuration file paths |
+| `config edit` | Open interactive configuration editor |
 
 ---
 
@@ -87,31 +87,39 @@ persona generate [OPTIONS]
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--from`, `-f` | PATH | Required | Data source (file or folder) |
-| `--output`, `-o` | PATH | Auto | Output directory |
+| `--from`, `-f` | PATH | Required | Data source (file, folder, or experiment name) |
+| `--output`, `-o` | PATH | ./outputs | Output directory |
 | `--count`, `-n` | INT | 3 | Number of personas |
-| `--provider` | STRING | Config | LLM provider |
-| `--model` | STRING | Config | Model name |
-| `--template` | STRING | default | Prompt template |
-| `--temperature` | FLOAT | 0.7 | Generation temperature |
-| `--format` | STRING | json | Output format |
-| `--no-confirm` | FLAG | False | Skip confirmation |
-| `--dry-run` | FLAG | False | Preview without generating |
+| `--provider`, `-p` | STRING | anthropic | LLM provider (anthropic, openai, gemini) |
+| `--model`, `-m` | STRING | Provider default | Model name |
+| `--workflow`, `-w` | STRING | default | Workflow to use (default, research, quick) |
+| `--experiment`, `-e` | STRING | - | Experiment name to save results under |
+| `--dry-run` | FLAG | False | Preview without calling LLM |
+| `--no-progress` | FLAG | False | Disable progress bar |
+
+**Smart Path Resolution:**
+
+The `--from` flag supports multiple input formats:
+- Direct path: `persona generate --from ./data/interviews.csv`
+- Experiment name: `persona generate --from my-experiment` (resolves to `experiments/my-experiment/data/`)
 
 **Examples:**
 
 ```bash
-# Basic generation
-persona generate --from experiments/my-experiment/data/
+# Basic generation from a file
+persona generate --from ./data/interviews.csv
+
+# Generate from an experiment (auto-resolves path)
+persona generate --from my-experiment
 
 # Specify provider and count
-persona generate -f data/ -n 5 --provider anthropic --model claude-3-sonnet
-
-# Batch processing
-persona generate --from ./interviews/ --batch
+persona generate -f data/ -n 5 --provider anthropic --model claude-sonnet-4-20250514
 
 # Dry run (preview only)
 persona generate -f data/ --dry-run
+
+# Interactive mode
+persona generate -i
 ```
 
 ### check
@@ -126,59 +134,79 @@ persona check [OPTIONS]
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--verbose`, `-v` | FLAG | Show detailed output |
-| `--providers` | FLAG | Check all providers |
-| `--fix` | FLAG | Attempt to fix issues |
+| `--json` | FLAG | Output results as JSON |
 
 **Example output:**
 
 ```
-System Check
+Persona Health Check
 ───────────────────────────────────
-Python      ✓ 3.12.1
-Config      ✓ Valid
-Storage     ✓ 2.1 GB available
+✓ Version: 0.9.0
+✓ Installation: OK
 
-Providers
+Provider Status:
 ───────────────────────────────────
-OpenAI      ✓ API key configured
-            Models: gpt-4o, gpt-4-turbo
-Anthropic   ✓ API key configured
-            Models: claude-3-opus, claude-3-sonnet
+  ✓ anthropic: Configured
+  ✓ openai: Configured
+  ○ gemini: Not configured (GOOGLE_API_KEY)
 
-Templates
-───────────────────────────────────
-System      ✓ 5 templates available
-User        ✓ 2 custom templates
+Ready! 2 provider(s) available.
 ```
 
-### demo
+### cost
 
-Try Persona with sample data.
+Estimate API costs before generating.
 
 ```bash
-persona demo [OPTIONS]
+persona cost [OPTIONS]
 ```
 
 **Options:**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `--domain` | STRING | general | Demo domain |
-| `--provider` | STRING | Config | LLM provider |
-| `--clean` | FLAG | False | Remove demo data after |
-
-**Available domains:**
-- `general` - General user research
-- `saas` - SaaS product personas
-- `ecommerce` - E-commerce customers
-- `healthcare` - Healthcare users
+| Option | Type | Description |
+|--------|------|-------------|
+| `--from`, `-f` | PATH | Data file for token estimation |
+| `--tokens`, `-t` | INT | Number of input tokens (if not using --from) |
+| `--count`, `-n` | INT | Number of personas (default: 3) |
+| `--provider`, `-p` | STRING | Filter by provider |
+| `--model`, `-m` | STRING | Specific model to estimate |
+| `--json` | FLAG | Output as JSON |
 
 **Example:**
 
 ```bash
-persona demo --domain saas --provider anthropic
+persona cost --from ./data/interviews.csv --count 5
+persona cost --tokens 10000 --model gpt-4o
 ```
+
+### models
+
+List available models with pricing information.
+
+```bash
+persona models [OPTIONS]
+```
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--provider`, `-p` | STRING | Filter by provider |
+| `--json` | FLAG | Output as JSON |
+
+### init
+
+Initialise a new Persona project.
+
+```bash
+persona init [PATH]
+```
+
+Creates the recommended directory structure:
+- `experiments/` - Experiment storage
+- `data/` - Source data files
+- `templates/` - Custom templates
+- `persona.yaml` - Project configuration
 
 ---
 
@@ -224,8 +252,8 @@ persona experiment list [OPTIONS]
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--format` | STRING | Output format (table/json) |
-| `--all` | FLAG | Include archived |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
+| `--json` | FLAG | Output as JSON |
 
 **Example output:**
 
@@ -240,7 +268,7 @@ legacy-study     archived  8         2 months ago
 
 ### experiment show
 
-Show experiment details.
+Show experiment details and outputs.
 
 ```bash
 persona experiment show <NAME> [OPTIONS]
@@ -250,12 +278,11 @@ persona experiment show <NAME> [OPTIONS]
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--format` | STRING | Output format |
-| `--full` | FLAG | Show all details |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
 
 ### experiment delete
 
-Delete an experiment.
+Delete an experiment and its data.
 
 ```bash
 persona experiment delete <NAME> [OPTIONS]
@@ -265,185 +292,57 @@ persona experiment delete <NAME> [OPTIONS]
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--force` | FLAG | Skip confirmation |
-| `--keep-outputs` | FLAG | Keep output files |
+| `--force`, `-f` | FLAG | Skip confirmation prompt |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
 
-### experiment export
+### experiment sources
 
-Export experiment for sharing.
+List data sources for an experiment.
 
 ```bash
-persona experiment export <NAME> [OPTIONS]
+persona experiment sources <NAME> [OPTIONS]
 ```
 
 **Options:**
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--output`, `-o` | PATH | Output path |
-| `--include-data` | FLAG | Include source data |
-| `--include-outputs` | FLAG | Include generated outputs |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
 
----
+### experiment record-run
 
-## Persona Commands
-
-### persona list
-
-List generated personas.
+Record a generation run in history.
 
 ```bash
-persona persona list [OPTIONS]
+persona experiment record-run <NAME> [OPTIONS]
 ```
 
 **Options:**
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--experiment` | STRING | Filter by experiment |
-| `--format` | STRING | Output format |
+| `--model`, `-m` | STRING | Model used (required) |
+| `--provider`, `-p` | STRING | Provider used (required) |
+| `--personas`, `-n` | INT | Number of personas generated (default: 0) |
+| `--cost` | FLOAT | Cost in USD (default: 0.0) |
+| `--status` | STRING | Run status (default: completed) |
+| `--output-dir` | PATH | Output directory path |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
 
-### persona show
+### experiment clear-history
 
-Display persona details.
+Clear run history for an experiment.
 
 ```bash
-persona persona show <ID> [OPTIONS]
+persona experiment clear-history <NAME> [OPTIONS]
 ```
 
 **Options:**
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--format` | STRING | Output format (rich/json/md) |
-| `--evidence` | FLAG | Show evidence links |
-
-### persona validate
-
-Validate persona against source data.
-
-```bash
-persona validate <ID> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--source` | PATH | Source data path |
-| `--threshold` | INT | Minimum score (0-100) |
-| `--report` | FLAG | Generate report |
-| `--output` | PATH | Report output path |
-
-**Example:**
-
-```bash
-persona validate persona-001 \
-  --source experiments/my-experiment/data/ \
-  --threshold 80 \
-  --report \
-  --output validation-report.md
-```
-
-### persona compare
-
-Compare two or more personas.
-
-```bash
-persona compare <ID1> <ID2> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--format` | STRING | Output format |
-| `--metrics` | FLAG | Show similarity metrics |
-
-### persona export
-
-Export persona to external format.
-
-```bash
-persona export <ID> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--format` | STRING | Export format (figma/miro/pdf/html) |
-| `--output` | PATH | Output path |
-| `--all` | FLAG | Export all personas |
-
-### persona refine
-
-Interactively refine a persona.
-
-```bash
-persona refine <ID> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--instruction` | STRING | Refinement instruction |
-| `--preserve-evidence` | FLAG | Keep evidence links |
-
----
-
-## Data Commands
-
-### data preview
-
-Preview data before processing.
-
-```bash
-persona data preview <PATH> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--tokens` | FLAG | Show token counts |
-| `--cost` | FLAG | Show cost estimate |
-| `--sample` | INT | Sample lines to show |
-
-**Example output:**
-
-```
-Data Preview: experiments/my-experiment/data/
-───────────────────────────────────
-Files: 4
-  interviews.csv      1,200 tokens
-  survey.json           800 tokens
-  notes.md             500 tokens
-  observations.txt      200 tokens
-───────────────────────────────────
-Total: 2,700 tokens
-Estimated cost: $0.09 (claude-3-sonnet)
-
-Sample content:
-  "I check the dashboard every morning..."
-  "Export takes too many steps..."
-```
-
-### data validate
-
-Validate data quality.
-
-```bash
-persona data validate <PATH> [OPTIONS]
-```
-
-**Options:**
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `--strict` | FLAG | Strict validation |
-| `--fix` | FLAG | Attempt fixes |
+| `--force`, `-f` | FLAG | Skip confirmation |
+| `--base-dir`, `-b` | PATH | Base directory for experiments |
 
 ---
 
@@ -451,7 +350,7 @@ persona data validate <PATH> [OPTIONS]
 
 ### config show
 
-Show current configuration.
+Show effective configuration.
 
 ```bash
 persona config show [OPTIONS]
@@ -461,53 +360,97 @@ persona config show [OPTIONS]
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `--all` | FLAG | Show all settings |
-| `--section` | STRING | Show specific section |
+| `--json` | FLAG | Output as JSON |
+| `--source`, `-s` | FLAG | Show configuration sources |
+
+### config get
+
+Get a configuration value.
+
+```bash
+persona config get <PATH>
+```
+
+**Arguments:**
+
+- `path` - Configuration path (e.g., `defaults.provider`)
+
+**Example:**
+
+```bash
+persona config get defaults.provider
+persona config get budgets.per_run
+```
 
 ### config set
 
 Set a configuration value.
 
 ```bash
-persona config set <KEY> <VALUE>
+persona config set <PATH> <VALUE> [OPTIONS]
 ```
+
+**Arguments:**
+
+- `path` - Configuration path (e.g., `defaults.provider`)
+- `value` - Value to set
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--project`, `-p` | FLAG | Set in project config instead of global |
 
 **Examples:**
 
 ```bash
-persona config set provider.default anthropic
-persona config set provider.anthropic.model claude-3-sonnet
-persona config set generation.temperature 0.5
-persona config set output.format json
+persona config set defaults.provider anthropic
+persona config set defaults.model claude-sonnet-4-20250514
+persona config set budgets.per_run 1.00
 ```
 
-### config provider
+### config reset
 
-Manage LLM providers.
+Reset configuration to defaults.
 
 ```bash
-persona config provider <ACTION> [OPTIONS]
+persona config reset [OPTIONS]
 ```
 
-**Actions:**
-- `list` - List configured providers
-- `add` - Add new provider
-- `remove` - Remove provider
-- `test` - Test provider connection
+**Options:**
 
-### config template
+| Option | Type | Description |
+|--------|------|-------------|
+| `--project`, `-p` | FLAG | Reset project config instead of global |
+| `--force`, `-f` | FLAG | Skip confirmation |
 
-Manage prompt templates.
+### config path
+
+Show configuration file paths.
 
 ```bash
-persona config template <ACTION> [OPTIONS]
+persona config path
 ```
 
-**Actions:**
-- `list` - List available templates
-- `show` - Show template content
-- `copy` - Copy template for editing
-- `validate` - Validate template syntax
+Displays the locations of global and project configuration files.
+
+### config edit
+
+Open interactive configuration editor.
+
+```bash
+persona config edit [SECTION] [OPTIONS]
+```
+
+**Arguments:**
+
+- `section` (optional) - Configuration section to edit (defaults, budgets, output, logging)
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--project`, `-p` | FLAG | Edit project config instead of global |
 
 ---
 
@@ -517,13 +460,12 @@ Available on all commands:
 
 | Option | Description |
 |--------|-------------|
-| `--help`, `-h` | Show help |
-| `--version`, `-v` | Show version |
-| `--format`, `-f` | Output format: rich\|plain\|json |
+| `--help` | Show help |
+| `--version`, `-V` | Show version and exit |
 | `--no-color` | Disable colour output |
-| `--verbose`, `-V` | Detailed output |
-| `--quiet`, `-q` | Minimal output |
-| `--config` | Config file path |
+| `--quiet`, `-q` | Minimal output (errors and results only) |
+| `--verbose`, `-v` | Increase verbosity (-v verbose, -vv debug) |
+| `--interactive`, `-i` | Run in interactive mode with guided prompts |
 
 ---
 
@@ -533,7 +475,7 @@ Available on all commands:
 |----------|-------------|---------|
 | `OPENAI_API_KEY` | OpenAI API key | - |
 | `ANTHROPIC_API_KEY` | Anthropic API key | - |
-| `GEMINI_API_KEY` | Google Gemini API key | - |
+| `GOOGLE_API_KEY` | Google Gemini API key | - |
 | `PERSONA_PROVIDER` | Default provider | - |
 | `PERSONA_MODEL` | Default model | - |
 | `PERSONA_CONFIG` | Config file path | `~/.config/persona/config.yaml` |
@@ -561,17 +503,19 @@ Available on all commands:
 ### First-Time Setup
 
 ```bash
-# Install
-pip install persona-cli
+# Clone and install
+git clone https://github.com/REPPL/Persona.git
+cd Persona
+pip install -e ".[all]"
 
-# Configure
+# Configure API key
 export ANTHROPIC_API_KEY="sk-ant-..."
 
-# Verify
+# Verify installation
 persona check
 
-# Try demo
-persona demo
+# Initialise a project
+persona init ./my-project
 ```
 
 ### Basic Workflow
@@ -583,40 +527,38 @@ persona experiment create "my-research"
 # Add data
 cp interviews.csv experiments/my-research/data/
 
-# Preview
-persona data preview experiments/my-research/data/
+# Preview data (check tokens and cost)
+persona preview experiments/my-research/data/
 
-# Generate
-persona generate --from experiments/my-research/
+# Generate from experiment name (auto-resolves path)
+persona generate --from my-research
 
-# View results
-persona persona show persona-001
+# Check cost before generating
+persona cost --from experiments/my-research/data/ --count 5
 ```
 
 ### Validation Workflow
 
 ```bash
-# Validate single persona
-persona validate persona-001 --source data/
+# Validate personas
+persona validate ./outputs/personas.json
 
-# Validate all with report
-persona validate --all --report --output report.md
-
-# Check thresholds
-persona validate --all --threshold 80
+# Validate with strict mode
+persona validate ./outputs/ --strict
 ```
 
 ### Export Workflow
 
 ```bash
-# Export to Figma
-persona export --all --format figma --output personas.fig
+# List available export formats
+persona export formats
 
-# Export to PDF
-persona export persona-001 --format pdf --output sarah.pdf
+# Export to various formats
+persona export ./outputs/personas.json --format markdown
+persona export ./outputs/personas.json --format figma
 
-# Export for sharing
-persona experiment export my-research --include-outputs
+# Preview export without writing
+persona export ./outputs/personas.json --format csv --preview
 ```
 
 ---

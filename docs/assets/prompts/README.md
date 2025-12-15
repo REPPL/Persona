@@ -23,3 +23,10 @@ These prompts are designed for use with AI image generation tools (Gemini, DALL-
 - Generated images (use `../img/`)
 - Code or scripts
 - Documentation prose
+
+---
+
+## Related Documentation
+
+- [Assets Directory](../README.md)
+- [Getting Started Tutorial](../../tutorials/01-getting-started.md)

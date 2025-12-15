@@ -56,7 +56,7 @@ OpenAI      ✓ API key configured
 Anthropic   ✓ API key configured
             ✓ Models: claude-3-opus, claude-3-sonnet
 Gemini      ✗ API key not found
-            → Set GEMINI_API_KEY environment variable
+            → Set GOOGLE_API_KEY environment variable
 
 Status: 2/3 providers ready
 ```
