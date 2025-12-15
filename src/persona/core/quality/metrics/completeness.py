@@ -5,14 +5,18 @@ Evaluates how completely a persona's fields are populated,
 including field depth and content richness.
 """
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
+from persona.core.quality.base import QualityMetric
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
+if TYPE_CHECKING:
+    from persona.core.evidence.linker import EvidenceReport
 
-class CompletenessMetric:
+
+class CompletenessMetric(QualityMetric):
     """
     Evaluate how completely a persona's fields are populated.
 
@@ -23,16 +27,38 @@ class CompletenessMetric:
     - Field richness (content quality): 10%
     """
 
-    def __init__(self, config: QualityConfig | None = None) -> None:
-        """
-        Initialise the completeness metric.
+    @property
+    def name(self) -> str:
+        """Return the metric name."""
+        return "completeness"
 
-        Args:
-            config: Quality configuration with thresholds.
-        """
-        self.config = config or QualityConfig()
+    @property
+    def description(self) -> str:
+        """Return metric description."""
+        return "Evaluate field population and content depth"
 
-    def evaluate(self, persona: Persona) -> DimensionScore:
+    @property
+    def requires_source_data(self) -> bool:
+        """This metric does not require source data."""
+        return False
+
+    @property
+    def requires_other_personas(self) -> bool:
+        """This metric does not require other personas."""
+        return False
+
+    @property
+    def requires_evidence_report(self) -> bool:
+        """This metric does not require evidence report."""
+        return False
+
+    def evaluate(
+        self,
+        persona: Persona,
+        source_data: str | None = None,
+        other_personas: list[Persona] | None = None,
+        evidence_report: "EvidenceReport | None" = None,
+    ) -> DimensionScore:
         """
         Calculate completeness score for a persona.
 

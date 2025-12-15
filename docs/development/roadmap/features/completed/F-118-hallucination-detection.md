@@ -132,33 +132,33 @@ Hallucination Rate = UNSUPPORTED / Total Claims
 
 ## Implementation Tasks
 
-- [ ] Create `src/persona/core/quality/faithfulness/__init__.py`
-- [ ] Create `src/persona/core/quality/faithfulness/extractor.py` with `ClaimExtractor`
-- [ ] Create `src/persona/core/quality/faithfulness/matcher.py` with embedding matching
-- [ ] Create `src/persona/core/quality/faithfulness/validator.py` with `FaithfulnessValidator`
-- [ ] Create `src/persona/core/quality/faithfulness/hhem.py` with `HHEMClassifier`
-- [ ] Implement claim extraction from persona fields
-- [ ] Implement embedding-based source matching
-- [ ] Implement faithfulness score calculation
-- [ ] Add HHEM model integration (optional dependency)
-- [ ] Create `persona validate --faithfulness` CLI command
-- [ ] Add `--hhem` flag for fast classification
-- [ ] Add `--threshold` for configurable sensitivity
-- [ ] Generate hallucination reports (Markdown, JSON)
-- [ ] Write unit tests for claim extraction
-- [ ] Write unit tests for faithfulness scoring
-- [ ] Write integration tests with real embeddings
-- [ ] Document interpretation of faithfulness scores
+- [x] Create `src/persona/core/quality/faithfulness/__init__.py`
+- [x] Create `src/persona/core/quality/faithfulness/extractor.py` with `ClaimExtractor`
+- [x] Create `src/persona/core/quality/faithfulness/matcher.py` with embedding matching
+- [x] Create `src/persona/core/quality/faithfulness/validator.py` with `FaithfulnessValidator`
+- [x] Create `src/persona/core/quality/faithfulness/hhem.py` with `HHEMClassifier`
+- [x] Implement claim extraction from persona fields
+- [x] Implement embedding-based source matching
+- [x] Implement faithfulness score calculation
+- [x] Add HHEM model integration (optional dependency)
+- [x] Create `persona faithfulness` CLI command
+- [x] Add `--hhem` flag for fast classification
+- [x] Add `--threshold` for configurable sensitivity
+- [x] Generate hallucination reports (Markdown, JSON)
+- [x] Write unit tests for claim extraction
+- [x] Write unit tests for faithfulness scoring
+- [x] Write integration tests with real embeddings
+- [x] Document interpretation of faithfulness scores
 
 ## Success Criteria
 
-- [ ] Automatic extraction of verifiable claims from persona attributes
-- [ ] Faithfulness score = (supported claims) / (total claims)
-- [ ] Claims matched to source data with confidence scores
-- [ ] Hallucination rate reported per persona
-- [ ] HHEM classifier provides fast local alternative
-- [ ] Unit test coverage >= 90%
-- [ ] Integration with existing validation framework
+- [x] Automatic extraction of verifiable claims from persona attributes
+- [x] Faithfulness score = (supported claims) / (total claims)
+- [x] Claims matched to source data with confidence scores
+- [x] Hallucination rate reported per persona
+- [x] HHEM classifier provides fast local alternative
+- [x] Unit test coverage >= 90%
+- [x] Integration with existing validation framework
 
 ## Dependencies
 

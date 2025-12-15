@@ -8,6 +8,7 @@ integrating with the existing EvidenceLinker when available.
 from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
+from persona.core.quality.base import QualityMetric
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
     from persona.core.evidence.linker import EvidenceReport, EvidenceStrength
 
 
-class EvidenceStrengthMetric:
+class EvidenceStrengthMetric(QualityMetric):
     """
     Evaluate how well persona attributes link to source data.
 
@@ -25,18 +26,36 @@ class EvidenceStrengthMetric:
     - Source diversity: multiple sources used (20%)
     """
 
-    def __init__(self, config: QualityConfig | None = None) -> None:
-        """
-        Initialise the evidence strength metric.
+    @property
+    def name(self) -> str:
+        """Return the metric name."""
+        return "evidence_strength"
 
-        Args:
-            config: Quality configuration with thresholds.
-        """
-        self.config = config or QualityConfig()
+    @property
+    def description(self) -> str:
+        """Return metric description."""
+        return "Evaluate link to source data"
+
+    @property
+    def requires_source_data(self) -> bool:
+        """This metric does not require source data directly."""
+        return False
+
+    @property
+    def requires_other_personas(self) -> bool:
+        """This metric does not require other personas."""
+        return False
+
+    @property
+    def requires_evidence_report(self) -> bool:
+        """This metric requires an evidence report for full evaluation."""
+        return True
 
     def evaluate(
         self,
         persona: Persona,
+        source_data: str | None = None,
+        other_personas: list[Persona] | None = None,
         evidence_report: "EvidenceReport | None" = None,
     ) -> DimensionScore:
         """

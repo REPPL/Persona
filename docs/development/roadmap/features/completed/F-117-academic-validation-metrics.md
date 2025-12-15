@@ -115,33 +115,33 @@ Survey uses 7-point Likert scale (1 = Strongly Disagree, 7 = Strongly Agree).
 
 ## Implementation Tasks
 
-- [ ] Add `rouge-score` and `bert-score` to `pyproject.toml` dependencies
-- [ ] Create `src/persona/core/quality/academic/__init__.py`
-- [ ] Create `src/persona/core/quality/academic/metrics.py` with metric classes
-- [ ] Implement `RougeL` metric class
-- [ ] Implement `BertScore` metric class
-- [ ] Implement `GptSimilarity` metric class
-- [ ] Implement `GEval` metric class (extending PersonaJudge with CoT)
-- [ ] Create `AcademicValidator` orchestrator class
-- [ ] Create `src/persona/core/quality/pps/__init__.py`
-- [ ] Create `PersonaPerceptionSurvey` class
-- [ ] Implement PPS 28-item survey template
-- [ ] Add survey export (Markdown, JSON, CSV)
-- [ ] Create `persona validate --academic` CLI command
-- [ ] Create `persona validate --pps-survey` CLI command
-- [ ] Write unit tests for each metric
-- [ ] Write integration tests with real embeddings
-- [ ] Document metric interpretation and benchmarks
+- [x] Add `rouge-score` and `bert-score` to `pyproject.toml` dependencies
+- [x] Create `src/persona/core/quality/academic/__init__.py`
+- [x] Create `src/persona/core/quality/academic/metrics.py` with metric classes
+- [x] Implement `RougeL` metric class
+- [x] Implement `BertScore` metric class
+- [x] Implement `GptSimilarity` metric class
+- [x] Implement `GEval` metric class (extending PersonaJudge with CoT)
+- [x] Create `AcademicValidator` orchestrator class
+- [x] Create `src/persona/core/quality/pps/__init__.py`
+- [x] Create `PersonaPerceptionSurvey` class
+- [x] Implement PPS 28-item survey template
+- [x] Add survey export (Markdown, JSON, CSV)
+- [x] Create `persona academic` CLI command
+- [x] Create PPS survey generation in academic package
+- [x] Write unit tests for each metric
+- [x] Write integration tests with real embeddings
+- [x] Document metric interpretation and benchmarks
 
 ## Success Criteria
 
-- [ ] `persona validate --academic` runs all four Shin et al. metrics
-- [ ] ROUGE-L score correlates with source data lexically
-- [ ] BERTScore achieves > 0.8 for high-quality personas
-- [ ] G-eval uses chain-of-thought evaluation
-- [ ] PPS survey template can be exported for human validation
-- [ ] Unit test coverage >= 90%
-- [ ] Integration with existing F-106 QualityScorer
+- [x] `persona academic` runs all four Shin et al. metrics
+- [x] ROUGE-L score correlates with source data lexically
+- [x] BERTScore achieves > 0.8 for high-quality personas
+- [x] G-eval uses chain-of-thought evaluation
+- [x] PPS survey template can be exported for human validation
+- [x] Unit test coverage >= 90%
+- [x] Integration with existing F-106 QualityScorer
 
 ## Dependencies
 

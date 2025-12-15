@@ -8,14 +8,16 @@ integrating with the existing PersonaComparator when available.
 from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
+from persona.core.quality.base import QualityMetric
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
     from persona.core.comparison.comparator import ComparisonResult
+    from persona.core.evidence.linker import EvidenceReport
 
 
-class DistinctivenessMetric:
+class DistinctivenessMetric(QualityMetric):
     """
     Evaluate how distinct a persona is from others in the set.
 
@@ -32,8 +34,33 @@ class DistinctivenessMetric:
         Args:
             config: Quality configuration with thresholds.
         """
-        self.config = config or QualityConfig()
+        super().__init__(config)
         self._comparator = None
+
+    @property
+    def name(self) -> str:
+        """Return the metric name."""
+        return "distinctiveness"
+
+    @property
+    def description(self) -> str:
+        """Return metric description."""
+        return "Evaluate uniqueness compared to other personas"
+
+    @property
+    def requires_source_data(self) -> bool:
+        """This metric does not require source data."""
+        return False
+
+    @property
+    def requires_other_personas(self) -> bool:
+        """This metric requires other personas for comparison."""
+        return True
+
+    @property
+    def requires_evidence_report(self) -> bool:
+        """This metric does not require evidence report."""
+        return False
 
     def _get_comparator(self) -> Any:
         """Lazy load comparator to avoid circular imports."""
@@ -45,7 +72,9 @@ class DistinctivenessMetric:
     def evaluate(
         self,
         persona: Persona,
+        source_data: str | None = None,
         other_personas: list[Persona] | None = None,
+        evidence_report: "EvidenceReport | None" = None,
     ) -> DimensionScore:
         """
         Calculate distinctiveness score for a persona.

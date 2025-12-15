@@ -26,6 +26,8 @@ from persona.ui.commands.serve import serve_app
 from persona.ui.commands.privacy import privacy_app
 from persona.ui.commands.evaluate import evaluate_app
 from persona.ui.commands.synthesise import synthesise_app
+from persona.ui.commands.academic import academic_app
+from persona.ui.commands.faithfulness import faithfulness_app
 
 __all__ = [
     "generate_app",
@@ -50,4 +52,6 @@ __all__ = [
     "privacy_app",
     "evaluate_app",
     "synthesise_app",
+    "academic_app",
+    "faithfulness_app",
 ]
