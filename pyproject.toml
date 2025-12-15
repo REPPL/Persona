@@ -42,6 +42,12 @@ async = [
 tui = [
     "textual>=0.87.0",
 ]
+api = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.12",
+    "pydantic-settings>=2.0.0",
+]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -66,7 +72,7 @@ docs = [
     "mkdocstrings[python]>=0.24",
 ]
 all = [
-    "persona[async,dev,test,security,docs]",
+    "persona[async,api,dev,test,security,docs]",
 ]
 
 [project.scripts]

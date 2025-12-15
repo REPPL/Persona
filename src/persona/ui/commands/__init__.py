@@ -22,6 +22,7 @@ from persona.ui.commands.quality import quality_app
 from persona.ui.commands.plugin import plugin_app
 from persona.ui.commands.script import script_app
 from persona.ui.commands.dashboard import dashboard_app
+from persona.ui.commands.serve import serve_app
 
 __all__ = [
     "generate_app",
@@ -42,4 +43,5 @@ __all__ = [
     "plugin_app",
     "script_app",
     "dashboard_app",
+    "serve_app",
 ]

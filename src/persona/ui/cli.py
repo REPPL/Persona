@@ -31,6 +31,7 @@ from persona.ui.commands import (
     plugin_app,
     script_app,
     dashboard_app,
+    serve_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -43,6 +44,7 @@ app = typer.Typer(
 
 # Add subcommand groups - User-facing commands
 app.add_typer(generate_app, name="generate")
+app.add_typer(serve_app, name="serve")
 app.add_typer(dashboard_app, name="dashboard")
 app.add_typer(preview_app, name="preview")
 app.add_typer(validate_app, name="validate")

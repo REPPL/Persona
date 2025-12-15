@@ -78,24 +78,24 @@ uvicorn persona.api:app --host 0.0.0.0 --port 8000
 
 ## Implementation Tasks
 
-- [ ] Create FastAPI application
-- [ ] Implement experiment endpoints
-- [ ] Implement generation endpoints
-- [ ] Implement persona endpoints
-- [ ] Add token authentication
-- [ ] Generate OpenAPI spec
-- [ ] Create `persona serve` command
-- [ ] Add to optional dependencies
-- [ ] Write unit tests
-- [ ] Write integration tests
+- [x] Create FastAPI application
+- [x] Implement experiment endpoints
+- [x] Implement generation endpoints
+- [x] Implement persona endpoints
+- [x] Add token authentication
+- [x] Generate OpenAPI spec
+- [x] Create `persona serve` command
+- [x] Add to optional dependencies
+- [x] Write unit tests
+- [x] Write integration tests
 
 ## Success Criteria
 
-- [ ] All endpoints functional
-- [ ] OpenAPI docs generated
-- [ ] Authentication works
-- [ ] Optional dependency works
-- [ ] Test coverage ≥ 80%
+- [x] All endpoints functional
+- [x] OpenAPI docs generated
+- [x] Authentication works
+- [x] Optional dependency works
+- [x] Test coverage ≥ 80%
 
 ## Dependencies
 

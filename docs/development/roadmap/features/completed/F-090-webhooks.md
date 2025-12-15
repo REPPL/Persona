@@ -81,23 +81,23 @@ def verify_signature(payload: bytes, signature: str, secret: str) -> bool:
 
 ## Implementation Tasks
 
-- [ ] Create WebhookManager class
-- [ ] Implement webhook registration
-- [ ] Add event filtering
-- [ ] Implement payload signing
-- [ ] Add retry with backoff
-- [ ] Support custom templates
-- [ ] Add webhook test command
-- [ ] Write unit tests
-- [ ] Write integration tests
+- [x] Create WebhookManager class
+- [x] Implement webhook registration
+- [x] Add event filtering
+- [x] Implement payload signing
+- [x] Add retry with backoff
+- [ ] Support custom templates (deferred)
+- [ ] Add webhook test command (deferred)
+- [x] Write unit tests
+- [x] Write integration tests
 
 ## Success Criteria
 
-- [ ] Webhooks delivered reliably
-- [ ] Signature verification works
-- [ ] Retry logic handles failures
-- [ ] Custom templates work
-- [ ] Test coverage ≥ 80%
+- [x] Webhooks delivered reliably
+- [x] Signature verification works
+- [x] Retry logic handles failures
+- [ ] Custom templates work (deferred)
+- [x] Test coverage ≥ 80%
 
 ## Dependencies
 
