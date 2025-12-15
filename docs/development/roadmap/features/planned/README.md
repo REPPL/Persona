@@ -2,13 +2,6 @@
 
 Features designed and ready for implementation.
 
-## v1.3.0 - Local Model Foundation
-
-| ID | Feature | Category | Priority |
-|----|---------|----------|----------|
-| [F-112](F-112-native-ollama-provider.md) | Native Ollama Provider | Provider | P0 |
-| [F-113](F-113-pii-detection-anonymisation.md) | PII Detection & Anonymisation | Privacy | P1 |
-
 ## v1.4.0 - Quality & Data Generation
 
 | ID | Feature | Category | Priority |

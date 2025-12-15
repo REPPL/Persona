@@ -219,8 +219,9 @@ This automatically detects and anonymises PII before generation.
 - **No guarantee** - PII detection is not perfect; review sensitive data carefully
 - **Performance** - Large files may take time to process
 
-## See Also
+## Related Documentation
 
-- [F-113: PII Detection & Anonymisation Specification](../development/roadmap/features/planned/F-113-pii-detection-anonymisation.md)
-- [F-112: Native Ollama Provider](../development/roadmap/features/planned/F-112-native-ollama-provider.md)
+- [F-113: PII Detection & Anonymisation](../development/roadmap/features/completed/F-113-pii-detection-anonymisation.md)
+- [F-112: Native Ollama Provider](../development/roadmap/features/completed/F-112-native-ollama-provider.md)
+- [v1.3.0 Milestone: Local Model Foundation](../development/roadmap/milestones/v1.3.0.md)
 - [Microsoft Presidio Documentation](https://microsoft.github.io/presidio/)

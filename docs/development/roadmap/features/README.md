@@ -6,20 +6,23 @@ All features for Persona, organised by milestone and status.
 
 | Milestone | Features | Status |
 |-----------|----------|--------|
-| v0.1.0 Foundation | 21 | ✅ Complete |
+| v0.1.0 Foundation | 20 | ✅ Complete |
 | v0.2.0 Validation & Data | 6 | ✅ Complete |
 | v0.3.0 Analysis & Variation | 5 | ✅ Complete |
 | v0.4.0 Advanced Output | 7 | ✅ Complete |
 | v0.5.0 Extensibility | 8 | ✅ Complete |
-| v0.6.0 Security | 9 | ✅ Complete |
-| v0.7.0 Batch Processing | 8 | ✅ Complete |
+| v0.6.0 Security | 10 | ✅ Complete |
+| v0.7.0 Batch Processing | 9 | ✅ Complete |
 | v0.8.0 Multi-Model | 7 | ✅ Complete |
 | v0.9.0 Logging | 6 | ✅ Complete |
 | v1.0.0 Production | 14 | ✅ Complete |
-| v1.1.0 Quality & API | 6 | 🔄 In Progress |
-| v1.2.0 Extensibility & TUI | 7 | 🔄 In Progress |
+| v1.1.0 Quality & API | 6 | ✅ Complete |
+| v1.2.0 Extensibility & TUI | 7 | ✅ Complete |
+| v1.3.0 Local Model Foundation | 2 | ✅ Complete |
+| v1.4.0 Quality & Data Generation | 2 | 📋 Planned |
+| v1.5.0 Hybrid Pipeline | 1 | 📋 Planned |
 
-**Total: 95 complete, 8 planned**
+**Total: 107 complete, 3 planned**
 
 ---
 
@@ -185,44 +188,56 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.1.0 - Quality & API 🔄 In Progress
-
-### Completed
+## v1.1.0 - Quality & API ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-106](completed/F-106-quality-metrics.md) | Quality metrics scoring | Quality |
-
-### Planned
-
-| ID | Feature | Category |
-|----|---------|----------|
-| [F-088](planned/F-088-async-support.md) | Async support | Core |
-| [F-089](planned/F-089-rest-api.md) | REST API (FastAPI) | API |
-| [F-090](planned/F-090-webhooks.md) | Webhooks | API |
-| [F-104](planned/F-104-conversation-scripts.md) | Conversation scripts | Output |
+| [F-088](completed/F-088-async-support.md) | Async support | Core |
+| [F-089](completed/F-089-rest-api.md) | REST API (FastAPI) | API |
+| [F-090](completed/F-090-webhooks.md) | Webhooks | API |
+| [F-104](completed/F-104-conversation-scripts.md) | Conversation scripts | Output |
 | [F-105](completed/F-105-python-sdk.md) | Python SDK | SDK |
+| [F-106](completed/F-106-quality-metrics.md) | Quality metrics scoring | Quality |
 
 ---
 
-## v1.2.0 - Extensibility & TUI 🔄 In Progress
-
-### Completed
+## v1.2.0 - Extensibility & TUI ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
+| [F-098](completed/F-098-tui-dashboard-app.md) | TUI Dashboard Application | TUI |
+| [F-099](completed/F-099-realtime-generation-monitor.md) | Real-Time Generation Monitor | TUI |
+| [F-100](completed/F-100-experiment-browser.md) | Experiment Browser | TUI |
+| [F-101](completed/F-101-persona-viewer.md) | Persona Viewer | TUI |
+| [F-102](completed/F-102-cost-tracker-widget.md) | Cost Tracker Widget | TUI |
+| [F-103](completed/F-103-responsive-layout-system.md) | Responsive Layout System | TUI |
 | [F-107](completed/F-107-plugin-system.md) | Plugin system | Core |
 
-### Planned
+---
+
+## v1.3.0 - Local Model Foundation ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-098](planned/F-098-tui-dashboard-app.md) | TUI Dashboard Application | TUI |
-| [F-099](planned/F-099-realtime-generation-monitor.md) | Real-Time Generation Monitor | TUI |
-| [F-100](planned/F-100-experiment-browser.md) | Experiment Browser | TUI |
-| [F-101](planned/F-101-persona-viewer.md) | Persona Viewer | TUI |
-| [F-102](planned/F-102-cost-tracker-widget.md) | Cost Tracker Widget | TUI |
-| [F-103](planned/F-103-responsive-layout-system.md) | Responsive Layout System | TUI |
+| [F-112](completed/F-112-native-ollama-provider.md) | Native Ollama Provider | Provider |
+| [F-113](completed/F-113-pii-detection-anonymisation.md) | PII Detection & Anonymisation | Privacy |
+
+---
+
+## v1.4.0 - Quality & Data Generation 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-114](planned/F-114-llm-as-judge-evaluation.md) | LLM-as-Judge Persona Evaluation | Quality |
+| [F-115](planned/F-115-synthetic-data-generation.md) | Synthetic Data Generation Pipeline | Data |
+
+---
+
+## v1.5.0 - Hybrid Pipeline 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-116](planned/F-116-hybrid-local-frontier-pipeline.md) | Hybrid Local/Frontier Pipeline | Optimisation |
 
 ---
 
