@@ -30,10 +30,10 @@ Analysis of the [Shin et al. DIS 2024 paper](https://dl.acm.org/doi/10.1145/3643
 
 | Metric | Method | Purpose | Persona Status |
 |--------|--------|---------|----------------|
-| **ROUGE-L** | Longest common subsequence | Lexical overlap with source | Not implemented |
-| **BERTScore** | distilbert-based-uncased embeddings | Contextual semantic similarity | Not implemented |
-| **GPT-similarity** | text-embedding-ada-002 | High-dimensional semantic distance | Not implemented |
-| **G-eval** | GPT-4 scoring (0-1) | Information validity vs source | Partial (PersonaJudge exists) |
+| **ROUGE-L** | Longest common subsequence | Lexical overlap with source | ✅ Implemented (v1.6.0) |
+| **BERTScore** | distilbert-based-uncased embeddings | Contextual semantic similarity | ✅ Implemented (v1.6.0) |
+| **GPT-similarity** | text-embedding-ada-002 | High-dimensional semantic distance | ✅ Implemented (v1.6.0) |
+| **G-eval** | GPT-4 scoring (0-1) | Information validity vs source | ✅ Implemented (v1.6.0) |
 
 **Key Finding from Paper:** "By every similarity metric, LLM-summarizing reached statistically higher scores than the other workflows (p < 0.01)."
 
@@ -68,7 +68,7 @@ The study evaluated persona quality using four metrics:
 | **Empathy** | "I can relate to this persona" |
 | **Willingness to Use** | "I would like to know more about this persona" |
 
-**Persona Status:** Not implemented - No survey template generation
+**Persona Status:** ✅ Implemented (v1.6.0) - PPS survey template generation
 
 **Referenced in:** R-008, ADR-0019, F-019 (documented as Layer 3: Perceptual Validation)
 
@@ -81,7 +81,7 @@ The study evaluated persona quality using four metrics:
 Faithfulness = (supported claims) / (total claims)
 ```
 
-**Persona Status:** Not implemented - Evidence linking is manual, not automatic
+**Persona Status:** ✅ Implemented (v1.6.0) - Automatic claim extraction and matching
 
 **Pipeline documented in R-008:**
 ```
@@ -94,7 +94,7 @@ Persona Attribute → Claim Extraction → Source Matching → Verification Scor
 - **RAGAS Faithfulness**: LLM-powered, 0.762 average precision
 - **[Vectara HHEM-2.1-Open](https://huggingface.co/vectara/hallucination_evaluation_model)**: Free, small T5-based classifier
 
-**Persona Status:** Not implemented
+**Persona Status:** ✅ Implemented (v1.6.0) - HHEM classifier and RAGAS-style faithfulness
 
 **Research context:** Expert surveys rate hallucination as highest concern (M = 5.94/7) for GenAI personas.
 
@@ -139,7 +139,7 @@ Persona's existing validation framework (QualityScorer, PersonaJudge) positions 
 | Evidence Linking | `/evidence/linker.py` | Manual tracking |
 | Validation Framework | `/validation/validator.py` | Pluggable rules |
 
-### NOT Implemented (from Shin et al.)
+### Implemented in v1.6.0 (from Shin et al.)
 
 | Metric | Complexity | Dependencies | Academic Value |
 |--------|------------|--------------|----------------|
@@ -149,40 +149,47 @@ Persona's existing validation framework (QualityScorer, PersonaJudge) positions 
 | **G-eval** | Medium | GPT-4 + CoT prompts | High - state-of-the-art |
 | **PPS Survey** | Medium | None (template) | High - validated instrument |
 
-### NOT Implemented (from Systematic Review)
+### Implemented in v1.6.0 (from Systematic Review)
 
 | Feature | Complexity | Value |
 |---------|------------|-------|
 | Automatic Claim Extraction | High | Required for faithfulness |
 | RAGAS Faithfulness | Medium | Hallucination detection |
 | HHEM Classifier | Low | Free, fast hallucination check |
+
+### Planned for v1.7.0 (Research Compliance)
+
+| Feature | Complexity | Value |
+|---------|------------|-------|
 | Bias Detection | Medium | Ethical AI compliance |
 | Lexical Diversity | Low | Quality indicator |
+| Multi-Model Verification | Medium | Cross-LLM validation |
+| Prompt Fidelity Scoring | Medium | Adherence measurement |
 
 ---
 
 ## Recommendations
 
-### Priority 1: Academic Credibility (v1.6.0 milestone)
+### ✅ Priority 1: Academic Credibility (v1.6.0 - COMPLETE)
 
-Implement **Shin et al. four metrics** to enable direct comparison with academic research:
+Implemented **Shin et al. four metrics** to enable direct comparison with academic research:
 
-1. **ROUGE-L** - `pip install rouge-score`, ~100 lines
-2. **BERTScore** - `pip install bert-score`, ~100 lines
-3. **G-eval** - Proper CoT implementation via PersonaJudge, ~200 lines
-4. **PPS Survey Generator** - Template + scoring, ~300 lines
+1. **ROUGE-L** - `persona.core.quality.academic.rouge`
+2. **BERTScore** - `persona.core.quality.academic.bertscore`
+3. **G-eval** - `persona.core.quality.academic.geval`
+4. **PPS Survey Generator** - `persona.core.quality.pps`
 
 **Impact:** Enables claims like "Persona achieves BERTScore of 0.85, comparable to Shin et al. LLM-summarizing workflow"
 
-### Priority 2: Hallucination Detection (v1.6.0 milestone)
+### ✅ Priority 2: Hallucination Detection (v1.6.0 - COMPLETE)
 
-1. **Automatic Claim Extraction** - Parse persona to verifiable claims
-2. **RAGAS Faithfulness** - Optional LLM-based verification
-3. **HHEM Integration** - Fast, free classifier option
+1. **Automatic Claim Extraction** - `persona.core.quality.faithfulness.extractor`
+2. **RAGAS Faithfulness** - `persona.core.quality.faithfulness.validator`
+3. **HHEM Integration** - `persona.core.quality.faithfulness.hhem`
 
 **Impact:** Addresses top expert concern (M = 5.94/7) for GenAI personas
 
-### Priority 3: Research Compliance (Future consideration)
+### Priority 3: Research Compliance (v1.7.0 milestone)
 
 1. **Bias Detection** - Stereotype lexicon matching
 2. **Model Comparison** - Multi-LLM output verification
@@ -217,6 +224,6 @@ Implement **Shin et al. four metrics** to enable direct comparison with academic
 
 - [R-008: Persona Validation Methodology](R-008-persona-validation-methodology.md)
 - [ADR-0019: Persona Validation Methodology](../decisions/adrs/ADR-0019-persona-validation-methodology.md)
-- [F-117: Academic Validation Metrics](../roadmap/features/planned/F-117-academic-validation-metrics.md)
-- [F-118: Hallucination Detection](../roadmap/features/planned/F-118-hallucination-detection.md)
+- [F-117: Academic Validation Metrics](../roadmap/features/completed/F-117-academic-validation-metrics.md)
+- [F-118: Hallucination Detection](../roadmap/features/completed/F-118-hallucination-detection.md)
 - [v1.6.0: Academic Validation](../roadmap/milestones/v1.6.0.md)

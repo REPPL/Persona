@@ -21,10 +21,10 @@ All features for Persona, organised by milestone and status.
 | v1.3.0 Local Model Foundation | 2 | ✅ Complete |
 | v1.4.0 Quality & Data Generation | 2 | ✅ Complete |
 | v1.5.0 Hybrid Pipeline | 1 | ✅ Complete |
-| v1.6.0 Academic Validation | 2 | 📋 Planned |
+| v1.6.0 Academic Validation | 2 | ✅ Complete |
 | v1.7.0 Research Compliance | 5 | 📋 Planned |
 
-**Total: 110 complete, 7 planned**
+**Total: 112 complete, 5 planned**
 
 ---
 
@@ -243,12 +243,12 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.6.0 - Academic Validation 📋 Planned
+## v1.6.0 - Academic Validation ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-117](planned/F-117-academic-validation-metrics.md) | Academic Validation Metrics | Quality |
-| [F-118](planned/F-118-hallucination-detection.md) | Hallucination Detection | Quality |
+| [F-117](completed/F-117-academic-validation-metrics.md) | Academic Validation Metrics | Quality |
+| [F-118](completed/F-118-hallucination-detection.md) | Hallucination Detection | Quality |
 
 ---
 
