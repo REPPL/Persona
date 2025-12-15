@@ -71,6 +71,23 @@ Documentation = "https://github.com/REPPL/Persona/tree/main/docs"
 Repository = "https://github.com/REPPL/Persona"
 Issues = "https://github.com/REPPL/Persona/issues"
 
+# Plugin entry point groups
+# Third-party plugins can register here to be discovered automatically
+[project.entry-points."persona.formatters"]
+# Example: html = "persona_html_formatter:HTMLFormatter"
+
+[project.entry-points."persona.loaders"]
+# Example: xlsx = "persona_xlsx_loader:XLSXLoader"
+
+[project.entry-points."persona.providers"]
+# Example: azure = "persona_azure_provider:AzureOpenAIProvider"
+
+[project.entry-points."persona.validators"]
+# Example: custom = "persona_custom_validator:CustomValidator"
+
+[project.entry-points."persona.workflows"]
+# Example: custom = "persona_custom_workflow:CustomWorkflow"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

@@ -12,14 +12,14 @@ Feature-centric roadmap for Persona development.
 | v0.4.0 | Advanced Output | 7 | ✅ Complete |
 | v0.5.0 | Extensibility | 8 | ✅ Complete |
 | v0.6.0 | Security | 9 | ✅ Complete |
-| v0.7.0 | Batch Processing | 9 | ✅ Complete |
+| v0.7.0 | Batch Processing | 8 | ✅ Complete |
 | v0.8.0 | Multi-Model | 7 | ✅ Complete |
 | v0.9.0 | Logging | 6 | ✅ Complete |
-| v1.0.0 | Production | 17 | 📋 Planned |
-| v1.1.0 | API & Integrations | 4 | 📋 Planned |
-| v1.2.0 | TUI Dashboard | 6 | 🔮 Future |
+| v1.0.0 | Production | 14 | ✅ Complete |
+| v1.1.0 | Quality & API | 6 | 🔄 In Progress |
+| v1.2.0 | Extensibility & TUI | 7 | 🔄 In Progress |
 
-**Total: 76 complete features, 27 planned features**
+**Total: 94 complete features, 9 planned features**
 
 ## Roadmap Structure
 
@@ -55,16 +55,20 @@ Multiple interfaces planned, with terminal-first approach:
 | Interface | Framework | Version | Status |
 |-----------|-----------|---------|--------|
 | CLI | Typer + Rich | v0.1.0 | ✅ Complete |
-| Interactive CLI | questionary | v1.0.0 | 📋 Planned |
-| REST API | FastAPI | v1.1.0 | 📋 Planned |
-| TUI Dashboard | Textual | v1.2.0 | 📋 Planned |
+| Interactive CLI | questionary | v1.0.0 | ✅ Complete |
+| Quality Metrics | Built-in | v1.1.0 | ✅ Complete |
+| Plugin System | Entry Points | v1.2.0 | ✅ Complete |
+| REST API | FastAPI | v1.1.0 | 🔄 In Progress |
+| TUI Dashboard | Textual | v1.2.0 | 🔄 In Progress |
 | WebUI | TBD | Future | ⏸️ Deferred |
 
 **Strategy:**
 - **CLI** — Primary interface for all functionality (complete)
-- **Interactive CLI** — Arrow-key prompts and form-based configuration
+- **Interactive CLI** — Arrow-key prompts and form-based configuration (complete)
+- **Quality Metrics** — Persona quality scoring and analysis (complete)
+- **Plugin System** — Entry point-based extension architecture (complete)
 - **REST API** — HTTP access for integrations and automation
-- **TUI Dashboard** — Full-screen terminal monitoring (after CLI maturity)
+- **TUI Dashboard** — Full-screen terminal monitoring
 - **WebUI** — Browser interface (not prioritised, TUI first)
 
 ---

@@ -28,6 +28,7 @@ from persona.ui.commands import (
     config_app,
     help_app,
     quality_app,
+    plugin_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -56,6 +57,7 @@ app.add_typer(vendor_app, name="vendor", hidden=True)
 app.add_typer(model_app, name="model", hidden=True)
 app.add_typer(template_app, name="template", hidden=True)
 app.add_typer(workflow_app, name="workflow", hidden=True)
+app.add_typer(plugin_app, name="plugin")
 
 # Global state for console options (used by callbacks)
 _no_color: bool = False

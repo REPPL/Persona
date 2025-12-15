@@ -17,9 +17,9 @@ All features for Persona, organised by milestone and status.
 | v0.9.0 Logging | 6 | ✅ Complete |
 | v1.0.0 Production | 14 | ✅ Complete |
 | v1.1.0 Quality & API | 6 | 🔄 In Progress |
-| v1.2.0 TUI Dashboard | 6 | 🔮 Future |
+| v1.2.0 Extensibility & TUI | 7 | 🔄 In Progress |
 
-**Total: 93 complete, 10 planned**
+**Total: 94 complete, 9 planned**
 
 ---
 
@@ -205,7 +205,15 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.2.0 - TUI Dashboard 🔮 Future
+## v1.2.0 - Extensibility & TUI 🔄 In Progress
+
+### Completed
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-107](completed/F-107-plugin-system.md) | Plugin system | Core |
+
+### Planned
 
 | ID | Feature | Category |
 |----|---------|----------|

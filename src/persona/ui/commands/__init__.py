@@ -19,6 +19,7 @@ from persona.ui.commands.refine import refine_app
 from persona.ui.commands.config import config_app
 from persona.ui.commands.help import help_app
 from persona.ui.commands.quality import quality_app
+from persona.ui.commands.plugin import plugin_app
 
 __all__ = [
     "generate_app",
@@ -36,4 +37,5 @@ __all__ = [
     "config_app",
     "help_app",
     "quality_app",
+    "plugin_app",
 ]

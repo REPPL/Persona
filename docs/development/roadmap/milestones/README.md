@@ -17,9 +17,9 @@ Release planning and milestone documentation.
 | [v0.9.0](v0.9.0.md) | Logging | 6 | v0.1.0 | ✅ Complete |
 | [v1.0.0](v1.0.0.md) | Production | 12 | All above | ✅ Complete |
 | [v1.1.0](v1.1.0.md) | Quality & API | 6 | v1.0.0 | 🔄 In Progress |
-| [v1.2.0](v1.2.0.md) | TUI Dashboard | 6 | v1.1.0 | 🔮 Future |
+| [v1.2.0](v1.2.0.md) | Extensibility & TUI | 7 | v1.0.0 | 🔄 In Progress |
 
-**Total: 93 complete features, 10 planned features**
+**Total: 94 complete features, 9 planned features**
 
 ## Dependency Graph
 
@@ -41,7 +41,7 @@ v0.1.0 (Foundation) ✅
     v1.1.0 (Quality & API) 🔄
         │
         ↓
-    v1.2.0 (TUI Dashboard) 🔮
+    v1.2.0 (Extensibility & TUI) 🔄
         │
         ↓
     v1.3.0+ (Future)
@@ -61,8 +61,8 @@ v1.0.0  ──────  Interactive CLI (questionary)
 v1.1.0  ──────  Quality Metrics + REST API (FastAPI)
                 Quality scoring and HTTP access for integrations
 
-v1.2.0  ──────  TUI Dashboard (Textual)
-                Full-screen terminal monitoring
+v1.2.0  ──────  Plugin System + TUI Dashboard (Textual)
+                Extensible plugins and full-screen terminal monitoring
 
 v1.3.0+ ──────  WebUI (TBD)
                 Browser interface (not prioritised)
