@@ -1,0 +1,64 @@
+/*
+Theme configuration for Persona TUI.
+
+This file defines theme variables including colours, spacing,
+and other design tokens that can be customised.
+*/
+
+/* Colour palette */
+$primary: #3b82f6;
+$primary-lighten-1: #60a5fa;
+$primary-darken-1: #2563eb;
+
+$accent: #06b6d4;
+$accent-lighten-1: #22d3ee;
+$accent-darken-1: #0891b2;
+
+$success: #10b981;
+$success-lighten-1: #34d399;
+$success-darken-1: #059669;
+
+$warning: #f59e0b;
+$warning-lighten-1: #fbbf24;
+$warning-darken-1: #d97706;
+
+$error: #ef4444;
+$error-lighten-1: #f87171;
+$error-darken-1: #dc2626;
+
+$text: #e5e7eb;
+$text-muted: #9ca3af;
+$text-disabled: #6b7280;
+
+$background: #111827;
+$background-lighten-1: #1f2937;
+$background-darken-1: #030712;
+
+$panel: #1f2937;
+$panel-lighten-1: #374151;
+$panel-darken-1: #111827;
+
+$border: #374151;
+
+/* Spacing */
+$spacing-xs: 1;
+$spacing-sm: 2;
+$spacing-md: 4;
+$spacing-lg: 6;
+$spacing-xl: 8;
+
+/* Typography */
+$font-family: monospace;
+$font-size-sm: 10;
+$font-size-md: 12;
+$font-size-lg: 14;
+
+/* Borders */
+$border-radius: 1;
+$border-width: 1;
+
+/* Shadows */
+$shadow: 2;
+
+/* Animation */
+$animation-duration: 0.3s;

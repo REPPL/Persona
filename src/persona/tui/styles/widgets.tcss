@@ -1,0 +1,109 @@
+/*
+Widget styles for Persona TUI.
+
+This file defines common widget styles used across the application.
+*/
+
+/* Buttons */
+Button {
+    width: auto;
+    height: 3;
+    border: solid $border;
+    background: $panel;
+    color: $text;
+}
+
+Button:hover {
+    background: $panel-lighten-1;
+}
+
+Button:focus {
+    border: solid $accent;
+}
+
+Button.-primary {
+    background: $primary;
+    border: solid $primary;
+}
+
+Button.-success {
+    background: $success;
+    border: solid $success;
+}
+
+Button.-warning {
+    background: $warning;
+    border: solid $warning;
+}
+
+Button.-error {
+    background: $error;
+    border: solid $error;
+}
+
+/* List views */
+ListView {
+    background: $background;
+    border: none;
+}
+
+ListItem {
+    background: $background;
+    color: $text;
+    padding: 1 2;
+}
+
+ListItem:hover {
+    background: $panel;
+}
+
+ListItem.-selected {
+    background: $primary;
+    color: $text;
+}
+
+/* Labels */
+Label {
+    color: $text;
+}
+
+Label.-muted {
+    color: $text-muted;
+}
+
+Label.-bold {
+    text-style: bold;
+}
+
+/* Progress bars */
+ProgressBar {
+    background: $panel;
+    border: solid $border;
+}
+
+ProgressBar > .bar--bar {
+    background: $accent;
+}
+
+ProgressBar > .bar--complete {
+    background: $success;
+}
+
+/* Containers */
+Container {
+    background: $background;
+}
+
+Vertical, Horizontal {
+    background: transparent;
+}
+
+/* Scroll containers */
+VerticalScroll, HorizontalScroll {
+    background: $background;
+}
+
+/* Static widgets */
+Static {
+    background: transparent;
+}

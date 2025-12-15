@@ -1,0 +1,90 @@
+/*
+Main application styles for Persona TUI.
+
+This file defines the base styling for the entire application,
+including colour scheme, typography, and layout utilities.
+*/
+
+/* Colour scheme */
+:root {
+    --primary: #3b82f6;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --text: #e5e7eb;
+    --text-muted: #9ca3af;
+    --background: #111827;
+    --panel: #1f2937;
+}
+
+/* App container */
+#app-content {
+    background: $background;
+    height: 1fr;
+}
+
+/* Header and footer */
+Header {
+    background: $primary;
+    color: $text;
+}
+
+Footer {
+    background: $panel;
+    color: $text-muted;
+}
+
+/* Typography */
+.title {
+    text-style: bold;
+    color: $accent;
+}
+
+.subtitle {
+    color: $text-muted;
+}
+
+.muted {
+    color: $text-muted;
+}
+
+.success {
+    color: $success;
+}
+
+.warning {
+    color: $warning;
+}
+
+.error {
+    color: $error;
+}
+
+/* Layout utilities */
+.hidden {
+    display: none;
+}
+
+.border {
+    border: solid $primary;
+}
+
+.panel {
+    background: $panel;
+    border: solid $primary;
+    padding: 1 2;
+}
+
+/* Responsive classes */
+.compact .details-panel {
+    display: none;
+}
+
+.standard .details-panel {
+    display: none;
+}
+
+.wide .details-panel {
+    display: block;
+}

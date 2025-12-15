@@ -1,0 +1,80 @@
+/*
+Dashboard screen styles for Persona TUI.
+
+This file defines styles for the dashboard screen, including
+the sidebar, main content area, and responsive layouts.
+*/
+
+#dashboard-container {
+    layout: horizontal;
+    height: 100%;
+}
+
+/* Sidebar - Experiment list */
+.sidebar {
+    width: 30;
+    height: 100%;
+    border-right: solid $primary;
+}
+
+/* Main content area */
+.main {
+    width: 1fr;
+    height: 100%;
+    padding: 1 2;
+}
+
+#content-title {
+    text-style: bold;
+    color: $accent;
+    margin: 0 0 1 0;
+}
+
+#recent-activity {
+    margin: 2 0;
+}
+
+/* Details panel - Cost tracker */
+.details-panel {
+    width: 30;
+    height: 100%;
+    padding: 1 2;
+    border-left: solid $primary;
+}
+
+/* Responsive breakpoints */
+#dashboard-container.compact {
+    layout: vertical;
+}
+
+#dashboard-container.compact .sidebar {
+    width: 100%;
+    height: 30%;
+    border-right: none;
+    border-bottom: solid $primary;
+}
+
+#dashboard-container.compact .main {
+    width: 100%;
+    height: 1fr;
+}
+
+#dashboard-container.standard .sidebar {
+    width: 25;
+}
+
+#dashboard-container.standard .main {
+    width: 1fr;
+}
+
+#dashboard-container.wide .sidebar {
+    width: 25;
+}
+
+#dashboard-container.wide .main {
+    width: 1fr;
+}
+
+#dashboard-container.wide .details-panel {
+    width: 25;
+}
