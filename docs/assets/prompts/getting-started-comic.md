@@ -40,7 +40,7 @@ Warm, loose hand-drawn sketch style throughout. Make it feel like a friendly tut
 
 ## 3-Panel Manga Style (Takahashi-inspired)
 
-Style inspiration: [Ranma ½ opening](https://youtu.be/XW9BapLxwkw), see also [Understanding Comics](https://doi.org/10.1057/9780312299408_3).
+Style inspiration: [Ranma ½ opening](https://youtu.be/XW9BapLxwkw), see also this discussion in [Akira and Ranma 1/2: The Monstrous Adolescent](https://doi.org/10.1057/9780312299408_3).
 
 ```
 Create a comic with the title: Meet Persona - From Research Data to User Personas
