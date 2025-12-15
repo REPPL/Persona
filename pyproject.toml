@@ -76,8 +76,13 @@ docs = [
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.24",
 ]
+academic = [
+    "rouge-score>=0.1.2",
+    "bert-score>=0.3.13",
+    "transformers>=4.36.0",
+]
 all = [
-    "persona[async,api,privacy,dev,test,security,docs]",
+    "persona[async,api,privacy,dev,test,security,docs,academic]",
 ]
 
 [project.scripts]
