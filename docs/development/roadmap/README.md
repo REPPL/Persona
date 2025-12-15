@@ -6,13 +6,13 @@ Feature-centric roadmap for Persona development.
 
 | Milestone | Theme | Features | Status |
 |-----------|-------|----------|--------|
-| v0.1.0 | Foundation | 21 | ✅ Complete |
+| v0.1.0 | Foundation | 20 | ✅ Complete |
 | v0.2.0 | Validation & Data | 6 | ✅ Complete |
 | v0.3.0 | Analysis & Variation | 5 | ✅ Complete |
 | v0.4.0 | Advanced Output | 7 | ✅ Complete |
 | v0.5.0 | Extensibility | 8 | ✅ Complete |
-| v0.6.0 | Security | 9 | ✅ Complete |
-| v0.7.0 | Batch Processing | 8 | ✅ Complete |
+| v0.6.0 | Security | 10 | ✅ Complete |
+| v0.7.0 | Batch Processing | 9 | ✅ Complete |
 | v0.8.0 | Multi-Model | 7 | ✅ Complete |
 | v0.9.0 | Logging | 6 | ✅ Complete |
 | v1.0.0 | Production | 14 | ✅ Complete |
@@ -62,8 +62,8 @@ Multiple interfaces planned, with terminal-first approach:
 | Interactive CLI | questionary | v1.0.0 | ✅ Complete |
 | Quality Metrics | Built-in | v1.1.0 | ✅ Complete |
 | Plugin System | Entry Points | v1.2.0 | ✅ Complete |
-| REST API | FastAPI | v1.1.0 | 🔄 In Progress |
-| TUI Dashboard | Textual | v1.2.0 | 🔄 In Progress |
+| REST API | FastAPI | v1.1.0 | ✅ Complete |
+| TUI Dashboard | Textual | v1.2.0 | ✅ Complete |
 | WebUI | TBD | Future | ⏸️ Deferred |
 
 **Strategy:**
@@ -71,8 +71,8 @@ Multiple interfaces planned, with terminal-first approach:
 - **Interactive CLI** — Arrow-key prompts and form-based configuration (complete)
 - **Quality Metrics** — Persona quality scoring and analysis (complete)
 - **Plugin System** — Entry point-based extension architecture (complete)
-- **REST API** — HTTP access for integrations and automation
-- **TUI Dashboard** — Full-screen terminal monitoring
+- **REST API** — HTTP access for integrations and automation (complete)
+- **TUI Dashboard** — Full-screen terminal monitoring (complete)
 - **WebUI** — Browser interface (not prioritised, TUI first)
 
 ---
