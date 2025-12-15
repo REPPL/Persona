@@ -54,6 +54,6 @@ Testing Persona without real research data is difficult. New users need a way to
 ## Related Documentation
 
 - [UC-008: Demo Without Real Data](../../../../use-cases/briefs/UC-008-demo-mode.md)
-- [T-01: Getting Started](../../../../../tutorials/01-getting-started.md)
+- [T-01: Getting Started](../../../../tutorials/01-getting-started.md)
 - [F-008: CLI Interface](F-008-cli-interface.md)
 

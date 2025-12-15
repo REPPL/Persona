@@ -115,7 +115,7 @@ No manual wrapper scripts needed - this is the recommended approach.
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Getting Started](../../../../../tutorials/01-getting-started.md)
+- [Getting Started](../../../../tutorials/01-getting-started.md)
 
 ---
 

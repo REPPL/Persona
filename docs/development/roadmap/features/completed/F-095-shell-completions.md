@@ -174,7 +174,7 @@ def complete_format(incomplete: str) -> Iterator[str]:
 ## Related Documentation
 
 - [F-008: CLI Interface](./F-008-cli-interface.md)
-- [ADR-0005: Typer + Rich CLI Framework](../../../../decisions/adrs/ADR-0005-cli-framework.md)
+- [ADR-0005: Typer + Rich CLI Framework](../../../decisions/adrs/ADR-0005-cli-framework.md)
 - [CLI Reference](../../../../reference/cli-reference.md)
 
 ---

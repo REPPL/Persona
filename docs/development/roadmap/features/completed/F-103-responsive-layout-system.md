@@ -1,6 +1,6 @@
 # F-103: Responsive Layout System
 
-**Status**: Completed
+**Status**: Complete
 **Category**: TUI
 **Milestone**: v1.2.0
 

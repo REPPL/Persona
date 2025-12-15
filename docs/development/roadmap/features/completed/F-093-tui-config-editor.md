@@ -125,5 +125,5 @@ Configuration saved!
 
 - [F-092: Interactive Mode Flag](./F-092-interactive-mode.md)
 - [F-085: Global Configuration](./F-085-global-configuration.md)
-- [ADR-0022: Interactive CLI Library Selection](../../../../decisions/adrs/ADR-0022-interactive-cli-library.md)
+- [ADR-0022: Interactive CLI Library Selection](../../../decisions/adrs/ADR-0022-interactive-cli-library.md)
 - [Configuration Reference](../../../../reference/configuration-reference.md)

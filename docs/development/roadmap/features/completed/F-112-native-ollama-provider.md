@@ -154,7 +154,7 @@ persona generate --input data.csv --provider ollama
 
 ## Implementation Summary
 
-**Status**: Completed
+**Status**: Complete
 
 **Key Achievements**:
 - Native `OllamaProvider` class with full async support

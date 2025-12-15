@@ -53,4 +53,4 @@ pricing:
 ## Related Documentation
 
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
-- [ADR-0010: Cost Estimation](../../../../decisions/adrs/ADR-0010-cost-estimation.md)
+- [ADR-0010: Cost Estimation](../../../decisions/adrs/ADR-0010-cost-estimation.md)

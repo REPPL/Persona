@@ -1,6 +1,6 @@
 # F-098: TUI Dashboard Application
 
-**Status**: Completed
+**Status**: Complete
 **Category**: TUI
 **Milestone**: v1.2.0
 

@@ -1,6 +1,6 @@
 # F-101: Persona Viewer
 
-**Status**: Completed
+**Status**: Complete
 **Category**: TUI
 **Milestone**: v1.2.0
 

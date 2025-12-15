@@ -49,4 +49,4 @@ Persona generation requires flexible prompts that can be customised for differen
 ## Related Documentation
 
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
-- [ADR-0004: Jinja2 Templating](../../../../decisions/adrs/ADR-0004-jinja2-templating.md)
+- [ADR-0004: Jinja2 Templating](../../../decisions/adrs/ADR-0004-jinja2-templating.md)

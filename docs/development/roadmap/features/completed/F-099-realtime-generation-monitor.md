@@ -1,6 +1,6 @@
 # F-099: Real-Time Generation Monitor
 
-**Status**: Completed
+**Status**: Complete
 **Category**: TUI
 **Milestone**: v1.2.0
 

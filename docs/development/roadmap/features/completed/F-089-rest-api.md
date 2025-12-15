@@ -107,6 +107,6 @@ uvicorn persona.api:app --host 0.0.0.0 --port 8000
 ## Related Documentation
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
-- [ADR-0021: Programmatic API](../../../../decisions/adrs/ADR-0021-programmatic-api.md)
+- [ADR-0021: Programmatic API](../../../decisions/adrs/ADR-0021-programmatic-api.md)
 - [F-105: Python SDK](F-105-python-sdk.md)
 

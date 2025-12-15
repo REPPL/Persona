@@ -49,6 +49,6 @@ Users have preferences and constraints for which LLM providers they can use. The
 ## Related Documentation
 
 - [F-002: LLM Provider Abstraction](F-002-llm-provider-abstraction.md)
-- [ADR-0002: Multi-Provider Architecture](../../../../decisions/adrs/ADR-0002-multi-provider-architecture.md)
+- [ADR-0002: Multi-Provider Architecture](../../../decisions/adrs/ADR-0002-multi-provider-architecture.md)
 - [Model Cards](../../../../reference/model-cards.md)
 

@@ -1,6 +1,6 @@
 # F-100: Experiment Browser
 
-**Status**: Completed
+**Status**: Complete
 **Category**: TUI
 **Milestone**: v1.2.0
 

@@ -92,8 +92,8 @@ Use delimiter tags in prompts:
 
 ## Related Documentation
 
-- [R-009: Reasoning Capture](../../../../research/R-009-reasoning-capture.md)
-- [ADR-0020: Reasoning Capture Architecture](../../../../decisions/adrs/ADR-0020-reasoning-capture-architecture.md)
-- [ADR-0011: Multi-Step Workflow](../../../../decisions/adrs/ADR-0011-multi-step-workflow.md)
+- [R-009: Reasoning Capture](../../../research/R-009-reasoning-capture.md)
+- [ADR-0020: Reasoning Capture Architecture](../../../decisions/adrs/ADR-0020-reasoning-capture-architecture.md)
+- [ADR-0011: Multi-Step Workflow](../../../decisions/adrs/ADR-0011-multi-step-workflow.md)
 - [Reproducibility](../../../../explanation/reproducibility.md)
 

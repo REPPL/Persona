@@ -53,5 +53,5 @@ Co-creation workshops produce photos of post-it notes on boards. Currently there
 
 - [UC-009: Empathy Mapping](../../../../use-cases/briefs/UC-009-empathy-mapping.md)
 - [F-029: Empathy Map Input Format](F-029-empathy-map-input-format.md)
-- [G-02: Preparing Research Data](../../../../../guides/preparing-data.md)
+- [G-02: Preparing Research Data](../../../../guides/preparing-data.md)
 

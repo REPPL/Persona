@@ -125,4 +125,4 @@ All async methods are additions - existing sync methods remain unchanged. The ba
 
 ---
 
-**Status**: Completed
+**Status**: Complete
