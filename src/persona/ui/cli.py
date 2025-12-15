@@ -27,6 +27,7 @@ from persona.ui.commands import (
     refine_app,
     config_app,
     help_app,
+    quality_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -48,6 +49,7 @@ app.add_typer(refine_app, name="refine")
 app.add_typer(experiment_app, name="experiment")
 app.add_typer(config_app, name="config")
 app.add_typer(help_app, name="help")
+app.add_typer(quality_app, name="score")
 
 # Add subcommand groups - Advanced/Admin commands (hidden by default)
 app.add_typer(vendor_app, name="vendor", hidden=True)

@@ -141,7 +141,7 @@ persona check [OPTIONS]
 ```
 Persona Health Check
 ───────────────────────────────────
-✓ Version: 0.9.0
+✓ Version: 1.0.0
 ✓ Installation: OK
 
 Provider Status:

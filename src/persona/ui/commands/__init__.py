@@ -18,6 +18,7 @@ from persona.ui.commands.cluster import cluster_app
 from persona.ui.commands.refine import refine_app
 from persona.ui.commands.config import config_app
 from persona.ui.commands.help import help_app
+from persona.ui.commands.quality import quality_app
 
 __all__ = [
     "generate_app",
@@ -34,4 +35,5 @@ __all__ = [
     "refine_app",
     "config_app",
     "help_app",
+    "quality_app",
 ]
