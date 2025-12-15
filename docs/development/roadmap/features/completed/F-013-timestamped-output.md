@@ -61,5 +61,5 @@ outputs/
 ## Related Documentation
 
 - [F-005: Output Formatting](F-005-output-formatting.md)
-- [ADR-0009: Timestamped Output Organisation](../../../decisions/adrs/ADR-0009-timestamped-output.md)
+- [ADR-0009: Timestamped Output Organisation](../../../../decisions/adrs/ADR-0009-timestamped-output.md)
 

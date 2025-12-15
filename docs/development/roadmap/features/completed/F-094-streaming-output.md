@@ -136,4 +136,4 @@ Model: claude-sonnet-4-20250514
 
 - [F-016: Interactive Rich UI](./F-016-interactive-rich-ui.md)
 - [F-063: Token Count Tracking](./F-063-token-count-tracking.md)
-- [ADR-0005: Typer + Rich CLI Framework](../../../decisions/adrs/ADR-0005-cli-framework.md)
+- [ADR-0005: Typer + Rich CLI Framework](../../../../decisions/adrs/ADR-0005-cli-framework.md)

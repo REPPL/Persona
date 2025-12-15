@@ -49,4 +49,4 @@ Users want to use different LLM providers (OpenAI, Anthropic, Gemini) without ch
 ## Related Documentation
 
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
-- [ADR-0002: Multi-Provider Architecture](../../../decisions/adrs/ADR-0002-multi-provider-architecture.md)
+- [ADR-0002: Multi-Provider Architecture](../../../../decisions/adrs/ADR-0002-multi-provider-architecture.md)

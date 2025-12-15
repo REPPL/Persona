@@ -60,4 +60,4 @@ persona
 ## Related Documentation
 
 - [All Use Cases](../../../../use-cases/)
-- [ADR-0005: CLI Framework](../../../decisions/adrs/ADR-0005-cli-framework.md)
+- [ADR-0005: CLI Framework](../../../../decisions/adrs/ADR-0005-cli-framework.md)

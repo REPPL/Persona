@@ -185,8 +185,8 @@ Hallucination Rate = UNSUPPORTED / Total Claims
 
 ## Related Documentation
 
-- [R-014: Shin et al. Gap Analysis](../../research/R-014-shin-et-al-gap-analysis.md)
-- [R-008: Persona Validation Methodology](../../research/R-008-persona-validation-methodology.md)
+- [R-014: Shin et al. Gap Analysis](../../../research/R-014-shin-et-al-gap-analysis.md)
+- [R-008: Persona Validation Methodology](../../../research/R-008-persona-validation-methodology.md)
 - [F-024: Evidence Linking](../completed/F-024-evidence-linking.md)
 - [F-106: Quality Metrics Scoring](../completed/F-106-quality-metrics.md)
 - [RAGAS Faithfulness](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/)

@@ -102,8 +102,8 @@ outputs/{timestamp}/validation/
 
 ## Related Documentation
 
-- [R-008: Persona Validation Methodology](../../../research/R-008-persona-validation-methodology.md)
+- [R-008: Persona Validation Methodology](../../../../research/R-008-persona-validation-methodology.md)
 - [UC-005: Validate Personas](../../../../use-cases/briefs/UC-005-validate-personas.md)
 - [F-024: Evidence Linking](F-024-evidence-linking.md)
-- [ADR-0019: Persona Validation Methodology](../../../decisions/adrs/ADR-0019-persona-validation-methodology.md)
+- [ADR-0019: Persona Validation Methodology](../../../../decisions/adrs/ADR-0019-persona-validation-methodology.md)
 

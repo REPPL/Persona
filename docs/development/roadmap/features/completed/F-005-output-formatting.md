@@ -59,4 +59,4 @@ outputs/YYYYMMDD_HHMMSS/
 ## Related Documentation
 
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
-- [ADR-0008: Structured JSON Output](../../../decisions/adrs/ADR-0008-structured-json-output.md)
+- [ADR-0008: Structured JSON Output](../../../../decisions/adrs/ADR-0008-structured-json-output.md)

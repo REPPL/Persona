@@ -111,7 +111,7 @@ persona data generate-synthetic --format csv --output ./my-data/
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Tutorials](../../../tutorials/)
+- [Tutorials](../../../../tutorials/)
 
 ---
 

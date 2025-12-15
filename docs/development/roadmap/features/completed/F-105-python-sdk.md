@@ -156,10 +156,10 @@ Complete exception hierarchy with context:
 ## Related Documentation
 
 - [Milestone v1.1.0](../../milestones/v1.1.0.md)
-- [SDK Quickstart](../../../tutorials/sdk-quickstart.md)
-- [SDK Patterns Guide](../../../guides/sdk-patterns.md)
+- [SDK Quickstart](../../../../tutorials/sdk-quickstart.md)
+- [SDK Patterns Guide](../../../../guides/sdk-patterns.md)
 - [API Reference](../../../../reference/api.md)
-- [ADR-0021: Programmatic API](../../decisions/adrs/ADR-0021-programmatic-api.md)
+- [ADR-0021: Programmatic API](../../../decisions/adrs/ADR-0021-programmatic-api.md)
 
 ---
 

@@ -65,5 +65,5 @@ Users need a consistent, discoverable set of CLI commands to interact with perso
 - [F-008: CLI Interface](F-008-cli-interface.md)
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
 - [UC-002: Manage Experiments](../../../../use-cases/briefs/UC-002-manage-experiments.md)
-- [ADR-0005: CLI Framework](../../../decisions/adrs/ADR-0005-cli-framework.md)
+- [ADR-0005: CLI Framework](../../../../decisions/adrs/ADR-0005-cli-framework.md)
 

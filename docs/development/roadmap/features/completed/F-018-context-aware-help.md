@@ -74,5 +74,5 @@ Did you mean:
 
 - [F-008: CLI Interface](F-008-cli-interface.md)
 - [F-016: Interactive Rich UI](F-016-interactive-rich-ui.md)
-- [Getting Started Tutorial](../../../../tutorials/01-getting-started.md)
+- [Getting Started Tutorial](../../../../../tutorials/01-getting-started.md)
 

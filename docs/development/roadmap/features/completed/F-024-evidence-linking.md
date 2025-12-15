@@ -62,5 +62,5 @@ Implemented in v0.2.0 with:
 
 - [UC-005: Validate Personas](../../../../use-cases/briefs/UC-005-validate-personas.md)
 - [F-019: Persona Validation](F-019-persona-validation.md)
-- [Persona Schema Reference](../../../../../reference/persona-schema.md)
+- [Persona Schema Reference](../../../../reference/persona-schema.md)
 

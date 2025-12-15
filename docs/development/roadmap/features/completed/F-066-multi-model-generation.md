@@ -85,5 +85,5 @@ generation:
 ## Related Documentation
 
 - [Milestone v0.8.0](../../milestones/v0.8.0.md)
-- [ADR-0002: Multi-Provider Architecture](../../decisions/adrs/ADR-0002-multi-provider-architecture.md)
+- [ADR-0002: Multi-Provider Architecture](../../../decisions/adrs/ADR-0002-multi-provider-architecture.md)
 

@@ -126,9 +126,9 @@ print(f"Generated {len(result.personas)} personas")
 ## Related Documentation
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
-- [SDK Quickstart](../../../tutorials/sdk-quickstart.md)
-- [SDK Patterns](../../../guides/sdk-patterns.md)
-- [Error Handling](../../../guides/error-handling.md)
+- [SDK Quickstart](../../../../tutorials/sdk-quickstart.md)
+- [SDK Patterns](../../../../guides/sdk-patterns.md)
+- [Error Handling](../../../../guides/error-handling.md)
 - [Error Codes Reference](../../../../reference/error-codes.md)
 
 ---

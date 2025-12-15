@@ -107,10 +107,10 @@ Configuration saved.
 
 ## Related Documentation
 
-- [ADR-0022: Interactive CLI Library Selection](../../../decisions/adrs/ADR-0022-interactive-cli-library.md)
+- [ADR-0022: Interactive CLI Library Selection](../../../../decisions/adrs/ADR-0022-interactive-cli-library.md)
 - [F-016: Interactive Rich UI](./F-016-interactive-rich-ui.md)
 - [F-093: TUI Configuration Editor](./F-093-tui-config-editor.md)
-- [R-011: Interactive CLI Libraries](../../research/R-011-interactive-cli-libraries.md)
+- [R-011: Interactive CLI Libraries](../../../research/R-011-interactive-cli-libraries.md)
 
 ---
 

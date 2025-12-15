@@ -178,6 +178,6 @@ persona generate --input data.csv --provider ollama
 
 ## Related Documentation
 
-- [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
+- [R-013: Local Model Assessment](../../../research/R-013-local-model-assessment.md)
 - [Provider APIs Reference](../../../../reference/provider-apis.md)
 - [F-002: LLM Provider Abstraction](F-002-llm-provider-abstraction.md)

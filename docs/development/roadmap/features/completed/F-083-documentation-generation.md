@@ -117,7 +117,7 @@ mkdocs serve
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Documentation Standards](../../../development/README.md)
+- [Documentation Standards](../../../README.md)
 
 ---
 

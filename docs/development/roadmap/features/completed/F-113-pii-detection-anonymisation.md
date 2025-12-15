@@ -149,6 +149,6 @@ python -m spacy download en_core_web_lg
 
 ## Related Documentation
 
-- [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
+- [R-013: Local Model Assessment](../../../research/R-013-local-model-assessment.md)
 - [Microsoft Presidio Documentation](https://microsoft.github.io/presidio/)
 - [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)

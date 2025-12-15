@@ -221,6 +221,6 @@ estimate = pipeline.estimate_cost(
 
 ## Related Documentation
 
-- [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
+- [R-013: Local Model Assessment](../../../research/R-013-local-model-assessment.md)
 - [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)
 - [F-114: LLM-as-Judge Persona Evaluation](F-114-llm-as-judge-evaluation.md)

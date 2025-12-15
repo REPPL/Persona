@@ -56,4 +56,4 @@ experiments/
 ## Related Documentation
 
 - [UC-002: Manage Experiments](../../../../use-cases/briefs/UC-002-manage-experiments.md)
-- [ADR-0003: Experiment-Centric Workflow](../../../decisions/adrs/ADR-0003-experiment-centric-workflow.md)
+- [ADR-0003: Experiment-Centric Workflow](../../../../decisions/adrs/ADR-0003-experiment-centric-workflow.md)

@@ -168,8 +168,8 @@ Survey uses 7-point Likert scale (1 = Strongly Disagree, 7 = Strongly Agree).
 
 ## Related Documentation
 
-- [R-014: Shin et al. Gap Analysis](../../research/R-014-shin-et-al-gap-analysis.md)
-- [R-008: Persona Validation Methodology](../../research/R-008-persona-validation-methodology.md)
+- [R-014: Shin et al. Gap Analysis](../../../research/R-014-shin-et-al-gap-analysis.md)
+- [R-008: Persona Validation Methodology](../../../research/R-008-persona-validation-methodology.md)
 - [F-106: Quality Metrics Scoring](../completed/F-106-quality-metrics.md)
 - [F-114: LLM-as-Judge Evaluation](../completed/F-114-llm-as-judge-evaluation.md)
 - [Shin et al. DIS 2024](https://dl.acm.org/doi/10.1145/3643834.3660729)

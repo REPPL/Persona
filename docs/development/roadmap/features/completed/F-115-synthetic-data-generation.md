@@ -189,7 +189,7 @@ For text columns:
 
 ## Related Documentation
 
-- [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
+- [R-013: Local Model Assessment](../../../research/R-013-local-model-assessment.md)
 - [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)
 - [F-113: PII Detection & Anonymisation](F-113-pii-detection-anonymisation.md)
 - [Gretel AI Synthetic Data](https://github.com/gretelai/gretel-synthetics)
