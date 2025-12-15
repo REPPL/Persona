@@ -6,7 +6,7 @@ This module provides webhook registration and management.
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 
-from persona.api.dependencies import AuthDep, ConfigDep
+from persona.api.dependencies import ConfigDep, verify_token
 from persona.api.models.requests import WebhookRegisterRequest
 from persona.api.models.responses import SuccessResponse, WebhookResponse
 from persona.api.services.webhook import WebhookManager
@@ -19,7 +19,7 @@ def get_webhook_manager(request: Request) -> WebhookManager:
     return request.app.state.webhook_manager
 
 
-@router.post("", response_model=WebhookResponse, dependencies=[Depends(AuthDep)])
+@router.post("", response_model=WebhookResponse, dependencies=[Depends(verify_token)])
 async def register_webhook(
     request: WebhookRegisterRequest,
     config: ConfigDep,
@@ -83,7 +83,7 @@ async def get_webhook(
     )
 
 
-@router.delete("/{webhook_id}", response_model=SuccessResponse, dependencies=[Depends(AuthDep)])
+@router.delete("/{webhook_id}", response_model=SuccessResponse, dependencies=[Depends(verify_token)])
 async def delete_webhook(
     webhook_id: str,
     manager: WebhookManager = Depends(get_webhook_manager),
