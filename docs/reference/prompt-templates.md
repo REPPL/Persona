@@ -487,6 +487,7 @@ prompts:
 - [Prompt Templating Research](../development/research/R-007-prompt-templating.md)
 - [Prompt Fidelity Feature](../development/roadmap/features/planned/F-122-prompt-fidelity-scoring.md)
 - [Configuration Reference](configuration-reference.md)
+- [Custom Workflows Guide](../guides/custom-workflows.md)
 
 ---
 
