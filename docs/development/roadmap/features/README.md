@@ -16,10 +16,10 @@ All features for Persona, organised by milestone and status.
 | v0.8.0 Multi-Model | 7 | ✅ Complete |
 | v0.9.0 Logging | 6 | ✅ Complete |
 | v1.0.0 Production | 14 | ✅ Complete |
-| v1.1.0 API & Integrations | 5 | 📋 Planned |
+| v1.1.0 Quality & API | 6 | 🔄 In Progress |
 | v1.2.0 TUI Dashboard | 6 | 🔮 Future |
 
-**Total: 92 complete, 11 planned**
+**Total: 93 complete, 10 planned**
 
 ---
 
@@ -185,7 +185,15 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.1.0 - API & Integrations 📋 Planned
+## v1.1.0 - Quality & API 🔄 In Progress
+
+### Completed
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-106](completed/F-106-quality-metrics.md) | Quality metrics scoring | Quality |
+
+### Planned
 
 | ID | Feature | Category |
 |----|---------|----------|
