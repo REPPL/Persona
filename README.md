@@ -9,6 +9,10 @@
 
 ## Generate realistic user personas from your data using AI
 
+![Getting Started with Persona](docs/assets/img/getting-started-comic3.png)
+
+*[Generated](docs/assets/prompts/getting-started-comic.md) by Gemini 3.*
+
 `Persona` is an AI-powered tool that generates realistic user personas from quantitative and qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
 
 ### Who is this for?
