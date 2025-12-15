@@ -101,6 +101,42 @@ class LLMProvider(ABC):
         """
         ...
 
+    async def generate_async(
+        self,
+        prompt: str,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        **kwargs: Any,
+    ) -> LLMResponse:
+        """
+        Generate a response from the LLM asynchronously.
+
+        Default implementation delegates to synchronous generate() method.
+        Providers should override this for native async support.
+
+        Args:
+            prompt: The input prompt text.
+            model: Model to use (defaults to provider's default).
+            max_tokens: Maximum tokens to generate.
+            temperature: Sampling temperature (0.0 to 1.0).
+            **kwargs: Additional provider-specific parameters.
+
+        Returns:
+            LLMResponse with the generated content.
+
+        Raises:
+            ValueError: If the model is not available.
+            RuntimeError: If the API call fails.
+        """
+        import asyncio
+
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            None,
+            lambda: self.generate(prompt, model, max_tokens, temperature, **kwargs),
+        )
+
     def validate_model(self, model: str) -> bool:
         """
         Check if a model is available for this provider.

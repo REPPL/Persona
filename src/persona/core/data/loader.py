@@ -5,6 +5,7 @@ This module provides the core DataLoader class that handles loading
 qualitative research data from various file formats.
 """
 
+import asyncio
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
@@ -251,3 +252,86 @@ class DataLoader:
             if loader.can_load(path):
                 return loader
         return None
+
+    async def load_file_async(self, path: Path) -> str:
+        """
+        Load content from a single file asynchronously.
+
+        Args:
+            path: Path to the file.
+
+        Returns:
+            String content of the file.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            ValueError: If no loader supports the file format.
+        """
+        path = Path(path)
+
+        if not path.exists():
+            raise FileNotFoundError(f"File does not exist: {path}")
+
+        loader = self._get_loader(path)
+        if loader is None:
+            raise ValueError(
+                f"Unsupported file format: {path.suffix}. "
+                f"Supported formats: {', '.join(self.supported_extensions)}"
+            )
+
+        # Run synchronous loader in thread pool
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, lambda: loader.load(path))
+
+    async def load_path_async(
+        self,
+        path: str | Path,
+        recursive: bool = True,
+    ) -> tuple[str, list[Path]]:
+        """
+        Load and combine content from a file or directory asynchronously.
+
+        Args:
+            path: File or directory path.
+            recursive: Whether to search subdirectories (default: True).
+
+        Returns:
+            Tuple of (combined content, list of loaded files).
+
+        Raises:
+            FileNotFoundError: If the path does not exist.
+            ValueError: If no loadable files are found.
+        """
+        path = Path(path)
+        files = self.discover_files(path, recursive=recursive)
+
+        if not files:
+            raise ValueError(
+                f"No loadable files found in: {path}. "
+                f"Supported formats: {', '.join(self.supported_extensions)}"
+            )
+
+        # Load all files concurrently
+        async def load_with_header(file_path: Path) -> str | None:
+            try:
+                file_content = await self.load_file_async(file_path)
+                # Add file header for context
+                header = f"# Source: {file_path.name}\n\n"
+                return header + file_content
+            except Exception:
+                # Skip files that fail to load
+                # TODO: Add proper logging
+                return None
+
+        # Load files concurrently
+        tasks = [load_with_header(file_path) for file_path in files]
+        contents = await asyncio.gather(*tasks)
+
+        # Filter out None values (failed loads)
+        valid_contents = [c for c in contents if c is not None]
+
+        if not valid_contents:
+            raise ValueError(f"Failed to load any files from: {path}")
+
+        combined = self.FILE_SEPARATOR.join(valid_contents)
+        return combined, files

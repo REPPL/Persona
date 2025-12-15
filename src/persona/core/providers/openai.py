@@ -134,3 +134,70 @@ class OpenAIProvider(LLMProvider):
             raise RuntimeError("OpenAI API request timed out")
         except httpx.RequestError as e:
             raise RuntimeError(f"OpenAI API request failed: {e}")
+
+    async def generate_async(
+        self,
+        prompt: str,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        **kwargs: Any,
+    ) -> LLMResponse:
+        """Generate a response using OpenAI's API asynchronously."""
+        if not self.is_configured():
+            raise AuthenticationError("OpenAI API key not configured")
+
+        model = model or self.default_model
+
+        if not self.validate_model(model):
+            raise ModelNotFoundError(f"Model not available: {model}")
+
+        headers = {
+            "Authorization": f"Bearer {self._api_key}",
+            "Content-Type": "application/json",
+        }
+
+        # Handle o1 models which don't support temperature
+        payload: dict[str, Any] = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": max_tokens,
+        }
+
+        # o1 models don't support temperature parameter
+        if not model.startswith("o1"):
+            payload["temperature"] = temperature
+
+        try:
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                response = await client.post(self.API_URL, headers=headers, json=payload)
+
+            if response.status_code == 401:
+                raise AuthenticationError("Invalid OpenAI API key")
+
+            if response.status_code == 429:
+                raise RateLimitError("OpenAI rate limit exceeded")
+
+            if response.status_code != 200:
+                error_data = response.json().get("error", {})
+                raise RuntimeError(
+                    f"OpenAI API error: {error_data.get('message', response.text)}"
+                )
+
+            data = response.json()
+            choice = data["choices"][0]
+            usage = data.get("usage", {})
+
+            return LLMResponse(
+                content=choice["message"]["content"],
+                model=data["model"],
+                input_tokens=usage.get("prompt_tokens", 0),
+                output_tokens=usage.get("completion_tokens", 0),
+                finish_reason=choice.get("finish_reason", "stop"),
+                raw_response=data,
+            )
+
+        except httpx.TimeoutException:
+            raise RuntimeError("OpenAI API request timed out")
+        except httpx.RequestError as e:
+            raise RuntimeError(f"OpenAI API request failed: {e}")

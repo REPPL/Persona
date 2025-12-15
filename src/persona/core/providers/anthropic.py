@@ -137,3 +137,72 @@ class AnthropicProvider(LLMProvider):
             raise RuntimeError("Anthropic API request timed out")
         except httpx.RequestError as e:
             raise RuntimeError(f"Anthropic API request failed: {e}")
+
+    async def generate_async(
+        self,
+        prompt: str,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        **kwargs: Any,
+    ) -> LLMResponse:
+        """Generate a response using Anthropic's API asynchronously."""
+        if not self.is_configured():
+            raise AuthenticationError("Anthropic API key not configured")
+
+        model = model or self.default_model
+
+        if not self.validate_model(model):
+            raise ModelNotFoundError(f"Model not available: {model}")
+
+        headers = {
+            "x-api-key": self._api_key,
+            "anthropic-version": self.API_VERSION,
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                response = await client.post(self.API_URL, headers=headers, json=payload)
+
+            if response.status_code == 401:
+                raise AuthenticationError("Invalid Anthropic API key")
+
+            if response.status_code == 429:
+                raise RateLimitError("Anthropic rate limit exceeded")
+
+            if response.status_code != 200:
+                error_data = response.json().get("error", {})
+                raise RuntimeError(
+                    f"Anthropic API error: {error_data.get('message', response.text)}"
+                )
+
+            data = response.json()
+            content_blocks = data.get("content", [])
+            content = ""
+            for block in content_blocks:
+                if block.get("type") == "text":
+                    content += block.get("text", "")
+
+            usage = data.get("usage", {})
+
+            return LLMResponse(
+                content=content,
+                model=data["model"],
+                input_tokens=usage.get("input_tokens", 0),
+                output_tokens=usage.get("output_tokens", 0),
+                finish_reason=data.get("stop_reason", "end_turn"),
+                raw_response=data,
+            )
+
+        except httpx.TimeoutException:
+            raise RuntimeError("Anthropic API request timed out")
+        except httpx.RequestError as e:
+            raise RuntimeError(f"Anthropic API request failed: {e}")

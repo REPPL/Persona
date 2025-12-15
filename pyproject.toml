@@ -32,9 +32,16 @@ dependencies = [
     "httpx>=0.25.0",
     "tiktoken>=0.5.0",
     "python-dotenv>=1.0.0",
+    "textual>=0.87.0",
 ]
 
 [project.optional-dependencies]
+async = [
+    "aiofiles>=24.1.0",
+]
+tui = [
+    "textual>=0.87.0",
+]
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
@@ -59,7 +66,7 @@ docs = [
     "mkdocstrings[python]>=0.24",
 ]
 all = [
-    "persona[dev,test,security,docs]",
+    "persona[async,dev,test,security,docs]",
 ]
 
 [project.scripts]

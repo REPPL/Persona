@@ -139,3 +139,78 @@ class GeminiProvider(LLMProvider):
             raise RuntimeError("Gemini API request timed out")
         except httpx.RequestError as e:
             raise RuntimeError(f"Gemini API request failed: {e}")
+
+    async def generate_async(
+        self,
+        prompt: str,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        **kwargs: Any,
+    ) -> LLMResponse:
+        """Generate a response using Google's Gemini API asynchronously."""
+        if not self.is_configured():
+            raise AuthenticationError("Google API key not configured")
+
+        model = model or self.default_model
+
+        if not self.validate_model(model):
+            raise ModelNotFoundError(f"Model not available: {model}")
+
+        url = f"{self.API_BASE}/{model}:generateContent?key={self._api_key}"
+
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": max_tokens,
+                "temperature": temperature,
+            },
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                response = await client.post(url, headers=headers, json=payload)
+
+            if response.status_code == 401 or response.status_code == 403:
+                raise AuthenticationError("Invalid Google API key")
+
+            if response.status_code == 429:
+                raise RateLimitError("Google API rate limit exceeded")
+
+            if response.status_code != 200:
+                error_data = response.json().get("error", {})
+                raise RuntimeError(
+                    f"Gemini API error: {error_data.get('message', response.text)}"
+                )
+
+            data = response.json()
+            candidates = data.get("candidates", [])
+
+            if not candidates:
+                raise RuntimeError("No response candidates from Gemini API")
+
+            candidate = candidates[0]
+            content_parts = candidate.get("content", {}).get("parts", [])
+            content = ""
+            for part in content_parts:
+                content += part.get("text", "")
+
+            usage = data.get("usageMetadata", {})
+
+            return LLMResponse(
+                content=content,
+                model=model,
+                input_tokens=usage.get("promptTokenCount", 0),
+                output_tokens=usage.get("candidatesTokenCount", 0),
+                finish_reason=candidate.get("finishReason", "STOP"),
+                raw_response=data,
+            )
+
+        except httpx.TimeoutException:
+            raise RuntimeError("Gemini API request timed out")
+        except httpx.RequestError as e:
+            raise RuntimeError(f"Gemini API request failed: {e}")

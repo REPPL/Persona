@@ -29,6 +29,8 @@ from persona.ui.commands import (
     help_app,
     quality_app,
     plugin_app,
+    script_app,
+    dashboard_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -41,6 +43,7 @@ app = typer.Typer(
 
 # Add subcommand groups - User-facing commands
 app.add_typer(generate_app, name="generate")
+app.add_typer(dashboard_app, name="dashboard")
 app.add_typer(preview_app, name="preview")
 app.add_typer(validate_app, name="validate")
 app.add_typer(compare_app, name="compare")
@@ -51,6 +54,7 @@ app.add_typer(experiment_app, name="experiment")
 app.add_typer(config_app, name="config")
 app.add_typer(help_app, name="help")
 app.add_typer(quality_app, name="score")
+app.add_typer(script_app, name="script")
 
 # Add subcommand groups - Advanced/Admin commands (hidden by default)
 app.add_typer(vendor_app, name="vendor", hidden=True)

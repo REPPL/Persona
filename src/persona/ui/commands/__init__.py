@@ -20,6 +20,8 @@ from persona.ui.commands.config import config_app
 from persona.ui.commands.help import help_app
 from persona.ui.commands.quality import quality_app
 from persona.ui.commands.plugin import plugin_app
+from persona.ui.commands.script import script_app
+from persona.ui.commands.dashboard import dashboard_app
 
 __all__ = [
     "generate_app",
@@ -38,4 +40,6 @@ __all__ = [
     "help_app",
     "quality_app",
     "plugin_app",
+    "script_app",
+    "dashboard_app",
 ]
