@@ -1,0 +1,44 @@
+name: Healthcare Patient Persona
+description: Constraints for generating healthcare patient personas
+
+constraints:
+  structure:
+    required_fields:
+      - name
+      - age
+      - demographics
+      - goals
+      - pain_points
+      - behaviours
+    field_types:
+      age: integer
+      goals: list
+      pain_points: list
+      behaviours: list
+      demographics: dict
+
+  content:
+    required_keywords:
+      pain_points:
+        - health
+        - care
+        - treatment
+    goal_themes:
+      - wellness
+      - recovery
+      - quality of life
+
+  limits:
+    age_range: [18, 85]
+    goal_count: [2, 4]
+    pain_point_count: [3, 6]
+    behaviour_count: [2, 5]
+
+  style:
+    tone: empathetic
+    detail_level: comprehensive
+    custom_rules:
+      - Use patient-centred language
+      - Avoid overly clinical terminology
+      - Focus on patient experience and emotions
+      - Include both physical and emotional aspects

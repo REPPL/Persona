@@ -163,6 +163,27 @@ def generate(
             help="Use local-only mode in hybrid pipeline (no frontier refinement).",
         ),
     ] = False,
+    verify: Annotated[
+        bool,
+        typer.Option(
+            "--verify",
+            help="Run multi-model verification after generation.",
+        ),
+    ] = False,
+    verify_models: Annotated[
+        Optional[str],
+        typer.Option(
+            "--verify-models",
+            help="Comma-separated models for verification (default: claude,gpt-4o,gemini).",
+        ),
+    ] = None,
+    verify_threshold: Annotated[
+        float,
+        typer.Option(
+            "--verify-threshold",
+            help="Consistency threshold for verification (0-1, default: 0.7).",
+        ),
+    ] = 0.7,
 ) -> None:
     """
     Generate personas from data files.
@@ -403,6 +424,17 @@ def generate(
     # Show summary
     _show_result_summary(console, result)
 
+    # Run verification if requested
+    if verify:
+        _run_verification(
+            console=console,
+            data=data,
+            count=count,
+            verify_models=verify_models,
+            verify_threshold=verify_threshold,
+            no_progress=no_progress,
+        )
+
 
 def _handle_hybrid_generation(
     console,
@@ -631,3 +663,92 @@ def _show_result_summary(console, result) -> None:
 
     console.print(f"\n[dim]Tokens used: {result.input_tokens + result.output_tokens:,} "
                   f"(in: {result.input_tokens:,}, out: {result.output_tokens:,})[/dim]")
+
+
+def _run_verification(
+    console,
+    data: str,
+    count: int,
+    verify_models: Optional[str],
+    verify_threshold: float,
+    no_progress: bool,
+) -> None:
+    """Run multi-model verification after generation."""
+    import asyncio
+    from persona.core.quality.verification import (
+        MultiModelVerifier,
+        VerificationConfig,
+    )
+
+    console.print("\n[bold cyan]Running Multi-Model Verification[/bold cyan]")
+
+    # Parse models
+    if verify_models:
+        model_list = [m.strip() for m in verify_models.split(",")]
+    else:
+        # Default verification models
+        model_list = ["claude-sonnet-4-20250514", "gpt-4o", "gemini-2.0-flash"]
+
+    console.print(f"[dim]Comparing outputs from: {', '.join(model_list)}[/dim]\n")
+
+    # Create verification config
+    config = VerificationConfig(
+        models=model_list,
+        samples_per_model=1,
+        voting_strategy="majority",
+        consistency_threshold=verify_threshold,
+        parallel=True,
+    )
+
+    # Create verifier
+    verifier = MultiModelVerifier(config)
+
+    # Run verification
+    try:
+        if not no_progress:
+            with console.status("[bold cyan]Verifying consistency...", spinner="dots"):
+                result = asyncio.run(verifier.verify(data, count=count))
+        else:
+            result = asyncio.run(verifier.verify(data, count=count))
+
+        # Display results
+        from rich.panel import Panel
+        from rich.text import Text
+        from rich.table import Table
+
+        # Status panel
+        status_text = Text()
+        if result.passed:
+            status_text.append("✓ PASSED", style="bold green")
+        else:
+            status_text.append("✗ FAILED", style="bold red")
+
+        status_text.append(f"\nConsistency Score: {result.consistency_score:.2%}")
+        status_text.append(f"\nThreshold: {result.config.consistency_threshold:.2%}")
+
+        console.print(Panel(
+            status_text,
+            title="[bold]Verification Result[/bold]",
+            border_style="green" if result.passed else "red",
+        ))
+
+        # Metrics summary
+        console.print("\n[bold]Consistency Metrics:[/bold]")
+        console.print(f"  Attribute Agreement: {result.metrics.attribute_agreement:.2%}")
+        console.print(f"  Semantic Consistency: {result.metrics.semantic_consistency:.2%}")
+        console.print(f"  Factual Convergence: {result.metrics.factual_convergence:.2%}")
+
+        # Attribute summary
+        console.print(f"\n[bold]Attributes:[/bold]")
+        console.print(f"  Agreed: {len(result.agreed_attributes)}")
+        console.print(f"  Disputed: {len(result.disputed_attributes)}")
+
+        if not result.passed:
+            console.print("\n[yellow]Warning:[/yellow] Verification failed. Consider:")
+            console.print("  - Reviewing disputed attributes")
+            console.print("  - Adjusting the consistency threshold")
+            console.print("  - Using more specific prompts")
+
+    except Exception as e:
+        console.print(f"\n[red]Verification error:[/red] {e}")
+        console.print("[yellow]Generation succeeded, but verification failed.[/yellow]")

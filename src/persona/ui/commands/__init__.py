@@ -28,6 +28,11 @@ from persona.ui.commands.evaluate import evaluate_app
 from persona.ui.commands.synthesise import synthesise_app
 from persona.ui.commands.academic import academic_app
 from persona.ui.commands.faithfulness import faithfulness_app
+from persona.ui.commands.fidelity import fidelity_app
+from persona.ui.commands.audit import app as audit_app
+from persona.ui.commands.diversity import diversity_app
+from persona.ui.commands.bias import bias_app
+from persona.ui.commands.verify import verify_app
 
 __all__ = [
     "generate_app",
@@ -54,4 +59,9 @@ __all__ = [
     "synthesise_app",
     "academic_app",
     "faithfulness_app",
+    "fidelity_app",
+    "audit_app",
+    "diversity_app",
+    "bias_app",
+    "verify_app",
 ]

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "1.6.0"
+version = "1.7.0"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -81,8 +81,13 @@ academic = [
     "bert-score>=0.3.13",
     "transformers>=4.36.0",
 ]
+bias = [
+    "sentence-transformers>=2.2.0",
+    "numpy>=1.24.0",
+    "scikit-learn>=1.3.0",
+]
 all = [
-    "persona[async,api,privacy,dev,test,security,docs,academic]",
+    "persona[async,api,privacy,dev,test,security,docs,academic,bias]",
 ]
 
 [project.scripts]
