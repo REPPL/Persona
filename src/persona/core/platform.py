@@ -18,6 +18,20 @@ IS_LINUX = PLATFORM.startswith("linux")
 IS_POSIX = not IS_WINDOWS
 
 
+def get_platform_name() -> str:
+    """Get a human-readable platform name.
+
+    Returns:
+        'windows', 'macos', or 'linux'.
+    """
+    if IS_WINDOWS:
+        return "windows"
+    elif IS_MACOS:
+        return "macos"
+    else:
+        return "linux"
+
+
 def get_config_dir() -> Path:
     """Get platform-appropriate configuration directory.
 
