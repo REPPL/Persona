@@ -150,7 +150,7 @@ Respond in JSON format:
 
 ## Dependencies
 
-- F-107: Native Ollama Provider
+- F-112: Native Ollama Provider
 - F-106: Quality Metrics Scoring (existing)
 
 ## Risks & Mitigations
@@ -167,6 +167,6 @@ Respond in JSON format:
 ## Related Documentation
 
 - [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
-- [F-106: Quality Metrics Scoring](../completed/F-106-quality-metrics-scoring.md)
-- [F-107: Native Ollama Provider](F-107-native-ollama-provider.md)
+- [F-106: Quality Metrics Scoring](../completed/F-106-quality-metrics.md)
+- [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)
 - [PersonaEval: Are LLM Evaluators Human Enough?](https://arxiv.org/abs/2508.10014)

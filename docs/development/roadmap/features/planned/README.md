@@ -2,26 +2,25 @@
 
 Features designed and ready for implementation.
 
-## v1.1.0 - API & Integrations
+## v1.3.0 - Local Model Foundation
 
-| ID | Feature | Category |
-|----|---------|----------|
-| [F-088](F-088-async-support.md) | Async support | Core |
-| [F-089](F-089-rest-api.md) | REST API (FastAPI) | API |
-| [F-090](F-090-webhooks.md) | Webhooks | API |
-| [F-104](F-104-conversation-scripts.md) | Conversation scripts | Output |
-| [F-105](F-105-python-sdk.md) | Python SDK | SDK |
+| ID | Feature | Category | Priority |
+|----|---------|----------|----------|
+| [F-112](F-112-native-ollama-provider.md) | Native Ollama Provider | Provider | P0 |
+| [F-113](F-113-pii-detection-anonymisation.md) | PII Detection & Anonymisation | Privacy | P1 |
 
-## v1.2.0 - TUI Dashboard
+## v1.4.0 - Quality & Data Generation
 
-| ID | Feature | Category |
-|----|---------|----------|
-| [F-098](F-098-tui-dashboard-app.md) | TUI Dashboard Application | TUI |
-| [F-099](F-099-realtime-generation-monitor.md) | Real-Time Generation Monitor | TUI |
-| [F-100](F-100-experiment-browser.md) | Experiment Browser | TUI |
-| [F-101](F-101-persona-viewer.md) | Persona Viewer | TUI |
-| [F-102](F-102-cost-tracker-widget.md) | Cost Tracker Widget | TUI |
-| [F-103](F-103-responsive-layout-system.md) | Responsive Layout System | TUI |
+| ID | Feature | Category | Priority |
+|----|---------|----------|----------|
+| [F-114](F-114-llm-as-judge-evaluation.md) | LLM-as-Judge Persona Evaluation | Quality | P2 |
+| [F-115](F-115-synthetic-data-generation.md) | Synthetic Data Generation Pipeline | Privacy | P2 |
+
+## v1.5.0 - Hybrid Pipeline
+
+| ID | Feature | Category | Priority |
+|----|---------|----------|----------|
+| [F-116](F-116-hybrid-local-frontier-pipeline.md) | Hybrid Local/Frontier Pipeline | Optimisation | P3 |
 
 ---
 

@@ -118,7 +118,7 @@ persona privacy anonymise --input sensitive.csv --output safe.csv
 
 ## Dependencies
 
-- F-107: Native Ollama Provider (for local-only privacy workflows)
+- F-112: Native Ollama Provider (for local-only privacy workflows)
 
 ### Python Dependencies
 
@@ -151,4 +151,4 @@ python -m spacy download en_core_web_lg
 
 - [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
 - [Microsoft Presidio Documentation](https://microsoft.github.io/presidio/)
-- [F-107: Native Ollama Provider](F-107-native-ollama-provider.md)
+- [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)

@@ -174,7 +174,7 @@ estimate = pipeline.estimate_cost(
 - [ ] Implement draft generation stage
 - [ ] Implement quality filtering stage
 - [ ] Implement frontier refinement stage
-- [ ] Integrate with F-107 (Ollama), F-108 (PII), F-109 (Judge)
+- [ ] Integrate with F-112 (Ollama), F-113 (PII), F-114 (Judge)
 - [ ] Add cost tracking and budget enforcement
 - [ ] Add cost estimation
 - [ ] Create `--hybrid` CLI flag
@@ -195,9 +195,9 @@ estimate = pipeline.estimate_cost(
 
 ## Dependencies
 
-- F-107: Native Ollama Provider
-- F-108: PII Detection & Anonymisation (optional integration)
-- F-109: LLM-as-Judge Persona Evaluation
+- F-112: Native Ollama Provider
+- F-113: PII Detection & Anonymisation (optional integration)
+- F-114: LLM-as-Judge Persona Evaluation
 
 ## Example Cost Comparison
 
@@ -222,5 +222,5 @@ estimate = pipeline.estimate_cost(
 ## Related Documentation
 
 - [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
-- [F-107: Native Ollama Provider](F-107-native-ollama-provider.md)
-- [F-109: LLM-as-Judge Persona Evaluation](F-109-llm-as-judge-evaluation.md)
+- [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)
+- [F-114: LLM-as-Judge Persona Evaluation](F-114-llm-as-judge-evaluation.md)

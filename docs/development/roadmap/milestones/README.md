@@ -16,10 +16,13 @@ Release planning and milestone documentation.
 | [v0.8.0](v0.8.0.md) | Multi-Model | 7 | v0.1.0 | ✅ Complete |
 | [v0.9.0](v0.9.0.md) | Logging | 6 | v0.1.0 | ✅ Complete |
 | [v1.0.0](v1.0.0.md) | Production | 12 | All above | ✅ Complete |
-| [v1.1.0](v1.1.0.md) | Quality & API | 6 | v1.0.0 | 🔄 In Progress |
-| [v1.2.0](v1.2.0.md) | Extensibility & TUI | 7 | v1.0.0 | 🔄 In Progress |
+| [v1.1.0](v1.1.0.md) | Quality & API | 6 | v1.0.0 | ✅ Complete |
+| [v1.2.0](v1.2.0.md) | Extensibility & TUI | 7 | v1.0.0 | ✅ Complete |
+| [v1.3.0](v1.3.0.md) | Local Model Foundation | 2 | v1.2.0 | 📋 Planned |
+| [v1.4.0](v1.4.0.md) | Quality & Data Generation | 2 | v1.3.0 | 📋 Planned |
+| [v1.5.0](v1.5.0.md) | Hybrid Pipeline | 1 | v1.4.0 | 📋 Planned |
 
-**Total: 94 complete features, 9 planned features**
+**Total: 107 complete features, 5 planned features**
 
 ## Dependency Graph
 
@@ -38,13 +41,19 @@ v0.1.0 (Foundation) ✅
     v1.0.0 (Production) ✅
         │
         ↓
-    v1.1.0 (Quality & API) 🔄
+    v1.1.0 (Quality & API) ✅
         │
         ↓
-    v1.2.0 (Extensibility & TUI) 🔄
+    v1.2.0 (Extensibility & TUI) ✅
         │
         ↓
-    v1.3.0+ (Future)
+    v1.3.0 (Local Model Foundation) 📋
+        │
+        ↓
+    v1.4.0 (Quality & Data Generation) 📋
+        │
+        ↓
+    v1.5.0 (Hybrid Pipeline) 📋
 ```
 
 ## User Interface Roadmap
@@ -61,11 +70,17 @@ v1.0.0  ──────  Interactive CLI (questionary)
 v1.1.0  ──────  Quality Metrics + REST API (FastAPI)
                 Quality scoring and HTTP access for integrations
 
-v1.2.0  ──────  Plugin System + TUI Dashboard (Textual)
+v1.2.0  ──────  Plugin System + TUI Dashboard (Textual) ✅
                 Extensible plugins and full-screen terminal monitoring
 
-v1.3.0+ ──────  WebUI (TBD)
-                Browser interface (not prioritised)
+v1.3.0  ──────  Local Model Foundation
+                Native Ollama provider + PII detection
+
+v1.4.0  ──────  Quality & Data Generation
+                LLM-as-judge evaluation + Synthetic data
+
+v1.5.0  ──────  Hybrid Pipeline
+                Local/frontier cost-optimised generation
 ```
 
 ## Milestone Format

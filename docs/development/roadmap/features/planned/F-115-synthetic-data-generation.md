@@ -128,7 +128,7 @@ persona synthesise preview --input interviews.csv --count 5
 - [ ] Implement schema extraction
 - [ ] Implement distribution analysis
 - [ ] Create generation prompt templates
-- [ ] Integrate with F-108 PII detection
+- [ ] Integrate with F-113 PII detection
 - [ ] Implement validation pipeline
 - [ ] Create `persona synthesise` CLI subcommand
 - [ ] Add preview/dry-run mode
@@ -148,8 +148,8 @@ persona synthesise preview --input interviews.csv --count 5
 
 ## Dependencies
 
-- F-107: Native Ollama Provider
-- F-108: PII Detection & Anonymisation
+- F-112: Native Ollama Provider
+- F-113: PII Detection & Anonymisation
 
 ## Technical Considerations
 
@@ -190,6 +190,6 @@ For text columns:
 ## Related Documentation
 
 - [R-013: Local Model Assessment](../../research/R-013-local-model-assessment.md)
-- [F-107: Native Ollama Provider](F-107-native-ollama-provider.md)
-- [F-108: PII Detection & Anonymisation](F-108-pii-detection-anonymisation.md)
+- [F-112: Native Ollama Provider](F-112-native-ollama-provider.md)
+- [F-113: PII Detection & Anonymisation](F-113-pii-detection-anonymisation.md)
 - [Gretel AI Synthetic Data](https://github.com/gretelai/gretel-synthetics)
