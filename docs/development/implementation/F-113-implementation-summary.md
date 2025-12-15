@@ -367,4 +367,12 @@ The feature is ready for use and follows all Persona project standards including
 
 ---
 
+## Related Documentation
+
+- [F-113 Feature Specification](../roadmap/features/completed/F-113-pii-detection-anonymisation.md)
+- [v1.3.0 Milestone](../roadmap/milestones/v1.3.0.md)
+- [Privacy Setup Guide](../../guides/privacy-setup.md)
+
+---
+
 **Status**: Implementation complete

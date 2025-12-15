@@ -19,10 +19,12 @@ Release planning and milestone documentation.
 | [v1.1.0](v1.1.0.md) | Quality & API | 6 | v1.0.0 | ✅ Complete |
 | [v1.2.0](v1.2.0.md) | Extensibility & TUI | 7 | v1.0.0 | ✅ Complete |
 | [v1.3.0](v1.3.0.md) | Local Model Foundation | 2 | v1.2.0 | ✅ Complete |
-| [v1.4.0](v1.4.0.md) | Quality & Data Generation | 2 | v1.3.0 | 📋 Planned |
-| [v1.5.0](v1.5.0.md) | Hybrid Pipeline | 1 | v1.4.0 | 📋 Planned |
+| [v1.4.0](v1.4.0.md) | Quality & Data Generation | 2 | v1.3.0 | ✅ Complete |
+| [v1.5.0](v1.5.0.md) | Hybrid Pipeline | 1 | v1.4.0 | ✅ Complete |
+| [v1.6.0](v1.6.0.md) | Academic Validation | 2 | v1.5.0 | 📋 Planned |
+| [v1.7.0](v1.7.0.md) | Research Compliance | 5 | v1.6.0 | 📋 Planned |
 
-**Total: 109 complete features, 3 planned features**
+**Total: 110 complete features, 7 planned features**
 
 ## Dependency Graph
 
@@ -50,10 +52,16 @@ v0.1.0 (Foundation) ✅
     v1.3.0 (Local Model Foundation) ✅
         │
         ↓
-    v1.4.0 (Quality & Data Generation) 📋
+    v1.4.0 (Quality & Data Generation) ✅
         │
         ↓
-    v1.5.0 (Hybrid Pipeline) 📋
+    v1.5.0 (Hybrid Pipeline) ✅
+        │
+        ↓
+    v1.6.0 (Academic Validation) 📋
+        │
+        ↓
+    v1.7.0 (Research Compliance) 📋
 ```
 
 ## User Interface Roadmap
@@ -76,11 +84,17 @@ v1.2.0  ──────  Plugin System + TUI Dashboard (Textual) ✅
 v1.3.0  ──────  Local Model Foundation ✅
                 Native Ollama provider + PII detection
 
-v1.4.0  ──────  Quality & Data Generation
+v1.4.0  ──────  Quality & Data Generation ✅
                 LLM-as-judge evaluation + Synthetic data
 
-v1.5.0  ──────  Hybrid Pipeline
+v1.5.0  ──────  Hybrid Pipeline ✅
                 Local/frontier cost-optimised generation
+
+v1.6.0  ──────  Academic Validation
+                Shin et al. DIS 2024 metrics + Hallucination detection
+
+v1.7.0  ──────  Research Compliance
+                Bias detection + Audit trails + Lexical diversity
 ```
 
 ## Milestone Format

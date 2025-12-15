@@ -32,13 +32,13 @@ Five synthetic user research interviews covering different professional roles:
 
 ```bash
 # Generate personas from interview data
-persona generate --from data/synthetic/interviews/ --count 3
+persona generate --from tests/synthetic/interviews/ --count 3
 
 # Generate from survey data
-persona generate --from data/synthetic/surveys/user-feedback.csv --count 3
+persona generate --from tests/synthetic/surveys/user-feedback.csv --count 3
 
 # Preview data before generation
-persona preview --from data/synthetic/interviews/
+persona preview --from tests/synthetic/interviews/
 ```
 
 ## Generating Fresh Synthetic Data

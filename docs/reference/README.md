@@ -11,6 +11,8 @@ Technical specifications and API documentation for Persona.
 | [Persona Schema](persona-schema.md) | JSON output format specification |
 | [Configuration Reference](configuration-reference.md) | YAML configuration options |
 | [Provider APIs](provider-apis.md) | LLM provider specifications |
+| [Quality Metrics](quality-metrics.md) | Persona quality assessment metrics |
+| [Prompt Templates](prompt-templates.md) | Jinja2 templating and constraint DSL |
 
 ## Reference Format
 

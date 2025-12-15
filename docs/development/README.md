@@ -31,12 +31,7 @@ Layer 3: TUTORIALS (How)
 
 ## Current Status
 
-| Milestone | Theme | Status |
-|-----------|-------|--------|
-| v0.1.0-planning | Documentation | 🔄 In Progress |
-| v0.1.0 | Foundation | 📋 Planned |
-| v0.2.0 | Multi-Step Workflows | 📋 Planned |
-| v0.3.0 | Multi-Variation | 📋 Planned |
+**Current Version:** v1.5.0 (110 features complete, 7 planned)
 
 See [Roadmap](roadmap/) for complete milestone details.
 

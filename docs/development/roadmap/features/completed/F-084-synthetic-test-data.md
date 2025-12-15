@@ -24,7 +24,7 @@ Users need sample data to learn Persona without using their own sensitive data. 
 ### Synthetic Data Set
 
 ```
-data/synthetic/
+tests/synthetic/
 ├── README.md                    # Dataset documentation
 ├── interviews/
 │   ├── participant-001.md       # Developer persona
