@@ -36,7 +36,7 @@ Researchers need to compare personas generated with different settings (models, 
 ## Success Criteria
 
 - [ ] Differences clearly visible in terminal output
-- [ ] Similarity score correlates with human judgment
+- [ ] Similarity score correlates with human judgement
 - [ ] Comparison works across different models/settings
 - [ ] Export suitable for stakeholder presentations
 - [ ] Supports at least 4 personas in single comparison

@@ -46,9 +46,11 @@ High-level architecture for Persona.
 ## Layer Responsibilities
 
 ### User Interface Layer
-- **CLI** - Primary interface using Typer + Rich
-- **TUI** - Terminal UI for interactive exploration (v1.0.0)
-- **WebUI** - Web interface (future)
+- **CLI** - Primary interface using Typer + Rich (v0.1.0)
+- **REST API** - HTTP access for integrations using FastAPI (v1.1.0)
+- **Interactive CLI** - Arrow-key prompts using questionary (v1.0.0)
+- **TUI Dashboard** - Full-screen terminal monitoring using Textual (v1.2.0+)
+- **WebUI** - Browser interface (future, not prioritised)
 
 ### Core Layer
 - **PersonaAutomation** - Main orchestrator coordinating all components

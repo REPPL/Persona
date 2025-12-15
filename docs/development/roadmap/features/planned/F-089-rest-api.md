@@ -99,7 +99,7 @@ uvicorn persona.api:app --host 0.0.0.0 --port 8000
 
 ## Dependencies
 
-- F-087: Python SDK
+- F-105: Python SDK
 - F-088: Async support
 
 ---
@@ -107,6 +107,6 @@ uvicorn persona.api:app --host 0.0.0.0 --port 8000
 ## Related Documentation
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
-- [ADR-0021: Programmatic API](../../decisions/adrs/ADR-0021-programmatic-api.md)
-- [F-087: Python SDK](F-087-python-sdk.md)
+- [ADR-0021: Programmatic API](../../../decisions/adrs/ADR-0021-programmatic-api.md)
+- [F-105: Python SDK](F-105-python-sdk.md)
 

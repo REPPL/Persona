@@ -12,32 +12,59 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.ui.commands import experiment_app, generate_app, vendor_app, model_app, template_app, workflow_app
+from persona.ui.commands import (
+    experiment_app,
+    generate_app,
+    vendor_app,
+    model_app,
+    template_app,
+    workflow_app,
+    preview_app,
+    validate_app,
+    compare_app,
+    export_app,
+    cluster_app,
+    refine_app,
+    config_app,
+    help_app,
+)
 from persona.ui.console import get_console as _get_console
 
 app = typer.Typer(
     name="persona",
     help="Generate realistic user personas from your data using AI.",
     no_args_is_help=True,
-    add_completion=False,
+    add_completion=True,  # Enable shell completions (F-095)
 )
 
-# Add subcommand groups
+# Add subcommand groups - User-facing commands
 app.add_typer(generate_app, name="generate")
+app.add_typer(preview_app, name="preview")
+app.add_typer(validate_app, name="validate")
+app.add_typer(compare_app, name="compare")
+app.add_typer(export_app, name="export")
+app.add_typer(cluster_app, name="cluster")
+app.add_typer(refine_app, name="refine")
 app.add_typer(experiment_app, name="experiment")
-app.add_typer(vendor_app, name="vendor")
-app.add_typer(model_app, name="model")
-app.add_typer(template_app, name="template")
-app.add_typer(workflow_app, name="workflow")
+app.add_typer(config_app, name="config")
+app.add_typer(help_app, name="help")
+
+# Add subcommand groups - Advanced/Admin commands (hidden by default)
+app.add_typer(vendor_app, name="vendor", hidden=True)
+app.add_typer(model_app, name="model", hidden=True)
+app.add_typer(template_app, name="template", hidden=True)
+app.add_typer(workflow_app, name="workflow", hidden=True)
 
 # Global state for console options (used by callbacks)
 _no_color: bool = False
 _quiet: bool = False
+_verbosity: int = 1  # 0=quiet, 1=normal, 2=verbose, 3=debug
+_interactive: bool = False
 
 
 def get_console():
     """Get console with current global settings."""
-    return _get_console(no_color=_no_color, quiet=_quiet)
+    return _get_console(no_color=_no_color, quiet=_quiet, verbosity=_verbosity)
 
 
 def version_callback(value: bool) -> None:
@@ -58,16 +85,41 @@ def no_color_callback(value: bool) -> None:
 
 def quiet_callback(value: bool) -> None:
     """Set quiet mode globally."""
-    global _quiet
+    global _quiet, _verbosity
     # Always reset first (for test isolation), then set if True
     _quiet = bool(value)
+    if _quiet:
+        _verbosity = 0
+
+
+def verbose_callback(value: int) -> None:
+    """Set verbosity level globally.
+
+    Can be called multiple times (-v -v) to increase verbosity.
+    """
+    global _verbosity
+    if value:
+        _verbosity = min(value + 1, 3)  # +1 because normal is 1, cap at 3 (debug)
+
+
+def interactive_callback(value: bool) -> None:
+    """Set interactive mode globally."""
+    global _interactive
+    _interactive = bool(value)
 
 
 def _reset_globals() -> None:
     """Reset global state (for testing)."""
-    global _no_color, _quiet
+    global _no_color, _quiet, _verbosity, _interactive
     _no_color = False
     _quiet = False
+    _verbosity = 1
+    _interactive = False
+
+
+def is_interactive() -> bool:
+    """Check if interactive mode is enabled."""
+    return _interactive
 
 
 @app.callback()
@@ -97,6 +149,25 @@ def main(
             callback=quiet_callback,
             is_eager=True,
             help="Minimal output (errors and results only).",
+        ),
+    ] = None,
+    verbose: Annotated[
+        int,
+        typer.Option(
+            "--verbose", "-v",
+            callback=verbose_callback,
+            count=True,
+            is_eager=True,
+            help="Increase output verbosity. Use -v for verbose, -vv for debug.",
+        ),
+    ] = 0,
+    interactive: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--interactive", "-i",
+            callback=interactive_callback,
+            is_eager=True,
+            help="Run in interactive mode with guided prompts.",
         ),
     ] = None,
 ) -> None:
@@ -238,6 +309,13 @@ def estimate_cost(
             help="Specific model to estimate (shows all if not specified).",
         ),
     ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
 ) -> None:
     """
     Estimate API costs before generating.
@@ -246,13 +324,13 @@ def estimate_cost(
         persona cost --from ./data/interviews.csv --count 5
         persona cost --tokens 10000 --model gpt-4o
     """
+    import json
+
     from persona import __version__
-    from persona.core.cost import CostEstimator, PricingData
+    from persona.core.cost import CostEstimator
     from persona.core.data import DataLoader
 
     console = get_console()
-    console.print(f"[dim]Persona {__version__}[/dim]\n")
-
     estimator = CostEstimator()
 
     # Determine input tokens
@@ -260,17 +338,10 @@ def estimate_cost(
         loader = DataLoader()
         data = loader.load_file(data_path)
         input_tokens = loader.count_tokens(data)
-        console.print(f"[bold]Data:[/bold] {data_path}")
-        console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
     elif tokens:
         input_tokens = tokens
-        console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
     else:
-        console.print("[yellow]Specify --from or --tokens for accurate estimates.[/yellow]")
         input_tokens = 5000  # Default assumption
-
-    console.print(f"[bold]Personas:[/bold] {count}")
-    console.print()
 
     if model:
         # Single model estimate
@@ -280,6 +351,33 @@ def estimate_cost(
             persona_count=count,
             provider=provider,
         )
+
+        if json_output:
+            result = {
+                "command": "cost",
+                "version": __version__,
+                "success": estimate.pricing is not None,
+                "data": {
+                    "input_tokens": estimate.input_tokens,
+                    "output_tokens": estimate.output_tokens,
+                    "persona_count": count,
+                    "model": estimate.model,
+                    "provider": estimate.provider,
+                    "input_cost": float(estimate.input_cost) if estimate.pricing else None,
+                    "output_cost": float(estimate.output_cost) if estimate.pricing else None,
+                    "total_cost": float(estimate.total_cost) if estimate.pricing else None,
+                },
+            }
+            print(json.dumps(result, indent=2))
+            return
+
+        # Rich output
+        console.print(f"[dim]Persona {__version__}[/dim]\n")
+        if data_path:
+            console.print(f"[bold]Data:[/bold] {data_path}")
+        console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
+        console.print(f"[bold]Personas:[/bold] {count}")
+        console.print()
 
         if estimate.pricing:
             console.print(f"[bold]{estimate.model}[/bold] ({estimate.provider})")
@@ -295,6 +393,44 @@ def estimate_cost(
             persona_count=count,
             provider=provider,
         )
+
+        if json_output:
+            result = {
+                "command": "cost",
+                "version": __version__,
+                "success": True,
+                "data": {
+                    "input_tokens": input_tokens,
+                    "persona_count": count,
+                    "estimates": [
+                        {
+                            "model": est.model,
+                            "provider": est.provider,
+                            "input_tokens": est.input_tokens,
+                            "output_tokens": est.output_tokens,
+                            "input_cost": float(est.input_cost) if est.pricing else None,
+                            "output_cost": float(est.output_cost) if est.pricing else None,
+                            "total_cost": float(est.total_cost) if est.pricing else None,
+                        }
+                        for est in estimates
+                        if est.pricing
+                    ],
+                },
+            }
+            print(json.dumps(result, indent=2))
+            return
+
+        # Rich output
+        console.print(f"[dim]Persona {__version__}[/dim]\n")
+        if data_path:
+            console.print(f"[bold]Data:[/bold] {data_path}")
+            console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
+        elif tokens:
+            console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
+        else:
+            console.print("[yellow]Specify --from or --tokens for accurate estimates.[/yellow]")
+        console.print(f"[bold]Personas:[/bold] {count}")
+        console.print()
 
         table = Table(title="Cost Estimates (sorted by cost)")
         table.add_column("Model", style="cyan")
@@ -314,7 +450,126 @@ def estimate_cost(
                 )
 
         console.print(table)
-        console.print(f"\n[dim]Estimates based on {input_tokens:,} input tokens + ~{estimates[0].output_tokens:,} output tokens[/dim]")
+        if estimates:
+            console.print(f"\n[dim]Estimates based on {input_tokens:,} input tokens + ~{estimates[0].output_tokens:,} output tokens[/dim]")
+
+
+@app.command("models")
+def list_models(
+    provider: Annotated[
+        Optional[str],
+        typer.Option(
+            "--provider",
+            "-p",
+            help="Filter by provider (anthropic, openai, gemini).",
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    List available models with pricing information.
+
+    Example:
+        persona models
+        persona models --provider anthropic
+        persona models --json
+    """
+    import json
+
+    from persona import __version__
+    from persona.core.cost import PricingData
+    from persona.core.providers import ProviderFactory
+
+    console = get_console()
+
+    # Get all pricing data
+    all_pricing = list(PricingData.list_models(provider=provider))
+
+    # Check which providers are configured
+    configured_providers = set()
+    for p_name in ["anthropic", "openai", "gemini"]:
+        try:
+            prov = ProviderFactory.create(p_name)
+            if prov.is_configured():
+                configured_providers.add(p_name)
+        except Exception:
+            pass
+
+    if json_output:
+        result = {
+            "command": "models",
+            "version": __version__,
+            "success": True,
+            "data": {
+                "providers": {},
+            },
+        }
+
+        # Group by provider
+        for pricing in all_pricing:
+            if pricing.provider not in result["data"]["providers"]:
+                result["data"]["providers"][pricing.provider] = {
+                    "configured": pricing.provider in configured_providers,
+                    "models": [],
+                }
+            result["data"]["providers"][pricing.provider]["models"].append({
+                "name": pricing.model,
+                "input_price": float(pricing.input_price),
+                "output_price": float(pricing.output_price),
+                "default": pricing.model in [
+                    "claude-sonnet-4-20250514",
+                    "gpt-4o",
+                    "gemini-2.0-flash",
+                ],
+            })
+
+        print(json.dumps(result, indent=2))
+        return
+
+    # Rich output
+    console.print(f"[dim]Persona {__version__}[/dim]\n")
+
+    # Group by provider
+    by_provider: dict[str, list] = {}
+    for pricing in all_pricing:
+        if pricing.provider not in by_provider:
+            by_provider[pricing.provider] = []
+        by_provider[pricing.provider].append(pricing)
+
+    for provider_name, models in sorted(by_provider.items()):
+        # Provider header with configured status
+        configured = provider_name in configured_providers
+        status = "[green]✓[/green]" if configured else "○"
+        console.print(f"\n[bold]{provider_name}[/bold] {status}")
+
+        # Sort models by input price
+        models.sort(key=lambda x: float(x.input_price))
+
+        for pricing in models:
+            # Check if default
+            is_default = pricing.model in [
+                "claude-sonnet-4-20250514",
+                "gpt-4o",
+                "gemini-2.0-flash",
+            ]
+            default_marker = " [cyan]✓ default[/cyan]" if is_default else ""
+
+            console.print(
+                f"  {pricing.model:30} "
+                f"${float(pricing.input_price):>6.2f}/${float(pricing.output_price):>6.2f} per M tokens"
+                f"{default_marker}"
+            )
+
+    # Legend
+    console.print()
+    console.print("[dim]Legend: Input/Output price per million tokens[/dim]")
+    console.print("[dim]✓ = configured provider, ○ = not configured[/dim]")
 
 
 @app.command()

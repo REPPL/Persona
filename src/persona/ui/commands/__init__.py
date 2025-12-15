@@ -10,6 +10,14 @@ from persona.ui.commands.vendor import vendor_app
 from persona.ui.commands.model import model_app
 from persona.ui.commands.template import template_app
 from persona.ui.commands.workflow import workflow_app
+from persona.ui.commands.preview import preview_app
+from persona.ui.commands.validate import validate_app
+from persona.ui.commands.compare import compare_app
+from persona.ui.commands.export import export_app
+from persona.ui.commands.cluster import cluster_app
+from persona.ui.commands.refine import refine_app
+from persona.ui.commands.config import config_app
+from persona.ui.commands.help import help_app
 
 __all__ = [
     "generate_app",
@@ -18,4 +26,12 @@ __all__ = [
     "model_app",
     "template_app",
     "workflow_app",
+    "preview_app",
+    "validate_app",
+    "compare_app",
+    "export_app",
+    "cluster_app",
+    "refine_app",
+    "config_app",
+    "help_app",
 ]

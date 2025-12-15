@@ -349,5 +349,5 @@ Documents the decision to use questionary (see ADR-0022).
 
 - [ADR-0005: Typer + Rich CLI Framework](../decisions/adrs/ADR-0005-cli-framework.md)
 - [ADR-0022: Interactive CLI Library Selection](../decisions/adrs/ADR-0022-interactive-cli-library.md)
-- [F-092: Interactive Mode Flag](../roadmap/features/planned/F-092-interactive-mode.md)
+- [F-092: Interactive Mode Flag](../roadmap/features/completed/F-092-interactive-mode.md)
 - [F-016: Interactive Rich UI](../roadmap/features/completed/F-016-interactive-rich-ui.md)

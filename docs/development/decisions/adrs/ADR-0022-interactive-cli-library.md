@@ -120,16 +120,16 @@ data_file = questionary.path(
 
 ## Research Reference
 
-See [R-010: Interactive CLI Libraries](../../research/R-010-interactive-cli-libraries.md) for comprehensive analysis.
+See [R-011: Interactive CLI Libraries](../../research/R-011-interactive-cli-libraries.md) for comprehensive analysis.
 
 ---
 
 ## Related Documentation
 
 - [ADR-0005: Typer + Rich CLI Framework](./ADR-0005-cli-framework.md)
-- [F-092: Interactive Mode Flag](../../roadmap/features/planned/F-092-interactive-mode.md)
-- [F-093: TUI Configuration Editor](../../roadmap/features/planned/F-093-tui-config-editor.md)
-- [R-010: Interactive CLI Libraries](../../research/R-010-interactive-cli-libraries.md)
+- [F-092: Interactive Mode Flag](../../roadmap/features/completed/F-092-interactive-mode.md)
+- [F-093: TUI Configuration Editor](../../roadmap/features/completed/F-093-tui-config-editor.md)
+- [R-011: Interactive CLI Libraries](../../research/R-011-interactive-cli-libraries.md)
 
 ---
 

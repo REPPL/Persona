@@ -1,0 +1,160 @@
+{
+  "metadata": {
+    "description": "Combined interview and survey data for persona generation",
+    "data_type": "synthetic",
+    "total_participants": 5,
+    "data_sources": ["interviews", "surveys"]
+  },
+  "participants": [
+    {
+      "id": "P001",
+      "demographics": {
+        "role": "Senior Software Developer",
+        "experience_years": 8,
+        "industry": "Financial Technology",
+        "company_size": "200-500 employees",
+        "location": "Remote (UK)"
+      },
+      "tools": ["VS Code", "GitHub", "Jira", "Slack", "Python", "React", "PostgreSQL", "Docker"],
+      "pain_points": [
+        "Technical debt accumulation",
+        "Too many meetings interrupting deep work",
+        "Unclear requirements from product",
+        "Context switching between projects"
+      ],
+      "goals": [
+        "Write high-quality, maintainable code",
+        "Reduce time spent on code reviews",
+        "Improve automated testing coverage",
+        "Better work-life balance"
+      ],
+      "quotes": [
+        "Invest in developer experience. Good CI/CD, fast builds, helpful error messages - these things compound.",
+        "Meetings that could have been emails are my biggest frustration.",
+        "When the tools work smoothly, developers are happier and more productive."
+      ],
+      "satisfaction_score": 4,
+      "nps_score": 9
+    },
+    {
+      "id": "P002",
+      "demographics": {
+        "role": "UX Designer",
+        "experience_years": 5,
+        "industry": "E-commerce",
+        "company_size": "50-100 employees",
+        "location": "Berlin, Germany"
+      },
+      "tools": ["Figma", "Maze", "Loom", "Notion", "axe", "colour contrast checkers"],
+      "pain_points": [
+        "Recruiting representative research participants",
+        "Developers implementing designs without consultation",
+        "Stakeholders changing requirements mid-project",
+        "Lack of proper design system documentation"
+      ],
+      "goals": [
+        "Build accessible, user-centred products",
+        "Establish a consistent design system",
+        "Get faster access to user behaviour data",
+        "Improve design-development collaboration"
+      ],
+      "quotes": [
+        "What works for one product might not work for another.",
+        "I design with accessibility in mind from the start.",
+        "A 'small' copy change can affect the entire layout."
+      ],
+      "satisfaction_score": 3,
+      "nps_score": 7
+    },
+    {
+      "id": "P003",
+      "demographics": {
+        "role": "Product Manager",
+        "experience_years": 6,
+        "industry": "SaaS / B2B Software",
+        "company_size": "100-200 employees",
+        "location": "San Francisco, USA"
+      },
+      "tools": ["Product analytics", "NPS surveys", "Support ticket systems", "Customer calls"],
+      "pain_points": [
+        "Saying no to feature requests",
+        "Endless meetings leaving no strategic thinking time",
+        "Misalignment across leadership",
+        "Manual data queries for user insights"
+      ],
+      "goals": [
+        "Focus team on highest-impact work",
+        "Make data-driven prioritisation decisions",
+        "Improve stakeholder communication",
+        "Build better data infrastructure"
+      ],
+      "quotes": [
+        "My job is to figure out what we should build, why, and when.",
+        "I involve engineers in problem discovery so they understand the context.",
+        "I've started protecting Thursday mornings for deep work."
+      ],
+      "satisfaction_score": 4,
+      "nps_score": 8
+    },
+    {
+      "id": "P004",
+      "demographics": {
+        "role": "Data Scientist",
+        "experience_years": 4,
+        "industry": "Healthcare Technology",
+        "company_size": "500+ employees",
+        "location": "Boston, USA"
+      },
+      "tools": ["Python", "pandas", "scikit-learn", "PyTorch", "Jupyter", "Databricks", "MLflow", "Snowflake", "Git"],
+      "pain_points": [
+        "Poor data quality requiring extensive cleaning",
+        "Unrealistic expectations about AI capabilities",
+        "Gap between prototype and production deployment",
+        "Inadequate model monitoring"
+      ],
+      "goals": [
+        "Spend more time on modelling, less on data cleaning",
+        "Improve MLOps tooling and CI/CD for ML",
+        "Better educate stakeholders about ML limitations",
+        "More compute resources for experimentation"
+      ],
+      "quotes": [
+        "I spend probably 60% of my time on data cleaning and preprocessing. The actual modelling is the easy part.",
+        "Executives don't want to hear about model performance metrics - they want to know the business impact.",
+        "We've had models silently degrade because nobody was watching the right metrics."
+      ],
+      "satisfaction_score": 3,
+      "nps_score": 6
+    },
+    {
+      "id": "P005",
+      "demographics": {
+        "role": "DevOps Engineer",
+        "experience_years": 7,
+        "industry": "Media & Entertainment",
+        "company_size": "1000+ employees",
+        "location": "Amsterdam, Netherlands"
+      },
+      "tools": ["Kubernetes", "Terraform", "ArgoCD", "Prometheus", "Grafana", "GitHub Actions", "Vault", "PagerDuty"],
+      "pain_points": [
+        "Cloud cost management surprises",
+        "Environment drift despite IaC",
+        "Being treated as a service desk",
+        "Technical debt in infrastructure"
+      ],
+      "goals": [
+        "Build better self-service developer tools",
+        "Improve documentation and runbooks",
+        "Reduce toil through automation",
+        "Focus on platform engineering"
+      ],
+      "quotes": [
+        "It's easy to spin up resources but hard to track what's actually being used.",
+        "When I'm on call at 2 AM, I don't want to reverse-engineer someone's clever automation.",
+        "You can't adopt everything, so picking the right battles matters."
+      ],
+      "satisfaction_score": 4,
+      "nps_score": 9
+    }
+  ]
+}

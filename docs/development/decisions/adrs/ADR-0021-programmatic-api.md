@@ -155,11 +155,10 @@ api = [
 
 ## Related Documentation
 
-- [F-087: Python SDK](../../roadmap/features/planned/F-087-python-sdk.md)
-- [F-088: Async Support](../../roadmap/features/planned/F-088-async-support.md)
+- [F-087: Models Command](../../roadmap/features/completed/F-087-models-command.md)
 - [F-089: REST API](../../roadmap/features/planned/F-089-rest-api.md)
 - [F-090: Webhooks](../../roadmap/features/planned/F-090-webhooks.md)
-- [F-091: SDK Documentation](../../roadmap/features/planned/F-091-sdk-documentation.md)
+- [F-091: SDK Documentation](../../roadmap/features/completed/F-091-sdk-documentation.md)
 - [Milestone v0.5.0](../../roadmap/milestones/v0.5.0.md)
 - [Milestone v0.9.0](../../roadmap/milestones/v0.9.0.md)
 

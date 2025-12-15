@@ -1,0 +1,136 @@
+{
+  "survey_metadata": {
+    "survey_name": "Developer Experience Survey Q4 2024",
+    "total_responses": 20,
+    "collection_period": "2024-10-01 to 2024-10-31",
+    "response_rate": 0.68
+  },
+  "nps_summary": {
+    "overall_score": 32,
+    "promoters": 9,
+    "passives": 6,
+    "detractors": 5
+  },
+  "responses": [
+    {
+      "participant_id": "P001",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "The platform has significantly improved our deployment speed. Would definitely recommend to other teams."
+    },
+    {
+      "participant_id": "P002",
+      "score": 7,
+      "category": "passive",
+      "verbatim": "Good overall but the design tools integration could be better. Takes too many steps to sync prototypes."
+    },
+    {
+      "participant_id": "P003",
+      "score": 8,
+      "category": "passive",
+      "verbatim": "Solid product management features. Would love to see better roadmap visualisation options."
+    },
+    {
+      "participant_id": "P004",
+      "score": 6,
+      "category": "detractor",
+      "verbatim": "Data pipeline tools are basic. Had to build custom solutions for most of our ML workflow needs."
+    },
+    {
+      "participant_id": "P005",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "Excellent infrastructure automation. The Terraform integration saved us weeks of manual work."
+    },
+    {
+      "participant_id": "P006",
+      "score": 10,
+      "category": "promoter",
+      "verbatim": "Love the component library and hot reload. Best developer experience I've had in years."
+    },
+    {
+      "participant_id": "P007",
+      "score": 5,
+      "category": "detractor",
+      "verbatim": "API documentation is outdated. Spent days debugging issues that were caused by incorrect docs."
+    },
+    {
+      "participant_id": "P008",
+      "score": 7,
+      "category": "passive",
+      "verbatim": "Test automation is decent but test data management is still painful. Would like better fixtures."
+    },
+    {
+      "participant_id": "P009",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "Security scanning integration is top-notch. Caught several vulnerabilities before they hit production."
+    },
+    {
+      "participant_id": "P010",
+      "score": 8,
+      "category": "passive",
+      "verbatim": "Good documentation tools but versioning is confusing. Hard to maintain docs for multiple versions."
+    },
+    {
+      "participant_id": "P011",
+      "score": 6,
+      "category": "detractor",
+      "verbatim": "Reporting features don't give me the insights I need for team performance. Had to export to Excel."
+    },
+    {
+      "participant_id": "P012",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "Cross-platform build system is reliable. Reduced our release time from days to hours."
+    },
+    {
+      "participant_id": "P013",
+      "score": 10,
+      "category": "promoter",
+      "verbatim": "The observability features are excellent. Alert correlation has reduced our MTTR significantly."
+    },
+    {
+      "participant_id": "P014",
+      "score": 5,
+      "category": "detractor",
+      "verbatim": "Database tooling feels like an afterthought. Query optimisation suggestions are often wrong."
+    },
+    {
+      "participant_id": "P015",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "Full stack debugging finally works properly. Can trace issues from frontend to database."
+    },
+    {
+      "participant_id": "P016",
+      "score": 7,
+      "category": "passive",
+      "verbatim": "Architecture tools are functional but diagrams export poorly. Client presentations need manual cleanup."
+    },
+    {
+      "participant_id": "P017",
+      "score": 10,
+      "category": "promoter",
+      "verbatim": "Developer portal capabilities are exactly what we needed. Self-service has reduced tickets by 60%."
+    },
+    {
+      "participant_id": "P018",
+      "score": 6,
+      "category": "detractor",
+      "verbatim": "ML model registry is too basic. Had to integrate with external tools for proper model versioning."
+    },
+    {
+      "participant_id": "P019",
+      "score": 8,
+      "category": "passive",
+      "verbatim": "Release management is solid for single-team releases. Multi-team coordination still needs work."
+    },
+    {
+      "participant_id": "P020",
+      "score": 9,
+      "category": "promoter",
+      "verbatim": "Multi-cloud support works well. Managing AWS and Azure from one place has been game-changing."
+    }
+  ]
+}

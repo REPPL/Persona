@@ -1,0 +1,21 @@
+participant_id,role,industry,years_experience,company_size,satisfaction_score,biggest_challenge,feature_request,tool_preference,work_style
+P001,Software Developer,FinTech,8,200-500,4,Technical debt and time pressure,Better automated testing tools,VS Code,Remote
+P002,UX Designer,E-commerce,5,50-100,3,Getting stakeholder buy-in for research,Design system documentation,Figma,Hybrid
+P003,Product Manager,SaaS,6,100-200,4,Prioritisation and saying no,Self-serve analytics dashboard,Notion,Office
+P004,Data Scientist,Healthcare,4,500+,3,Data quality and cleaning,MLOps automation,Jupyter,Hybrid
+P005,DevOps Engineer,Media,7,1000+,4,Cost management and drift,Self-service platform tools,Kubernetes,Remote
+P006,Frontend Developer,Retail,3,50-100,4,Keeping up with framework changes,Component library,React,Hybrid
+P007,Backend Developer,Logistics,6,200-500,3,Legacy system integration,API documentation tools,IntelliJ,Office
+P008,QA Engineer,Insurance,5,500+,3,Test environment stability,Better test data management,Selenium,Hybrid
+P009,Security Analyst,Banking,4,1000+,4,Alert fatigue,Automated threat detection,Splunk,Office
+P010,Technical Writer,Software,3,100-200,4,Getting developer time for reviews,Content versioning system,Confluence,Remote
+P011,Engineering Manager,Telecom,10,1000+,3,Balancing technical and people work,Better 1:1 tracking tools,Jira,Hybrid
+P012,Mobile Developer,Gaming,4,50-100,4,Cross-platform consistency,Unified testing framework,Android Studio,Remote
+P013,Site Reliability Engineer,Cloud Services,5,500+,4,Toil reduction,Better runbook automation,Terraform,Remote
+P014,Database Administrator,Healthcare,8,200-500,3,Performance tuning complexity,Automated index recommendations,pgAdmin,Office
+P015,Full Stack Developer,EdTech,4,100-200,4,Context switching between layers,Integrated debugging tools,VS Code,Hybrid
+P016,Solutions Architect,Consulting,9,500+,3,Translating requirements to design,Architecture diagramming tools,Draw.io,Hybrid
+P017,Platform Engineer,FinTech,6,200-500,4,Standardisation across teams,Developer portal,Backstage,Remote
+P018,Machine Learning Engineer,Automotive,5,1000+,3,Model deployment complexity,Feature store integration,PyTorch,Office
+P019,Release Manager,Insurance,7,500+,3,Coordinating cross-team releases,Release orchestration platform,Jenkins,Hybrid
+P020,Cloud Architect,Retail,8,200-500,4,Multi-cloud complexity,Unified cloud management,AWS Console,Remote

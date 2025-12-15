@@ -7,12 +7,14 @@ against quality criteria and data consistency checks.
 
 from persona.core.validation.validator import (
     PersonaValidator,
+    ValidationLevel,
     ValidationResult,
     ValidationRule,
 )
 
 __all__ = [
     "PersonaValidator",
+    "ValidationLevel",
     "ValidationResult",
     "ValidationRule",
 ]

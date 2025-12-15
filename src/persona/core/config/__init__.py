@@ -38,6 +38,18 @@ from persona.core.config.validator import (
     ValidationLevel,
     validate_config,
 )
+from persona.core.config.global_config import (
+    GlobalConfig,
+    ConfigManager,
+    DefaultsConfig,
+    BudgetConfig,
+    OutputConfig,
+    LoggingConfig,
+    get_config,
+    get_config_manager,
+    get_global_config_path,
+    get_project_config_path,
+)
 
 __all__ = [
     # Vendor configuration
@@ -68,4 +80,15 @@ __all__ = [
     "ValidationIssue",
     "ValidationLevel",
     "validate_config",
+    # Global configuration (F-085)
+    "GlobalConfig",
+    "ConfigManager",
+    "DefaultsConfig",
+    "BudgetConfig",
+    "OutputConfig",
+    "LoggingConfig",
+    "get_config",
+    "get_config_manager",
+    "get_global_config_path",
+    "get_project_config_path",
 ]

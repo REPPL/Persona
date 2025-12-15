@@ -98,16 +98,54 @@ def list_experiments(
             help="Base directory for experiments.",
         ),
     ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
 ) -> None:
     """
     List all experiments.
 
     Example:
         persona experiment list
+        persona experiment list --json
     """
+    import json
+
     console = get_console()
     manager = _get_manager(base_dir)
     experiments = manager.list_experiments()
+
+    if json_output:
+        result = {
+            "command": "experiment list",
+            "success": True,
+            "data": {
+                "experiments": [],
+            },
+        }
+        for exp_name in experiments:
+            try:
+                exp = manager.load(exp_name)
+                outputs = exp.list_outputs()
+                result["data"]["experiments"].append({
+                    "name": exp_name,
+                    "description": exp.config.description or "",
+                    "provider": exp.config.provider,
+                    "model": exp.config.model,
+                    "count": exp.config.count,
+                    "outputs_count": len(outputs),
+                })
+            except Exception as e:
+                result["data"]["experiments"].append({
+                    "name": exp_name,
+                    "error": str(e),
+                })
+        print(json.dumps(result, indent=2))
+        return
 
     if not experiments:
         console.print("[yellow]No experiments found.[/yellow]")

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "persona"
-version = "0.9.0"
+version = "1.0.0"
 description = "Generate realistic user personas from your data using AI"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -12,7 +12,7 @@ requires-python = ">=3.12"
 authors = []
 keywords = ["persona", "ux", "user-research", "ai", "llm"]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -53,8 +53,13 @@ security = [
     "bandit>=1.7.0",
     "safety>=2.3.0",
 ]
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.24",
+]
 all = [
-    "persona[dev,test,security]",
+    "persona[dev,test,security,docs]",
 ]
 
 [project.scripts]

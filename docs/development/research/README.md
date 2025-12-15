@@ -27,6 +27,7 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-009](./R-009-reasoning-capture.md) | Reasoning Capture | Complete | ADR-0020 |
 | [R-010](./R-010-mvp-architecture.md) | MVP Architecture | Complete | - |
 | [R-011](./R-011-interactive-cli-libraries.md) | Interactive CLI Libraries | Complete | ADR-0022 |
+| [R-012](./R-012-tui-fullscreen-layout-patterns.md) | Full-Screen TUI Layout Patterns | Complete | - |
 
 ## Research Methodology
 

@@ -77,12 +77,12 @@ asyncio.run(generate_personas())
 
 ## Dependencies
 
-- F-087: Python SDK
+- F-105: Python SDK
 
 ---
 
 ## Related Documentation
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
-- [F-087: Python SDK](F-087-python-sdk.md)
+- [F-105: Python SDK](F-105-python-sdk.md)
 
