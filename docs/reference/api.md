@@ -154,6 +154,48 @@ The main SDK module provides the high-level interface for persona generation.
         - BudgetExceededError
         - GenerationError
 
+## Scripts API
+
+### Script Generator
+
+::: persona.core.scripts.generator.ScriptGenerator
+    options:
+      show_root_heading: true
+      members:
+        - generate
+        - batch_generate
+
+### Character Card Models
+
+::: persona.core.scripts.models.CharacterCard
+    options:
+      show_root_heading: true
+
+::: persona.core.scripts.models.Identity
+    options:
+      show_root_heading: true
+
+::: persona.core.scripts.models.PsychologicalProfile
+    options:
+      show_root_heading: true
+
+::: persona.core.scripts.models.CommunicationStyle
+    options:
+      show_root_heading: true
+
+::: persona.core.scripts.models.KnowledgeBoundaries
+    options:
+      show_root_heading: true
+
+### Privacy Audit
+
+::: persona.core.scripts.privacy.PrivacyAuditor
+    options:
+      show_root_heading: true
+      members:
+        - audit
+        - check_leakage
+
 ---
 
 ## Related Documentation
@@ -161,3 +203,5 @@ The main SDK module provides the high-level interface for persona generation.
 - [SDK Quickstart](../tutorials/sdk-quickstart.md)
 - [SDK Patterns Guide](../guides/sdk-patterns.md)
 - [Error Codes Reference](./error-codes.md)
+- [Character Card Schema](./character-card-schema.md)
+- [Conversation Scripts Guide](../guides/conversation-scripts.md)

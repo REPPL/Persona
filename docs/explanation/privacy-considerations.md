@@ -114,7 +114,7 @@ Privacy features are implemented in:
 - `persona.core.script_generation` - Conversation script generation
 
 See feature documentation for implementation details:
-- [F-104: Conversation Scripts](../development/roadmap/features/planned/F-104-conversation-scripts.md)
+- [F-104: Conversation Scripts](../development/roadmap/features/completed/F-104-conversation-scripts.md)
 
 ---
 
@@ -122,4 +122,5 @@ See feature documentation for implementation details:
 
 - [How Generation Works](how-generation-works.md) - Generation pipeline overview
 - [Reproducibility](reproducibility.md) - Experiment reproducibility
-- [F-104: Conversation Scripts](../development/roadmap/features/planned/F-104-conversation-scripts.md) - Privacy-preserving scripts
+- [F-104: Conversation Scripts](../development/roadmap/features/completed/F-104-conversation-scripts.md) - Privacy-preserving scripts
+- [Privacy Setup Guide](../guides/privacy-setup.md) - PII detection and anonymisation

@@ -513,10 +513,10 @@ persona script batch ./training-personas \
 
 ## Related Documentation
 
-- [Persona Generation Guide](./persona-generation.md)
+- [Persona Generation Guide](persona-generation.md)
 - [Privacy Considerations](../explanation/privacy-considerations.md)
 - [Character Card Schema](../reference/character-card-schema.md)
-- [API Reference](../reference/api/scripts.md)
+- [Scripts API Reference](../reference/api.md#scripts-api)
 
 ---
 
