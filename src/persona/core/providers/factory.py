@@ -12,6 +12,7 @@ from persona.core.providers.base import LLMProvider
 from persona.core.providers.openai import OpenAIProvider
 from persona.core.providers.anthropic import AnthropicProvider
 from persona.core.providers.gemini import GeminiProvider
+from persona.core.providers.ollama import OllamaProvider
 
 
 class ProviderFactory:
@@ -36,6 +37,7 @@ class ProviderFactory:
         "anthropic": AnthropicProvider,
         "gemini": GeminiProvider,
         "google": GeminiProvider,  # Alias
+        "ollama": OllamaProvider,
     }
 
     # Legacy alias for backward compatibility

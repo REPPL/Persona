@@ -100,6 +100,20 @@ def generate(
             help="Disable progress bar and streaming output.",
         ),
     ] = False,
+    anonymise: Annotated[
+        bool,
+        typer.Option(
+            "--anonymise",
+            help="Anonymise PII in data before generation.",
+        ),
+    ] = False,
+    anonymise_strategy: Annotated[
+        str,
+        typer.Option(
+            "--anonymise-strategy",
+            help="Anonymisation strategy: redact, replace, hash (default: redact).",
+        ),
+    ] = "redact",
 ) -> None:
     """
     Generate personas from data files.
@@ -107,6 +121,8 @@ def generate(
     Example:
         persona generate --from ./data/interviews.csv --count 3
         persona generate -i  # Interactive mode
+        persona generate --from sensitive.csv --anonymise
+        persona generate --from data.csv --anonymise --anonymise-strategy replace
     """
     if ctx.invoked_subcommand is not None:
         return
@@ -181,6 +197,70 @@ def generate(
     # Show data summary
     token_count = loader.count_tokens(data)
     console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)")
+
+    # Anonymise if requested
+    if anonymise:
+        try:
+            from persona.core.privacy import (
+                PIIDetector,
+                PIIAnonymiser,
+                AnonymisationStrategy,
+            )
+        except ImportError:
+            console.print(
+                "[red]Error:[/red] Privacy module not installed.\n"
+                "Install with: [cyan]pip install persona[privacy][/cyan]\n"
+                "Then run: [cyan]python -m spacy download en_core_web_lg[/cyan]"
+            )
+            raise typer.Exit(1)
+
+        console.print("[dim]Anonymising PII...[/dim]")
+
+        # Validate strategy
+        try:
+            anon_strategy = AnonymisationStrategy(anonymise_strategy.lower())
+        except ValueError:
+            console.print(
+                f"[red]Error:[/red] Invalid strategy '{anonymise_strategy}'. "
+                "Choose from: redact, replace, hash"
+            )
+            raise typer.Exit(1)
+
+        # Detect and anonymise
+        try:
+            detector = PIIDetector()
+            if not detector.is_available():
+                error = detector.get_import_error()
+                console.print(
+                    f"[red]Error:[/red] PII detection not available.\n"
+                    f"Install with: [cyan]pip install persona[privacy][/cyan]\n"
+                    f"Original error: {error}"
+                )
+                raise typer.Exit(1)
+
+            anonymiser = PIIAnonymiser()
+            if not anonymiser.is_available():
+                error = anonymiser.get_import_error()
+                console.print(
+                    f"[red]Error:[/red] PII anonymisation not available.\n"
+                    f"Install with: [cyan]pip install persona[privacy][/cyan]\n"
+                    f"Original error: {error}"
+                )
+                raise typer.Exit(1)
+
+            entities = detector.detect(data)
+            if entities:
+                result = anonymiser.anonymise(data, entities, anon_strategy)
+                data = result.text
+                console.print(
+                    f"[green]✓[/green] Anonymised {result.entity_count} PII "
+                    f"entities ({', '.join(sorted(result.entity_types))})"
+                )
+            else:
+                console.print("[green]✓[/green] No PII detected")
+        except Exception as e:
+            console.print(f"[red]Error anonymising data:[/red] {e}")
+            raise typer.Exit(1)
 
     # Configure generation (before provider check for dry_run)
     config = GenerationConfig(

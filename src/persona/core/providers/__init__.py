@@ -10,6 +10,7 @@ from persona.core.providers.factory import ProviderFactory
 from persona.core.providers.openai import OpenAIProvider
 from persona.core.providers.anthropic import AnthropicProvider
 from persona.core.providers.gemini import GeminiProvider
+from persona.core.providers.ollama import OllamaProvider
 from persona.core.providers.custom import CustomVendorProvider
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "OpenAIProvider",
     "AnthropicProvider",
     "GeminiProvider",
+    "OllamaProvider",
     "CustomVendorProvider",
 ]
