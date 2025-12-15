@@ -114,6 +114,55 @@ def generate(
             help="Anonymisation strategy: redact, replace, hash (default: redact).",
         ),
     ] = "redact",
+    hybrid: Annotated[
+        bool,
+        typer.Option(
+            "--hybrid",
+            help="Use hybrid local/frontier pipeline for cost-efficient generation.",
+        ),
+    ] = False,
+    local_model: Annotated[
+        Optional[str],
+        typer.Option(
+            "--local-model",
+            help="Local model for hybrid mode (default: qwen2.5:7b).",
+        ),
+    ] = None,
+    frontier_provider: Annotated[
+        Optional[str],
+        typer.Option(
+            "--frontier-provider",
+            help="Frontier provider for hybrid refinement (anthropic, openai, gemini).",
+        ),
+    ] = None,
+    frontier_model: Annotated[
+        Optional[str],
+        typer.Option(
+            "--frontier-model",
+            help="Frontier model for hybrid refinement.",
+        ),
+    ] = None,
+    quality_threshold: Annotated[
+        float,
+        typer.Option(
+            "--quality-threshold",
+            help="Minimum quality score to skip frontier refinement (0.0-1.0).",
+        ),
+    ] = 0.7,
+    max_cost: Annotated[
+        Optional[float],
+        typer.Option(
+            "--max-cost",
+            help="Maximum budget in USD for hybrid generation.",
+        ),
+    ] = None,
+    no_frontier: Annotated[
+        bool,
+        typer.Option(
+            "--no-frontier",
+            help="Use local-only mode in hybrid pipeline (no frontier refinement).",
+        ),
+    ] = False,
 ) -> None:
     """
     Generate personas from data files.
@@ -123,6 +172,11 @@ def generate(
         persona generate -i  # Interactive mode
         persona generate --from sensitive.csv --anonymise
         persona generate --from data.csv --anonymise --anonymise-strategy replace
+
+        # Hybrid mode examples
+        persona generate --from data.csv --hybrid --count 10
+        persona generate --from data.csv --hybrid --no-frontier  # Local-only
+        persona generate --from data.csv --hybrid --frontier-provider anthropic --max-cost 5.0
     """
     if ctx.invoked_subcommand is not None:
         return
@@ -262,6 +316,22 @@ def generate(
             console.print(f"[red]Error anonymising data:[/red] {e}")
             raise typer.Exit(1)
 
+    # Handle hybrid mode
+    if hybrid:
+        return _handle_hybrid_generation(
+            console=console,
+            data=data,
+            count=count or 3,
+            local_model=local_model,
+            frontier_provider=frontier_provider if not no_frontier else None,
+            frontier_model=frontier_model,
+            quality_threshold=quality_threshold,
+            max_cost=max_cost,
+            output=output,
+            experiment=experiment,
+            dry_run=dry_run,
+        )
+
     # Configure generation (before provider check for dry_run)
     config = GenerationConfig(
         data_path=data_path,
@@ -332,6 +402,157 @@ def generate(
 
     # Show summary
     _show_result_summary(console, result)
+
+
+def _handle_hybrid_generation(
+    console,
+    data: str,
+    count: int,
+    local_model: Optional[str],
+    frontier_provider: Optional[str],
+    frontier_model: Optional[str],
+    quality_threshold: float,
+    max_cost: Optional[float],
+    output: Optional[Path],
+    experiment: Optional[str],
+    dry_run: bool,
+) -> None:
+    """Handle hybrid pipeline generation."""
+    import asyncio
+    from persona.core.hybrid import HybridPipeline, HybridConfig
+
+    console.print("\n[bold cyan]Hybrid Pipeline Mode[/bold cyan]")
+
+    # Build hybrid configuration
+    try:
+        config = HybridConfig(
+            local_model=local_model or "qwen2.5:7b",
+            frontier_provider=frontier_provider,
+            frontier_model=frontier_model,
+            quality_threshold=quality_threshold,
+            max_cost=max_cost,
+        )
+    except ValueError as e:
+        console.print(f"[red]Error:[/red] Invalid configuration: {e}")
+        raise typer.Exit(1)
+
+    # Show hybrid configuration
+    _show_hybrid_config(console, config, count)
+
+    if dry_run:
+        console.print("\n[yellow]Dry run - no LLM call made.[/yellow]")
+        return
+
+    # Create pipeline
+    pipeline = HybridPipeline(config)
+
+    # Generate personas
+    console.print("\n[dim]Starting hybrid generation...[/dim]")
+    try:
+        # Run async generation
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(pipeline.generate(data, count))
+        loop.close()
+    except Exception as e:
+        console.print(f"[red]Error during generation:[/red] {e}")
+        raise typer.Exit(1)
+
+    # Show results
+    _show_hybrid_result(console, result)
+
+    # Save output
+    output_dir = output or Path("./outputs")
+    from persona.core.output import OutputManager
+
+    manager = OutputManager(base_dir=output_dir)
+
+    # Convert hybrid result to format compatible with OutputManager
+    # We need to adapt the personas to the expected format
+    from persona.core.generation import PersonaData
+
+    personas = []
+    for p in result.personas:
+        persona = PersonaData(
+            id=p.get("id", "unknown"),
+            name=p.get("name", "Unknown"),
+            raw_data=p,
+        )
+        personas.append(persona)
+
+    # Create a minimal result object for saving
+    from persona.core.generation import GenerationResult
+
+    generation_result = GenerationResult(
+        personas=personas,
+        input_tokens=result.total_tokens // 2,  # Rough estimate
+        output_tokens=result.total_tokens // 2,
+        config=None,
+    )
+
+    output_path = manager.save(generation_result, name=experiment)
+    console.print(f"\n[green]✓[/green] Saved to: {output_path}")
+
+
+def _show_hybrid_config(console, config: "HybridConfig", count: int) -> None:
+    """Display hybrid configuration."""
+    from rich.table import Table
+
+    table = Table(title="Hybrid Configuration", show_header=False)
+    table.add_column("Setting", style="cyan")
+    table.add_column("Value")
+
+    table.add_row("Pipeline mode", "Hybrid" if config.is_hybrid_mode else "Local-only")
+    table.add_row("Persona count", str(count))
+    table.add_row("Local model", config.local_model)
+
+    if config.is_hybrid_mode:
+        table.add_row("Frontier provider", config.frontier_provider or "None")
+        table.add_row("Frontier model", config.frontier_model or "None")
+        table.add_row("Quality threshold", f"{config.quality_threshold:.2f}")
+
+    if config.max_cost:
+        table.add_row("Max cost", f"${config.max_cost:.2f}")
+
+    console.print(table)
+
+
+def _show_hybrid_result(console, result: "HybridResult") -> None:
+    """Display hybrid generation result."""
+    from rich.table import Table
+
+    console.print(f"\n[bold green]Generated {result.persona_count} personas:[/bold green]")
+
+    # Show persona list
+    for i, persona in enumerate(result.personas[:10], 1):  # Show first 10
+        name = persona.get("name", "Unknown")
+        persona_id = persona.get("id", "unknown")
+        is_refined = persona.get("_refined", False)
+        status = "[yellow]refined[/yellow]" if is_refined else "[green]draft[/green]"
+        console.print(f"  {i}. [bold]{name}[/bold] ({persona_id}) {status}")
+
+    if result.persona_count > 10:
+        console.print(f"  ... and {result.persona_count - 10} more")
+
+    # Show statistics
+    console.print(f"\n[bold]Pipeline Statistics:[/bold]")
+    console.print(f"  Drafts generated: {result.draft_count}")
+    console.print(f"  Passed threshold: {result.passing_count}")
+    console.print(f"  Refined by frontier: {result.refined_count}")
+
+    # Show costs
+    costs = result.cost_tracker.to_dict()
+    console.print(f"\n[bold]Costs:[/bold]")
+    console.print(f"  Local: ${costs['local']['cost']:.4f}")
+    console.print(f"  Judge: ${costs['judge']['cost']:.4f}")
+    console.print(f"  Frontier: ${costs['frontier']['cost']:.4f}")
+    console.print(f"  [bold]Total: ${costs['total']['cost']:.4f}[/bold]")
+
+    if costs["budget"]["max"]:
+        remaining = costs["budget"]["remaining"]
+        console.print(f"  Budget remaining: ${remaining:.4f}")
+
+    console.print(f"\n[dim]Generation time: {result.generation_time:.1f}s[/dim]")
 
 
 def _get_api_key_env(provider: str) -> str:

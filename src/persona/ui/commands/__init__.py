@@ -24,6 +24,8 @@ from persona.ui.commands.script import script_app
 from persona.ui.commands.dashboard import dashboard_app
 from persona.ui.commands.serve import serve_app
 from persona.ui.commands.privacy import privacy_app
+from persona.ui.commands.evaluate import evaluate_app
+from persona.ui.commands.synthesise import synthesise_app
 
 __all__ = [
     "generate_app",
@@ -46,4 +48,6 @@ __all__ = [
     "dashboard_app",
     "serve_app",
     "privacy_app",
+    "evaluate_app",
+    "synthesise_app",
 ]

@@ -33,6 +33,8 @@ from persona.ui.commands import (
     dashboard_app,
     serve_app,
     privacy_app,
+    evaluate_app,
+    synthesise_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -57,8 +59,10 @@ app.add_typer(experiment_app, name="experiment")
 app.add_typer(config_app, name="config")
 app.add_typer(help_app, name="help")
 app.add_typer(quality_app, name="score")
+app.add_typer(evaluate_app, name="evaluate")
 app.add_typer(script_app, name="script")
 app.add_typer(privacy_app, name="privacy")
+app.add_typer(synthesise_app, name="synthesise")
 
 # Add subcommand groups - Advanced/Admin commands (hidden by default)
 app.add_typer(vendor_app, name="vendor", hidden=True)
