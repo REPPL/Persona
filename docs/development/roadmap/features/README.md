@@ -22,8 +22,9 @@ All features for Persona, organised by milestone and status.
 | v1.4.0 Quality & Data Generation | 2 | ✅ Complete |
 | v1.5.0 Hybrid Pipeline | 1 | ✅ Complete |
 | v1.6.0 Academic Validation | 2 | 📋 Planned |
+| v1.7.0 Research Compliance | 5 | 📋 Planned |
 
-**Total: 110 complete, 2 planned**
+**Total: 110 complete, 7 planned**
 
 ---
 
@@ -248,6 +249,18 @@ All features for Persona, organised by milestone and status.
 |----|---------|----------|
 | [F-117](planned/F-117-academic-validation-metrics.md) | Academic Validation Metrics | Quality |
 | [F-118](planned/F-118-hallucination-detection.md) | Hallucination Detection | Quality |
+
+---
+
+## v1.7.0 - Research Compliance 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-119](planned/F-119-bias-stereotype-detection.md) | Bias & Stereotype Detection | Quality |
+| [F-120](planned/F-120-multi-model-verification.md) | Multi-Model Verification | Quality |
+| [F-121](planned/F-121-lexical-diversity-metrics.md) | Lexical Diversity Metrics | Quality |
+| [F-122](planned/F-122-prompt-fidelity-scoring.md) | Prompt Fidelity Scoring | Quality |
+| [F-123](planned/F-123-generation-audit-trail.md) | Generation Audit Trail | Compliance |
 
 ---
 

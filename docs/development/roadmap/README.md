@@ -22,8 +22,9 @@ Feature-centric roadmap for Persona development.
 | v1.4.0 | Quality & Data Generation | 2 | ✅ Complete |
 | v1.5.0 | Hybrid Pipeline | 1 | ✅ Complete |
 | v1.6.0 | Academic Validation | 2 | 📋 Planned |
+| v1.7.0 | Research Compliance | 5 | 📋 Planned |
 
-**Total: 110 complete features, 2 planned features**
+**Total: 110 complete features, 7 planned features**
 
 ## Roadmap Structure
 
