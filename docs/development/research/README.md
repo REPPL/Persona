@@ -28,6 +28,33 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-010](./R-010-mvp-architecture.md) | MVP Architecture | Complete | - |
 | [R-011](./R-011-interactive-cli-libraries.md) | Interactive CLI Libraries | Complete | ADR-0022 |
 | [R-012](./R-012-tui-fullscreen-layout-patterns.md) | Full-Screen TUI Layout Patterns | Complete | - |
+| [R-013](./R-013-local-model-assessment.md) | Local Model Assessment | Complete | - |
+| [R-014](./R-014-shin-et-al-gap-analysis.md) | Shin et al. DIS 2024 Gap Analysis | Complete | - |
+| [R-015](./R-015-quality-metrics-taxonomy.md) | Quality Metrics Taxonomy | Complete | - |
+
+---
+
+## Research-to-Feature Mapping
+
+Quick reference showing which features each research document informs:
+
+| Research | Milestone | Features Informed |
+|----------|-----------|-------------------|
+| R-001 | v0.1.0 | F-004, F-005 (Persona generation, output formatting) |
+| R-002 | v0.1.0 | F-002, F-011 (LLM abstraction, multi-provider) |
+| R-003 | v0.1.0 | F-004, F-019 (Generation methodology, validation) |
+| R-004 | v0.1.0 | F-007, F-014 (Cost estimation, model pricing) |
+| R-005 | v0.1.0 | F-008, F-015, F-016 (CLI interface, commands, Rich UI) |
+| R-006 | v0.1.0 | F-012, F-055 (Experiment config, config validation) |
+| R-007 | v0.1.0 | F-003, F-046 (Prompt templating, custom templates) |
+| R-008 | v0.2.0 | F-019, F-106 (Persona validation, quality metrics) |
+| R-009 | v0.1.0 | F-032 (Reasoning capture) |
+| R-010 | v0.1.0 | Overall architecture |
+| R-011 | v1.0.0 | F-092 (Interactive mode) |
+| R-012 | v1.2.0 | F-098-F-103 (TUI dashboard features) |
+| R-013 | v1.3.0 | F-112, F-113, F-116 (Ollama, PII, hybrid pipeline) |
+| R-014 | v1.6.0 | F-117, F-118 (Academic validation, hallucination) |
+| R-015 | v1.6.0+ | F-106, F-119, F-121 (Quality metrics, bias, diversity) |
 
 ## Research Methodology
 

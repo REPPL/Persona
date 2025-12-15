@@ -467,6 +467,8 @@ Available on all commands:
 | `--verbose`, `-v` | Increase verbosity (-v verbose, -vv debug) |
 | `--interactive`, `-i` | Run in interactive mode with guided prompts |
 
+**Note:** The `--no-color` flag uses American spelling to comply with the [NO_COLOR](https://no-color.org/) standard, which specifies this exact spelling for cross-tool compatibility. The `NO_COLOR` environment variable is also supported.
+
 ---
 
 ## Environment Variables
