@@ -72,6 +72,28 @@ class TestOutputModes:
         # Quiet mode should still succeed
         assert result.exit_code == 0
 
+    def test_verbose_flag_exists(self):
+        """Test --verbose flag is available."""
+        result = runner.invoke(app, ["--help"])
+
+        assert result.exit_code == 0
+        assert "--verbose" in result.stdout
+        assert "-v" in result.stdout
+
+    def test_verbose_flag_works(self):
+        """Test --verbose flag doesn't break commands."""
+        result = runner.invoke(app, ["-v", "check"])
+
+        assert result.exit_code == 0
+        assert "Persona Health Check" in result.stdout
+
+    def test_double_verbose_flag_works(self):
+        """Test -vv flag doesn't break commands."""
+        result = runner.invoke(app, ["-v", "-v", "check"])
+
+        assert result.exit_code == 0
+        assert "Persona Health Check" in result.stdout
+
     def test_no_color_env_variable(self, monkeypatch):
         """Test NO_COLOR environment variable is respected."""
         monkeypatch.setenv("NO_COLOR", "1")
@@ -135,6 +157,96 @@ class TestCheckCommand:
         assert "configured" in provider
         assert "env_var" in provider
         assert provider["env_var"] == "ANTHROPIC_API_KEY"
+
+
+class TestModelsCommand:
+    """Tests for models command."""
+
+    def test_models_help(self):
+        """Test models command help is available."""
+        result = runner.invoke(app, ["models", "--help"])
+
+        assert result.exit_code == 0
+        assert "--provider" in result.stdout
+        assert "--json" in result.stdout
+
+    def test_models_list_all(self):
+        """Test models command lists models."""
+        result = runner.invoke(app, ["models"])
+
+        assert result.exit_code == 0
+        # Should show some models
+        assert "per M tokens" in result.stdout
+
+    def test_models_filter_by_provider(self):
+        """Test models command filters by provider."""
+        result = runner.invoke(app, ["models", "--provider", "anthropic"])
+
+        assert result.exit_code == 0
+        # Should only show anthropic models
+        assert "anthropic" in result.stdout
+
+    def test_models_json_output(self):
+        """Test models command with JSON output."""
+        result = runner.invoke(app, ["models", "--json"])
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["command"] == "models"
+        assert data["success"] is True
+        assert "providers" in data["data"]
+
+
+class TestCostCommand:
+    """Tests for cost command."""
+
+    def test_cost_help(self):
+        """Test cost command help is available."""
+        result = runner.invoke(app, ["cost", "--help"])
+
+        assert result.exit_code == 0
+        assert "--from" in result.stdout
+        assert "--tokens" in result.stdout
+        assert "--count" in result.stdout
+        assert "--json" in result.stdout
+
+    def test_cost_default_tokens(self):
+        """Test cost command with default token estimate."""
+        result = runner.invoke(app, ["cost"])
+
+        assert result.exit_code == 0
+        # Should show cost table even with default tokens
+
+    def test_cost_with_token_count(self):
+        """Test cost command with specified token count."""
+        result = runner.invoke(app, ["cost", "--tokens", "10000"])
+
+        assert result.exit_code == 0
+        assert "10,000" in result.stdout
+
+    def test_cost_json_output(self):
+        """Test cost command with --json flag."""
+        result = runner.invoke(app, ["cost", "--tokens", "5000", "--json"])
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["command"] == "cost"
+        assert data["success"] is True
+        assert "estimates" in data["data"]
+        assert data["data"]["input_tokens"] == 5000
+
+    def test_cost_json_single_model(self):
+        """Test cost command JSON output for single model."""
+        result = runner.invoke(
+            app,
+            ["cost", "--tokens", "5000", "--model", "claude-sonnet-4-20250514", "--json"],
+        )
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["command"] == "cost"
+        assert "model" in data["data"]
+        assert data["data"]["model"] == "claude-sonnet-4-20250514"
 
 
 class TestInitCommand:
@@ -223,6 +335,34 @@ class TestExperimentCommands:
         assert "exp-1" in result.stdout
         assert "exp-2" in result.stdout
 
+    def test_experiment_list_json_output(self, tmp_path: Path):
+        """Test experiment list with JSON output."""
+        runner.invoke(app, ["experiment", "create", "json-exp", "--base-dir", str(tmp_path)])
+
+        result = runner.invoke(
+            app,
+            ["experiment", "list", "--json", "--base-dir", str(tmp_path)],
+        )
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["command"] == "experiment list"
+        assert data["success"] is True
+        assert len(data["data"]["experiments"]) == 1
+        assert data["data"]["experiments"][0]["name"] == "json-exp"
+
+    def test_experiment_list_json_empty(self, tmp_path: Path):
+        """Test experiment list JSON output when empty."""
+        result = runner.invoke(
+            app,
+            ["experiment", "list", "--json", "--base-dir", str(tmp_path)],
+        )
+
+        assert result.exit_code == 0
+        data = json.loads(result.stdout)
+        assert data["success"] is True
+        assert data["data"]["experiments"] == []
+
     def test_experiment_show(self, tmp_path: Path):
         """Test showing experiment details."""
         runner.invoke(
@@ -310,7 +450,7 @@ class TestGenerateCommand:
             ["generate", "--from", str(tmp_path / "nonexistent.csv")],
         )
 
-        assert result.exit_code == 2  # Typer validation error
+        assert result.exit_code == 1  # Custom path resolution error
 
     def test_generate_unconfigured_provider(self, tmp_path: Path, monkeypatch):
         """Test generate with unconfigured provider."""
