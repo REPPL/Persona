@@ -19,7 +19,7 @@ All features for Persona, organised by milestone and status.
 | v1.1.0 Quality & API | 6 | 🔄 In Progress |
 | v1.2.0 Extensibility & TUI | 7 | 🔄 In Progress |
 
-**Total: 94 complete, 9 planned**
+**Total: 95 complete, 8 planned**
 
 ---
 
@@ -201,7 +201,7 @@ All features for Persona, organised by milestone and status.
 | [F-089](planned/F-089-rest-api.md) | REST API (FastAPI) | API |
 | [F-090](planned/F-090-webhooks.md) | Webhooks | API |
 | [F-104](planned/F-104-conversation-scripts.md) | Conversation scripts | Output |
-| [F-105](planned/F-105-python-sdk.md) | Python SDK | SDK |
+| [F-105](completed/F-105-python-sdk.md) | Python SDK | SDK |
 
 ---
 
