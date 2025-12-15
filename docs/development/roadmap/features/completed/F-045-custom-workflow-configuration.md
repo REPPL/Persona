@@ -78,5 +78,5 @@ steps:
 ## Related Documentation
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
-- [Configuration Reference](../../../reference/configuration-reference.md)
+- [Configuration Reference](../../../../reference/configuration-reference.md)
 

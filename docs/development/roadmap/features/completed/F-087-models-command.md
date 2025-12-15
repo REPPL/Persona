@@ -109,7 +109,7 @@ Legend: Input/Output price per million tokens
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [CLI Reference](../../../reference/cli-reference.md)
+- [CLI Reference](../../../../reference/cli-reference.md)
 - [F-086: CLI Output Modes](./F-086-cli-output-modes.md)
 
 ---

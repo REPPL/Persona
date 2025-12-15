@@ -83,5 +83,5 @@ persona config validate --verbose
 ## Related Documentation
 
 - [Milestone v0.6.0](../../milestones/v0.6.0.md)
-- [Configuration Reference](../../../reference/configuration-reference.md)
+- [Configuration Reference](../../../../reference/configuration-reference.md)
 

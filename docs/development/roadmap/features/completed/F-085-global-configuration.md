@@ -157,7 +157,7 @@ def load_config() -> Config:
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Configuration Reference](../../../reference/configuration-reference.md)
+- [Configuration Reference](../../../../reference/configuration-reference.md)
 
 ---
 

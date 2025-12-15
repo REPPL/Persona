@@ -16,10 +16,14 @@ Feature-centric roadmap for Persona development.
 | v0.8.0 | Multi-Model | 7 | ✅ Complete |
 | v0.9.0 | Logging | 6 | ✅ Complete |
 | v1.0.0 | Production | 14 | ✅ Complete |
-| v1.1.0 | Quality & API | 6 | 🔄 In Progress |
-| v1.2.0 | Extensibility & TUI | 7 | 🔄 In Progress |
+| v1.1.0 | Quality & API | 6 | ✅ Complete |
+| v1.2.0 | Extensibility & TUI | 7 | ✅ Complete |
+| v1.3.0 | Local Model Foundation | 2 | ✅ Complete |
+| v1.4.0 | Quality & Data Generation | 2 | ✅ Complete |
+| v1.5.0 | Hybrid Pipeline | 1 | ✅ Complete |
+| v1.6.0 | Academic Validation | 2 | 📋 Planned |
 
-**Total: 94 complete features, 9 planned features**
+**Total: 110 complete features, 2 planned features**
 
 ## Roadmap Structure
 

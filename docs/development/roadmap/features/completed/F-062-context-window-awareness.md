@@ -91,5 +91,5 @@ LLMs have context window limits. Exceeding these limits causes failures or trunc
 ## Related Documentation
 
 - [Milestone v0.7.0](../../milestones/v0.7.0.md)
-- [Model Cards](../../../reference/model-cards.md)
+- [Model Cards](../../../../reference/model-cards.md)
 

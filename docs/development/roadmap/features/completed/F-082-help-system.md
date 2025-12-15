@@ -106,7 +106,7 @@ $ persona generate --help
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [CLI Reference](../../../reference/cli-reference.md)
+- [CLI Reference](../../../../reference/cli-reference.md)
 
 ---
 

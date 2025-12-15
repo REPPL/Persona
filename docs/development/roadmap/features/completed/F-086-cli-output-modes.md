@@ -118,7 +118,7 @@ def get_console() -> Console:
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
 - [NO_COLOR Standard](https://no-color.org/)
-- [CLI Reference](../../../reference/cli-reference.md)
+- [CLI Reference](../../../../reference/cli-reference.md)
 
 ---
 

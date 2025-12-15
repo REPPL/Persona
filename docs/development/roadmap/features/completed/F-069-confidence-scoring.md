@@ -103,5 +103,5 @@ class AttributeConfidence:
 ## Related Documentation
 
 - [Milestone v0.8.0](../../milestones/v0.8.0.md)
-- [Persona Schema](../../../reference/persona-schema.md)
+- [Persona Schema](../../../../reference/persona-schema.md)
 

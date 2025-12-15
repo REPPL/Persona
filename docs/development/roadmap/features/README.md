@@ -19,10 +19,11 @@ All features for Persona, organised by milestone and status.
 | v1.1.0 Quality & API | 6 | ✅ Complete |
 | v1.2.0 Extensibility & TUI | 7 | ✅ Complete |
 | v1.3.0 Local Model Foundation | 2 | ✅ Complete |
-| v1.4.0 Quality & Data Generation | 2 | 📋 Planned |
-| v1.5.0 Hybrid Pipeline | 1 | 📋 Planned |
+| v1.4.0 Quality & Data Generation | 2 | ✅ Complete |
+| v1.5.0 Hybrid Pipeline | 1 | ✅ Complete |
+| v1.6.0 Academic Validation | 2 | 📋 Planned |
 
-**Total: 107 complete, 3 planned**
+**Total: 110 complete, 2 planned**
 
 ---
 
@@ -224,20 +225,29 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.4.0 - Quality & Data Generation 📋 Planned
+## v1.4.0 - Quality & Data Generation ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-114](planned/F-114-llm-as-judge-evaluation.md) | LLM-as-Judge Persona Evaluation | Quality |
-| [F-115](planned/F-115-synthetic-data-generation.md) | Synthetic Data Generation Pipeline | Data |
+| [F-114](completed/F-114-llm-as-judge-evaluation.md) | LLM-as-Judge Persona Evaluation | Quality |
+| [F-115](completed/F-115-synthetic-data-generation.md) | Synthetic Data Generation Pipeline | Data |
 
 ---
 
-## v1.5.0 - Hybrid Pipeline 📋 Planned
+## v1.5.0 - Hybrid Pipeline ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-116](planned/F-116-hybrid-local-frontier-pipeline.md) | Hybrid Local/Frontier Pipeline | Optimisation |
+| [F-116](completed/F-116-hybrid-local-frontier-pipeline.md) | Hybrid Local/Frontier Pipeline | Optimisation |
+
+---
+
+## v1.6.0 - Academic Validation 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-117](planned/F-117-academic-validation-metrics.md) | Academic Validation Metrics | Quality |
+| [F-118](planned/F-118-hallucination-detection.md) | Hallucination Detection | Quality |
 
 ---
 

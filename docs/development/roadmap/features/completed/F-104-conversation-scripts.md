@@ -149,5 +149,5 @@ The conversation scripts feature has been fully implemented with:
 - [Milestone v1.1.0](../../milestones/v1.1.0.md)
 - [Conversation Scripts Guide](../../../guides/conversation-scripts.md)
 - [Privacy Considerations](../../../explanation/privacy-considerations.md)
-- [Character Card Schema](../../../reference/character-card-schema.md)
+- [Character Card Schema](../../../../reference/character-card-schema.md)
 

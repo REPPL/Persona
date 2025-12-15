@@ -2,18 +2,12 @@
 
 Features designed and ready for implementation.
 
-## v1.4.0 - Quality & Data Generation
+## v1.6.0 - Academic Validation
 
 | ID | Feature | Category | Priority |
 |----|---------|----------|----------|
-| [F-114](F-114-llm-as-judge-evaluation.md) | LLM-as-Judge Persona Evaluation | Quality | P2 |
-| [F-115](F-115-synthetic-data-generation.md) | Synthetic Data Generation Pipeline | Privacy | P2 |
-
-## v1.5.0 - Hybrid Pipeline
-
-| ID | Feature | Category | Priority |
-|----|---------|----------|----------|
-| [F-116](F-116-hybrid-local-frontier-pipeline.md) | Hybrid Local/Frontier Pipeline | Optimisation | P3 |
+| [F-117](F-117-academic-validation-metrics.md) | Academic Validation Metrics | Quality | P1 |
+| [F-118](F-118-hallucination-detection.md) | Hallucination Detection | Quality | P2 |
 
 ---
 
@@ -22,3 +16,4 @@ Features designed and ready for implementation.
 - [Features Index](../README.md)
 - [Completed Features](../completed/)
 - [Active Features](../active/)
+- [v1.6.0 Milestone](../../milestones/v1.6.0.md)

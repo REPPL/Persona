@@ -82,5 +82,5 @@ persona model list --show-deprecated
 ## Related Documentation
 
 - [Milestone v0.6.0](../../milestones/v0.6.0.md)
-- [Model Cards](../../../reference/model-cards.md)
+- [Model Cards](../../../../reference/model-cards.md)
 

@@ -103,7 +103,7 @@ PathManager is implemented in `src/persona/core/platform.py` and provides:
 ## Related Documentation
 
 - [Milestone v1.0.0](../../milestones/v1.0.0.md)
-- [Configuration Reference](../../../reference/configuration-reference.md)
+- [Configuration Reference](../../../../reference/configuration-reference.md)
 
 ---
 

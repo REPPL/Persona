@@ -68,5 +68,5 @@ You are an expert healthcare UX researcher specialising in patient experience.
 ## Related Documentation
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
-- [Configuration Reference](../../../reference/configuration-reference.md)
+- [Configuration Reference](../../../../reference/configuration-reference.md)
 

@@ -64,5 +64,5 @@ persona experiment edit my-experiment --add-source ./new-data.csv
 ## Related Documentation
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
-- [CLI Reference](../../../reference/cli-reference.md)
+- [CLI Reference](../../../../reference/cli-reference.md)
 

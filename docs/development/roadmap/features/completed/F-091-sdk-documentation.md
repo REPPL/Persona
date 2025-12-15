@@ -129,7 +129,7 @@ print(f"Generated {len(result.personas)} personas")
 - [SDK Quickstart](../../../tutorials/sdk-quickstart.md)
 - [SDK Patterns](../../../guides/sdk-patterns.md)
 - [Error Handling](../../../guides/error-handling.md)
-- [Error Codes Reference](../../../reference/error-codes.md)
+- [Error Codes Reference](../../../../reference/error-codes.md)
 
 ---
 

@@ -121,7 +121,7 @@ All async methods are additions - existing sync methods remain unchanged. The ba
 ## Related Documentation
 
 - [Milestone v1.1.0](../../milestones/v1.1.0.md)
-- [Async SDK Documentation](../../../reference/async-api.md)
+- [API Reference](../../../../reference/api.md)
 
 ---
 

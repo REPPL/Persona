@@ -389,4 +389,4 @@ This research identifies 5 features for implementation:
 
 - [Provider APIs Reference](../../reference/provider-apis.md)
 - [F-002: LLM Provider Abstraction](../roadmap/features/completed/F-002-llm-provider-abstraction.md)
-- [F-106: Quality Metrics Scoring](../roadmap/features/completed/F-106-quality-metrics-scoring.md)
+- [F-106: Quality Metrics Scoring](../roadmap/features/completed/F-106-quality-metrics.md)
