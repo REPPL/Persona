@@ -336,7 +336,7 @@ def estimate_cost(
     # Determine input tokens
     if data_path:
         loader = DataLoader()
-        data = loader.load_file(data_path)
+        data, _files = loader.load_path(data_path)
         input_tokens = loader.count_tokens(data)
     elif tokens:
         input_tokens = tokens

@@ -308,6 +308,62 @@ class PathManager:
         ensure_dir(self.cache_dir)
         ensure_dir(self.log_dir)
 
+    def get_config_dir(self) -> Path:
+        """Get configuration directory.
+
+        Returns:
+            Path to configuration directory.
+        """
+        return self.config_dir
+
+    def get_data_dir(self) -> Path:
+        """Get data directory.
+
+        Returns:
+            Path to data directory.
+        """
+        return self.data_dir
+
+    def get_cache_dir(self) -> Path:
+        """Get cache directory.
+
+        Returns:
+            Path to cache directory.
+        """
+        return self.cache_dir
+
+    def get_log_dir(self) -> Path:
+        """Get log directory.
+
+        Returns:
+            Path to log directory.
+        """
+        return self.log_dir
+
+    def get_temp_dir(self) -> Path:
+        """Get temporary directory.
+
+        Returns:
+            Path to temporary directory.
+        """
+        return self.temp_dir
+
+    def normalize_path(self, path: str | Path) -> Path:
+        """Normalise a path for the current platform.
+
+        Handles:
+        - Expanding ~ to home directory
+        - Converting separators
+        - Resolving .. and .
+
+        Args:
+            path: Path string or Path object.
+
+        Returns:
+            Normalised Path object.
+        """
+        return normalise_path(path)
+
     def get_platform_info(self) -> dict:
         """Get platform information.
 

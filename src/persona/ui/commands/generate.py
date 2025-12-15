@@ -173,10 +173,7 @@ def generate(
     loader = DataLoader()
 
     try:
-        if data_path.is_dir():
-            data = loader.load_directory(data_path)
-        else:
-            data = loader.load_file(data_path)
+        data, _files = loader.load_path(data_path)
     except Exception as e:
         console.print(f"[red]Error loading data:[/red] {e}")
         raise typer.Exit(1)

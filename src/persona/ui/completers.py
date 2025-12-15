@@ -32,12 +32,12 @@ def complete_provider(incomplete: str) -> Iterator[tuple[str, str]]:
 
 
 def complete_model(
-    ctx: typer.Context, incomplete: str
+    ctx: Optional[typer.Context] = None, incomplete: str = ""
 ) -> Iterator[tuple[str, str]]:
     """Complete model names based on selected provider.
 
     Args:
-        ctx: Typer context containing parsed parameters.
+        ctx: Typer context containing parsed parameters (optional).
         incomplete: The partial string to complete.
 
     Yields:
@@ -45,7 +45,7 @@ def complete_model(
     """
     # Get provider from context if available
     provider: Optional[str] = None
-    if ctx.params:
+    if ctx is not None and ctx.params:
         provider = ctx.params.get("provider")
 
     # Get all models or filter by provider
