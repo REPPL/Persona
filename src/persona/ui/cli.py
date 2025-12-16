@@ -65,7 +65,7 @@ app = typer.Typer(
     name="persona",
     help="Generate realistic user personas from your data using AI.",
     no_args_is_help=True,
-    add_completion=True,  # Enable shell completions (F-095)
+    add_completion=False,  # Hide completion options from help (expert feature)
 )
 
 # =============================================================================
