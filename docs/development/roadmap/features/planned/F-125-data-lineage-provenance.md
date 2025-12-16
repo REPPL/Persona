@@ -438,7 +438,7 @@ def verify_entity(entity: LineageEntity) -> bool:
 
 ## Related Documentation
 
-- [R-016: Experiment & Project Organisation](../../research/R-016-experiment-project-organisation.md)
+- [R-016: Experiment & Project Organisation](../../../research/R-016-experiment-project-organisation.md)
 - [F-123: Generation Audit Trail](../completed/F-123-generation-audit-trail.md)
 - [F-124: Experiment Management](./F-124-experiment-management.md)
 - [W3C PROV-DM](https://www.w3.org/TR/prov-dm/)

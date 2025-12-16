@@ -376,7 +376,7 @@ Default: File system with SQLite index for queries.
 
 ## Related Documentation
 
-- [R-016: Experiment & Project Organisation](../../research/R-016-experiment-project-organisation.md)
+- [R-016: Experiment & Project Organisation](../../../research/R-016-experiment-project-organisation.md)
 - [F-123: Generation Audit Trail](../completed/F-123-generation-audit-trail.md)
 - [F-125: Data Lineage & Provenance](./F-125-data-lineage-provenance.md)
 
