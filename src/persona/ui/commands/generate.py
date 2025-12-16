@@ -184,6 +184,27 @@ def generate(
             help="Consistency threshold for verification (0-1, default: 0.7).",
         ),
     ] = 0.7,
+    local: Annotated[
+        bool,
+        typer.Option(
+            "--local",
+            help="Use all available local models (via Ollama).",
+        ),
+    ] = False,
+    cloud: Annotated[
+        bool,
+        typer.Option(
+            "--cloud",
+            help="Use cloud/frontier providers (default behaviour).",
+        ),
+    ] = False,
+    all_providers: Annotated[
+        bool,
+        typer.Option(
+            "--all",
+            help="Use all available models (local and cloud).",
+        ),
+    ] = False,
 ) -> None:
     """
     Generate personas from data files.
@@ -192,7 +213,15 @@ def generate(
         persona generate --from ./data/interviews.csv --count 3
         persona generate -i  # Interactive mode
         persona generate --from sensitive.csv --anonymise
-        persona generate --from data.csv --anonymise --anonymise-strategy replace
+
+        # Provider selection shortcuts
+        persona generate --from data.csv --local  # Use all local Ollama models
+        persona generate --from data.csv --cloud  # Use cloud providers (default)
+        persona generate --from data.csv --all    # Use all available models
+
+        # Specific model selection
+        persona generate --from data.csv --provider ollama --model llama3:8b
+        persona generate --from data.csv --provider anthropic --model claude-sonnet-4-20250514
 
         # Hybrid mode examples
         persona generate --from data.csv --hybrid --count 10
@@ -245,6 +274,53 @@ def generate(
             workflow = "default"
 
     console = get_console()
+
+    # Handle shortcut flags (--local, --cloud, --all)
+    if local or all_providers:
+        # --local or --all: use all local models
+        return _handle_multi_model_generation(
+            console=console,
+            data_path=data_path,
+            output=output,
+            count=count,
+            workflow=workflow,
+            experiment=experiment,
+            dry_run=dry_run,
+            no_progress=no_progress,
+            anonymise=anonymise,
+            anonymise_strategy=anonymise_strategy,
+            verify=verify,
+            verify_models=verify_models,
+            verify_threshold=verify_threshold,
+            include_cloud=all_providers,
+        )
+
+    # Handle Ollama model selection when provider is ollama but no model specified
+    if provider == "ollama" and not model:
+        model, use_all = _handle_ollama_model_selection(
+            console=console,
+            all_models=False,
+        )
+        if model is None and not use_all:
+            # User cancelled selection
+            raise typer.Exit(0)
+        if use_all:
+            return _handle_multi_model_generation(
+                console=console,
+                data_path=data_path,
+                output=output,
+                count=count,
+                workflow=workflow,
+                experiment=experiment,
+                dry_run=dry_run,
+                no_progress=no_progress,
+                anonymise=anonymise,
+                anonymise_strategy=anonymise_strategy,
+                verify=verify,
+                verify_models=verify_models,
+                verify_threshold=verify_threshold,
+                include_cloud=False,
+            )
 
     from persona import __version__
     console.print(f"[dim]Persona {__version__}[/dim]\n")
@@ -585,6 +661,290 @@ def _show_hybrid_result(console, result: "HybridResult") -> None:
         console.print(f"  Budget remaining: ${remaining:.4f}")
 
     console.print(f"\n[dim]Generation time: {result.generation_time:.1f}s[/dim]")
+
+
+def _handle_multi_model_generation(
+    console,
+    data_path: Path,
+    output: Optional[Path],
+    count: Optional[int],
+    workflow: Optional[str],
+    experiment: Optional[str],
+    dry_run: bool,
+    no_progress: bool,
+    anonymise: bool,
+    anonymise_strategy: str,
+    verify: bool,
+    verify_models: Optional[str],
+    verify_threshold: float,
+    include_cloud: bool = False,
+) -> None:
+    """Generate personas using multiple models.
+
+    This runs generation for each model and saves results separately.
+
+    Args:
+        include_cloud: If True, also include cloud providers (anthropic, openai, gemini).
+    """
+    from rich.table import Table
+
+    from persona import __version__
+    from persona.core.data import DataLoader
+    from persona.core.generation import GenerationPipeline, GenerationConfig
+    from persona.core.output import OutputManager
+    from persona.core.providers import ProviderFactory
+
+    console.print(f"[dim]Persona {__version__}[/dim]\n")
+
+    # Build list of models to use
+    models_to_use = []  # List of (provider, model) tuples
+
+    # Get local Ollama models
+    try:
+        ollama_provider = ProviderFactory.create("ollama")
+        if ollama_provider.is_configured():
+            local_models = ollama_provider.list_available_models()
+            for m in local_models:
+                models_to_use.append(("ollama", m))
+    except Exception as e:
+        console.print(f"[yellow]Warning:[/yellow] Could not get Ollama models: {e}")
+
+    # Add cloud providers if requested
+    if include_cloud:
+        cloud_configs = [
+            ("anthropic", "claude-sonnet-4-20250514"),
+            ("openai", "gpt-4o"),
+            ("gemini", "gemini-2.5-flash"),
+        ]
+        for provider_name, model_name in cloud_configs:
+            try:
+                p = ProviderFactory.create(provider_name)
+                if p.is_configured():
+                    models_to_use.append((provider_name, model_name))
+            except Exception:
+                pass  # Skip unconfigured providers
+
+    if not models_to_use:
+        console.print("[red]Error:[/red] No models available.")
+        console.print("Start Ollama with: [cyan]ollama serve[/cyan]")
+        if include_cloud:
+            console.print("Or configure a cloud provider API key.")
+        raise typer.Exit(1)
+
+    mode_name = "All Providers" if include_cloud else "Local Models"
+    console.print(f"[bold cyan]{mode_name} Generation Mode[/bold cyan]")
+    model_display = [f"{p}:{m}" for p, m in models_to_use]
+    console.print(f"Running with {len(models_to_use)} models: {', '.join(model_display)}\n")
+
+    # Resolve data path
+    try:
+        resolved_path = _resolve_data_path(data_path)
+        if resolved_path != data_path:
+            console.print(f"[dim]Resolved '{data_path}' → {resolved_path}[/dim]")
+        data_path = resolved_path
+    except FileNotFoundError as e:
+        console.print(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
+
+    # Load data
+    console.print(f"[bold]Loading data from:[/bold] {data_path}")
+    loader = DataLoader()
+
+    try:
+        data, _files = loader.load_path(data_path)
+    except Exception as e:
+        console.print(f"[red]Error loading data:[/red] {e}")
+        raise typer.Exit(1)
+
+    token_count = loader.count_tokens(data)
+    console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)\n")
+
+    # Anonymise if requested
+    if anonymise:
+        try:
+            from persona.core.privacy import PIIDetector, PIIAnonymiser, AnonymisationStrategy
+
+            anon_strategy = AnonymisationStrategy(anonymise_strategy.lower())
+            detector = PIIDetector()
+            anonymiser = PIIAnonymiser()
+
+            if detector.is_available() and anonymiser.is_available():
+                entities = detector.detect(data)
+                if entities:
+                    result = anonymiser.anonymise(data, entities, anon_strategy)
+                    data = result.text
+                    console.print(f"[green]✓[/green] Anonymised {result.entity_count} PII entities")
+        except Exception as e:
+            console.print(f"[yellow]Warning:[/yellow] Could not anonymise: {e}")
+
+    if dry_run:
+        console.print("[yellow]Dry run - no LLM calls made.[/yellow]")
+        console.print(f"Would generate with models: {', '.join(model_display)}")
+        return
+
+    # Generate with each model
+    results_summary = []
+    output_dir = output or Path("./outputs")
+    manager = OutputManager(base_dir=output_dir)
+
+    for i, (provider_name, model_name) in enumerate(models_to_use, 1):
+        model_display_name = f"{provider_name}:{model_name}"
+        console.print(f"\n[bold]Model {i}/{len(models_to_use)}: {model_display_name}[/bold]")
+
+        config = GenerationConfig(
+            data_path=data_path,
+            provider=provider_name,
+            model=model_name,
+            count=count or 3,
+            workflow=workflow or "default",
+        )
+
+        try:
+            pipeline = GenerationPipeline()
+
+            # Simple progress for multi-model mode
+            if not no_progress:
+                with console.status(f"[cyan]Generating with {model_display_name}...", spinner="dots"):
+                    result = pipeline.generate(config)
+            else:
+                result = pipeline.generate(config)
+
+            # Save output with model name in experiment
+            safe_name = model_name.replace(":", "-").replace("/", "-")
+            exp_name = f"{experiment or 'multi-model'}-{provider_name}-{safe_name}"
+            output_path = manager.save(result, name=exp_name)
+
+            results_summary.append({
+                "model": model_display_name,
+                "personas": len(result.personas),
+                "tokens": result.input_tokens + result.output_tokens,
+                "path": output_path,
+                "status": "success",
+            })
+            console.print(f"[green]✓[/green] Generated {len(result.personas)} personas → {output_path}")
+
+        except Exception as e:
+            results_summary.append({
+                "model": model_display_name,
+                "personas": 0,
+                "tokens": 0,
+                "path": None,
+                "status": f"error: {e}",
+            })
+            console.print(f"[red]✗[/red] Failed: {e}")
+
+    # Summary table
+    console.print("\n[bold]Multi-Model Generation Summary[/bold]")
+    table = Table(show_header=True)
+    table.add_column("Model", style="cyan")
+    table.add_column("Personas", justify="right")
+    table.add_column("Tokens", justify="right")
+    table.add_column("Status")
+
+    total_personas = 0
+    total_tokens = 0
+    for r in results_summary:
+        status_style = "green" if r["status"] == "success" else "red"
+        table.add_row(
+            r["model"],
+            str(r["personas"]),
+            f"{r['tokens']:,}",
+            f"[{status_style}]{r['status']}[/{status_style}]",
+        )
+        total_personas += r["personas"]
+        total_tokens += r["tokens"]
+
+    table.add_row("", "", "", "", end_section=True)
+    table.add_row(
+        "[bold]Total[/bold]",
+        f"[bold]{total_personas}[/bold]",
+        f"[bold]{total_tokens:,}[/bold]",
+        "",
+    )
+
+    console.print(table)
+    console.print(f"\n[green]✓[/green] Results saved to: {output_dir}")
+
+
+def _handle_ollama_model_selection(
+    console,
+    all_models: bool,
+) -> tuple[Optional[str], bool]:
+    """Handle Ollama model selection interactively or via --all-models flag.
+
+    Args:
+        console: Console instance for output.
+        all_models: Whether --all-models flag was passed.
+
+    Returns:
+        Tuple of (selected_model, all_models_flag).
+        If all_models is True, returns (None, True) to indicate multi-model mode.
+        If user cancels, returns (None, False).
+    """
+    from persona.core.providers import ProviderFactory
+
+    # Check if Ollama is running
+    try:
+        ollama_provider = ProviderFactory.create("ollama")
+        if not ollama_provider.is_configured():
+            console.print("[red]Error:[/red] Ollama is not running.")
+            console.print("Start Ollama with: [cyan]ollama serve[/cyan]")
+            return None, False
+
+        available = ollama_provider.list_available_models()
+        if not available:
+            console.print("[red]Error:[/red] No models found in Ollama.")
+            console.print("Pull a model with: [cyan]ollama pull llama3:8b[/cyan]")
+            return None, False
+    except Exception as e:
+        console.print(f"[red]Error connecting to Ollama:[/red] {e}")
+        return None, False
+
+    # If --all-models flag, return all models mode
+    if all_models:
+        console.print(f"[dim]Using all {len(available)} local models[/dim]")
+        return None, True
+
+    # Interactive model selection
+    console.print(f"[bold]Available Ollama models ({len(available)}):[/bold]")
+
+    try:
+        import questionary
+    except ImportError:
+        # Fallback: use first model if questionary not available
+        console.print("[yellow]questionary not installed, using default model[/yellow]")
+        default = ollama_provider.default_model
+        console.print(f"[dim]Selected: {default}[/dim]")
+        return default, False
+
+    # Build choices with model info
+    choices = []
+    for model_name in available:
+        choices.append(questionary.Choice(title=model_name, value=model_name))
+
+    # Add "All models" option
+    choices.append(questionary.Choice(
+        title="[All models] - Generate with each model",
+        value="__all__",
+    ))
+
+    # Prompt for selection
+    selected = questionary.select(
+        "Select a model:",
+        choices=choices,
+        default=ollama_provider.default_model if ollama_provider.default_model in available else None,
+    ).ask()
+
+    if selected is None:
+        # User cancelled (Ctrl+C)
+        return None, False
+
+    if selected == "__all__":
+        console.print(f"[dim]Using all {len(available)} local models[/dim]")
+        return None, True
+
+    console.print(f"[dim]Selected: {selected}[/dim]")
+    return selected, False
 
 
 def _get_api_key_env(provider: str) -> str:

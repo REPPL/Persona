@@ -31,7 +31,7 @@ Layer 3: TUTORIALS (How)
 
 ## Current Status
 
-**Current Version:** v1.6.0 (112 features complete, 5 planned)
+**Current Version:** v1.7.0 (117 features complete, 2 planned)
 
 See [Roadmap](roadmap/) for complete milestone details.
 
