@@ -1,0 +1,14 @@
+# Default parameters for all Ollama models
+# Applied when no specific model config exists
+
+parameters:
+  max_tokens: 4096
+  temperature: 0.7
+  top_p: 0.9
+  context_window: 128000
+
+# Common Ollama models (for reference)
+# - llama3:8b, llama3:70b
+# - qwen2.5:7b, qwen2.5:72b
+# - mistral:7b
+# - mixtral:8x7b

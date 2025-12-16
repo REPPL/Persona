@@ -1,0 +1,10 @@
+# Google Gemini 2.5 Flash Configuration
+name: gemini-2.5-flash
+provider: gemini
+description: "Gemini 2.5 Flash - fast and efficient"
+
+parameters:
+  max_tokens: 4096
+  temperature: 0.7
+  top_p: 1.0
+  context_window: 1000000

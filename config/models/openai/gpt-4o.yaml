@@ -1,0 +1,10 @@
+# OpenAI GPT-4o Configuration
+name: gpt-4o
+provider: openai
+description: "Most capable GPT-4 model, optimised for speed and quality"
+
+parameters:
+  max_tokens: 4096
+  temperature: 0.7
+  top_p: 1.0
+  context_window: 128000
