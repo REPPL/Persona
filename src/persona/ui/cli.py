@@ -58,6 +58,7 @@ from persona.ui.commands import (
     diversity_app,
     bias_app,
     verify_app,
+    project_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -77,6 +78,7 @@ app.add_typer(generate_app, name="generate")
 app.add_typer(preview_app, name="preview")
 app.add_typer(export_app, name="export")
 app.add_typer(validate_app, name="validate")
+app.add_typer(project_app, name="project")
 app.add_typer(config_app, name="config")
 app.add_typer(help_app, name="help")
 

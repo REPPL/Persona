@@ -33,6 +33,7 @@ from persona.ui.commands.audit import app as audit_app
 from persona.ui.commands.diversity import diversity_app
 from persona.ui.commands.bias import bias_app
 from persona.ui.commands.verify import verify_app
+from persona.ui.commands.project import project_app
 
 __all__ = [
     "generate_app",
@@ -64,4 +65,5 @@ __all__ = [
     "diversity_app",
     "bias_app",
     "verify_app",
+    "project_app",
 ]
