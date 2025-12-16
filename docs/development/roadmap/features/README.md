@@ -22,9 +22,11 @@ All features for Persona, organised by milestone and status.
 | v1.4.0 Quality & Data Generation | 2 | ✅ Complete |
 | v1.5.0 Hybrid Pipeline | 1 | ✅ Complete |
 | v1.6.0 Academic Validation | 2 | ✅ Complete |
-| v1.7.0 Research Compliance | 5 | 📋 Planned |
+| v1.7.0 Research Compliance | 5 | ✅ Complete |
+| v1.8.0 Technical Debt | 0 | 📋 Planned |
+| v1.9.0 Experiment Infrastructure | 2 | 📋 Planned |
 
-**Total: 112 complete, 5 planned**
+**Total: 117 complete, 2 planned**
 
 ---
 
@@ -252,15 +254,30 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.7.0 - Research Compliance 📋 Planned
+## v1.7.0 - Research Compliance ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-119](planned/F-119-bias-stereotype-detection.md) | Bias & Stereotype Detection | Quality |
-| [F-120](planned/F-120-multi-model-verification.md) | Multi-Model Verification | Quality |
-| [F-121](planned/F-121-lexical-diversity-metrics.md) | Lexical Diversity Metrics | Quality |
-| [F-122](planned/F-122-prompt-fidelity-scoring.md) | Prompt Fidelity Scoring | Quality |
-| [F-123](planned/F-123-generation-audit-trail.md) | Generation Audit Trail | Compliance |
+| [F-119](completed/F-119-bias-stereotype-detection.md) | Bias & Stereotype Detection | Quality |
+| [F-120](completed/F-120-multi-model-verification.md) | Multi-Model Verification | Quality |
+| [F-121](completed/F-121-lexical-diversity-metrics.md) | Lexical Diversity Metrics | Quality |
+| [F-122](completed/F-122-prompt-fidelity-scoring.md) | Prompt Fidelity Scoring | Quality |
+| [F-123](completed/F-123-generation-audit-trail.md) | Generation Audit Trail | Compliance |
+
+---
+
+## v1.8.0 - Technical Debt 📋 Planned
+
+Refactoring-only release with no feature specifications. See [v1.8.0 milestone](../milestones/v1.8.0.md) for details.
+
+---
+
+## v1.9.0 - Experiment Infrastructure 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-124](planned/F-124-experiment-management.md) | Experiment Management System | Research Infrastructure |
+| [F-125](planned/F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure |
 
 ---
 

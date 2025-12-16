@@ -8,7 +8,7 @@
 | **Milestone** | v1.7.0 |
 | **Priority** | P2 |
 | **Category** | Quality |
-| **Status** | Planned |
+| **Status** | Complete |
 
 ## Problem Statement
 
@@ -178,4 +178,4 @@ persona diversity output/ --report diversity-report.md
 
 ---
 
-**Status**: Planned
+**Status**: Complete

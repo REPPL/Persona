@@ -8,7 +8,7 @@
 | **Milestone** | v1.7.0 |
 | **Priority** | P1 |
 | **Category** | Quality |
-| **Status** | Planned |
+| **Status** | Complete |
 
 ## Problem Statement
 
@@ -158,4 +158,4 @@ persona bias check output/ --method embedding --model all-MiniLM-L6-v2
 
 ---
 
-**Status**: Planned
+**Status**: Complete

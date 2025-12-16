@@ -8,7 +8,7 @@
 | **Milestone** | v1.7.0 |
 | **Priority** | P2 |
 | **Category** | Quality |
-| **Status** | Planned |
+| **Status** | Complete |
 
 ## Problem Statement
 
@@ -183,4 +183,4 @@ persona generate data.csv --verify --models claude-sonnet-4-20250514,gpt-4o --co
 
 ---
 
-**Status**: Planned
+**Status**: Complete

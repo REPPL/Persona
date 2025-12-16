@@ -8,7 +8,7 @@
 | **Milestone** | v1.7.0 |
 | **Priority** | P1 |
 | **Category** | Compliance |
-| **Status** | Planned |
+| **Status** | Complete |
 
 ## Problem Statement
 
@@ -251,4 +251,4 @@ persona generate data.csv --no-audit
 
 ---
 
-**Status**: Planned
+**Status**: Complete

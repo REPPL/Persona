@@ -31,6 +31,7 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-013](./R-013-local-model-assessment.md) | Local Model Assessment | Complete | - |
 | [R-014](./R-014-shin-et-al-gap-analysis.md) | Shin et al. DIS 2024 Gap Analysis | Complete | - |
 | [R-015](./R-015-quality-metrics-taxonomy.md) | Quality Metrics Taxonomy | Complete | - |
+| [R-016](./R-016-experiment-project-organisation.md) | Experiment & Project Organisation | Complete | - |
 
 ---
 
@@ -55,6 +56,7 @@ Quick reference showing which features each research document informs:
 | R-013 | v1.3.0 | F-112, F-113, F-116 (Ollama, PII, hybrid pipeline) |
 | R-014 | v1.6.0 | F-117, F-118 (Academic validation, hallucination) |
 | R-015 | v1.6.0+ | F-106, F-119, F-121 (Quality metrics, bias, diversity) |
+| R-016 | v1.8.0+ | F-124, F-125 (Experiment management, lineage) |
 
 ## Research Methodology
 
