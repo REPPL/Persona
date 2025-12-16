@@ -65,6 +65,7 @@ app = typer.Typer(
     name="persona",
     help="Generate realistic user personas from your data using AI.",
     no_args_is_help=True,
+    invoke_without_command=True,  # Allow callback to handle -i flag
     add_completion=False,  # Hide completion options from help (expert feature)
 )
 
@@ -235,10 +236,115 @@ def main(
             help="Run in interactive mode with guided prompts.",
         ),
     ] = None,
+    ctx: typer.Context = None,
 ) -> None:
     """Generate realistic user personas from your data using AI."""
-    # Note: Global state is set by eager callbacks before this runs
-    pass
+    # If a subcommand was invoked, let it handle things
+    if ctx and ctx.invoked_subcommand is not None:
+        return
+
+    # If interactive mode is set, launch the generate wizard
+    if _interactive:
+        from persona.ui.interactive import GenerateWizard, is_interactive_supported
+        from persona.core.data import DataLoader
+        from persona.core.generation import GenerationPipeline, GenerationConfig
+        from persona.core.output import OutputManager
+        from persona.core.providers import ProviderFactory
+        from persona.ui.streaming import get_progress_handler
+        from pathlib import Path
+
+        console = get_console()
+
+        if not is_interactive_supported():
+            console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
+            raise typer.Exit(1)
+
+        wizard = GenerateWizard()
+        result = wizard.run()
+        if result is None:
+            raise typer.Exit(0)
+
+        # Run generation with wizard results
+        from persona import __version__
+        console.print(f"[dim]Persona {__version__}[/dim]\n")
+
+        data_path = result["data_path"]
+        provider = result["provider"]
+        model = result.get("model")
+        count = result["count"]
+        workflow = result.get("workflow", "default")
+
+        # Load data
+        console.print(f"[bold]Loading data from:[/bold] {data_path}")
+        loader = DataLoader()
+        try:
+            data, _files = loader.load_path(data_path)
+        except Exception as e:
+            console.print(f"[red]Error loading data:[/red] {e}")
+            raise typer.Exit(1)
+
+        token_count = loader.count_tokens(data)
+        console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)")
+
+        # Create provider
+        try:
+            llm_provider = ProviderFactory.create(provider)
+            if not llm_provider.is_configured():
+                console.print(f"[red]Error:[/red] {provider} is not configured.")
+                raise typer.Exit(1)
+        except ValueError as e:
+            console.print(f"[red]Error:[/red] {e}")
+            raise typer.Exit(1)
+
+        # Configure and run generation
+        config = GenerationConfig(
+            data_path=data_path,
+            provider=provider,
+            model=model or llm_provider.default_model,
+            count=count,
+            workflow=workflow,
+        )
+
+        progress_handler = get_progress_handler(
+            console=console._console if hasattr(console, "_console") else console,
+            show_progress=True,
+        )
+
+        progress_callback = progress_handler.start(
+            total=config.count,
+            provider=config.provider,
+            model=config.model,
+        )
+
+        try:
+            pipeline = GenerationPipeline()
+            pipeline.set_progress_callback(progress_callback)
+            gen_result = pipeline.generate(config)
+            progress_handler.finish(
+                personas=gen_result.personas,
+                input_tokens=gen_result.input_tokens,
+                output_tokens=gen_result.output_tokens,
+            )
+        except Exception as e:
+            progress_handler.error(str(e))
+            raise typer.Exit(1)
+
+        # Save output
+        output_dir = Path("./outputs")
+        manager = OutputManager(base_dir=output_dir)
+        output_path = manager.save(gen_result)
+        console.print(f"[green]✓[/green] Saved to: {output_path}")
+
+        # Show summary
+        console.print(f"\n[bold green]Generated {len(gen_result.personas)} personas:[/bold green]")
+        for i, persona in enumerate(gen_result.personas, 1):
+            console.print(f"  {i}. [bold]{persona.name}[/bold] ({persona.id})")
+
+        return
+
+    # No command and no -i flag: this is handled by no_args_is_help=True
+    # But if we get here somehow, just return
+    return
 
 
 @app.command()
