@@ -473,8 +473,8 @@ def aggregate_quality(scores: dict, weights: dict) -> float:
 ## Related Documentation
 
 - [F-106: Quality Metrics Scoring](../roadmap/features/completed/F-106-quality-metrics.md)
-- [F-119: Bias & Stereotype Detection](../roadmap/features/planned/F-119-bias-stereotype-detection.md)
-- [F-121: Lexical Diversity Metrics](../roadmap/features/planned/F-121-lexical-diversity-metrics.md)
+- [F-119: Bias & Stereotype Detection](../roadmap/features/completed/F-119-bias-stereotype-detection.md)
+- [F-121: Lexical Diversity Metrics](../roadmap/features/completed/F-121-lexical-diversity-metrics.md)
 - [R-008: Persona Validation Methodology](R-008-persona-validation-methodology.md)
 - [Quality Metrics Reference](../../reference/quality-metrics.md)
 

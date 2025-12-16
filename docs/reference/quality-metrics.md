@@ -416,9 +416,9 @@ This installs:
 
 - [LLM-as-Judge Evaluation](../development/roadmap/features/completed/F-114-llm-as-judge-evaluation.md)
 - [Quality Metrics Taxonomy Research](../development/research/R-015-quality-metrics-taxonomy.md)
-- [Bias Detection Feature](../development/roadmap/features/planned/F-119-bias-stereotype-detection.md)
-- [Lexical Diversity Feature](../development/roadmap/features/planned/F-121-lexical-diversity-metrics.md)
+- [Bias Detection Feature](../development/roadmap/features/completed/F-119-bias-stereotype-detection.md)
+- [Lexical Diversity Feature](../development/roadmap/features/completed/F-121-lexical-diversity-metrics.md)
 
 ---
 
-**Status**: Reference document for planned features (v1.6.0, v1.7.0)
+**Status**: Complete
