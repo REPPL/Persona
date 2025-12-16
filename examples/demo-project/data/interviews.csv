@@ -1,0 +1,11 @@
+participant_id,role,experience_years,quote,context
+P001,Software Engineer,5,"I spend most of my day context-switching between tasks. The hardest part is getting back into flow after a meeting.",Discussing daily workflow
+P001,Software Engineer,5,"Documentation is always the last thing I do, and honestly, it often gets skipped. There's never enough time.",Discussing pain points
+P002,Product Manager,8,"I need visibility into what the team is working on without having to interrupt them constantly.",Discussing collaboration challenges
+P002,Product Manager,8,"The biggest gap is between what stakeholders want and what's technically feasible. I'm always translating.",Discussing role challenges
+P003,UX Designer,3,"Users tell me one thing in interviews but do something completely different in usability tests.",Discussing research methods
+P003,UX Designer,3,"I wish developers understood why I iterate so much on designs. It's not indecision, it's refinement.",Discussing team collaboration
+P004,Data Scientist,4,"Most of my time goes into cleaning data, not analysing it. It's frustrating but necessary.",Discussing daily workflow
+P004,Data Scientist,4,"I struggle to explain my models to non-technical stakeholders. They just want a number, but it's more nuanced.",Discussing communication challenges
+P005,DevOps Engineer,6,"When something breaks at 3am, I'm the one who gets the call. Burnout is real in this role.",Discussing work-life balance
+P005,DevOps Engineer,6,"Infrastructure as code has been a game-changer, but the learning curve was steep.",Discussing tool adoption

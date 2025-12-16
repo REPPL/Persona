@@ -13,7 +13,7 @@
 
 *[Generated](docs/assets/prompts/getting-started-comic.md) by Gemini 3.*
 
-`Persona` is an AI-powered tool that generates realistic user personas from quantitative and qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini)* and provides an experiment-centric workflow for reproducible persona generation.
+`Persona` is an AI-powered tool that generates realistic user personas from quantitative and qualitative research data. It supports multiple LLM providers *(incl. OpenAI, Anthropic, Gemini, and Ollama for local models)* and provides an experiment-centric workflow for reproducible persona generation.
 
 ### Who is this for?
 
@@ -27,14 +27,19 @@
 ### Prerequisites
 
 - Python 3.12 or higher
-- API key from OpenAI, Anthropic, or Google
+- API key from OpenAI, Anthropic, or Google (optional with Ollama for local models)
 
 ### Installation
 
 ```bash
 # Create virtual environment
 python3.12 -m venv .venv
+
+# Activate (macOS/Linux)
 source .venv/bin/activate
+
+# Activate (Windows)
+# .venv\Scripts\activate
 
 # Install from source (development)
 git clone https://github.com/REPPL/Persona.git
@@ -58,6 +63,31 @@ persona generate --from experiments/my-research/data/ --experiment my-research
 ```
 
 Your personas are saved as JSON and Markdown in timestamped output folders.
+
+### Using Local Models (Ollama)
+
+```bash
+# Install and start Ollama (https://ollama.ai)
+ollama serve
+
+# Pull a model
+ollama pull llama3:8b
+
+# Generate personas locally (no API key needed!)
+persona generate --provider ollama --model llama3:8b --from experiments/my-research/data/
+```
+
+### Try the Demo Project
+
+```bash
+# Navigate to the demo project
+cd examples/demo-project
+
+# Generate personas from sample data
+persona generate --from data/interviews.csv
+```
+
+See [examples/demo-project/README.md](examples/demo-project/README.md) for more details.
 
 ## Features
 

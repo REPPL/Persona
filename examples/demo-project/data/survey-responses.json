@@ -1,0 +1,55 @@
+{
+  "survey_name": "Developer Productivity Survey 2024",
+  "responses": [
+    {
+      "id": "R001",
+      "role": "Frontend Developer",
+      "years_experience": 3,
+      "primary_language": "TypeScript",
+      "satisfaction_score": 7,
+      "biggest_challenge": "Keeping up with the rapidly changing JavaScript ecosystem",
+      "tools_used": ["VS Code", "Chrome DevTools", "Figma"],
+      "improvement_suggestion": "Better documentation for internal APIs"
+    },
+    {
+      "id": "R002",
+      "role": "Backend Developer",
+      "years_experience": 7,
+      "primary_language": "Python",
+      "satisfaction_score": 8,
+      "biggest_challenge": "Managing technical debt while shipping new features",
+      "tools_used": ["PyCharm", "Docker", "Postman"],
+      "improvement_suggestion": "Dedicated time for refactoring in sprints"
+    },
+    {
+      "id": "R003",
+      "role": "Full Stack Developer",
+      "years_experience": 5,
+      "primary_language": "JavaScript",
+      "satisfaction_score": 6,
+      "biggest_challenge": "Context-switching between frontend and backend",
+      "tools_used": ["VS Code", "Docker", "Jira"],
+      "improvement_suggestion": "Clearer boundaries between frontend and backend responsibilities"
+    },
+    {
+      "id": "R004",
+      "role": "Mobile Developer",
+      "years_experience": 4,
+      "primary_language": "Swift",
+      "satisfaction_score": 8,
+      "biggest_challenge": "Testing on multiple device configurations",
+      "tools_used": ["Xcode", "Instruments", "Charles Proxy"],
+      "improvement_suggestion": "Access to more physical test devices"
+    },
+    {
+      "id": "R005",
+      "role": "ML Engineer",
+      "years_experience": 2,
+      "primary_language": "Python",
+      "satisfaction_score": 7,
+      "biggest_challenge": "Bridging the gap between research and production",
+      "tools_used": ["Jupyter", "MLflow", "AWS SageMaker"],
+      "improvement_suggestion": "Better collaboration with platform engineers"
+    }
+  ]
+}

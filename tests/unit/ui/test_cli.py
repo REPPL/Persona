@@ -254,30 +254,36 @@ class TestInitCommand:
 
     def test_init_creates_structure(self, tmp_path: Path):
         """Test init command creates directory structure."""
-        result = runner.invoke(app, ["init", str(tmp_path)])
+        result = runner.invoke(app, ["init", "test-project", "--path", str(tmp_path)])
 
         assert result.exit_code == 0
-        assert (tmp_path / "experiments").exists()
-        assert (tmp_path / "data").exists()
-        assert (tmp_path / "templates").exists()
-        assert (tmp_path / "persona.yaml").exists()
+        project_dir = tmp_path / "test-project"
+        assert project_dir.exists()
+        assert (project_dir / "data").exists()
+        assert (project_dir / "output").exists()
+        assert (project_dir / "templates").exists()
+        assert (project_dir / "persona.yaml").exists()
 
     def test_init_creates_config(self, tmp_path: Path):
         """Test init command creates config file."""
-        runner.invoke(app, ["init", str(tmp_path)])
+        runner.invoke(app, ["init", "test-project", "--path", str(tmp_path)])
 
-        config_path = tmp_path / "persona.yaml"
+        config_path = tmp_path / "test-project" / "persona.yaml"
         content = config_path.read_text()
 
         assert "provider: anthropic" in content
         assert "count: 3" in content
+        assert "name: test-project" in content
 
     def test_init_does_not_overwrite_config(self, tmp_path: Path):
         """Test init doesn't overwrite existing config."""
-        config_path = tmp_path / "persona.yaml"
+        project_dir = tmp_path / "test-project"
+        project_dir.mkdir(parents=True)
+        config_path = project_dir / "persona.yaml"
         config_path.write_text("existing: config\n")
 
-        runner.invoke(app, ["init", str(tmp_path)])
+        # Use input="n\n" to answer "no" to the continue anyway prompt
+        runner.invoke(app, ["init", "test-project", "--path", str(tmp_path)], input="n\n")
 
         content = config_path.read_text()
         assert "existing: config" in content

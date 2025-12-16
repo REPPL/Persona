@@ -58,10 +58,12 @@ constraints:
 
 
 def test_fidelity_command_exists():
-    """Test that fidelity command is registered."""
-    result = runner.invoke(app, ["--help"])
+    """Test that fidelity command is registered (hidden but functional)."""
+    # fidelity is hidden from main help (expert command)
+    # but should still work when invoked directly
+    result = runner.invoke(app, ["fidelity", "--help"])
     assert result.exit_code == 0
-    assert "fidelity" in result.output
+    assert "fidelity" in result.output.lower() or "Check prompt fidelity" in result.output
 
 
 def test_fidelity_with_persona_file(sample_persona_file, sample_constraints_file):

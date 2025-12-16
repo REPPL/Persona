@@ -6,11 +6,27 @@ This module provides the main CLI entry point using Typer.
 
 import os
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import TYPE_CHECKING, Annotated, Optional
 
 import typer
-from rich.panel import Panel
-from rich.table import Table
+
+# Lazy load Rich components for faster CLI startup
+if TYPE_CHECKING:
+    from rich.panel import Panel
+    from rich.table import Table
+
+
+def _get_panel():
+    """Lazy load Rich Panel class."""
+    from rich.panel import Panel
+    return Panel
+
+
+def _get_table():
+    """Lazy load Rich Table class."""
+    from rich.table import Table
+    return Table
+
 
 from persona.ui.commands import (
     experiment_app,
@@ -52,38 +68,57 @@ app = typer.Typer(
     add_completion=True,  # Enable shell completions (F-095)
 )
 
-# Add subcommand groups - User-facing commands
+# =============================================================================
+# Essential Commands (visible to all users)
+# =============================================================================
+# These are the core commands that most users will need.
 app.add_typer(generate_app, name="generate")
-app.add_typer(serve_app, name="serve")
-app.add_typer(dashboard_app, name="dashboard")
 app.add_typer(preview_app, name="preview")
-app.add_typer(validate_app, name="validate")
-app.add_typer(compare_app, name="compare")
 app.add_typer(export_app, name="export")
-app.add_typer(cluster_app, name="cluster")
-app.add_typer(refine_app, name="refine")
-app.add_typer(experiment_app, name="experiment")
+app.add_typer(validate_app, name="validate")
 app.add_typer(config_app, name="config")
 app.add_typer(help_app, name="help")
-app.add_typer(quality_app, name="score")
-app.add_typer(evaluate_app, name="evaluate")
-app.add_typer(script_app, name="script")
-app.add_typer(privacy_app, name="privacy")
-app.add_typer(synthesise_app, name="synthesise")
-app.add_typer(academic_app, name="academic")
-app.add_typer(faithfulness_app, name="faithfulness")
-app.add_typer(fidelity_app, name="fidelity")
-app.add_typer(diversity_app, name="diversity")
-app.add_typer(audit_app, name="audit")
-app.add_typer(bias_app, name="bias")
-app.add_typer(verify_app, name="verify")
 
-# Add subcommand groups - Advanced/Admin commands (hidden by default)
+# =============================================================================
+# Advanced Commands (hidden by default, for expert users)
+# =============================================================================
+# Use `persona --all-commands` or `persona help advanced` to see these.
+# These commands are still fully functional, just not shown in `--help`.
+
+# Research & Analysis
+app.add_typer(experiment_app, name="experiment", hidden=True)
+app.add_typer(compare_app, name="compare", hidden=True)
+app.add_typer(cluster_app, name="cluster", hidden=True)
+app.add_typer(refine_app, name="refine", hidden=True)
+
+# Quality & Validation
+app.add_typer(quality_app, name="score", hidden=True)
+app.add_typer(evaluate_app, name="evaluate", hidden=True)
+app.add_typer(academic_app, name="academic", hidden=True)
+app.add_typer(faithfulness_app, name="faithfulness", hidden=True)
+app.add_typer(fidelity_app, name="fidelity", hidden=True)
+app.add_typer(diversity_app, name="diversity", hidden=True)
+app.add_typer(bias_app, name="bias", hidden=True)
+app.add_typer(verify_app, name="verify", hidden=True)
+
+# Privacy & Security
+app.add_typer(privacy_app, name="privacy", hidden=True)
+app.add_typer(synthesise_app, name="synthesise", hidden=True)
+app.add_typer(audit_app, name="audit", hidden=True)
+
+# Development & Deployment
+app.add_typer(serve_app, name="serve", hidden=True)
+app.add_typer(dashboard_app, name="dashboard", hidden=True)
+app.add_typer(script_app, name="script", hidden=True)
+app.add_typer(plugin_app, name="plugin", hidden=True)
+
+# =============================================================================
+# Admin Commands (hidden, for advanced configuration)
+# =============================================================================
 app.add_typer(vendor_app, name="vendor", hidden=True)
 app.add_typer(model_app, name="model", hidden=True)
 app.add_typer(template_app, name="template", hidden=True)
 app.add_typer(workflow_app, name="workflow", hidden=True)
-app.add_typer(plugin_app, name="plugin")
 
 # Global state for console options (used by callbacks)
 _no_color: bool = False
@@ -265,6 +300,7 @@ def check(
         return
 
     # Rich output mode
+    Panel = _get_panel()
     console.print(Panel.fit(
         "[bold]Persona Health Check[/bold]",
         border_style="green",
@@ -462,6 +498,7 @@ def estimate_cost(
         console.print(f"[bold]Personas:[/bold] {count}")
         console.print()
 
+        Table = _get_table()
         table = Table(title="Cost Estimates (sorted by cost)")
         table.add_column("Model", style="cyan")
         table.add_column("Provider")
@@ -604,10 +641,17 @@ def list_models(
 
 @app.command()
 def init(
+    name: Annotated[
+        Optional[str],
+        typer.Argument(
+            help="Project name (creates directory with this name).",
+        ),
+    ] = None,
     path: Annotated[
         Optional[Path],
-        typer.Argument(
-            help="Directory to initialise (defaults to current directory).",
+        typer.Option(
+            "--path", "-p",
+            help="Parent directory for project (defaults to current directory).",
         ),
     ] = None,
 ) -> None:
@@ -617,23 +661,45 @@ def init(
     Creates the recommended directory structure for managing
     experiments and data.
 
-    Example:
-        persona init ./my-project
+    Examples:
+        persona init my-research
+        persona init my-research --path ~/projects/
     """
     from persona import __version__
 
     console = get_console()
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
-    target = path or Path.cwd()
-    target = target.resolve()
+    # Prompt for name if not provided
+    if not name:
+        import questionary
+        name = questionary.text(
+            "Project name:",
+            validate=lambda x: len(x) > 0 or "Project name is required",
+        ).ask()
+        if not name:
+            console.print("[red]Cancelled[/red]")
+            raise typer.Exit(1)
 
-    console.print(f"[bold]Initialising Persona project in:[/bold] {target}")
+    # Determine target directory
+    parent = path or Path.cwd()
+    target = (parent / name).resolve()
+
+    console.print(f"[bold]Initialising Persona project:[/bold] {name}")
+    console.print(f"[dim]Location: {target}[/dim]\n")
+
+    # Check if directory already exists
+    if target.exists():
+        console.print(f"[yellow]Warning:[/yellow] Directory already exists: {target}")
+        import questionary
+        if not questionary.confirm("Continue anyway?", default=False).ask():
+            console.print("[dim]Cancelled[/dim]")
+            raise typer.Exit(0)
 
     # Create directory structure
     dirs = [
-        target / "experiments",
         target / "data",
+        target / "output",
         target / "templates",
     ]
 
@@ -641,11 +707,14 @@ def init(
         d.mkdir(parents=True, exist_ok=True)
         console.print(f"  [green]✓[/green] Created: {d.relative_to(target)}/")
 
-    # Create sample config
+    # Create project config
     config_path = target / "persona.yaml"
     if not config_path.exists():
-        config_content = """# Persona Configuration
+        config_content = f"""# Persona Project: {name}
 # See: https://github.com/REPPL/Persona
+
+project:
+  name: {name}
 
 defaults:
   provider: anthropic
@@ -653,18 +722,15 @@ defaults:
   workflow: default
   complexity: moderate
   detail_level: standard
-
-experiments_dir: ./experiments
-data_dir: ./data
-templates_dir: ./templates
 """
         config_path.write_text(config_content)
         console.print(f"  [green]✓[/green] Created: persona.yaml")
 
-    console.print("\n[green]Project initialised![/green]")
-    console.print("\nNext steps:")
-    console.print("  1. Add your data files to ./data/")
-    console.print("  2. Run: persona generate --from ./data/your-file.csv")
+    console.print(f"\n[green]Project '{name}' initialised![/green]")
+    console.print("\n[bold]Next steps:[/bold]")
+    console.print(f"  1. cd {name}")
+    console.print("  2. Add your data files to ./data/")
+    console.print("  3. Run: persona generate --from ./data/your-file.csv")
 
 
 if __name__ == "__main__":

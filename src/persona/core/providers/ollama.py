@@ -18,6 +18,9 @@ from persona.core.providers.base import (
     ModelNotFoundError,
 )
 
+# Patterns indicating embedding-only models (not for text generation)
+EMBEDDING_PATTERNS = ["embed", "embedding", "nomic-embed", "bge-", "e5-"]
+
 
 class OllamaProvider(LLMProvider):
     """
@@ -158,7 +161,14 @@ class OllamaProvider(LLMProvider):
 
             data = response.json()
             models = data.get("models", [])
-            return [model["name"] for model in models]
+            model_names = [model["name"] for model in models]
+
+            # Filter out embedding-only models
+            return [
+                name
+                for name in model_names
+                if not any(pattern in name.lower() for pattern in EMBEDDING_PATTERNS)
+            ]
 
         except httpx.ConnectError:
             raise RuntimeError(

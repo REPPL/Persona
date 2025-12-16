@@ -1,0 +1,26 @@
+# Persona Project: demo-project
+# A demonstration project with synthetic research data
+# See: https://github.com/REPPL/Persona
+
+project:
+  name: demo-project
+  description: Demonstration project with sample developer research data
+
+defaults:
+  provider: anthropic
+  count: 3
+  workflow: default
+  complexity: moderate
+  detail_level: standard
+
+# Data sources
+data:
+  - name: interviews
+    path: data/interviews.csv
+    type: qualitative
+    description: Developer interview transcripts
+
+  - name: survey
+    path: data/survey-responses.json
+    type: quantitative
+    description: Developer productivity survey responses
