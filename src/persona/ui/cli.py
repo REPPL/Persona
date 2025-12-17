@@ -8,6 +8,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Optional
 
 import typer
+from dotenv import load_dotenv
+
+# Load .env file for API keys and configuration
+load_dotenv()
 
 # Lazy load Rich components for faster CLI startup
 if TYPE_CHECKING:
