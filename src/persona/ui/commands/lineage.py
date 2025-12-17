@@ -1,0 +1,712 @@
+"""
+Lineage tracking CLI commands.
+
+Provides commands for viewing, tracing, and verifying data lineage
+throughout the persona generation pipeline.
+"""
+
+import json
+from pathlib import Path
+from typing import Annotated
+
+import typer
+from rich.panel import Panel
+from rich.table import Table
+from rich.tree import Tree
+
+from persona.ui.console import get_console
+
+lineage_app = typer.Typer(
+    name="lineage",
+    help="Track and verify data lineage and provenance.",
+)
+
+
+def _get_store():
+    """Get SQLite lineage store."""
+    from persona.core.lineage import SQLiteLineageStore
+
+    return SQLiteLineageStore()
+
+
+@lineage_app.command("list")
+def list_entities(
+    entity_type: Annotated[
+        str | None,
+        typer.Option(
+            "--type",
+            "-t",
+            help="Filter by entity type (input_file, persona, etc.).",
+        ),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option(
+            "--limit",
+            "-n",
+            help="Maximum number of entities to show.",
+        ),
+    ] = 20,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    List tracked entities.
+
+    Example:
+        persona lineage list
+        persona lineage list --type persona
+        persona lineage list --limit 50 --json
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        entities = store.list_entities(entity_type=entity_type, limit=limit)
+
+        if json_output:
+            output = [
+                {
+                    "entity_id": e.entity_id,
+                    "type": e.entity_type,
+                    "name": e.name,
+                    "hash": e.hash[:20] + "...",
+                    "path": e.path,
+                    "generated_at": e.generated_at.isoformat(),
+                }
+                for e in entities
+            ]
+            print(json.dumps(output, indent=2))
+            return
+
+        if not entities:
+            console.print("[yellow]No entities tracked yet.[/yellow]")
+            return
+
+        console.print(
+            Panel.fit(
+                f"[bold]Tracked Entities ({len(entities)})[/bold]",
+                border_style="cyan",
+            )
+        )
+
+        table = Table()
+        table.add_column("ID", style="dim")
+        table.add_column("Type", style="cyan")
+        table.add_column("Name")
+        table.add_column("Hash", style="dim")
+        table.add_column("Generated")
+
+        for entity in entities:
+            # Truncate hash for display
+            short_hash = entity.hash[:16] + "..."
+            table.add_row(
+                entity.entity_id,
+                entity.entity_type,
+                entity.name,
+                short_hash,
+                entity.generated_at.strftime("%Y-%m-%d %H:%M"),
+            )
+
+        console.print(table)
+
+    finally:
+        store.close()
+
+
+@lineage_app.command("show")
+def show_entity(
+    entity_id: Annotated[
+        str,
+        typer.Argument(help="Entity ID to show."),
+    ],
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    Show entity details.
+
+    Example:
+        persona lineage show ent-abc123
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        entity = store.get_entity(entity_id)
+
+        if entity is None:
+            console.print(f"[red]Error:[/red] Entity not found: {entity_id}")
+            raise typer.Exit(1)
+
+        if json_output:
+            output = {
+                "entity_id": entity.entity_id,
+                "type": entity.entity_type,
+                "name": entity.name,
+                "hash": entity.hash,
+                "path": entity.path,
+                "size_bytes": entity.size_bytes,
+                "metadata": entity.metadata,
+                "generated_by": entity.generated_by,
+                "generated_at": entity.generated_at.isoformat(),
+            }
+            print(json.dumps(output, indent=2))
+            return
+
+        console.print(
+            Panel.fit(
+                f"[bold]Entity: {entity.name}[/bold]",
+                border_style="cyan",
+            )
+        )
+
+        console.print(f"\n[bold]ID:[/bold] {entity.entity_id}")
+        console.print(f"[bold]Type:[/bold] {entity.entity_type}")
+        console.print(f"[bold]Hash:[/bold] {entity.hash}")
+
+        if entity.path:
+            console.print(f"[bold]Path:[/bold] {entity.path}")
+
+        if entity.size_bytes:
+            size_kb = entity.size_bytes / 1024
+            console.print(f"[bold]Size:[/bold] {size_kb:.1f} KB")
+
+        generated_str = entity.generated_at.strftime("%Y-%m-%d %H:%M:%S")
+        console.print(f"[bold]Generated:[/bold] {generated_str}")
+
+        if entity.generated_by:
+            console.print(f"[bold]Generated By:[/bold] {entity.generated_by}")
+
+        if entity.metadata:
+            console.print("\n[bold]Metadata:[/bold]")
+            for key, value in entity.metadata.items():
+                console.print(f"  {key}: {json.dumps(value)}")
+
+    finally:
+        store.close()
+
+
+@lineage_app.command("trace")
+def trace_lineage(
+    entity_id: Annotated[
+        str,
+        typer.Argument(help="Entity ID to trace."),
+    ],
+    direction: Annotated[
+        str,
+        typer.Option(
+            "--direction",
+            "-d",
+            help="Trace direction: up (ancestors), down (descendants), or both.",
+        ),
+    ] = "up",
+    max_depth: Annotated[
+        int | None,
+        typer.Option(
+            "--depth",
+            help="Maximum traversal depth.",
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    Trace entity lineage.
+
+    Shows the provenance chain for an entity - what inputs were used
+    to create it (ancestors) or what was derived from it (descendants).
+
+    Examples:
+        persona lineage trace ent-abc123 --direction up
+        persona lineage trace ent-abc123 --direction down --depth 3
+        persona lineage trace ent-abc123 --direction both --json
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        if direction not in ("up", "down", "both"):
+            console.print(
+                "[red]Error:[/red] Direction must be 'up', 'down', or 'both'"
+            )
+            raise typer.Exit(1)
+
+        if direction == "up":
+            graph = store.get_ancestors(entity_id, max_depth=max_depth)
+        elif direction == "down":
+            graph = store.get_descendants(entity_id, max_depth=max_depth)
+        else:
+            graph = store.get_full_lineage(entity_id)
+
+        if json_output:
+            print(json.dumps(graph.to_prov_dict(), indent=2))
+            return
+
+        # Find root entity
+        root_entity = None
+        for e in graph.entities:
+            if e.entity_id == entity_id:
+                root_entity = e
+                break
+
+        if root_entity is None:
+            console.print(f"[red]Error:[/red] Entity not found: {entity_id}")
+            raise typer.Exit(1)
+
+        console.print(
+            Panel.fit(
+                f"[bold]Lineage: {root_entity.name}[/bold]\n"
+                f"Direction: {direction}",
+                border_style="cyan",
+            )
+        )
+
+        # Build tree visualisation
+        label = f"[bold cyan]{root_entity.name}[/bold cyan] ({root_entity.entity_type})"
+        tree = Tree(label)
+
+        # For ancestors, show what was used to create this
+        if direction in ("up", "both"):
+            _build_ancestor_tree(tree, entity_id, graph)
+
+        # For descendants, show what was derived
+        if direction in ("down", "both"):
+            _build_descendant_tree(tree, entity_id, graph)
+
+        console.print(tree)
+
+        # Summary
+        console.print(f"\n[dim]Entities: {len(graph.entities)}, "
+                     f"Activities: {len(graph.activities)}, "
+                     f"Agents: {len(graph.agents)}[/dim]")
+
+    finally:
+        store.close()
+
+
+def _build_ancestor_tree(tree: Tree, entity_id: str, graph) -> None:
+    """Build tree showing ancestors."""
+    # Find activity that generated this entity
+    for entity in graph.entities:
+        if entity.entity_id == entity_id and entity.generated_by:
+            # Find the activity
+            for activity in graph.activities:
+                if activity.activity_id == entity.generated_by:
+                    act_branch = tree.add(
+                        f"[yellow]← {activity.name}[/yellow] ({activity.activity_type})"
+                    )
+
+                    # Show agent
+                    for agent in graph.agents:
+                        if agent.agent_id == activity.agent_id:
+                            act_branch.add(f"[magenta]Agent: {agent.name}[/magenta]")
+                            break
+
+                    # Show used entities
+                    for used_id in activity.used_entities:
+                        for used_entity in graph.entities:
+                            if used_entity.entity_id == used_id:
+                                used_branch = act_branch.add(
+                                    f"[green]{used_entity.name}[/green] "
+                                    f"({used_entity.entity_type})"
+                                )
+                                # Recurse
+                                _build_ancestor_subtree(
+                                    used_branch, used_id, graph, set()
+                                )
+                    break
+            break
+
+
+def _build_ancestor_subtree(branch: Tree, entity_id: str, graph, visited: set) -> None:
+    """Recursively build ancestor subtree."""
+    if entity_id in visited:
+        return
+    visited.add(entity_id)
+
+    for entity in graph.entities:
+        if entity.entity_id == entity_id and entity.generated_by:
+            for activity in graph.activities:
+                if activity.activity_id == entity.generated_by:
+                    act_branch = branch.add(
+                        f"[yellow]← {activity.name}[/yellow]"
+                    )
+                    for used_id in activity.used_entities:
+                        for used_entity in graph.entities:
+                            if used_entity.entity_id == used_id:
+                                used_branch = act_branch.add(
+                                    f"[green]{used_entity.name}[/green]"
+                                )
+                                _build_ancestor_subtree(
+                                    used_branch, used_id, graph, visited
+                                )
+                    break
+            break
+
+
+def _build_descendant_tree(tree: Tree, entity_id: str, graph) -> None:
+    """Build tree showing descendants."""
+    visited: set[str] = set()
+    _build_descendant_subtree(tree, entity_id, graph, visited)
+
+
+def _build_descendant_subtree(
+    branch: Tree, entity_id: str, graph, visited: set
+) -> None:
+    """Recursively build descendant subtree."""
+    if entity_id in visited:
+        return
+    visited.add(entity_id)
+
+    # Find activities that used this entity
+    for activity in graph.activities:
+        if entity_id in activity.used_entities:
+            act_branch = branch.add(
+                f"[yellow]→ {activity.name}[/yellow] ({activity.activity_type})"
+            )
+
+            # Show generated entities
+            for gen_id in activity.generated_entities:
+                for gen_entity in graph.entities:
+                    if gen_entity.entity_id == gen_id:
+                        gen_branch = act_branch.add(
+                            f"[green]{gen_entity.name}[/green] "
+                            f"({gen_entity.entity_type})"
+                        )
+                        _build_descendant_subtree(gen_branch, gen_id, graph, visited)
+
+
+@lineage_app.command("verify")
+def verify_lineage(
+    entity_id: Annotated[
+        str,
+        typer.Argument(help="Entity ID to verify."),
+    ],
+    chain: Annotated[
+        bool,
+        typer.Option(
+            "--chain",
+            "-c",
+            help="Verify entire ancestor chain.",
+        ),
+    ] = False,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    Verify entity integrity.
+
+    Checks that stored hashes match current file contents to detect
+    tampering or modifications.
+
+    Examples:
+        persona lineage verify ent-abc123
+        persona lineage verify ent-abc123 --chain
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        if chain:
+            result = store.verify_chain(entity_id)
+        else:
+            result = store.verify_entity(entity_id)
+
+        if json_output:
+            print(json.dumps(result, indent=2))
+            return
+
+        if chain:
+            if result["verified"]:
+                valid = result["entities_valid"]
+                checked = result["entities_checked"]
+                console.print(
+                    f"[green]✓[/green] Chain verified: {valid}/{checked} entities valid"
+                )
+            else:
+                console.print(
+                    f"[red]✗[/red] Chain verification failed: "
+                    f"{len(result['entities_invalid'])} invalid entities"
+                )
+                for invalid_id in result["entities_invalid"]:
+                    console.print(f"  [red]•[/red] {invalid_id}")
+        else:
+            if result["verified"]:
+                console.print(f"[green]✓[/green] Entity verified: {entity_id}")
+                if "note" in result:
+                    console.print(f"  [dim]{result['note']}[/dim]")
+            else:
+                console.print(f"[red]✗[/red] Verification failed: {entity_id}")
+                console.print(f"  Error: {result.get('error', 'Unknown error')}")
+
+                if "stored_hash" in result:
+                    console.print(f"  Stored hash: {result['stored_hash']}")
+                if "current_hash" in result:
+                    console.print(f"  Current hash: {result['current_hash']}")
+
+        if not result["verified"]:
+            raise typer.Exit(1)
+
+    finally:
+        store.close()
+
+
+@lineage_app.command("export")
+def export_lineage(
+    entity_id: Annotated[
+        str | None,
+        typer.Argument(help="Entity ID (omit for all)."),
+    ] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Output file path.",
+        ),
+    ] = None,
+    format: Annotated[
+        str,
+        typer.Option(
+            "--format",
+            "-f",
+            help="Export format (prov-json).",
+        ),
+    ] = "prov-json",
+) -> None:
+    """
+    Export lineage as PROV-JSON.
+
+    Exports lineage data in W3C PROV-JSON format for external tools
+    or archival.
+
+    Examples:
+        persona lineage export --output lineage.json
+        persona lineage export ent-abc123 -o entity-lineage.json
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        if format != "prov-json":
+            console.print(f"[red]Error:[/red] Unsupported format: {format}")
+            console.print("Supported formats: prov-json")
+            raise typer.Exit(1)
+
+        prov = store.export_prov_json(entity_id)
+
+        json_str = json.dumps(prov, indent=2)
+
+        if output:
+            output.write_text(json_str)
+            console.print(f"[green]✓[/green] Exported to: {output}")
+        else:
+            print(json_str)
+
+    finally:
+        store.close()
+
+
+@lineage_app.command("agents")
+def list_agents(
+    agent_type: Annotated[
+        str | None,
+        typer.Option(
+            "--type",
+            "-t",
+            help="Filter by agent type.",
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    List registered agents.
+
+    Shows all agents (LLMs, tools, users) that have performed activities.
+
+    Example:
+        persona lineage agents
+        persona lineage agents --type llm_model
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        agents = store.list_agents(agent_type=agent_type)
+
+        if json_output:
+            output = [
+                {
+                    "agent_id": a.agent_id,
+                    "type": a.agent_type,
+                    "name": a.name,
+                    "version": a.version,
+                    "provider": a.provider,
+                }
+                for a in agents
+            ]
+            print(json.dumps(output, indent=2))
+            return
+
+        if not agents:
+            console.print("[yellow]No agents registered yet.[/yellow]")
+            return
+
+        console.print(
+            Panel.fit(
+                f"[bold]Registered Agents ({len(agents)})[/bold]",
+                border_style="cyan",
+            )
+        )
+
+        table = Table()
+        table.add_column("ID", style="dim")
+        table.add_column("Type", style="cyan")
+        table.add_column("Name")
+        table.add_column("Version")
+        table.add_column("Provider")
+
+        for agent in agents:
+            table.add_row(
+                agent.agent_id,
+                agent.agent_type,
+                agent.name,
+                agent.version or "-",
+                agent.provider or "-",
+            )
+
+        console.print(table)
+
+    finally:
+        store.close()
+
+
+@lineage_app.command("activities")
+def list_activities(
+    activity_type: Annotated[
+        str | None,
+        typer.Option(
+            "--type",
+            "-t",
+            help="Filter by activity type.",
+        ),
+    ] = None,
+    run_id: Annotated[
+        str | None,
+        typer.Option(
+            "--run",
+            "-r",
+            help="Filter by experiment run ID.",
+        ),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option(
+            "--limit",
+            "-n",
+            help="Maximum number to show.",
+        ),
+    ] = 20,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    List tracked activities.
+
+    Shows transformations that have been performed on data.
+
+    Example:
+        persona lineage activities
+        persona lineage activities --type llm_generation
+        persona lineage activities --run run-abc123
+    """
+    console = get_console()
+    store = _get_store()
+
+    try:
+        activities = store.list_activities(
+            activity_type=activity_type,
+            run_id=run_id,
+            limit=limit,
+        )
+
+        if json_output:
+            output = [
+                {
+                    "activity_id": a.activity_id,
+                    "type": a.activity_type,
+                    "name": a.name,
+                    "agent_id": a.agent_id,
+                    "run_id": a.run_id,
+                    "status": a.status,
+                    "started_at": a.started_at.isoformat(),
+                }
+                for a in activities
+            ]
+            print(json.dumps(output, indent=2))
+            return
+
+        if not activities:
+            console.print("[yellow]No activities tracked yet.[/yellow]")
+            return
+
+        console.print(
+            Panel.fit(
+                f"[bold]Tracked Activities ({len(activities)})[/bold]",
+                border_style="cyan",
+            )
+        )
+
+        table = Table()
+        table.add_column("ID", style="dim")
+        table.add_column("Type", style="cyan")
+        table.add_column("Name")
+        table.add_column("Status")
+        table.add_column("Started")
+
+        for activity in activities:
+            status_style = "green" if activity.status == "completed" else "yellow"
+            table.add_row(
+                activity.activity_id,
+                activity.activity_type,
+                activity.name,
+                f"[{status_style}]{activity.status}[/{status_style}]",
+                activity.started_at.strftime("%Y-%m-%d %H:%M"),
+            )
+
+        console.print(table)
+
+    finally:
+        store.close()

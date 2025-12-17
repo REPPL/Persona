@@ -19,6 +19,7 @@ from persona.ui.commands.faithfulness import faithfulness_app
 from persona.ui.commands.fidelity import fidelity_app
 from persona.ui.commands.generate import generate_app
 from persona.ui.commands.help import help_app
+from persona.ui.commands.lineage import lineage_app
 from persona.ui.commands.model import model_app
 from persona.ui.commands.plugin import plugin_app
 from persona.ui.commands.preview import preview_app
@@ -68,4 +69,5 @@ __all__ = [
     "verify_app",
     "project_app",
     "variant_app",
+    "lineage_app",
 ]

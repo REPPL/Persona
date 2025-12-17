@@ -44,6 +44,7 @@ from persona.ui.commands import (
     fidelity_app,
     generate_app,
     help_app,
+    lineage_app,
     model_app,
     plugin_app,
     preview_app,
@@ -110,6 +111,7 @@ app.add_typer(verify_app, name="verify", hidden=True)
 app.add_typer(privacy_app, name="privacy", hidden=True)
 app.add_typer(synthesise_app, name="synthesise", hidden=True)
 app.add_typer(audit_app, name="audit", hidden=True)
+app.add_typer(lineage_app, name="lineage", hidden=True)
 
 # Development & Deployment
 app.add_typer(serve_app, name="serve", hidden=True)
@@ -129,9 +131,6 @@ app.add_typer(workflow_app, name="workflow", hidden=True)
 from persona.ui.context import (
     get_cli_context,
     get_interactive,
-    get_no_color,
-    get_quiet,
-    get_verbosity,
     reset_cli_context,
     set_interactive,
     set_no_color,
