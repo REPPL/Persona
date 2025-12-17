@@ -227,31 +227,28 @@ data/
 
 ## Step 7: Quality Validation
 
-Before processing, validate your data:
+Before processing, preview your data to check for issues:
 
 ```bash
-# Preview and validate
-persona data validate experiments/my-experiment/data/
+# Preview data files
+persona preview experiments/my-experiment/data/
 ```
 
 **Output:**
 
 ```
-Data Validation Report
+Data Preview
 ───────────────────────────────────
 Files: 4
-Total tokens: 3,500
+Total tokens: ~3,500
 
-Quality Checks:
-  ✓ All files readable
-  ✓ Encoding: UTF-8
-  ✓ No empty files
-  ⚠ interviews.csv: 3 empty rows (lines 12, 45, 67)
-  ⚠ notes.txt: Possible PII detected (line 23)
+File Summary:
+  ✓ interviews.csv: 45 rows, 5 columns
+  ✓ notes.txt: 234 lines
+  ✓ survey.json: 89 records
+  ✓ feedback.yaml: 12 entries
 
-Recommendations:
-  1. Remove empty rows from interviews.csv
-  2. Review line 23 of notes.txt for anonymisation
+Estimated Cost: ~$0.12 (Anthropic Claude)
 ```
 
 ## Step 8: Folder Organisation
@@ -307,15 +304,14 @@ All participant names replaced with IDs.
 Confirm your data is ready:
 
 ```bash
-# Full validation
-persona data validate experiments/my-experiment/data/ --strict
+# Preview with token counts
+persona preview experiments/my-experiment/data/ --verbose
 
 # Expected output
-✓ Data validation passed
+✓ Data preview complete
   Files: 4
-  Tokens: 3,500
+  Tokens: ~3,500
   Estimated cost: $0.12
-  Quality: Good
 
 Ready for generation: Yes
 ```
@@ -327,4 +323,3 @@ Ready for generation: Yes
 - [T-03: Data Formats](../tutorials/03-data-formats.md)
 - [F-001: Data Loading](../development/roadmap/features/completed/F-001-data-loading.md)
 - [F-022: Data Preview](../development/roadmap/features/completed/F-022-data-preview.md)
-

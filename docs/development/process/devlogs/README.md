@@ -35,11 +35,32 @@ Devlogs capture:
 
 ## Naming Convention
 
-`YYYY-MM-DD-feature-name.md`
+`vX.Y.Z-devlog.md` - Version-based naming for milestone devlogs.
 
 ## Logs
 
-*Devlogs will be added as implementation progresses.*
+| Version | Theme | Status |
+|---------|-------|--------|
+| [v0.1.0](v0.1.0-devlog.md) | Foundation | Complete |
+| [v0.2.0](v0.2.0-devlog.md) | Validation & Data | Complete |
+| [v0.3.0](v0.3.0-devlog.md) | Analysis & Variation | Complete |
+| [v0.4.0](v0.4.0-devlog.md) | Advanced Output | Complete |
+| [v0.5.0](v0.5.0-devlog.md) | Extensibility | Complete |
+| [v0.6.0](v0.6.0-devlog.md) | Security | Complete |
+| [v0.7.0](v0.7.0-devlog.md) | Batch Processing | Complete |
+| [v0.8.0](v0.8.0-devlog.md) | Multi-Model | Complete |
+| [v0.9.0](v0.9.0-devlog.md) | Logging | Complete |
+| [v1.0.0](v1.0.0-devlog.md) | Production | Complete |
+| [v1.1.0](v1.1.0-devlog.md) | Quality & API | Complete |
+| [v1.2.0](v1.2.0-devlog.md) | Extensibility & TUI | Complete |
+| [v1.3.0](v1.3.0-devlog.md) | Local Model Foundation | Complete |
+| [v1.4.0](v1.4.0-devlog.md) | Quality & Data Generation | Complete |
+| [v1.5.0](v1.5.0-devlog.md) | Hybrid Pipeline | Complete |
+| [v1.6.0](v1.6.0-devlog.md) | Academic Validation | Complete |
+| [v1.7.0](v1.7.0-devlog.md) | Research Compliance | Complete |
+| [v1.7.5](v1.7.5-devlog.md) | Patch Release | Complete |
+| [v1.8.0](v1.8.0-devlog.md) | Technical Debt | Complete |
+| [v1.9.0](v1.9.0-devlog.md) | Experiment Infrastructure | Complete |
 
 ---
 

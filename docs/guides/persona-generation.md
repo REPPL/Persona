@@ -19,11 +19,11 @@ Persona transforms qualitative research data (interviews, surveys, feedback) int
 
 ```bash
 # Basic generation from interview data
-persona generate --input ./data/interviews.csv --count 3
+persona generate --from ./data/interviews.csv --count 3
 
 # With explicit provider and model
 persona generate \
-    --input ./data/feedback.json \
+    --from ./data/feedback.json \
     --provider anthropic \
     --model claude-3-5-sonnet-20241022 \
     --count 5
@@ -94,49 +94,49 @@ respondent_id,role,pain_points,goals,frequency
 
 ```bash
 # Anthropic (recommended for quality)
-persona generate --input data.csv --provider anthropic
+persona generate --from data.csv --provider anthropic
 
 # OpenAI
-persona generate --input data.csv --provider openai
+persona generate --from data.csv --provider openai
 
 # Google Gemini
-persona generate --input data.csv --provider gemini
+persona generate --from data.csv --provider gemini
 
 # Local Ollama (privacy-preserving)
-persona generate --input data.csv --provider ollama --model llama3:8b
+persona generate --from data.csv --provider ollama --model llama3:8b
 ```
 
 ### Persona Count
 
 ```bash
 # Generate specific number
-persona generate --input data.csv --count 5
+persona generate --from data.csv --count 5
 
 # Let the system estimate optimal count
-persona generate --input data.csv --auto-count
+persona generate --from data.csv --auto-count
 ```
 
 ### Complexity Levels
 
 ```bash
 # Simple personas (quick, less detail)
-persona generate --input data.csv --complexity simple
+persona generate --from data.csv --complexity simple
 
 # Standard (default)
-persona generate --input data.csv --complexity standard
+persona generate --from data.csv --complexity standard
 
 # Detailed (comprehensive)
-persona generate --input data.csv --complexity detailed
+persona generate --from data.csv --complexity detailed
 ```
 
 ### Privacy Options
 
 ```bash
 # Anonymise PII before sending to LLM
-persona generate --input sensitive.csv --anonymise
+persona generate --from sensitive.csv --anonymise
 
 # Choose anonymisation strategy
-persona generate --input data.csv --anonymise --anonymise-strategy replace
+persona generate --from data.csv --anonymise --anonymise-strategy replace
 ```
 
 ## Output Formats
@@ -144,7 +144,7 @@ persona generate --input data.csv --anonymise --anonymise-strategy replace
 ### JSON (Default)
 
 ```bash
-persona generate --input data.csv --output-format json
+persona generate --from data.csv --output-format json
 ```
 
 Produces structured JSON files ideal for programmatic use:
@@ -166,7 +166,7 @@ Produces structured JSON files ideal for programmatic use:
 ### Markdown
 
 ```bash
-persona generate --input data.csv --output-format markdown
+persona generate --from data.csv --output-format markdown
 ```
 
 Human-readable format for documentation:
@@ -187,7 +187,7 @@ Human-readable format for documentation:
 ### YAML
 
 ```bash
-persona generate --input data.csv --output-format yaml
+persona generate --from data.csv --output-format yaml
 ```
 
 Good for configuration files and human editing.
@@ -196,13 +196,13 @@ Good for configuration files and human editing.
 
 ```bash
 # Default: ./outputs/<timestamp>/
-persona generate --input data.csv
+persona generate --from data.csv
 
 # Custom directory
-persona generate --input data.csv --output ./my-personas
+persona generate --from data.csv --output ./my-personas
 
 # Single file output (all personas in one file)
-persona generate --input data.csv --output ./personas.json --single-file
+persona generate --from data.csv --output ./personas.json --single-file
 ```
 
 ## Advanced Options
@@ -212,7 +212,7 @@ persona generate --input data.csv --output ./personas.json --single-file
 Before generating, estimate costs:
 
 ```bash
-persona estimate --input data.csv --count 5 --provider anthropic
+persona cost --from data.csv --count 5 --provider anthropic
 ```
 
 ### Dry Run
@@ -220,7 +220,7 @@ persona estimate --input data.csv --count 5 --provider anthropic
 See what would be generated without calling the LLM:
 
 ```bash
-persona generate --input data.csv --dry-run
+persona generate --from data.csv --dry-run
 ```
 
 ### Verbose Output
@@ -228,7 +228,7 @@ persona generate --input data.csv --dry-run
 Get detailed progress information:
 
 ```bash
-persona generate --input data.csv --verbose
+persona generate --from data.csv --verbose
 ```
 
 ### Streaming Output
@@ -236,7 +236,7 @@ persona generate --input data.csv --verbose
 See personas as they're generated:
 
 ```bash
-persona generate --input data.csv --stream
+persona generate --from data.csv --stream
 ```
 
 ## Workflows
@@ -245,13 +245,13 @@ persona generate --input data.csv --stream
 
 ```bash
 # 1. Preview your data
-persona data preview ./interviews.csv
+persona preview ./interviews.csv
 
 # 2. Estimate cost
-persona estimate --input ./interviews.csv --count 5
+persona cost --from ./interviews.csv --count 5
 
 # 3. Generate personas
-persona generate --input ./interviews.csv --count 5
+persona generate --from ./interviews.csv --count 5
 
 # 4. Review output
 ls ./outputs/latest/
@@ -262,11 +262,11 @@ cat ./outputs/latest/persona-001.json
 
 ```bash
 # 1. Scan for PII
-persona privacy scan --input ./sensitive-data.csv
+persona privacy scan ./sensitive-data.csv
 
 # 2. Generate with anonymisation
 persona generate \
-    --input ./sensitive-data.csv \
+    --from ./sensitive-data.csv \
     --anonymise \
     --provider ollama \
     --model llama3:8b
@@ -279,7 +279,7 @@ persona generate \
 ```bash
 # Process multiple data files
 persona generate \
-    --input ./data/ \
+    --from ./data/ \
     --count 3 \
     --output ./all-personas
 ```
@@ -290,7 +290,7 @@ persona generate \
 
 **Cause**: File is empty or in unexpected format.
 
-**Solution**: Use `persona data preview` to inspect the file structure.
+**Solution**: Use `persona preview` to inspect the file structure.
 
 ### "Rate limit exceeded"
 

@@ -98,9 +98,9 @@ jobs:
       - name: Install Persona
         run: pip install persona-cli
 
-      - name: Validate Data Quality
+      - name: Preview Data
         run: |
-          persona data validate research/data/ --strict
+          persona preview research/data/ --verbose
 
       - name: Validate Personas
         env:
@@ -137,12 +137,12 @@ stages:
 variables:
   PYTHON_VERSION: "3.12"
 
-validate-data:
+preview-data:
   stage: validate
   image: python:${PYTHON_VERSION}
   script:
     - pip install persona-cli
-    - persona data validate research/data/ --strict
+    - persona preview research/data/ --verbose
   rules:
     - changes:
         - research/data/**
@@ -437,4 +437,3 @@ cat test-output/metadata.json
 - [CLI Reference](../reference/cli-reference.md)
 - [F-020: Batch Processing](../development/roadmap/features/completed/F-020-batch-data-processing.md)
 - [Reproducibility](../explanation/reproducibility.md)
-
