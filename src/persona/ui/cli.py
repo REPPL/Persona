@@ -56,6 +56,7 @@ from persona.ui.commands import (
     synthesise_app,
     template_app,
     validate_app,
+    variant_app,
     vendor_app,
     verify_app,
     workflow_app,
@@ -90,6 +91,7 @@ app.add_typer(help_app, name="help")
 
 # Research & Analysis
 app.add_typer(experiment_app, name="experiment", hidden=True)
+app.add_typer(variant_app, name="variant", hidden=True)
 app.add_typer(compare_app, name="compare", hidden=True)
 app.add_typer(cluster_app, name="cluster", hidden=True)
 app.add_typer(refine_app, name="refine", hidden=True)
