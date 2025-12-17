@@ -10,14 +10,21 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.panel import Panel
 from rich.table import Table
 
-from persona.core.generation.parser import Persona
 from persona.core.quality.diversity import (
     DiversityConfig,
     InterpretationLevel,
     LexicalDiversityAnalyser,
+)
+from persona.ui.commands.quality_base import (
+    QualityOutputFormatter,
+    colour_score,
+    create_panel,
+    create_summary_table,
+    display_version_header,
+    handle_error,
+    load_personas,
 )
 from persona.ui.console import get_console
 
@@ -39,7 +46,8 @@ def diversity(
     output_format: Annotated[
         str,
         typer.Option(
-            "--format", "-f",
+            "--format",
+            "-f",
             help="Output format: rich, json, table.",
         ),
     ] = "rich",
@@ -80,25 +88,16 @@ def diversity(
         persona diversity analyse ./outputs/ --save diversity_report.json
     """
     console = get_console()
-
-    from persona import __version__
+    formatter = QualityOutputFormatter(console, output_format, save_to)
 
     # Load personas
     try:
-        personas = _load_personas(persona_path)
+        personas = load_personas(persona_path)
     except Exception as e:
-        if output_format == "json":
-            print(json.dumps({"success": False, "error": str(e)}, indent=2))
-        else:
-            console.print(f"[red]Error loading personas:[/red] {e}")
-        raise typer.Exit(1)
+        handle_error(console, "Error loading personas", output_format, e)
 
     if not personas:
-        if output_format == "json":
-            print(json.dumps({"success": False, "error": "No personas found"}, indent=2))
-        else:
-            console.print("[yellow]No personas found to analyse.[/yellow]")
-        raise typer.Exit(1)
+        handle_error(console, "Error", output_format, "No personas found to analyse")
 
     # Configure analyser
     config = DiversityConfig(
@@ -112,49 +111,28 @@ def diversity(
 
     # Output results
     if output_format == "json":
-        output = {
-            "command": "diversity",
-            "version": __version__,
-            "success": True,
-            "data": result.to_dict(),
-        }
-        output_text = json.dumps(output, indent=2)
-        print(output_text)
-        if save_to:
-            save_to.write_text(output_text)
+        formatter.output_json(result.to_dict(), "diversity")
     elif output_format == "table":
         _display_table_output(console, result)
-        if save_to:
-            # Save JSON for table output
-            save_to.write_text(json.dumps(result.to_dict(), indent=2))
+        formatter.save_data(result.to_dict())
     else:
-        if not console.is_quiet:
-            console.print(f"[dim]Persona {__version__}[/dim]\n")
+        display_version_header(console, console.is_quiet)
         _display_rich_output(console, result)
-        if save_to:
-            # Save JSON for rich output
-            save_to.write_text(json.dumps(result.to_dict(), indent=2))
+        formatter.save_data(result.to_dict())
 
 
 def _display_rich_output(console, result) -> None:
     """Display results with Rich formatting."""
-    console.print(Panel.fit(
-        "[bold]Lexical Diversity Analysis[/bold]",
-        border_style="blue",
-    ))
+    console.print(create_panel("[bold]Lexical Diversity Analysis[/bold]", border_style="blue"))
 
     # Summary table
-    summary = Table(show_header=False, box=None)
-    summary.add_column("Metric", style="cyan")
-    summary.add_column("Value")
-    summary.add_row("Personas analysed", str(len(result.reports)))
-    summary.add_row("Average TTR", f"{result.average_ttr:.4f}")
-    summary.add_row("Average MATTR", f"{result.average_mattr:.4f}")
-    summary.add_row(
-        "Average MTLD",
-        _colour_mtld(result.average_mtld)
-    )
-    summary.add_row("Average Hapax Ratio", f"{result.average_hapax_ratio:.4f}")
+    summary = create_summary_table([
+        ("Personas analysed", str(len(result.reports))),
+        ("Average TTR", f"{result.average_ttr:.4f}"),
+        ("Average MATTR", f"{result.average_mattr:.4f}"),
+        ("Average MTLD", _colour_mtld(result.average_mtld)),
+        ("Average Hapax Ratio", f"{result.average_hapax_ratio:.4f}"),
+    ])
     console.print(summary)
     console.print()
 
@@ -205,8 +183,10 @@ def _display_rich_output(console, result) -> None:
 
     # Show top tokens for low-diversity personas
     low_diversity = [
-        r for r in result.reports
-        if r.interpretation in (InterpretationLevel.POOR, InterpretationLevel.BELOW_AVERAGE)
+        r
+        for r in result.reports
+        if r.interpretation
+        in (InterpretationLevel.POOR, InterpretationLevel.BELOW_AVERAGE)
     ]
     if low_diversity:
         console.print("\n[bold]Low Diversity Personas - Top Tokens:[/bold]")
@@ -242,7 +222,9 @@ def _display_table_output(console, result) -> None:
     console.print("-" * 120)
 
     for report in result.reports:
-        name = report.persona_name[:28] if report.persona_name else report.persona_id[:28]
+        name = (
+            report.persona_name[:28] if report.persona_name else report.persona_id[:28]
+        )
         console.print(
             f"{name:<30} {report.total_tokens:>8} {report.unique_tokens:>8} "
             f"{report.ttr:>8.4f} {report.mattr:>8.4f} {report.mtld:>8.2f} "
@@ -252,51 +234,9 @@ def _display_table_output(console, result) -> None:
 
 def _colour_mtld(mtld: float) -> str:
     """Return MTLD score with appropriate colour markup."""
-    if mtld >= 100:
-        return f"[green]{mtld:.2f}[/green]"
-    elif mtld >= 70:
+    if mtld >= 70:
         return f"[green]{mtld:.2f}[/green]"
     elif mtld >= 50:
         return f"[yellow]{mtld:.2f}[/yellow]"
     else:
         return f"[red]{mtld:.2f}[/red]"
-
-
-def _load_personas(path: Path) -> list[Persona]:
-    """Load personas from a file or directory."""
-    if path.is_file():
-        # Load from JSON file
-        with open(path) as f:
-            data = json.load(f)
-
-        # Handle different JSON structures
-        if isinstance(data, list):
-            return [Persona.from_dict(p) for p in data]
-        elif isinstance(data, dict):
-            if "personas" in data:
-                return [Persona.from_dict(p) for p in data["personas"]]
-            else:
-                return [Persona.from_dict(data)]
-    else:
-        # Load from output directory
-        personas = []
-
-        # Look for personas.json
-        personas_file = path / "personas.json"
-        if personas_file.exists():
-            with open(personas_file) as f:
-                data = json.load(f)
-            if isinstance(data, list):
-                return [Persona.from_dict(p) for p in data]
-            elif "personas" in data:
-                return [Persona.from_dict(p) for p in data["personas"]]
-
-        # Look for individual persona files
-        for json_file in path.glob("persona_*.json"):
-            with open(json_file) as f:
-                data = json.load(f)
-            personas.append(Persona.from_dict(data))
-
-        return personas
-
-    return []

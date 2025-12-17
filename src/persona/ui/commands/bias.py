@@ -13,7 +13,14 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.core.generation.parser import Persona
+from persona.ui.commands.quality_base import (
+    QualityOutputFormatter,
+    colour_score,
+    create_summary_table,
+    display_version_header,
+    handle_error,
+    load_personas,
+)
 from persona.ui.console import get_console
 
 bias_app = typer.Typer(
@@ -34,28 +41,32 @@ def check_bias(
     categories: Annotated[
         str,
         typer.Option(
-            "--categories", "-c",
+            "--categories",
+            "-c",
             help="Comma-separated bias categories to check (gender,racial,age,professional).",
         ),
     ] = "gender,racial,age,professional",
     methods: Annotated[
         str,
         typer.Option(
-            "--methods", "-m",
+            "--methods",
+            "-m",
             help="Detection methods to use (lexicon,embedding,llm,all).",
         ),
     ] = "lexicon",
     threshold: Annotated[
         float,
         typer.Option(
-            "--threshold", "-t",
+            "--threshold",
+            "-t",
             help="Confidence threshold for reporting findings (0-1).",
         ),
     ] = 0.3,
     output_format: Annotated[
         str,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output format: rich, json, markdown.",
         ),
     ] = "rich",
@@ -102,6 +113,7 @@ def check_bias(
         persona bias check ./personas.json --methods llm --max-score 0.5
     """
     console = get_console()
+    formatter = QualityOutputFormatter(console, output_format, save_to)
 
     from persona import __version__
     from persona.core.providers import ProviderFactory
@@ -118,24 +130,12 @@ def check_bias(
 
     # Load personas
     try:
-        personas = _load_personas(persona_path)
+        personas = load_personas(persona_path)
     except Exception as e:
-        if output_format == "json":
-            print(json.dumps({"success": False, "error": str(e)}, indent=2))
-        else:
-            console.print(f"[red]Error loading personas:[/red] {e}")
-        raise typer.Exit(1)
+        handle_error(console, "Error loading personas", output_format, e)
 
     if not personas:
-        if output_format == "json":
-            print(
-                json.dumps(
-                    {"success": False, "error": "No personas found"}, indent=2
-                )
-            )
-        else:
-            console.print("[yellow]No personas found to check.[/yellow]")
-        raise typer.Exit(1)
+        handle_error(console, "Error", output_format, "No personas found to check")
 
     # Create LLM provider if needed
     llm_provider_instance = None
@@ -145,19 +145,7 @@ def check_bias(
             if llm_model:
                 llm_provider_instance.model = llm_model
         except Exception as e:
-            if output_format == "json":
-                print(
-                    json.dumps(
-                        {
-                            "success": False,
-                            "error": f"Failed to create LLM provider: {e}",
-                        },
-                        indent=2,
-                    )
-                )
-            else:
-                console.print(f"[red]Error creating LLM provider:[/red] {e}")
-            raise typer.Exit(1)
+            handle_error(console, "Error creating LLM provider", output_format, e)
 
     # Create bias detector
     try:
@@ -166,20 +154,11 @@ def check_bias(
         )
         detector = BiasDetector(config, llm_provider_instance)
     except Exception as e:
-        if output_format == "json":
-            print(
-                json.dumps(
-                    {"success": False, "error": f"Failed to initialise detector: {e}"},
-                    indent=2,
-                )
-            )
-        else:
-            console.print(f"[red]Error initialising detector:[/red] {e}")
-        raise typer.Exit(1)
+        handle_error(console, "Error initialising detector", output_format, e)
 
     # Run detection
     if output_format == "rich" and not console._quiet:
-        console.print(f"[dim]Persona {__version__}[/dim]\n")
+        display_version_header(console)
         console.print(
             f"[dim]Checking {len(personas)} persona(s) for bias using: {', '.join(method_list)}...[/dim]\n"
         )
@@ -187,11 +166,7 @@ def check_bias(
     try:
         reports = [detector.analyse(persona) for persona in personas]
     except Exception as e:
-        if output_format == "json":
-            print(json.dumps({"success": False, "error": str(e)}, indent=2))
-        else:
-            console.print(f"[red]Detection error:[/red] {e}")
-        raise typer.Exit(1)
+        handle_error(console, "Detection error", output_format, e)
 
     # Calculate summary statistics
     total_findings = sum(len(r.findings) for r in reports)
@@ -202,11 +177,8 @@ def check_bias(
 
     # Output results
     if output_format == "json":
-        output = {
-            "command": "bias check",
-            "version": __version__,
-            "success": True,
-            "data": {
+        formatter.output_json(
+            {
                 "persona_count": len(reports),
                 "summary": {
                     "total_findings": total_findings,
@@ -218,32 +190,24 @@ def check_bias(
                 },
                 "reports": [r.to_dict() for r in reports],
             },
-        }
-        output_text = json.dumps(output, indent=2)
-        print(output_text)
-        if save_to:
-            save_to.write_text(output_text)
+            "bias check",
+        )
     elif output_format == "markdown":
         report = _generate_markdown_report(reports, method_list, category_list)
         print(report)
-        if save_to:
-            save_to.write_text(report)
+        formatter.save_text(report)
     else:
         _display_rich_output(console, reports, method_list, category_list)
-        if save_to:
-            save_to.write_text(
-                json.dumps(
-                    {
-                        "summary": {
-                            "total_findings": total_findings,
-                            "average_bias_score": round(avg_bias_score, 3),
-                            "personas_with_bias": personas_with_bias,
-                        },
-                        "reports": [r.to_dict() for r in reports],
-                    },
-                    indent=2,
-                )
-            )
+        formatter.save_data(
+            {
+                "summary": {
+                    "total_findings": total_findings,
+                    "average_bias_score": round(avg_bias_score, 3),
+                    "personas_with_bias": personas_with_bias,
+                },
+                "reports": [r.to_dict() for r in reports],
+            }
+        )
 
     # Check maximum score threshold
     if max_score is not None:
@@ -269,28 +233,32 @@ def generate_report(
     output_file: Annotated[
         Path,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output file path for detailed report.",
         ),
     ],
     format: Annotated[
         str,
         typer.Option(
-            "--format", "-f",
+            "--format",
+            "-f",
             help="Report format: markdown, json.",
         ),
     ] = "markdown",
     methods: Annotated[
         str,
         typer.Option(
-            "--methods", "-m",
+            "--methods",
+            "-m",
             help="Detection methods to use (lexicon,embedding,llm,all).",
         ),
     ] = "all",
     categories: Annotated[
         str,
         typer.Option(
-            "--categories", "-c",
+            "--categories",
+            "-c",
             help="Comma-separated bias categories to check.",
         ),
     ] = "gender,racial,age,professional",
@@ -521,44 +489,5 @@ def _generate_markdown_report(
 
 def _colour_bias_score(score: float) -> str:
     """Return bias score with appropriate colour markup."""
-    if score <= 0.3:
-        return f"[green]{score:.3f}[/green]"
-    elif score <= 0.6:
-        return f"[yellow]{score:.3f}[/yellow]"
-    else:
-        return f"[red]{score:.3f}[/red]"
-
-
-def _load_personas(path: Path) -> list[Persona]:
-    """Load personas from a file or directory."""
-    if path.is_file():
-        with open(path) as f:
-            data = json.load(f)
-
-        if isinstance(data, list):
-            return [Persona.from_dict(p) for p in data]
-        elif isinstance(data, dict):
-            if "personas" in data:
-                return [Persona.from_dict(p) for p in data["personas"]]
-            else:
-                return [Persona.from_dict(data)]
-    else:
-        personas = []
-
-        personas_file = path / "personas.json"
-        if personas_file.exists():
-            with open(personas_file) as f:
-                data = json.load(f)
-            if isinstance(data, list):
-                return [Persona.from_dict(p) for p in data]
-            elif "personas" in data:
-                return [Persona.from_dict(p) for p in data["personas"]]
-
-        for json_file in path.glob("persona_*.json"):
-            with open(json_file) as f:
-                data = json.load(f)
-            personas.append(Persona.from_dict(data))
-
-        return personas
-
-    return []
+    # Bias: low is good (green), high is bad (red)
+    return colour_score(score, low_threshold=0.3, high_threshold=0.6, invert=False)

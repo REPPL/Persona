@@ -4,7 +4,6 @@ Command-line interface for Persona.
 This module provides the main CLI entry point using Typer.
 """
 
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Optional
 
@@ -12,53 +11,54 @@ import typer
 
 # Lazy load Rich components for faster CLI startup
 if TYPE_CHECKING:
-    from rich.panel import Panel
-    from rich.table import Table
+    pass
 
 
 def _get_panel():
     """Lazy load Rich Panel class."""
     from rich.panel import Panel
+
     return Panel
 
 
 def _get_table():
     """Lazy load Rich Table class."""
     from rich.table import Table
+
     return Table
 
 
 from persona.ui.commands import (
-    experiment_app,
-    generate_app,
-    vendor_app,
-    model_app,
-    template_app,
-    workflow_app,
-    preview_app,
-    validate_app,
-    compare_app,
-    export_app,
-    cluster_app,
-    refine_app,
-    config_app,
-    help_app,
-    quality_app,
-    plugin_app,
-    script_app,
-    dashboard_app,
-    serve_app,
-    privacy_app,
-    evaluate_app,
-    synthesise_app,
     academic_app,
+    audit_app,
+    bias_app,
+    cluster_app,
+    compare_app,
+    config_app,
+    dashboard_app,
+    diversity_app,
+    evaluate_app,
+    experiment_app,
+    export_app,
     faithfulness_app,
     fidelity_app,
-    audit_app,
-    diversity_app,
-    bias_app,
-    verify_app,
+    generate_app,
+    help_app,
+    model_app,
+    plugin_app,
+    preview_app,
+    privacy_app,
     project_app,
+    quality_app,
+    refine_app,
+    script_app,
+    serve_app,
+    synthesise_app,
+    template_app,
+    validate_app,
+    vendor_app,
+    verify_app,
+    workflow_app,
 )
 from persona.ui.console import get_console as _get_console
 
@@ -123,71 +123,69 @@ app.add_typer(model_app, name="model", hidden=True)
 app.add_typer(template_app, name="template", hidden=True)
 app.add_typer(workflow_app, name="workflow", hidden=True)
 
-# Global state for console options (used by callbacks)
-_no_color: bool = False
-_quiet: bool = False
-_verbosity: int = 1  # 0=quiet, 1=normal, 2=verbose, 3=debug
-_interactive: bool = False
+# CLI context management (replaces global state)
+from persona.ui.context import (
+    get_cli_context,
+    get_interactive,
+    get_no_color,
+    get_quiet,
+    get_verbosity,
+    reset_cli_context,
+    set_interactive,
+    set_no_color,
+    set_quiet,
+    set_verbosity,
+)
 
 
 def get_console():
-    """Get console with current global settings."""
-    return _get_console(no_color=_no_color, quiet=_quiet, verbosity=_verbosity)
+    """Get console with current context settings."""
+    ctx = get_cli_context()
+    return _get_console(no_color=ctx.no_color, quiet=ctx.quiet, verbosity=ctx.verbosity)
 
 
 def version_callback(value: bool) -> None:
     """Print version and exit."""
     if value:
         from persona import __version__
+
         console = get_console()
         console.print(f"Persona {__version__}")
         raise typer.Exit()
 
 
 def no_color_callback(value: bool) -> None:
-    """Set no-color mode globally."""
-    global _no_color
-    # Always reset first (for test isolation), then set if True
-    _no_color = bool(value)
+    """Set no-color mode via context."""
+    set_no_color(bool(value))
 
 
 def quiet_callback(value: bool) -> None:
-    """Set quiet mode globally."""
-    global _quiet, _verbosity
-    # Always reset first (for test isolation), then set if True
-    _quiet = bool(value)
-    if _quiet:
-        _verbosity = 0
+    """Set quiet mode via context."""
+    set_quiet(bool(value))
 
 
 def verbose_callback(value: int) -> None:
-    """Set verbosity level globally.
+    """Set verbosity level via context.
 
     Can be called multiple times (-v -v) to increase verbosity.
     """
-    global _verbosity
     if value:
-        _verbosity = min(value + 1, 3)  # +1 because normal is 1, cap at 3 (debug)
+        set_verbosity(min(value + 1, 3))  # +1 because normal is 1, cap at 3 (debug)
 
 
 def interactive_callback(value: bool) -> None:
-    """Set interactive mode globally."""
-    global _interactive
-    _interactive = bool(value)
+    """Set interactive mode via context."""
+    set_interactive(bool(value))
 
 
 def _reset_globals() -> None:
-    """Reset global state (for testing)."""
-    global _no_color, _quiet, _verbosity, _interactive
-    _no_color = False
-    _quiet = False
-    _verbosity = 1
-    _interactive = False
+    """Reset context state (for testing)."""
+    reset_cli_context()
 
 
 def is_interactive() -> bool:
     """Check if interactive mode is enabled."""
-    return _interactive
+    return get_interactive()
 
 
 @app.callback()
@@ -195,7 +193,8 @@ def main(
     version: Annotated[
         Optional[bool],
         typer.Option(
-            "--version", "-V",
+            "--version",
+            "-V",
             callback=version_callback,
             is_eager=True,
             help="Show version and exit.",
@@ -213,7 +212,8 @@ def main(
     quiet: Annotated[
         Optional[bool],
         typer.Option(
-            "--quiet", "-q",
+            "--quiet",
+            "-q",
             callback=quiet_callback,
             is_eager=True,
             help="Minimal output (errors and results only).",
@@ -222,7 +222,8 @@ def main(
     verbose: Annotated[
         int,
         typer.Option(
-            "--verbose", "-v",
+            "--verbose",
+            "-v",
             callback=verbose_callback,
             count=True,
             is_eager=True,
@@ -232,7 +233,8 @@ def main(
     interactive: Annotated[
         Optional[bool],
         typer.Option(
-            "--interactive", "-i",
+            "--interactive",
+            "-i",
             callback=interactive_callback,
             is_eager=True,
             help="Run in interactive mode with guided prompts.",
@@ -246,19 +248,22 @@ def main(
         return
 
     # If interactive mode is set, launch the generate wizard
-    if _interactive:
-        from persona.ui.interactive import GenerateWizard, is_interactive_supported
+    if get_interactive():
+        from pathlib import Path
+
         from persona.core.data import DataLoader
-        from persona.core.generation import GenerationPipeline, GenerationConfig
+        from persona.core.generation import GenerationConfig, GenerationPipeline
         from persona.core.output import OutputManager
         from persona.core.providers import ProviderFactory
+        from persona.ui.interactive import GenerateWizard, is_interactive_supported
         from persona.ui.streaming import get_progress_handler
-        from pathlib import Path
 
         console = get_console()
 
         if not is_interactive_supported():
-            console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
+            console.print(
+                "[yellow]Interactive mode not supported in non-TTY environment.[/yellow]"
+            )
             raise typer.Exit(1)
 
         wizard = GenerateWizard()
@@ -268,6 +273,7 @@ def main(
 
         # Run generation with wizard results
         from persona import __version__
+
         console.print(f"[dim]Persona {__version__}[/dim]\n")
 
         data_path = result["data_path"]
@@ -281,12 +287,14 @@ def main(
         loader = DataLoader()
         try:
             data, _files = loader.load_path(data_path)
-        except Exception as e:
+        except (FileNotFoundError, ValueError, OSError) as e:
             console.print(f"[red]Error loading data:[/red] {e}")
             raise typer.Exit(1)
 
         token_count = loader.count_tokens(data)
-        console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)")
+        console.print(
+            f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)"
+        )
 
         # Create provider
         try:
@@ -327,7 +335,7 @@ def main(
                 input_tokens=gen_result.input_tokens,
                 output_tokens=gen_result.output_tokens,
             )
-        except Exception as e:
+        except (ValueError, RuntimeError, OSError) as e:
             progress_handler.error(str(e))
             raise typer.Exit(1)
 
@@ -338,7 +346,9 @@ def main(
         console.print(f"[green]✓[/green] Saved to: {output_path}")
 
         # Show summary
-        console.print(f"\n[bold green]Generated {len(gen_result.personas)} personas:[/bold green]")
+        console.print(
+            f"\n[bold green]Generated {len(gen_result.personas)} personas:[/bold green]"
+        )
         for i, persona in enumerate(gen_result.personas, 1):
             console.print(f"  {i}. [bold]{persona.name}[/bold] ({persona.id})")
 
@@ -386,7 +396,8 @@ def check(
             }
             if is_configured:
                 configured_count += 1
-        except Exception:
+        except (ValueError, ImportError, OSError):
+            # Provider unavailable or not properly installed
             provider_status[provider_name] = {
                 "configured": False,
                 "env_var": env_var,
@@ -409,14 +420,16 @@ def check(
 
     # Rich output mode
     Panel = _get_panel()
-    console.print(Panel.fit(
-        "[bold]Persona Health Check[/bold]",
-        border_style="green",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Persona Health Check[/bold]",
+            border_style="green",
+        )
+    )
 
     # Version and installation
     console.print(f"\n[green]✓[/green] Version: {__version__}")
-    console.print(f"[green]✓[/green] Installation: OK")
+    console.print("[green]✓[/green] Installation: OK")
 
     # Provider status
     console.print("\n[bold]Provider Status:[/bold]")
@@ -428,16 +441,26 @@ def check(
         elif status["configured"]:
             console.print(f"  [green]✓[/green] {provider_name}: Configured")
         else:
-            console.print(f"  [yellow]○[/yellow] {provider_name}: Not configured ({env_var})")
+            console.print(
+                f"  [yellow]○[/yellow] {provider_name}: Not configured ({env_var})"
+            )
 
     if configured_count == 0:
         console.print("\n[yellow]Warning:[/yellow] No providers configured.")
-        console.print("Set at least one API key to start generating personas:")
-        console.print("  export ANTHROPIC_API_KEY=your-key")
-        console.print("  export OPENAI_API_KEY=your-key")
-        console.print("  export GOOGLE_API_KEY=your-key")
+        console.print("Set at least one API key to start generating personas:\n")
+        console.print("  [bold]Option 1 - Persistent (recommended):[/bold]")
+        console.print("    Add to .env file: ANTHROPIC_API_KEY=your-key\n")
+        console.print("  [bold]Option 2 - Current session only:[/bold]")
+        console.print("    export ANTHROPIC_API_KEY=your-key")
+        console.print("    export OPENAI_API_KEY=your-key")
+        console.print("    export GOOGLE_API_KEY=your-key\n")
+        console.print(
+            "  Run [cyan]persona help api-keys[/cyan] for detailed setup instructions."
+        )
     else:
-        console.print(f"\n[green]Ready![/green] {configured_count} provider(s) available.")
+        console.print(
+            f"\n[green]Ready![/green] {configured_count} provider(s) available."
+        )
 
 
 @app.command("cost")
@@ -537,9 +560,15 @@ def estimate_cost(
                     "persona_count": count,
                     "model": estimate.model,
                     "provider": estimate.provider,
-                    "input_cost": float(estimate.input_cost) if estimate.pricing else None,
-                    "output_cost": float(estimate.output_cost) if estimate.pricing else None,
-                    "total_cost": float(estimate.total_cost) if estimate.pricing else None,
+                    "input_cost": float(estimate.input_cost)
+                    if estimate.pricing
+                    else None,
+                    "output_cost": float(estimate.output_cost)
+                    if estimate.pricing
+                    else None,
+                    "total_cost": float(estimate.total_cost)
+                    if estimate.pricing
+                    else None,
                 },
             }
             print(json.dumps(result, indent=2))
@@ -555,9 +584,15 @@ def estimate_cost(
 
         if estimate.pricing:
             console.print(f"[bold]{estimate.model}[/bold] ({estimate.provider})")
-            console.print(f"  Input:  {estimate.input_tokens:,} tokens @ ${float(estimate.pricing.input_price)}/M = {estimator.format_cost(estimate.input_cost)}")
-            console.print(f"  Output: {estimate.output_tokens:,} tokens @ ${float(estimate.pricing.output_price)}/M = {estimator.format_cost(estimate.output_cost)}")
-            console.print(f"  [bold]Total: {estimator.format_cost(estimate.total_cost)}[/bold]")
+            console.print(
+                f"  Input:  {estimate.input_tokens:,} tokens @ ${float(estimate.pricing.input_price)}/M = {estimator.format_cost(estimate.input_cost)}"
+            )
+            console.print(
+                f"  Output: {estimate.output_tokens:,} tokens @ ${float(estimate.pricing.output_price)}/M = {estimator.format_cost(estimate.output_cost)}"
+            )
+            console.print(
+                f"  [bold]Total: {estimator.format_cost(estimate.total_cost)}[/bold]"
+            )
         else:
             console.print(f"[yellow]Unknown model: {model}[/yellow]")
     else:
@@ -582,9 +617,15 @@ def estimate_cost(
                             "provider": est.provider,
                             "input_tokens": est.input_tokens,
                             "output_tokens": est.output_tokens,
-                            "input_cost": float(est.input_cost) if est.pricing else None,
-                            "output_cost": float(est.output_cost) if est.pricing else None,
-                            "total_cost": float(est.total_cost) if est.pricing else None,
+                            "input_cost": float(est.input_cost)
+                            if est.pricing
+                            else None,
+                            "output_cost": float(est.output_cost)
+                            if est.pricing
+                            else None,
+                            "total_cost": float(est.total_cost)
+                            if est.pricing
+                            else None,
                         }
                         for est in estimates
                         if est.pricing
@@ -602,7 +643,9 @@ def estimate_cost(
         elif tokens:
             console.print(f"[bold]Tokens:[/bold] {input_tokens:,}")
         else:
-            console.print("[yellow]Specify --from or --tokens for accurate estimates.[/yellow]")
+            console.print(
+                "[yellow]Specify --from or --tokens for accurate estimates.[/yellow]"
+            )
         console.print(f"[bold]Personas:[/bold] {count}")
         console.print()
 
@@ -626,7 +669,9 @@ def estimate_cost(
 
         console.print(table)
         if estimates:
-            console.print(f"\n[dim]Estimates based on {input_tokens:,} input tokens + ~{estimates[0].output_tokens:,} output tokens[/dim]")
+            console.print(
+                f"\n[dim]Estimates based on {input_tokens:,} input tokens + ~{estimates[0].output_tokens:,} output tokens[/dim]"
+            )
 
 
 @app.command("models")
@@ -673,7 +718,8 @@ def list_models(
             prov = ProviderFactory.create(p_name)
             if prov.is_configured():
                 configured_providers.add(p_name)
-        except Exception:
+        except (ValueError, ImportError, OSError):
+            # Provider unavailable or not properly installed
             pass
 
     if json_output:
@@ -693,16 +739,19 @@ def list_models(
                     "configured": pricing.provider in configured_providers,
                     "models": [],
                 }
-            result["data"]["providers"][pricing.provider]["models"].append({
-                "name": pricing.model,
-                "input_price": float(pricing.input_price),
-                "output_price": float(pricing.output_price),
-                "default": pricing.model in [
-                    "claude-sonnet-4-20250514",
-                    "gpt-4o",
-                    "gemini-2.0-flash",
-                ],
-            })
+            result["data"]["providers"][pricing.provider]["models"].append(
+                {
+                    "name": pricing.model,
+                    "input_price": float(pricing.input_price),
+                    "output_price": float(pricing.output_price),
+                    "default": pricing.model
+                    in [
+                        "claude-sonnet-4-20250514",
+                        "gpt-4o",
+                        "gemini-2.0-flash",
+                    ],
+                }
+            )
 
         print(json.dumps(result, indent=2))
         return
@@ -758,7 +807,8 @@ def init(
     path: Annotated[
         Optional[Path],
         typer.Option(
-            "--path", "-p",
+            "--path",
+            "-p",
             help="Parent directory for project (defaults to current directory).",
         ),
     ] = None,
@@ -781,6 +831,7 @@ def init(
     # Prompt for name if not provided
     if not name:
         import questionary
+
         name = questionary.text(
             "Project name:",
             validate=lambda x: len(x) > 0 or "Project name is required",
@@ -800,6 +851,7 @@ def init(
     if target.exists():
         console.print(f"[yellow]Warning:[/yellow] Directory already exists: {target}")
         import questionary
+
         if not questionary.confirm("Continue anyway?", default=False).ask():
             console.print("[dim]Cancelled[/dim]")
             raise typer.Exit(0)
@@ -832,7 +884,7 @@ defaults:
   detail_level: standard
 """
         config_path.write_text(config_content)
-        console.print(f"  [green]✓[/green] Created: persona.yaml")
+        console.print("  [green]✓[/green] Created: persona.yaml")
 
     console.print(f"\n[green]Project '{name}' initialised![/green]")
     console.print("\n[bold]Next steps:[/bold]")

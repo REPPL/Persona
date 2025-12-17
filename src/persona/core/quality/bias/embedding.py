@@ -3,23 +3,70 @@ Embedding-based bias detection using WEAT (Word Embedding Association Test).
 
 This module implements the WEAT algorithm to detect implicit biases in
 persona representations using semantic embeddings.
+
+Heavy dependencies (sentence-transformers, numpy) are loaded lazily at
+point of use to avoid slow CLI startup times.
 """
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.bias.models import BiasCategory, BiasFinding, Severity
 
-# Optional dependency - gracefully degrade if not available
-try:
-    import numpy as np
-    from sentence_transformers import SentenceTransformer
+if TYPE_CHECKING:
+    pass
 
-    EMBEDDING_AVAILABLE = True
-except ImportError:
-    EMBEDDING_AVAILABLE = False
-    np = None  # type: ignore
-    SentenceTransformer = None  # type: ignore
+# Lazy-loaded module references
+_np = None
+_SentenceTransformer = None
+
+
+def _get_numpy():
+    """Lazy load numpy."""
+    global _np
+    if _np is None:
+        import numpy as np
+
+        _np = np
+    return _np
+
+
+def _get_sentence_transformer_class():
+    """Lazy load SentenceTransformer class."""
+    global _SentenceTransformer
+    if _SentenceTransformer is None:
+        from sentence_transformers import SentenceTransformer
+
+        _SentenceTransformer = SentenceTransformer
+    return _SentenceTransformer
+
+
+def is_embedding_available() -> bool:
+    """
+    Check if embedding dependencies are available.
+
+    Returns:
+        True if sentence-transformers and numpy are importable.
+    """
+    try:
+        import numpy  # noqa: F401
+        import sentence_transformers  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
+# Backward compatibility - but now computed lazily
+EMBEDDING_AVAILABLE = None  # Will be set on first access
+
+
+def _check_embedding_available() -> bool:
+    """Check and cache embedding availability."""
+    global EMBEDDING_AVAILABLE
+    if EMBEDDING_AVAILABLE is None:
+        EMBEDDING_AVAILABLE = is_embedding_available()
+    return EMBEDDING_AVAILABLE
 
 
 class EmbeddingAnalyser:
@@ -40,13 +87,15 @@ class EmbeddingAnalyser:
         Raises:
             ImportError: If sentence-transformers is not installed.
         """
-        if not EMBEDDING_AVAILABLE:
+        if not _check_embedding_available():
             raise ImportError(
                 "sentence-transformers is required for embedding-based bias detection. "
                 "Install with: pip install sentence-transformers"
             )
 
         self.model_name = model_name
+        # Lazy load the model - this is where the heavy lifting happens
+        SentenceTransformer = _get_sentence_transformer_class()
         self.model = SentenceTransformer(model_name)
         self._load_weat_sets()
 
@@ -146,9 +195,7 @@ class EmbeddingAnalyser:
             ],
         }
 
-    def _compute_cosine_similarity(
-        self, embedding_a: Any, embedding_b: Any
-    ) -> float:
+    def _compute_cosine_similarity(self, embedding_a: Any, embedding_b: Any) -> float:
         """
         Compute cosine similarity between two embeddings.
 
@@ -159,6 +206,7 @@ class EmbeddingAnalyser:
         Returns:
             Cosine similarity (-1 to 1).
         """
+        np = _get_numpy()
         return float(
             np.dot(embedding_a, embedding_b)
             / (np.linalg.norm(embedding_a) * np.linalg.norm(embedding_b))
@@ -177,6 +225,7 @@ class EmbeddingAnalyser:
         Returns:
             Mean similarity score.
         """
+        np = _get_numpy()
         similarities = [
             self._compute_cosine_similarity(target_embedding, attr_emb)
             for attr_emb in attribute_embeddings
@@ -219,6 +268,7 @@ class EmbeddingAnalyser:
             scores.append(mean_sim_a - mean_sim_b)
 
         # Return mean effect size
+        np = _get_numpy()
         return float(np.mean(scores))
 
     def _extract_persona_text(self, persona: Persona) -> list[str]:
@@ -302,9 +352,7 @@ class EmbeddingAnalyser:
 
         return findings
 
-    def analyse_age_bias(
-        self, persona: Persona, threshold: float
-    ) -> list[BiasFinding]:
+    def analyse_age_bias(self, persona: Persona, threshold: float) -> list[BiasFinding]:
         """
         Analyse age bias using WEAT.
 

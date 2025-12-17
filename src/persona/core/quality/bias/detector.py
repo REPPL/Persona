@@ -9,7 +9,10 @@ comprehensive bias reports.
 from typing import TYPE_CHECKING
 
 from persona.core.generation.parser import Persona
-from persona.core.quality.bias.embedding import EMBEDDING_AVAILABLE, EmbeddingAnalyser
+from persona.core.quality.bias.embedding import (
+    EmbeddingAnalyser,
+    _check_embedding_available,
+)
 from persona.core.quality.bias.judge import BiasJudge
 from persona.core.quality.bias.lexicon import LexiconMatcher
 from persona.core.quality.bias.models import BiasConfig, BiasFinding, BiasReport
@@ -56,16 +59,16 @@ class BiasDetector:
         if "lexicon" in self.config.methods:
             try:
                 self.lexicon = LexiconMatcher(self.config.lexicon)
-            except Exception:
+            except (FileNotFoundError, ValueError, OSError):
                 # If lexicon loading fails, continue without it
                 pass
 
         # Initialise embedding analyser
         if "embedding" in self.config.methods:
-            if EMBEDDING_AVAILABLE:
+            if _check_embedding_available():
                 try:
                     self.embedding = EmbeddingAnalyser(self.config.embedding_model)
-                except Exception:
+                except (ImportError, ValueError, OSError):
                     # If embedding model loading fails, continue without it
                     pass
 
@@ -100,9 +103,7 @@ class BiasDetector:
 
             total_score = 0.0
             for finding in category_findings:
-                severity_weight = severity_weights.get(
-                    finding.severity.value, 0.5
-                )
+                severity_weight = severity_weights.get(finding.severity.value, 0.5)
                 total_score += severity_weight * finding.confidence
 
             # Normalise by number of findings (cap at 1.0)
@@ -128,9 +129,7 @@ class BiasDetector:
         # Return mean of category scores
         return sum(category_scores.values()) / len(category_scores)
 
-    def _deduplicate_findings(
-        self, findings: list[BiasFinding]
-    ) -> list[BiasFinding]:
+    def _deduplicate_findings(self, findings: list[BiasFinding]) -> list[BiasFinding]:
         """
         Remove duplicate findings across methods.
 
@@ -172,11 +171,10 @@ class BiasDetector:
         # Run lexicon-based detection
         if self.lexicon:
             try:
-                lexicon_findings = self.lexicon.analyse(
-                    persona, self.config.categories
-                )
+                lexicon_findings = self.lexicon.analyse(persona, self.config.categories)
                 all_findings.extend(lexicon_findings)
-            except Exception:
+            except (ValueError, KeyError, AttributeError):
+                # Analysis failure - continue with other methods
                 pass
 
         # Run embedding-based detection
@@ -186,7 +184,8 @@ class BiasDetector:
                     persona, self.config.categories
                 )
                 all_findings.extend(embedding_findings)
-            except Exception:
+            except (ValueError, KeyError, AttributeError, RuntimeError):
+                # Analysis failure - continue with other methods
                 pass
 
         # Run LLM judge detection
@@ -194,7 +193,8 @@ class BiasDetector:
             try:
                 judge_findings = self.judge.analyse(persona, self.config.categories)
                 all_findings.extend(judge_findings)
-            except Exception:
+            except (ValueError, KeyError, AttributeError, RuntimeError):
+                # Analysis failure - continue with other methods
                 pass
 
         # Filter by confidence threshold
