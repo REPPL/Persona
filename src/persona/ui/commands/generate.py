@@ -6,17 +6,16 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.data import DataLoader
-from persona.core.generation import GenerationPipeline, GenerationConfig
+from persona.core.generation import GenerationConfig, GenerationPipeline
 from persona.core.output import OutputManager
 from persona.core.providers import ProviderFactory
+from persona.ui.completers import complete_model, complete_provider, complete_workflow
 from persona.ui.console import get_console
 from persona.ui.interactive import GenerateWizard, is_interactive_supported
-from persona.ui.completers import complete_provider, complete_model, complete_workflow
-from persona.ui.streaming import StreamingOutput, get_progress_handler
+from persona.ui.streaming import get_progress_handler
 
 generate_app = typer.Typer(
     name="generate",
@@ -233,10 +232,13 @@ def generate(
 
     # Check for interactive mode
     from persona.ui.cli import is_interactive
+
     if is_interactive():
         if not is_interactive_supported():
             console = get_console()
-            console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
+            console.print(
+                "[yellow]Interactive mode not supported in non-TTY environment.[/yellow]"
+            )
             console.print("Use explicit flags instead.")
             raise typer.Exit(1)
 
@@ -262,7 +264,9 @@ def generate(
         if data_path is None:
             console = get_console()
             console.print("[red]Error:[/red] --from is required.")
-            console.print("Use 'persona generate --from ./data.csv' or 'persona generate -i' for interactive mode.")
+            console.print(
+                "Use 'persona generate --from ./data.csv' or 'persona generate -i' for interactive mode."
+            )
             raise typer.Exit(1)
 
         # Apply defaults for non-interactive mode
@@ -323,6 +327,7 @@ def generate(
             )
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     # Resolve data path (supports experiment names)
@@ -347,15 +352,17 @@ def generate(
 
     # Show data summary
     token_count = loader.count_tokens(data)
-    console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)")
+    console.print(
+        f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)"
+    )
 
     # Anonymise if requested
     if anonymise:
         try:
             from persona.core.privacy import (
-                PIIDetector,
-                PIIAnonymiser,
                 AnonymisationStrategy,
+                PIIAnonymiser,
+                PIIDetector,
             )
         except ImportError:
             console.print(
@@ -490,11 +497,11 @@ def generate(
         progress_handler.error(str(e))
         raise typer.Exit(1)
 
-    # Save output
-    output_dir = output or Path("./outputs")
+    # Save output (respect experiment directory structure)
+    output_dir, save_name = _resolve_output_path(output, experiment)
     manager = OutputManager(base_dir=output_dir)
 
-    output_path = manager.save(result, name=experiment)
+    output_path = manager.save(result, name=save_name)
     console.print(f"[green]✓[/green] Saved to: {output_path}")
 
     # Show summary
@@ -527,7 +534,8 @@ def _handle_hybrid_generation(
 ) -> None:
     """Handle hybrid pipeline generation."""
     import asyncio
-    from persona.core.hybrid import HybridPipeline, HybridConfig
+
+    from persona.core.hybrid import HybridConfig, HybridPipeline
 
     console.print("\n[bold cyan]Hybrid Pipeline Mode[/bold cyan]")
 
@@ -569,8 +577,8 @@ def _handle_hybrid_generation(
     # Show results
     _show_hybrid_result(console, result)
 
-    # Save output
-    output_dir = output or Path("./outputs")
+    # Save output (respect experiment directory structure)
+    output_dir, save_name = _resolve_output_path(output, experiment)
     from persona.core.output import OutputManager
 
     manager = OutputManager(base_dir=output_dir)
@@ -598,7 +606,7 @@ def _handle_hybrid_generation(
         config=None,
     )
 
-    output_path = manager.save(generation_result, name=experiment)
+    output_path = manager.save(generation_result, name=save_name)
     console.print(f"\n[green]✓[/green] Saved to: {output_path}")
 
 
@@ -627,9 +635,10 @@ def _show_hybrid_config(console, config: "HybridConfig", count: int) -> None:
 
 def _show_hybrid_result(console, result: "HybridResult") -> None:
     """Display hybrid generation result."""
-    from rich.table import Table
 
-    console.print(f"\n[bold green]Generated {result.persona_count} personas:[/bold green]")
+    console.print(
+        f"\n[bold green]Generated {result.persona_count} personas:[/bold green]"
+    )
 
     # Show persona list
     for i, persona in enumerate(result.personas[:10], 1):  # Show first 10
@@ -643,14 +652,14 @@ def _show_hybrid_result(console, result: "HybridResult") -> None:
         console.print(f"  ... and {result.persona_count - 10} more")
 
     # Show statistics
-    console.print(f"\n[bold]Pipeline Statistics:[/bold]")
+    console.print("\n[bold]Pipeline Statistics:[/bold]")
     console.print(f"  Drafts generated: {result.draft_count}")
     console.print(f"  Passed threshold: {result.passing_count}")
     console.print(f"  Refined by frontier: {result.refined_count}")
 
     # Show costs
     costs = result.cost_tracker.to_dict()
-    console.print(f"\n[bold]Costs:[/bold]")
+    console.print("\n[bold]Costs:[/bold]")
     console.print(f"  Local: ${costs['local']['cost']:.4f}")
     console.print(f"  Judge: ${costs['judge']['cost']:.4f}")
     console.print(f"  Frontier: ${costs['frontier']['cost']:.4f}")
@@ -690,7 +699,7 @@ def _handle_multi_model_generation(
 
     from persona import __version__
     from persona.core.data import DataLoader
-    from persona.core.generation import GenerationPipeline, GenerationConfig
+    from persona.core.generation import GenerationConfig, GenerationPipeline
     from persona.core.output import OutputManager
     from persona.core.providers import ProviderFactory
 
@@ -734,7 +743,9 @@ def _handle_multi_model_generation(
     mode_name = "All Providers" if include_cloud else "Local Models"
     console.print(f"[bold cyan]{mode_name} Generation Mode[/bold cyan]")
     model_display = [f"{p}:{m}" for p, m in models_to_use]
-    console.print(f"Running with {len(models_to_use)} models: {', '.join(model_display)}\n")
+    console.print(
+        f"Running with {len(models_to_use)} models: {', '.join(model_display)}\n"
+    )
 
     # Resolve data path
     try:
@@ -757,12 +768,18 @@ def _handle_multi_model_generation(
         raise typer.Exit(1)
 
     token_count = loader.count_tokens(data)
-    console.print(f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)\n")
+    console.print(
+        f"[green]✓[/green] Loaded {len(data)} characters ({token_count:,} tokens)\n"
+    )
 
     # Anonymise if requested
     if anonymise:
         try:
-            from persona.core.privacy import PIIDetector, PIIAnonymiser, AnonymisationStrategy
+            from persona.core.privacy import (
+                AnonymisationStrategy,
+                PIIAnonymiser,
+                PIIDetector,
+            )
 
             anon_strategy = AnonymisationStrategy(anonymise_strategy.lower())
             detector = PIIDetector()
@@ -773,7 +790,9 @@ def _handle_multi_model_generation(
                 if entities:
                     result = anonymiser.anonymise(data, entities, anon_strategy)
                     data = result.text
-                    console.print(f"[green]✓[/green] Anonymised {result.entity_count} PII entities")
+                    console.print(
+                        f"[green]✓[/green] Anonymised {result.entity_count} PII entities"
+                    )
         except Exception as e:
             console.print(f"[yellow]Warning:[/yellow] Could not anonymise: {e}")
 
@@ -782,14 +801,16 @@ def _handle_multi_model_generation(
         console.print(f"Would generate with models: {', '.join(model_display)}")
         return
 
-    # Generate with each model
+    # Generate with each model (respect experiment directory structure)
     results_summary = []
-    output_dir = output or Path("./outputs")
+    output_dir, _ = _resolve_output_path(output, experiment)
     manager = OutputManager(base_dir=output_dir)
 
     for i, (provider_name, model_name) in enumerate(models_to_use, 1):
         model_display_name = f"{provider_name}:{model_name}"
-        console.print(f"\n[bold]Model {i}/{len(models_to_use)}: {model_display_name}[/bold]")
+        console.print(
+            f"\n[bold]Model {i}/{len(models_to_use)}: {model_display_name}[/bold]"
+        )
 
         config = GenerationConfig(
             data_path=data_path,
@@ -804,7 +825,9 @@ def _handle_multi_model_generation(
 
             # Simple progress for multi-model mode
             if not no_progress:
-                with console.status(f"[cyan]Generating with {model_display_name}...", spinner="dots"):
+                with console.status(
+                    f"[cyan]Generating with {model_display_name}...", spinner="dots"
+                ):
                     result = pipeline.generate(config)
             else:
                 result = pipeline.generate(config)
@@ -814,23 +837,29 @@ def _handle_multi_model_generation(
             exp_name = f"{experiment or 'multi-model'}-{provider_name}-{safe_name}"
             output_path = manager.save(result, name=exp_name)
 
-            results_summary.append({
-                "model": model_display_name,
-                "personas": len(result.personas),
-                "tokens": result.input_tokens + result.output_tokens,
-                "path": output_path,
-                "status": "success",
-            })
-            console.print(f"[green]✓[/green] Generated {len(result.personas)} personas → {output_path}")
+            results_summary.append(
+                {
+                    "model": model_display_name,
+                    "personas": len(result.personas),
+                    "tokens": result.input_tokens + result.output_tokens,
+                    "path": output_path,
+                    "status": "success",
+                }
+            )
+            console.print(
+                f"[green]✓[/green] Generated {len(result.personas)} personas → {output_path}"
+            )
 
         except Exception as e:
-            results_summary.append({
-                "model": model_display_name,
-                "personas": 0,
-                "tokens": 0,
-                "path": None,
-                "status": f"error: {e}",
-            })
+            results_summary.append(
+                {
+                    "model": model_display_name,
+                    "personas": 0,
+                    "tokens": 0,
+                    "path": None,
+                    "status": f"error: {e}",
+                }
+            )
             console.print(f"[red]✗[/red] Failed: {e}")
 
     # Summary table
@@ -923,16 +952,20 @@ def _handle_ollama_model_selection(
         choices.append(questionary.Choice(title=model_name, value=model_name))
 
     # Add "All models" option
-    choices.append(questionary.Choice(
-        title="[All models] - Generate with each model",
-        value="__all__",
-    ))
+    choices.append(
+        questionary.Choice(
+            title="[All models] - Generate with each model",
+            value="__all__",
+        )
+    )
 
     # Prompt for selection
     selected = questionary.select(
         "Select a model:",
         choices=choices,
-        default=ollama_provider.default_model if ollama_provider.default_model in available else None,
+        default=ollama_provider.default_model
+        if ollama_provider.default_model in available
+        else None,
     ).ask()
 
     if selected is None:
@@ -998,7 +1031,38 @@ def _resolve_data_path(path: Path) -> Path:
     )
 
 
-def _show_config(console, config: GenerationConfig, data_path: Path, token_count: int) -> None:
+def _resolve_output_path(
+    output: Optional[Path], experiment: Optional[str]
+) -> tuple[Path, Optional[str]]:
+    """Resolve output path, respecting experiment structure.
+
+    When an experiment is specified and no explicit output path is given,
+    outputs are saved to the experiment's outputs directory.
+
+    Args:
+        output: Explicit output path from --output flag, if any.
+        experiment: Experiment name from --experiment flag, if any.
+
+    Returns:
+        Tuple of (base_dir, save_name):
+        - base_dir: Directory for OutputManager
+        - save_name: Name to pass to save() (None for timestamp-based)
+    """
+    if output:
+        # Explicit output path takes precedence
+        return output, None
+
+    if experiment:
+        # Use experiment's outputs directory with timestamp subfolder
+        return Path("experiments") / experiment / "outputs", None
+
+    # Default: ./outputs with experiment name or timestamp
+    return Path("./outputs"), experiment
+
+
+def _show_config(
+    console, config: GenerationConfig, data_path: Path, token_count: int
+) -> None:
     """Display generation configuration."""
     table = Table(title="Generation Configuration", show_header=False)
     table.add_column("Setting", style="cyan")
@@ -1016,13 +1080,17 @@ def _show_config(console, config: GenerationConfig, data_path: Path, token_count
 
 def _show_result_summary(console, result) -> None:
     """Display generation result summary."""
-    console.print(f"\n[bold green]Generated {len(result.personas)} personas:[/bold green]")
+    console.print(
+        f"\n[bold green]Generated {len(result.personas)} personas:[/bold green]"
+    )
 
     for i, persona in enumerate(result.personas, 1):
         console.print(f"  {i}. [bold]{persona.name}[/bold] ({persona.id})")
 
-    console.print(f"\n[dim]Tokens used: {result.input_tokens + result.output_tokens:,} "
-                  f"(in: {result.input_tokens:,}, out: {result.output_tokens:,})[/dim]")
+    console.print(
+        f"\n[dim]Tokens used: {result.input_tokens + result.output_tokens:,} "
+        f"(in: {result.input_tokens:,}, out: {result.output_tokens:,})[/dim]"
+    )
 
 
 def _run_verification(
@@ -1035,6 +1103,7 @@ def _run_verification(
 ) -> None:
     """Run multi-model verification after generation."""
     import asyncio
+
     from persona.core.quality.verification import (
         MultiModelVerifier,
         VerificationConfig,
@@ -1074,7 +1143,6 @@ def _run_verification(
         # Display results
         from rich.panel import Panel
         from rich.text import Text
-        from rich.table import Table
 
         # Status panel
         status_text = Text()
@@ -1086,20 +1154,28 @@ def _run_verification(
         status_text.append(f"\nConsistency Score: {result.consistency_score:.2%}")
         status_text.append(f"\nThreshold: {result.config.consistency_threshold:.2%}")
 
-        console.print(Panel(
-            status_text,
-            title="[bold]Verification Result[/bold]",
-            border_style="green" if result.passed else "red",
-        ))
+        console.print(
+            Panel(
+                status_text,
+                title="[bold]Verification Result[/bold]",
+                border_style="green" if result.passed else "red",
+            )
+        )
 
         # Metrics summary
         console.print("\n[bold]Consistency Metrics:[/bold]")
-        console.print(f"  Attribute Agreement: {result.metrics.attribute_agreement:.2%}")
-        console.print(f"  Semantic Consistency: {result.metrics.semantic_consistency:.2%}")
-        console.print(f"  Factual Convergence: {result.metrics.factual_convergence:.2%}")
+        console.print(
+            f"  Attribute Agreement: {result.metrics.attribute_agreement:.2%}"
+        )
+        console.print(
+            f"  Semantic Consistency: {result.metrics.semantic_consistency:.2%}"
+        )
+        console.print(
+            f"  Factual Convergence: {result.metrics.factual_convergence:.2%}"
+        )
 
         # Attribute summary
-        console.print(f"\n[bold]Attributes:[/bold]")
+        console.print("\n[bold]Attributes:[/bold]")
         console.print(f"  Agreed: {len(result.agreed_attributes)}")
         console.print(f"  Disputed: {len(result.disputed_attributes)}")
 
