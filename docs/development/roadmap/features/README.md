@@ -23,10 +23,10 @@ All features for Persona, organised by milestone and status.
 | v1.5.0 Hybrid Pipeline | 1 | ✅ Complete |
 | v1.6.0 Academic Validation | 2 | ✅ Complete |
 | v1.7.0 Research Compliance | 5 | ✅ Complete |
-| v1.8.0 Technical Debt | 0 | 📋 Planned |
-| v1.9.0 Experiment Infrastructure | 2 | 📋 Planned |
+| v1.8.0 Technical Debt | 0 | ✅ Complete |
+| v1.9.0 Experiment Infrastructure | 2 | ✅ Complete |
 
-**Total: 117 complete, 2 planned**
+**Total: 119 complete, 0 planned**
 
 ---
 
@@ -266,18 +266,18 @@ All features for Persona, organised by milestone and status.
 
 ---
 
-## v1.8.0 - Technical Debt 📋 Planned
+## v1.8.0 - Technical Debt ✅ Complete
 
 Refactoring-only release with no feature specifications. See [v1.8.0 milestone](../milestones/v1.8.0.md) for details.
 
 ---
 
-## v1.9.0 - Experiment Infrastructure 📋 Planned
+## v1.9.0 - Experiment Infrastructure ✅ Complete
 
 | ID | Feature | Category |
 |----|---------|----------|
-| [F-124](planned/F-124-experiment-management.md) | Experiment Management System | Research Infrastructure |
-| [F-125](planned/F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure |
+| [F-124](completed/F-124-experiment-management.md) | Experiment Management System | Research Infrastructure |
+| [F-125](completed/F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure |
 
 ---
 

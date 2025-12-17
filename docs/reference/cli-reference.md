@@ -10,6 +10,7 @@ persona check       Verify installation and configuration
 persona preview     Preview data before processing
 persona validate    Validate personas against source
 persona compare     Compare persona similarity
+persona project     Manage Persona projects
 persona help        Show help for any command
 ```
 
@@ -57,6 +58,22 @@ Manage experiments and projects.
 | `experiment record-run` | Record a generation run in history |
 | `experiment clear-history` | Clear run history for an experiment |
 
+### Project Commands
+
+Registry-based project management.
+
+| Command | Description |
+|---------|-------------|
+| `project list` | List all registered projects |
+| `project create` | Create a new project |
+| `project register` | Register an existing project |
+| `project unregister` | Remove a project from registry |
+| `project show` | Show project details |
+| `project add-source` | Add a data source to a project |
+| `project remove-source` | Remove a data source |
+| `project defaults` | Show or set global defaults |
+| `project init-registry` | Initialise the project registry |
+
 ### Configuration Commands
 
 Manage configuration.
@@ -70,6 +87,33 @@ Manage configuration.
 | `config reset` | Reset to defaults |
 | `config path` | Show configuration file paths |
 | `config edit` | Open interactive configuration editor |
+
+### Variant Commands (Advanced)
+
+Manage experiment variants - named parameter sets for comparing configurations.
+
+| Command | Description |
+|---------|-------------|
+| `variant create` | Create a variant for an experiment |
+| `variant list` | List variants for an experiment |
+| `variant show` | Show variant details |
+| `variant update` | Update a variant's parameters |
+| `variant delete` | Delete a variant |
+| `variant compare` | Compare parameters between variants |
+
+### Lineage Commands (Advanced)
+
+Track and verify data lineage and provenance.
+
+| Command | Description |
+|---------|-------------|
+| `lineage list` | List tracked entities |
+| `lineage show` | Show entity details |
+| `lineage trace` | Trace entity lineage |
+| `lineage verify` | Verify entity integrity |
+| `lineage export` | Export lineage as PROV-JSON |
+| `lineage agents` | List registered agents |
+| `lineage activities` | List tracked activities |
 
 ---
 
@@ -454,6 +498,545 @@ persona config edit [SECTION] [OPTIONS]
 
 ---
 
+## Project Commands
+
+### project list
+
+List all registered projects.
+
+```bash
+persona project list [OPTIONS]
+```
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+### project create
+
+Create a new project.
+
+```bash
+persona project create <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` - Name for the new project
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--path`, `-p` | PATH | Current directory | Directory to create project in |
+| `--template`, `-t` | STRING | basic | Project template (basic or research) |
+| `--description`, `-d` | STRING | - | Project description |
+| `--no-register` | FLAG | False | Don't register in global registry |
+
+**Templates:**
+- **basic** - Minimal structure (data/, output/)
+- **research** - Full structure with config/, templates/ directories
+
+**Example:**
+
+```bash
+persona project create my-research
+persona project create my-study --template research
+persona project create demo --path ./projects --description "Demo project"
+```
+
+### project register
+
+Register an existing project in the global registry.
+
+```bash
+persona project register <NAME> <PATH> [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` - Name to register the project as
+- `PATH` - Path to existing project directory
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--force`, `-f` | FLAG | Update path if project already registered |
+
+### project unregister
+
+Remove a project from the global registry.
+
+```bash
+persona project unregister <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` - Name of project to unregister
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--force`, `-f` | FLAG | Skip confirmation |
+
+**Note:** This does not delete project files, only removes the registry entry.
+
+### project show
+
+Show project details.
+
+```bash
+persona project show [NAME] [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` (optional) - Project name or path. Uses current directory if not specified.
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+### project add-source
+
+Add a data source to a project.
+
+```bash
+persona project add-source <NAME> <PATH> [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` - Name for the data source
+- `PATH` - Relative path to data file from project root
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--project`, `-p` | STRING | Current directory | Project to add source to |
+| `--type`, `-t` | STRING | raw | Data type (qualitative, quantitative, mixed, raw) |
+| `--description`, `-d` | STRING | - | Description of the data source |
+
+**Example:**
+
+```bash
+persona project add-source interviews data/interviews.csv
+persona project add-source survey data/survey.json --type quantitative
+```
+
+### project remove-source
+
+Remove a data source from a project.
+
+```bash
+persona project remove-source <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `NAME` - Name of data source to remove
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--project`, `-p` | STRING | Project to remove source from |
+
+### project defaults
+
+Show or set global defaults.
+
+```bash
+persona project defaults [OPTIONS]
+```
+
+Without options, shows current defaults. With options, updates them.
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--provider` | STRING | Set default provider |
+| `--model` | STRING | Set default model |
+| `--count` | INT | Set default persona count |
+
+**Example:**
+
+```bash
+persona project defaults
+persona project defaults --provider openai
+persona project defaults --count 5
+```
+
+### project init-registry
+
+Initialise the project registry.
+
+```bash
+persona project init-registry [OPTIONS]
+```
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--force`, `-f` | FLAG | Overwrite existing registry |
+
+---
+
+## Variant Commands (Advanced)
+
+Variants are named parameter sets that allow comparing different configurations within the same experiment. These commands require an experiment to be created first.
+
+### variant create
+
+Create a variant for an experiment.
+
+```bash
+persona variant create <EXPERIMENT> <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+- `NAME` - Name for the variant
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--param`, `-p` | STRING | Parameter in key=value format (repeatable) |
+| `--json`, `-j` | STRING | Parameters as JSON string |
+| `--description`, `-d` | STRING | Description of the variant |
+
+**Examples:**
+
+```bash
+# Create with individual parameters
+persona variant create my-experiment high-temp --param temperature=0.9
+
+# Create with multiple parameters
+persona variant create my-experiment creative \
+    --param temperature=0.9 \
+    --param top_p=0.95 \
+    --description "High creativity settings"
+
+# Create with JSON parameters
+persona variant create my-experiment precise \
+    --json '{"temperature": 0.3, "top_p": 0.8}'
+```
+
+### variant list
+
+List variants for an experiment.
+
+```bash
+persona variant list <EXPERIMENT> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+### variant show
+
+Show variant details.
+
+```bash
+persona variant show <EXPERIMENT> <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+- `NAME` - Variant name
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+### variant update
+
+Update a variant's parameters or description.
+
+```bash
+persona variant update <EXPERIMENT> <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+- `NAME` - Variant name
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--param`, `-p` | STRING | Parameter to add/update in key=value format |
+| `--remove`, `-r` | STRING | Parameter key to remove |
+| `--description`, `-d` | STRING | Update description |
+
+**Examples:**
+
+```bash
+# Add or update a parameter
+persona variant update my-experiment high-temp --param temperature=0.95
+
+# Remove a parameter
+persona variant update my-experiment high-temp --remove top_p
+
+# Update description
+persona variant update my-experiment high-temp -d "Very creative output"
+```
+
+### variant delete
+
+Delete a variant.
+
+```bash
+persona variant delete <EXPERIMENT> <NAME> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+- `NAME` - Variant name
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--force`, `-f` | FLAG | Skip confirmation |
+
+### variant compare
+
+Compare parameters between two variants.
+
+```bash
+persona variant compare <EXPERIMENT> <VARIANT1> <VARIANT2> [OPTIONS]
+```
+
+**Arguments:**
+
+- `EXPERIMENT` - Experiment name or ID
+- `VARIANT1` - First variant name
+- `VARIANT2` - Second variant name
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+**Example:**
+
+```bash
+persona variant compare my-experiment high-temp low-temp
+```
+
+---
+
+## Lineage Commands (Advanced)
+
+Data lineage commands track and verify provenance throughout the persona generation pipeline. These commands use the W3C PROV data model for tracking entities, activities, and agents.
+
+### lineage list
+
+List tracked entities.
+
+```bash
+persona lineage list [OPTIONS]
+```
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--type`, `-t` | STRING | - | Filter by entity type (input_file, persona, etc.) |
+| `--limit`, `-n` | INT | 20 | Maximum number of entities to show |
+| `--json` | FLAG | False | Output as JSON |
+
+**Example:**
+
+```bash
+persona lineage list
+persona lineage list --type persona
+persona lineage list --limit 50 --json
+```
+
+### lineage show
+
+Show entity details.
+
+```bash
+persona lineage show <ENTITY_ID> [OPTIONS]
+```
+
+**Arguments:**
+
+- `ENTITY_ID` - Entity ID to show
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--json` | FLAG | Output as JSON |
+
+### lineage trace
+
+Trace entity lineage.
+
+```bash
+persona lineage trace <ENTITY_ID> [OPTIONS]
+```
+
+Shows the provenance chain for an entity - what inputs were used to create it (ancestors) or what was derived from it (descendants).
+
+**Arguments:**
+
+- `ENTITY_ID` - Entity ID to trace
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--direction`, `-d` | STRING | up | Trace direction: up (ancestors), down (descendants), or both |
+| `--depth` | INT | - | Maximum traversal depth |
+| `--json` | FLAG | False | Output as JSON |
+
+**Examples:**
+
+```bash
+persona lineage trace ent-abc123 --direction up
+persona lineage trace ent-abc123 --direction down --depth 3
+persona lineage trace ent-abc123 --direction both --json
+```
+
+### lineage verify
+
+Verify entity integrity.
+
+```bash
+persona lineage verify <ENTITY_ID> [OPTIONS]
+```
+
+Checks that stored hashes match current file contents to detect tampering or modifications.
+
+**Arguments:**
+
+- `ENTITY_ID` - Entity ID to verify
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--chain`, `-c` | FLAG | Verify entire ancestor chain |
+| `--json` | FLAG | Output as JSON |
+
+**Examples:**
+
+```bash
+persona lineage verify ent-abc123
+persona lineage verify ent-abc123 --chain
+```
+
+### lineage export
+
+Export lineage as PROV-JSON.
+
+```bash
+persona lineage export [ENTITY_ID] [OPTIONS]
+```
+
+Exports lineage data in W3C PROV-JSON format for external tools or archival.
+
+**Arguments:**
+
+- `ENTITY_ID` (optional) - Entity ID (omit for all)
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--output`, `-o` | PATH | - | Output file path |
+| `--format`, `-f` | STRING | prov-json | Export format |
+
+**Examples:**
+
+```bash
+persona lineage export --output lineage.json
+persona lineage export ent-abc123 -o entity-lineage.json
+```
+
+### lineage agents
+
+List registered agents.
+
+```bash
+persona lineage agents [OPTIONS]
+```
+
+Shows all agents (LLMs, tools, users) that have performed activities.
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--type`, `-t` | STRING | Filter by agent type |
+| `--json` | FLAG | Output as JSON |
+
+**Example:**
+
+```bash
+persona lineage agents
+persona lineage agents --type llm_model
+```
+
+### lineage activities
+
+List tracked activities.
+
+```bash
+persona lineage activities [OPTIONS]
+```
+
+Shows transformations that have been performed on data.
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--type`, `-t` | STRING | - | Filter by activity type |
+| `--run`, `-r` | STRING | - | Filter by experiment run ID |
+| `--limit`, `-n` | INT | 20 | Maximum number to show |
+| `--json` | FLAG | False | Output as JSON |
+
+**Example:**
+
+```bash
+persona lineage activities
+persona lineage activities --type llm_generation
+persona lineage activities --run run-abc123
+```
+
+---
+
 ## Global Options
 
 Available on all commands:
@@ -570,4 +1153,3 @@ persona export ./outputs/personas.json --format csv --preview
 - [G-01: Choosing a Provider](../guides/choosing-provider.md)
 - [G-04: Troubleshooting](../guides/troubleshooting.md)
 - [T-01: Getting Started](../tutorials/01-getting-started.md)
-

@@ -23,10 +23,10 @@ Feature-centric roadmap for Persona development.
 | v1.5.0 | Hybrid Pipeline | 1 | ✅ Complete |
 | v1.6.0 | Academic Validation | 2 | ✅ Complete |
 | v1.7.0 | Research Compliance | 5 | ✅ Complete |
-| v1.8.0 | Technical Debt | 0 | 📋 Planned |
-| v1.9.0 | Experiment Infrastructure | 2 | 📋 Planned |
+| v1.8.0 | Technical Debt | 0 | ✅ Complete |
+| v1.9.0 | Experiment Infrastructure | 2 | ✅ Complete |
 
-**Total: 117 complete features, 2 planned features**
+**Total: 119 complete features, 0 planned features**
 
 ## Roadmap Structure
 
