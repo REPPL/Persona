@@ -55,6 +55,24 @@ from persona.core.experiments.sqlite_store import (
 # Abstract store interface
 from persona.core.experiments.store import ExperimentStore
 
+# Run history tracking
+from persona.core.experiments.history import (
+    RunHistoryManager,
+    RunInfo,
+    RunHistory as RunHistoryTracker,
+    TokenUsage,
+)
+
+# Experiment context
+from persona.core.experiments.context import ExperimentContext
+
+# Experiment manifest
+from persona.core.experiments.manifest import (
+    ExperimentManifest,
+    ExperimentSummary,
+    ManifestManager,
+)
+
 __all__ = [
     # YAML-based (legacy)
     "ExperimentManager",
@@ -78,4 +96,15 @@ __all__ = [
     # SQLite store
     "SQLiteExperimentStore",
     "get_default_db_path",
+    # Run history tracking
+    "RunHistoryManager",
+    "RunInfo",
+    "RunHistoryTracker",
+    "TokenUsage",
+    # Experiment context
+    "ExperimentContext",
+    # Experiment manifest
+    "ExperimentManifest",
+    "ExperimentSummary",
+    "ManifestManager",
 ]

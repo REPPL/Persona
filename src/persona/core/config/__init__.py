@@ -5,50 +5,55 @@ This module provides configuration loading, validation, and management
 for custom vendors, models, workflows, and prompts.
 """
 
-from persona.core.config.vendor import (
-    VendorConfig,
-    VendorLoader,
-    AuthType,
-)
-from persona.core.config.model import (
-    ModelConfig,
-    ModelLoader,
-    ModelPricing,
-    ModelCapabilities,
-    get_builtin_models,
-    get_all_models,
-)
-from persona.core.config.template import (
-    TemplateLoader,
-    TemplateInfo,
-    TemplateMetadata,
-    get_builtin_templates,
-)
-from persona.core.config.workflow import (
-    WorkflowConfig,
-    WorkflowStep,
-    WorkflowInfo,
-    CustomWorkflowLoader,
-    get_builtin_workflows,
-)
-from persona.core.config.validator import (
-    ConfigValidator,
-    ValidationResult,
-    ValidationIssue,
-    ValidationLevel,
-    validate_config,
-)
 from persona.core.config.global_config import (
-    GlobalConfig,
+    BudgetConfig,
     ConfigManager,
     DefaultsConfig,
-    BudgetConfig,
-    OutputConfig,
+    GlobalConfig,
     LoggingConfig,
+    OutputConfig,
     get_config,
     get_config_manager,
     get_global_config_path,
     get_project_config_path,
+)
+from persona.core.config.model import (
+    ModelCapabilities,
+    ModelConfig,
+    ModelLoader,
+    ModelPricing,
+    get_all_models,
+    get_builtin_models,
+)
+from persona.core.config.template import (
+    TemplateInfo,
+    TemplateLoader,
+    TemplateMetadata,
+    get_builtin_templates,
+)
+from persona.core.config.validator import (
+    ConfigValidator,
+    ValidationIssue,
+    ValidationLevel,
+    ValidationResult,
+    validate_config,
+)
+from persona.core.config.vendor import (
+    AuthType,
+    VendorConfig,
+    VendorLoader,
+)
+from persona.core.config.workflow import (
+    CustomWorkflowLoader,
+    WorkflowConfig,
+    WorkflowInfo,
+    WorkflowStep,
+    get_builtin_workflows,
+)
+from persona.core.config.registry import (
+    ExperimentRegistry,
+    get_registry,
+    resolve_experiment_path,
 )
 
 __all__ = [
@@ -91,4 +96,8 @@ __all__ = [
     "get_config_manager",
     "get_global_config_path",
     "get_project_config_path",
+    # Experiment registry (F-086)
+    "ExperimentRegistry",
+    "get_registry",
+    "resolve_experiment_path",
 ]

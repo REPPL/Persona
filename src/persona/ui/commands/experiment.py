@@ -9,7 +9,13 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.core.experiments import ExperimentManager, ExperimentEditor, RunHistory
+from persona.core.config.registry import ExperimentRegistry, get_registry
+from persona.core.experiments import (
+    ExperimentEditor,
+    ExperimentManager,
+    RunHistory,
+    RunHistoryManager,
+)
 from persona.ui.console import get_console
 
 experiment_app = typer.Typer(
@@ -80,7 +86,7 @@ def create(
         )
         console.print(f"[green]✓[/green] Created experiment: [bold]{exp.name}[/bold]")
         console.print(f"  Path: {exp.path}")
-        console.print(f"\nNext steps:")
+        console.print("\nNext steps:")
         console.print(f"  1. Add data files to: {exp.data_dir}")
         console.print(f"  2. Run: persona generate --experiment {exp.name}")
     except ValueError as e:
@@ -131,19 +137,23 @@ def list_experiments(
             try:
                 exp = manager.load(exp_name)
                 outputs = exp.list_outputs()
-                result["data"]["experiments"].append({
-                    "name": exp_name,
-                    "description": exp.config.description or "",
-                    "provider": exp.config.provider,
-                    "model": exp.config.model,
-                    "count": exp.config.count,
-                    "outputs_count": len(outputs),
-                })
+                result["data"]["experiments"].append(
+                    {
+                        "name": exp_name,
+                        "description": exp.config.description or "",
+                        "provider": exp.config.provider,
+                        "model": exp.config.model,
+                        "count": exp.config.count,
+                        "outputs_count": len(outputs),
+                    }
+                )
             except Exception as e:
-                result["data"]["experiments"].append({
-                    "name": exp_name,
-                    "error": str(e),
-                })
+                result["data"]["experiments"].append(
+                    {
+                        "name": exp_name,
+                        "error": str(e),
+                    }
+                )
         print(json.dumps(result, indent=2))
         return
 
@@ -436,10 +446,12 @@ def edit(
         sources = editor.list_sources(name)
         history = editor.get_history(name)
 
-        console.print(Panel.fit(
-            f"[bold]Edit Experiment: {name}[/bold]",
-            border_style="cyan",
-        ))
+        console.print(
+            Panel.fit(
+                f"[bold]Edit Experiment: {name}[/bold]",
+                border_style="cyan",
+            )
+        )
 
         console.print("\n[bold]Current Configuration:[/bold]")
         console.print(f"  provider: {exp.config.provider}")
@@ -506,7 +518,9 @@ def list_sources(
 
     if not sources:
         console.print("[yellow]No data sources found.[/yellow]")
-        console.print(f"Add sources with: persona experiment edit {name} --add-source <file>")
+        console.print(
+            f"Add sources with: persona experiment edit {name} --add-source <file>"
+        )
         return
 
     console.print(f"[bold]Data Sources for {name}:[/bold]")
@@ -523,7 +537,8 @@ def history(
     last: Annotated[
         Optional[int],
         typer.Option(
-            "--last", "-n",
+            "--last",
+            "-n",
             help="Show only the last N runs.",
         ),
     ] = None,
@@ -537,7 +552,8 @@ def history(
     stats: Annotated[
         bool,
         typer.Option(
-            "--stats", "-s",
+            "--stats",
+            "-s",
             help="Show aggregate statistics.",
         ),
     ] = False,
@@ -609,10 +625,12 @@ def history(
             if json_output:
                 print(json_module.dumps(diff_result, indent=2))
             else:
-                console.print(Panel.fit(
-                    f"[bold]Run Comparison: #{id1} vs #{id2}[/bold]",
-                    border_style="cyan",
-                ))
+                console.print(
+                    Panel.fit(
+                        f"[bold]Run Comparison: #{id1} vs #{id2}[/bold]",
+                        border_style="cyan",
+                    )
+                )
 
                 if diff_result["differences"]:
                     console.print("\n[bold]Differences:[/bold]")
@@ -646,32 +664,38 @@ def history(
         if json_output:
             print(json_module.dumps(statistics.to_dict(), indent=2))
         else:
-            console.print(Panel.fit(
-                f"[bold]Statistics for {name}[/bold]",
-                border_style="cyan",
-            ))
+            console.print(
+                Panel.fit(
+                    f"[bold]Statistics for {name}[/bold]",
+                    border_style="cyan",
+                )
+            )
 
-            console.print(f"\n[bold]Runs:[/bold]")
+            console.print("\n[bold]Runs:[/bold]")
             console.print(f"  Total: {statistics.total_runs}")
             console.print(f"  Completed: {statistics.completed_runs}")
             console.print(f"  Failed: {statistics.failed_runs}")
 
-            console.print(f"\n[bold]Output:[/bold]")
+            console.print("\n[bold]Output:[/bold]")
             console.print(f"  Total personas: {statistics.total_personas}")
             console.print(f"  Avg per run: {statistics.avg_personas_per_run:.1f}")
 
-            console.print(f"\n[bold]Cost:[/bold]")
+            console.print("\n[bold]Cost:[/bold]")
             console.print(f"  Total: ${statistics.total_cost:.4f}")
             console.print(f"  Avg per run: ${statistics.avg_cost_per_run:.4f}")
 
-            console.print(f"\n[bold]Tokens:[/bold]")
+            console.print("\n[bold]Tokens:[/bold]")
             console.print(f"  Input: {statistics.total_input_tokens:,}")
             console.print(f"  Output: {statistics.total_output_tokens:,}")
 
             if statistics.models_used:
-                console.print(f"\n[bold]Models used:[/bold] {', '.join(statistics.models_used)}")
+                console.print(
+                    f"\n[bold]Models used:[/bold] {', '.join(statistics.models_used)}"
+                )
             if statistics.providers_used:
-                console.print(f"[bold]Providers used:[/bold] {', '.join(statistics.providers_used)}")
+                console.print(
+                    f"[bold]Providers used:[/bold] {', '.join(statistics.providers_used)}"
+                )
         return
 
     # Default: show run history
@@ -689,10 +713,12 @@ def history(
         console.print(f"[yellow]No runs found for experiment: {name}[/yellow]")
         return
 
-    console.print(Panel.fit(
-        f"[bold]Run History for {name}[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Run History for {name}[/bold]",
+            border_style="cyan",
+        )
+    )
 
     table = Table()
     table.add_column("Run", style="cyan", justify="right")
@@ -703,7 +729,9 @@ def history(
     table.add_column("Status")
 
     for run in runs:
-        status_icon = "[green]✓[/green]" if run.status == "completed" else "[red]✗[/red]"
+        status_icon = (
+            "[green]✓[/green]" if run.status == "completed" else "[red]✗[/red]"
+        )
         table.add_row(
             f"#{run.run_id}",
             run.timestamp.strftime("%Y-%m-%d %H:%M"),
@@ -803,7 +831,8 @@ def clear_run_history(
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Skip confirmation.",
         ),
     ] = False,
@@ -841,3 +870,364 @@ def clear_run_history(
 
     run_history.clear_history(name)
     console.print(f"[green]✓[/green] Cleared run history for {name}")
+
+
+@experiment_app.command("runs")
+def runs(
+    name: Annotated[
+        str,
+        typer.Argument(help="Experiment name."),
+    ],
+    last: Annotated[
+        Optional[int],
+        typer.Option(
+            "--last",
+            "-n",
+            help="Show only the last N runs.",
+        ),
+    ] = None,
+    status_filter: Annotated[
+        Optional[str],
+        typer.Option(
+            "--status",
+            help="Filter by status (success, failed, partial, running).",
+        ),
+    ] = None,
+    provider_filter: Annotated[
+        Optional[str],
+        typer.Option(
+            "--provider",
+            help="Filter by provider.",
+        ),
+    ] = None,
+    model_filter: Annotated[
+        Optional[str],
+        typer.Option(
+            "--model",
+            help="Filter by model.",
+        ),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
+    base_dir: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--base-dir",
+            "-b",
+            help="Base directory for experiments.",
+        ),
+    ] = None,
+) -> None:
+    """
+    Show tracked generation runs for an experiment.
+
+    Displays runs recorded in the experiment's history.json file,
+    which is automatically updated when using --experiment flag.
+
+    Examples:
+        # Show all runs
+        persona experiment runs my-research
+
+        # Show last 5 runs
+        persona experiment runs my-research --last 5
+
+        # Filter by status
+        persona experiment runs my-research --status success
+
+        # Filter by provider
+        persona experiment runs my-research --provider anthropic
+
+        # JSON output
+        persona experiment runs my-research --json
+    """
+    import json as json_module
+
+    console = get_console()
+
+    # Determine experiment path
+    experiment_base = base_dir or Path("./experiments")
+    experiment_path = experiment_base / name
+
+    if not experiment_path.exists():
+        if json_output:
+            print(json_module.dumps({"error": f"Experiment not found: {name}"}))
+        else:
+            console.print(f"[red]Error:[/red] Experiment not found: {name}")
+        raise typer.Exit(1)
+
+    history_manager = RunHistoryManager(experiment_path, name)
+    run_list = history_manager.list_runs(
+        status=status_filter,
+        provider=provider_filter,
+        model=model_filter,
+        limit=last,
+    )
+
+    if json_output:
+        result = {
+            "command": "experiment runs",
+            "success": True,
+            "data": {
+                "experiment": name,
+                "runs": [r.model_dump(mode="json") for r in run_list],
+                "total": len(run_list),
+            },
+        }
+        print(json_module.dumps(result, indent=2, default=str))
+        return
+
+    if not run_list:
+        console.print(f"[yellow]No runs recorded for experiment: {name}[/yellow]")
+        console.print(
+            "\n[dim]Tip: Runs are automatically recorded when using "
+            "[cyan]--experiment {name}[/cyan] flag with generate command.[/dim]"
+        )
+        return
+
+    # Display runs table
+    table = Table(title=f"Runs for '{name}'")
+    table.add_column("ID", style="cyan")
+    table.add_column("Date", style="dim")
+    table.add_column("Provider")
+    table.add_column("Model")
+    table.add_column("Personas", justify="right")
+    table.add_column("Tokens", justify="right")
+    table.add_column("Status")
+
+    for run in run_list:
+        status_icon = {
+            "success": "[green]✓[/green]",
+            "failed": "[red]✗[/red]",
+            "partial": "[yellow]~[/yellow]",
+            "running": "[blue]⟳[/blue]",
+        }.get(run.status, run.status)
+
+        date_str = run.started_at.strftime("%Y-%m-%d %H:%M") if run.started_at else "-"
+
+        table.add_row(
+            run.run_id,
+            date_str,
+            run.provider,
+            run.model,
+            str(run.persona_count),
+            str(run.tokens.total),
+            status_icon,
+        )
+
+    console.print(table)
+
+    # Summary
+    total_personas = sum(r.persona_count for r in run_list)
+    total_tokens = sum(r.tokens.total for r in run_list)
+    success_count = sum(1 for r in run_list if r.status == "success")
+
+    console.print(
+        f"\n[bold]Summary:[/bold] {len(run_list)} runs, "
+        f"{success_count} successful, {total_personas} personas, {total_tokens:,} tokens"
+    )
+
+
+@experiment_app.command("register")
+def register(
+    name: Annotated[
+        str,
+        typer.Argument(help="Name to register the experiment under."),
+    ],
+    path: Annotated[
+        Path,
+        typer.Argument(help="Path to the experiment directory."),
+    ],
+    force: Annotated[
+        bool,
+        typer.Option(
+            "--force",
+            "-f",
+            help="Overwrite existing registration.",
+        ),
+    ] = False,
+) -> None:
+    """
+    Register an external experiment in the global registry.
+
+    Allows experiments outside ./experiments/ to be referenced by name.
+    Registered experiments are stored in ~/.config/persona/experiments.yaml
+
+    Examples:
+        # Register an experiment
+        persona experiment register client-study /projects/client/personas
+
+        # Overwrite existing registration
+        persona experiment register client-study /new/path --force
+    """
+    console = get_console()
+    registry = get_registry()
+
+    try:
+        registry.register(name, path, force=force)
+        resolved_path = Path(path).resolve()
+        console.print(f"[green]✓[/green] Registered experiment: [bold]{name}[/bold]")
+        console.print(f"  Path: {resolved_path}")
+        console.print(f"\nYou can now use:")
+        console.print(f"  persona generate --from {name} --experiment {name}")
+    except FileNotFoundError as e:
+        console.print(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1)
+    except ValueError as e:
+        console.print(f"[red]Error:[/red] {e}")
+        console.print(f"\nUse [cyan]--force[/cyan] to overwrite.")
+        raise typer.Exit(1)
+
+
+@experiment_app.command("unregister")
+def unregister(
+    name: Annotated[
+        str,
+        typer.Argument(help="Name of the experiment to unregister."),
+    ],
+) -> None:
+    """
+    Remove an experiment from the global registry.
+
+    Note: This only removes the registry entry, not the actual files.
+
+    Example:
+        persona experiment unregister client-study
+    """
+    console = get_console()
+    registry = get_registry()
+
+    if registry.unregister(name):
+        console.print(f"[green]✓[/green] Unregistered experiment: {name}")
+        console.print("[dim]Note: The experiment files were not deleted.[/dim]")
+    else:
+        console.print(f"[yellow]Warning:[/yellow] Experiment not found in registry: {name}")
+
+
+@experiment_app.command("registry")
+def list_registry(
+    validate: Annotated[
+        bool,
+        typer.Option(
+            "--validate",
+            "-v",
+            help="Check if registered paths still exist.",
+        ),
+    ] = False,
+    cleanup: Annotated[
+        bool,
+        typer.Option(
+            "--cleanup",
+            help="Remove invalid registrations.",
+        ),
+    ] = False,
+    json_output: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Output results as JSON.",
+        ),
+    ] = False,
+) -> None:
+    """
+    List all globally registered experiments.
+
+    Shows experiments registered with 'persona experiment register'.
+
+    Examples:
+        # List all registered experiments
+        persona experiment registry
+
+        # Validate paths exist
+        persona experiment registry --validate
+
+        # Remove invalid entries
+        persona experiment registry --cleanup
+    """
+    import json
+
+    console = get_console()
+    registry = get_registry()
+
+    # Handle cleanup
+    if cleanup:
+        removed = registry.cleanup()
+        if removed:
+            console.print(f"[green]✓[/green] Removed {len(removed)} invalid registration(s):")
+            for name in removed:
+                console.print(f"  • {name}")
+        else:
+            console.print("[dim]No invalid registrations found.[/dim]")
+        return
+
+    experiments = registry.list_experiments()
+
+    if json_output:
+        result = {
+            "command": "experiment registry",
+            "success": True,
+            "data": {
+                "config_path": str(registry.config_path),
+                "experiments": [
+                    {"name": name, "path": str(path)}
+                    for name, path in experiments
+                ],
+            },
+        }
+
+        if validate:
+            errors = registry.validate()
+            result["data"]["errors"] = [
+                {"name": name, "error": error}
+                for name, error in errors
+            ]
+
+        print(json.dumps(result, indent=2))
+        return
+
+    if not experiments:
+        console.print("[yellow]No experiments registered.[/yellow]")
+        console.print("\nRegister experiments with:")
+        console.print("  persona experiment register <name> <path>")
+        return
+
+    console.print(
+        Panel.fit(
+            "[bold]Global Experiment Registry[/bold]",
+            border_style="cyan",
+        )
+    )
+    console.print(f"[dim]Config: {registry.config_path}[/dim]\n")
+
+    table = Table()
+    table.add_column("Name", style="cyan")
+    table.add_column("Path")
+    if validate:
+        table.add_column("Status")
+
+    errors_dict = {}
+    if validate:
+        errors = registry.validate()
+        errors_dict = dict(errors)
+
+    for name, path in experiments:
+        if validate:
+            if name in errors_dict:
+                status = f"[red]✗ {errors_dict[name]}[/red]"
+            else:
+                status = "[green]✓ Valid[/green]"
+            table.add_row(name, str(path), status)
+        else:
+            table.add_row(name, str(path))
+
+    console.print(table)
+
+    if validate and errors_dict:
+        console.print(
+            f"\n[yellow]Found {len(errors_dict)} invalid registration(s).[/yellow]"
+        )
+        console.print("Run with [cyan]--cleanup[/cyan] to remove them.")
