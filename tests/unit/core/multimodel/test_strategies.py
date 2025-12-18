@@ -1,14 +1,12 @@
 """Tests for execution strategies (F-067)."""
 
-import pytest
 
 from persona.core.multimodel.generator import ModelSpec
 from persona.core.multimodel.strategies import (
+    ConsensusStrategy,
     ExecutionMode,
-    ExecutionStrategy,
     ParallelStrategy,
     SequentialStrategy,
-    ConsensusStrategy,
     StrategyConfig,
 )
 

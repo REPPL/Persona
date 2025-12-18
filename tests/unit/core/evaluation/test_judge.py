@@ -3,12 +3,12 @@ Unit tests for PersonaJudge.
 """
 
 import json
-import pytest
 from unittest.mock import Mock, patch
 
+import pytest
 from persona.core.evaluation.criteria import EvaluationCriteria
 from persona.core.evaluation.judge import PersonaJudge
-from persona.core.evaluation.models import EvaluationResult, BatchEvaluationResult
+from persona.core.evaluation.models import BatchEvaluationResult, EvaluationResult
 from persona.core.providers.base import LLMResponse
 
 
@@ -60,7 +60,9 @@ class TestPersonaJudge:
 
     def test_create_judge(self, mock_provider):
         """Test creating a PersonaJudge."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             judge = PersonaJudge(provider="ollama", model="qwen2.5:72b")
 
@@ -70,7 +72,9 @@ class TestPersonaJudge:
 
     def test_create_judge_default_model(self, mock_provider):
         """Test creating judge with default model."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             judge = PersonaJudge(provider="ollama")
 
@@ -80,7 +84,9 @@ class TestPersonaJudge:
         self, mock_provider, sample_persona, sample_llm_response
     ):
         """Test evaluating a single persona."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = sample_llm_response
 
@@ -108,7 +114,9 @@ class TestPersonaJudge:
 
     def test_evaluate_missing_id(self, mock_provider):
         """Test that evaluating persona without ID raises error."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
 
             judge = PersonaJudge(provider="ollama")
@@ -120,7 +128,9 @@ class TestPersonaJudge:
         self, mock_provider, sample_persona
     ):
         """Test that single evaluation with DISTINCTIVENESS raises error."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
 
             judge = PersonaJudge(provider="ollama")
@@ -138,7 +148,9 @@ class TestPersonaJudge:
             {"id": "p2", "name": "Persona 2"},
         ]
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = sample_llm_response
 
@@ -158,7 +170,9 @@ class TestPersonaJudge:
 
     def test_evaluate_batch_empty_list(self, mock_provider):
         """Test that evaluating empty list raises error."""
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
 
             judge = PersonaJudge(provider="ollama")
@@ -198,7 +212,9 @@ class TestPersonaJudge:
             finish_reason="stop",
         )
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = batch_response
 
@@ -212,8 +228,12 @@ class TestPersonaJudge:
             )
 
             assert result.persona_count == 2
-            assert result.results[0].get_score(EvaluationCriteria.DISTINCTIVENESS) == 0.75
-            assert result.results[1].get_score(EvaluationCriteria.DISTINCTIVENESS) == 0.70
+            assert (
+                result.results[0].get_score(EvaluationCriteria.DISTINCTIVENESS) == 0.75
+            )
+            assert (
+                result.results[1].get_score(EvaluationCriteria.DISTINCTIVENESS) == 0.70
+            )
 
     def test_parse_evaluation_response_with_markdown(self, mock_provider):
         """Test parsing response with markdown code blocks."""
@@ -234,7 +254,9 @@ class TestPersonaJudge:
             finish_reason="stop",
         )
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = llm_response
 
@@ -256,7 +278,9 @@ class TestPersonaJudge:
             finish_reason="stop",
         )
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = invalid_response
 
@@ -278,7 +302,9 @@ class TestPersonaJudge:
             finish_reason="stop",
         )
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = incomplete_response
 
@@ -303,7 +329,9 @@ class TestPersonaJudge:
             finish_reason="stop",
         )
 
-        with patch("persona.core.evaluation.judge.ProviderFactory.create") as mock_factory:
+        with patch(
+            "persona.core.evaluation.judge.ProviderFactory.create"
+        ) as mock_factory:
             mock_factory.return_value = mock_provider
             mock_provider.generate.return_value = bad_response
 

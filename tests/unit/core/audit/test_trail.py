@@ -1,11 +1,9 @@
 """Tests for audit trail interface (F-123)."""
 
 import tempfile
-from datetime import datetime
 from pathlib import Path
 
 import pytest
-
 from persona.core.audit.models import AuditConfig
 from persona.core.audit.trail import AuditTrail
 

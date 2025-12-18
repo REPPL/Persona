@@ -6,7 +6,7 @@ This middleware logs all HTTP requests and responses.
 
 import logging
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -37,9 +37,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
         # Log request
         client_ip = request.client.host if request.client else "unknown"
-        logger.info(
-            f"{request.method} {request.url.path} - Client: {client_ip}"
-        )
+        logger.info(f"{request.method} {request.url.path} - Client: {client_ip}")
 
         # Process request
         try:

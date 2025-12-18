@@ -5,13 +5,30 @@ This module provides functionality for formatting and saving
 generated personas to various output formats.
 """
 
-from persona.core.output.manager import OutputManager
-from persona.core.output.formatters import JSONFormatter, MarkdownFormatter, TextFormatter
 from persona.core.output.empathy_table import (
+    EmpathyTableConfig,
     EmpathyTableFormatter,
     EmpathyTableRow,
-    EmpathyTableConfig,
     TableFormat,
+)
+from persona.core.output.formatters import (
+    JSONFormatter,
+    MarkdownFormatter,
+    TextFormatter,
+)
+from persona.core.output.manager import OutputManager
+from persona.core.output.narrative import (
+    FirstPersonNarrativeFormatter,
+    NarrativeConfig,
+    NarrativeFormatter,
+    Perspective,
+    ThirdPersonNarrativeFormatter,
+)
+from persona.core.output.readme import (
+    CustomReadmeTemplate,
+    GenerationSummary,
+    PersonaSummary,
+    ReadmeGenerator,
 )
 from persona.core.output.registry import (
     BaseFormatterV2,
@@ -22,12 +39,13 @@ from persona.core.output.registry import (
     get_registry,
     register,
 )
-from persona.core.output.narrative import (
-    NarrativeConfig,
-    NarrativeFormatter,
-    Perspective,
-    FirstPersonNarrativeFormatter,
-    ThirdPersonNarrativeFormatter,
+from persona.core.output.response_capture import (
+    RequestCapture,
+    ResponseCapture,
+    ResponseCaptureManager,
+    ResponseCaptureStore,
+    TokenUsage,
+    create_request_capture,
 )
 from persona.core.output.tables import (
     ASCIITableFormatter,
@@ -49,20 +67,6 @@ from persona.core.output.usage import (
     UsageLikelihood,
     UsageScenario,
     UsageScenarioGenerator,
-)
-from persona.core.output.readme import (
-    CustomReadmeTemplate,
-    GenerationSummary,
-    PersonaSummary,
-    ReadmeGenerator,
-)
-from persona.core.output.response_capture import (
-    RequestCapture,
-    ResponseCapture,
-    ResponseCaptureManager,
-    ResponseCaptureStore,
-    TokenUsage,
-    create_request_capture,
 )
 
 __all__ = [

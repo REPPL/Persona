@@ -2,7 +2,9 @@
 [![Status: Development](https://img.shields.io/badge/status-development-orange.svg)]()
 [![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blueviolet?logo=anthropic)](https://claude.ai/code)
 
-![Persona logo](docs/assets/img/persona-logo.png)
+<p align="center">
+  <img src="docs/assets/img/persona-logo.png" alt="Persona logo" />
+</p>
 
 > [!NOTE]
 > Persona is under active development. If you need a working solution today, consider [Taguette](https://www.taguette.org/) for qualitative analysis or [Persona Hub](https://github.com/tencent-ailab/persona-hub) for synthetic personas.

@@ -5,7 +5,7 @@ This module provides configuration dataclasses for the hybrid pipeline
 that combines local Ollama models with optional frontier APIs.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 

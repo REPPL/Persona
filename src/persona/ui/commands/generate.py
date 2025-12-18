@@ -9,6 +9,7 @@ import typer
 from rich.table import Table
 
 from persona.core.data import DataLoader
+from persona.core.experiments import RunHistoryManager
 from persona.core.generation import GenerationConfig, GenerationPipeline
 from persona.core.output import OutputManager
 from persona.core.providers import ProviderFactory
@@ -204,6 +205,20 @@ def generate(
             help="Use all available models (local and cloud).",
         ),
     ] = False,
+    accept_terms: Annotated[
+        bool,
+        typer.Option(
+            "--accept-terms",
+            help="Accept terms for URL data sources (required for remote URLs).",
+        ),
+    ] = False,
+    no_cache: Annotated[
+        bool,
+        typer.Option(
+            "--no-cache",
+            help="Bypass cache and fetch fresh data from URL sources.",
+        ),
+    ] = False,
 ) -> None:
     """
     Generate personas from data files.
@@ -221,6 +236,11 @@ def generate(
         # Specific model selection
         persona generate --from data.csv --provider ollama --model llama3:8b
         persona generate --from data.csv --provider anthropic --model claude-sonnet-4-20250514
+
+        # URL data sources (requires --accept-terms)
+        persona generate --from https://example.com/data.csv --accept-terms
+        persona generate --from https://github.com/user/repo/blob/main/data.csv --accept-terms
+        persona generate --from URL --accept-terms --no-cache  # Force fresh fetch
 
         # Hybrid mode examples
         persona generate --from data.csv --hybrid --count 10
@@ -504,6 +524,18 @@ def generate(
     output_path = manager.save(result, name=save_name)
     console.print(f"[green]✓[/green] Saved to: {output_path}")
 
+    # Record run in experiment history
+    if experiment:
+        _record_run(
+            experiment=experiment,
+            provider=provider or "anthropic",
+            model=model or "default",
+            result=result,
+            output_path=output_path,
+            data_path=data_path,
+            config=config,
+        )
+
     # Show summary
     _show_result_summary(console, result)
 
@@ -608,6 +640,38 @@ def _handle_hybrid_generation(
 
     output_path = manager.save(generation_result, name=save_name)
     console.print(f"\n[green]✓[/green] Saved to: {output_path}")
+
+    # Record run in experiment history
+    if experiment:
+        experiment_path = Path("experiments") / experiment
+        if experiment_path.exists():
+            try:
+                history_manager = RunHistoryManager(experiment_path, experiment)
+                try:
+                    relative_output = output_path.relative_to(
+                        experiment_path / "outputs"
+                    )
+                    output_dir_str = str(relative_output)
+                except ValueError:
+                    output_dir_str = str(output_path)
+
+                history_manager.record_run(
+                    provider="hybrid",
+                    model=f"{config.local_model}+{config.frontier_provider or 'local'}",
+                    persona_count=len(result.personas),
+                    tokens={"input": result.total_tokens // 2, "output": result.total_tokens // 2},
+                    output_dir=output_dir_str,
+                    data_source=data,
+                    config={
+                        "count": count,
+                        "quality_threshold": config.quality_threshold,
+                        "local_model": config.local_model,
+                        "frontier_provider": config.frontier_provider,
+                    },
+                    status="success",
+                )
+            except Exception:
+                pass  # Don't fail generation if history recording fails
 
 
 def _show_hybrid_config(console, config: "HybridConfig", count: int) -> None:
@@ -850,6 +914,40 @@ def _handle_multi_model_generation(
                 f"[green]✓[/green] Generated {len(result.personas)} personas → {output_path}"
             )
 
+            # Record run in experiment history for multi-model mode
+            if experiment:
+                experiment_path = Path("experiments") / experiment
+                if experiment_path.exists():
+                    try:
+                        history_manager = RunHistoryManager(experiment_path, experiment)
+                        try:
+                            relative_output = output_path.relative_to(
+                                experiment_path / "outputs"
+                            )
+                            output_dir_str = str(relative_output)
+                        except ValueError:
+                            output_dir_str = str(output_path)
+
+                        history_manager.record_run(
+                            provider=provider_name,
+                            model=model_name,
+                            persona_count=len(result.personas),
+                            tokens={
+                                "input": result.input_tokens,
+                                "output": result.output_tokens,
+                            },
+                            output_dir=output_dir_str,
+                            data_source=str(data_path),
+                            config={
+                                "count": count or 3,
+                                "workflow": workflow or "default",
+                                "multi_model": True,
+                            },
+                            status="success",
+                        )
+                    except Exception:
+                        pass  # Don't fail generation if history recording fails
+
         except Exception as e:
             results_summary.append(
                 {
@@ -1058,6 +1156,61 @@ def _resolve_output_path(
 
     # Default: ./outputs with experiment name or timestamp
     return Path("./outputs"), experiment
+
+
+def _record_run(
+    experiment: str,
+    provider: str,
+    model: str,
+    result,  # GenerationResult
+    output_path: Path,
+    data_path: Path,
+    config: GenerationConfig,
+) -> None:
+    """Record a generation run in the experiment's history.
+
+    Args:
+        experiment: Name of the experiment.
+        provider: LLM provider used.
+        model: Model identifier used.
+        result: Generation result.
+        output_path: Path where output was saved.
+        data_path: Path to input data.
+        config: Generation configuration.
+    """
+    experiment_path = Path("experiments") / experiment
+    if not experiment_path.exists():
+        return  # Not a valid experiment
+
+    try:
+        history_manager = RunHistoryManager(experiment_path, experiment)
+
+        # Calculate relative output directory
+        try:
+            relative_output = output_path.relative_to(experiment_path / "outputs")
+            output_dir = str(relative_output)
+        except ValueError:
+            output_dir = str(output_path)
+
+        history_manager.record_run(
+            provider=provider,
+            model=model,
+            persona_count=len(result.personas),
+            tokens={
+                "input": result.input_tokens,
+                "output": result.output_tokens,
+            },
+            output_dir=output_dir,
+            data_source=str(data_path),
+            config={
+                "count": config.count if config else None,
+                "workflow": config.workflow if config else None,
+            },
+            status="success",
+        )
+    except Exception:
+        # Don't fail generation if history recording fails
+        pass
 
 
 def _show_config(

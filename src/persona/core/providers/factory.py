@@ -8,11 +8,11 @@ providers and custom vendors loaded from YAML configuration.
 
 from typing import Any
 
-from persona.core.providers.base import LLMProvider
-from persona.core.providers.openai import OpenAIProvider
 from persona.core.providers.anthropic import AnthropicProvider
+from persona.core.providers.base import LLMProvider
 from persona.core.providers.gemini import GeminiProvider
 from persona.core.providers.ollama import OllamaProvider
+from persona.core.providers.openai import OpenAIProvider
 
 
 class ProviderFactory:
@@ -51,6 +51,7 @@ class ProviderFactory:
         """Lazy-load the vendor loader."""
         if cls._vendor_loader is None:
             from persona.core.config.vendor import VendorLoader
+
             cls._vendor_loader = VendorLoader()
         return cls._vendor_loader
 
@@ -87,14 +88,14 @@ class ProviderFactory:
         vendor_loader = cls._get_vendor_loader()
         if vendor_loader.exists(provider_name):
             from persona.core.providers.custom import CustomVendorProvider
+
             config = vendor_loader.load(provider_name)
             return CustomVendorProvider(config, api_key=api_key)
 
         # Provider not found
         available = ", ".join(cls.list_providers())
         raise ValueError(
-            f"Unknown provider: {provider_name}. "
-            f"Available providers: {available}"
+            f"Unknown provider: {provider_name}. " f"Available providers: {available}"
         )
 
     @classmethod

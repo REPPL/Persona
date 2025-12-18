@@ -2,19 +2,19 @@
 Tests for async provider functionality.
 """
 
-import pytest
-import httpx
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
-from persona.core.providers.openai import OpenAIProvider
+import httpx
+import pytest
 from persona.core.providers.anthropic import AnthropicProvider
-from persona.core.providers.gemini import GeminiProvider
-from persona.core.providers.ollama import OllamaProvider
 from persona.core.providers.base import (
     AuthenticationError,
-    RateLimitError,
     ModelNotFoundError,
+    RateLimitError,
 )
+from persona.core.providers.gemini import GeminiProvider
+from persona.core.providers.ollama import OllamaProvider
+from persona.core.providers.openai import OpenAIProvider
 
 
 @pytest.mark.asyncio
@@ -299,8 +299,7 @@ class TestOllamaProviderAsync:
                 mock_client.return_value = mock_instance
 
                 response = await provider.generate_async(
-                    "Test prompt",
-                    system_prompt="You are helpful"
+                    "Test prompt", system_prompt="You are helpful"
                 )
 
                 # Verify messages structure
@@ -324,7 +323,9 @@ class TestOllamaProviderAsync:
 
         with patch.object(provider, "is_configured", return_value=True):
             provider._available_models_cache = ["llama3:8b"]
-            with pytest.raises(ModelNotFoundError, match="Model 'invalid' not available"):
+            with pytest.raises(
+                ModelNotFoundError, match="Model 'invalid' not available"
+            ):
                 await provider.generate_async("Test prompt", model="invalid")
 
     async def test_generate_async_timeout_error(self):
@@ -371,9 +372,7 @@ class TestOllamaProviderAsync:
                 mock_client.return_value = mock_instance
 
                 await provider.generate_async(
-                    "Test prompt",
-                    temperature=0.9,
-                    max_tokens=2048
+                    "Test prompt", temperature=0.9, max_tokens=2048
                 )
 
                 # Verify custom parameters

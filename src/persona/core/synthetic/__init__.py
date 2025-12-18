@@ -6,23 +6,23 @@ synthetic interview data for demos and testing, as well as
 privacy-preserving synthetic data generation from sensitive sources.
 """
 
+from persona.core.synthetic.analyser import DataAnalyser
 from persona.core.synthetic.generator import (
+    DataDomain,
+    GenerationConfig,
     SyntheticDataGenerator,
     SyntheticInterview,
     SyntheticParticipant,
-    DataDomain,
-    GenerationConfig,
 )
-from persona.core.synthetic.pipeline import SyntheticPipeline
-from persona.core.synthetic.analyser import DataAnalyser
-from persona.core.synthetic.validator import SyntheticValidator
 from persona.core.synthetic.models import (
-    SyntheticResult,
-    ValidationResult,
+    ColumnType,
     DataSchema,
     DistributionStats,
-    ColumnType,
+    SyntheticResult,
+    ValidationResult,
 )
+from persona.core.synthetic.pipeline import SyntheticPipeline
+from persona.core.synthetic.validator import SyntheticValidator
 
 __all__ = [
     # Demo/test data generation (existing)

@@ -2,16 +2,14 @@
 Tests for interactive refinement functionality (F-025).
 """
 
-import pytest
-from pathlib import Path
 
 from persona.core.generation.parser import Persona
 from persona.core.refinement import (
     PersonaRefiner,
-    RefinementSession,
+    RefinementHistory,
     RefinementInstruction,
     RefinementResult,
-    RefinementHistory,
+    RefinementSession,
 )
 
 

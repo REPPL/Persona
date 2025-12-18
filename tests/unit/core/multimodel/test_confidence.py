@@ -1,14 +1,13 @@
 """Tests for confidence scoring (F-069)."""
 
-import pytest
 
 from persona.core.multimodel.confidence import (
-    ConfidenceLevel,
     AttributeConfidence,
-    PersonaConfidence,
+    ConfidenceLevel,
     ConfidenceScorer,
-    score_confidence,
+    PersonaConfidence,
     add_confidence_to_persona,
+    score_confidence,
 )
 
 

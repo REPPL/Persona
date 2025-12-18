@@ -110,4 +110,3 @@ def verify_signature(payload: bytes, signature: str, secret: str) -> bool:
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
 - [F-089: REST API](F-089-rest-api.md)
-

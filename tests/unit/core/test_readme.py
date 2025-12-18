@@ -2,19 +2,19 @@
 Tests for automatic README generation (F-041).
 """
 
-import pytest
+import tempfile
 from datetime import datetime
 from pathlib import Path
-import tempfile
 
+import pytest
+from persona.core.generation.parser import Persona
 from persona.core.output.readme import (
+    DEFAULT_README_TEMPLATE,
     CustomReadmeTemplate,
     GenerationSummary,
     PersonaSummary,
     ReadmeGenerator,
-    DEFAULT_README_TEMPLATE,
 )
-from persona.core.generation.parser import Persona
 
 
 @pytest.fixture
@@ -206,7 +206,9 @@ class TestReadmeGenerator:
         assert "## Usage" in result
         assert "Loading Personas" in result
 
-    def test_generate_shows_prompt_file_conditionally(self, sample_summary, sample_personas):
+    def test_generate_shows_prompt_file_conditionally(
+        self, sample_summary, sample_personas
+    ):
         """Test prompt.txt shown conditionally."""
         generator = ReadmeGenerator()
 
@@ -223,7 +225,9 @@ class TestReadmeGenerator:
         # Should not show prompt.txt in file tree
         assert result_without.count("prompt.txt") == 0
 
-    def test_generate_shows_reasoning_conditionally(self, sample_summary, sample_personas):
+    def test_generate_shows_reasoning_conditionally(
+        self, sample_summary, sample_personas
+    ):
         """Test reasoning.txt shown conditionally."""
         generator = ReadmeGenerator()
 

@@ -1,8 +1,7 @@
 """Tests for verification data models."""
 
-import pytest
-from datetime import datetime
 
+import pytest
 from persona.core.quality.verification.models import (
     AttributeAgreement,
     ConsistencyMetrics,

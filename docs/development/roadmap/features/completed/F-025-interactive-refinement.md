@@ -55,4 +55,3 @@ CHI 2024 research on human-AI collaboration shows iterative refinement improves 
 - [UC-001: Generate Personas](../../../../use-cases/briefs/UC-001-generate-personas.md)
 - [F-004: Persona Generation](F-004-persona-generation.md)
 - [F-024: Evidence Linking](F-024-evidence-linking.md)
-

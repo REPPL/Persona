@@ -7,7 +7,7 @@ faithfulness, academic, and verify commands.
 
 import json
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 import typer
 from rich.console import Console

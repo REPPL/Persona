@@ -2,15 +2,14 @@
 Tests for evidence linking functionality (F-024).
 """
 
-import pytest
 from pathlib import Path
 
 from persona.core.evidence import (
-    EvidenceLinker,
-    Evidence,
-    EvidenceStrength,
-    EvidenceReport,
     AttributeEvidence,
+    Evidence,
+    EvidenceLinker,
+    EvidenceReport,
+    EvidenceStrength,
 )
 
 

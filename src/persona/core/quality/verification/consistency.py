@@ -5,7 +5,6 @@ This module provides functionality to measure consistency across
 persona generation outputs from different models.
 """
 
-from typing import Any
 
 from persona.core.embedding import EmbeddingProvider, get_embedding_provider
 from persona.core.generation.parser import Persona
@@ -109,8 +108,12 @@ class ConsistencyChecker:
             persona_dict = persona.to_dict()
             # Focus on substantive fields
             substantive_fields = [
-                "name", "demographics", "goals", "pain_points",
-                "behaviours", "quotes"
+                "name",
+                "demographics",
+                "goals",
+                "pain_points",
+                "behaviours",
+                "quotes",
             ]
             for field in substantive_fields:
                 if field in persona_dict and persona_dict[field]:
@@ -123,8 +126,7 @@ class ConsistencyChecker:
         agreements = []
         for attr in all_attributes:
             count = sum(
-                1 for p in personas
-                if attr in p.to_dict() and p.to_dict()[attr]
+                1 for p in personas if attr in p.to_dict() and p.to_dict()[attr]
             )
             agreements.append(count / len(personas))
 
@@ -156,9 +158,7 @@ class ConsistencyChecker:
                 # Fall back to simpler comparison if embeddings unavailable
                 return self._simple_text_similarity(texts)
 
-            embeddings = [
-                self.embedding_provider.embed(text) for text in texts
-            ]
+            embeddings = [self.embedding_provider.embed(text) for text in texts]
 
             # Calculate pairwise similarities
             similarities = []
@@ -209,14 +209,10 @@ class ConsistencyChecker:
         # Calculate percentage of claims in majority
         majority_threshold = len(personas) / 2
         majority_claims = sum(
-            1 for count in claim_counts.values()
-            if count > majority_threshold
+            1 for count in claim_counts.values() if count > majority_threshold
         )
 
-        return (
-            majority_claims / len(unique_claims)
-            if unique_claims else 0.0
-        )
+        return majority_claims / len(unique_claims) if unique_claims else 0.0
 
     def get_attribute_details(
         self,
@@ -308,9 +304,7 @@ class ConsistencyChecker:
             return 1.0
 
         # Convert to word sets
-        word_sets = [
-            set(text.lower().split()) for text in texts
-        ]
+        word_sets = [set(text.lower().split()) for text in texts]
 
         # Calculate pairwise Jaccard similarities
         similarities = []

@@ -4,11 +4,11 @@ description: Constraints for generating tech industry professional personas
 constraints:
   structure:
     required_fields:
-      - name
-      - age
-      - occupation
-      - goals
-      - pain_points
+    - name
+    - age
+    - occupation
+    - goals
+    - pain_points
     field_types:
       age: integer
       goals: list
@@ -16,13 +16,13 @@ constraints:
 
   content:
     occupation_keywords:
-      - developer
-      - engineer
-      - architect
+    - developer
+    - engineer
+    - architect
     goal_themes:
-      - productivity
-      - learning
-      - efficiency
+    - productivity
+    - learning
+    - efficiency
 
   limits:
     age_range: [25, 55]
@@ -33,6 +33,6 @@ constraints:
     tone: professional
     detail_level: detailed
     custom_rules:
-      - Use industry-appropriate technical terminology
-      - Goals should be career-focused and measurable
-      - Pain points should relate to professional challenges
+    - Use industry-appropriate technical terminology
+    - Goals should be career-focused and measurable
+    - Pain points should relate to professional challenges

@@ -14,9 +14,9 @@ from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.evaluation import (
-    PersonaJudge,
-    EvaluationCriteria,
     DEFAULT_CRITERIA,
+    EvaluationCriteria,
+    PersonaJudge,
 )
 from persona.ui.console import get_console
 
@@ -118,7 +118,9 @@ def evaluate(
 
     if not personas:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": "No personas found"}, indent=2))
+            print(
+                json.dumps({"success": False, "error": "No personas found"}, indent=2)
+            )
         else:
             console.print("[yellow]No personas found to evaluate.[/yellow]")
         raise typer.Exit(1)
@@ -128,7 +130,12 @@ def evaluate(
         persona_judge = PersonaJudge(provider=judge, model=model)
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to create judge: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {"success": False, "error": f"Failed to create judge: {e}"},
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error creating judge:[/red] {e}")
         raise typer.Exit(1)
@@ -196,10 +203,12 @@ def _display_rich_output(
     verbose: bool,
 ) -> None:
     """Display results with Rich formatting."""
-    console.print(Panel.fit(
-        "[bold]LLM-Based Persona Evaluation[/bold]",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]LLM-Based Persona Evaluation[/bold]",
+            border_style="blue",
+        )
+    )
 
     # Summary table
     summary = Table(show_header=False, box=None)
@@ -257,7 +266,9 @@ def _display_rich_output(
         console.print("\n[bold]Detailed Reasoning:[/bold]\n")
         for eval_result in result.results:
             name = eval_result.persona_name or eval_result.persona_id
-            console.print(f"[bold cyan]{name}[/bold cyan] (Overall: {eval_result.overall_score:.2f})")
+            console.print(
+                f"[bold cyan]{name}[/bold cyan] (Overall: {eval_result.overall_score:.2f})"
+            )
             console.print()
 
             for criterion in criteria:
@@ -266,7 +277,9 @@ def _display_rich_output(
                 if reasoning and score is not None:
                     colour = _get_score_colour(score)
                     criterion_display = criterion.value.replace("_", " ").title()
-                    console.print(f"  [bold]{criterion_display}:[/bold] [{colour}]{score:.2f}[/{colour}]")
+                    console.print(
+                        f"  [bold]{criterion_display}:[/bold] [{colour}]{score:.2f}[/{colour}]"
+                    )
                     console.print(f"  {reasoning}")
                     console.print()
 
@@ -313,9 +326,7 @@ def _parse_criteria(criteria_str: str) -> list[EvaluationCriteria]:
             parsed.append(criterion)
         except ValueError:
             valid = ", ".join(c.value for c in EvaluationCriteria)
-            raise ValueError(
-                f"Invalid criterion: '{name}'. Valid criteria: {valid}"
-            )
+            raise ValueError(f"Invalid criterion: '{name}'. Valid criteria: {valid}")
 
     return parsed
 

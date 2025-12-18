@@ -2,9 +2,9 @@
 Preview command for inspecting data before generation.
 """
 
-from pathlib import Path
-from typing import Annotated, Optional
 import json
+from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.panel import Panel
@@ -97,10 +97,12 @@ def preview(
         return
 
     # Rich output mode
-    console.print(Panel.fit(
-        f"[bold]Data Preview[/bold]\n{data_path}",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Data Preview[/bold]\n{data_path}",
+            border_style="blue",
+        )
+    )
 
     # Summary table
     summary_table = Table(show_header=False, box=None)
@@ -133,11 +135,11 @@ def preview(
             # Add issue indicators
             if file_preview.issues:
                 error_count = sum(
-                    1 for i in file_preview.issues
-                    if i.severity == IssueSeverity.ERROR
+                    1 for i in file_preview.issues if i.severity == IssueSeverity.ERROR
                 )
                 warn_count = sum(
-                    1 for i in file_preview.issues
+                    1
+                    for i in file_preview.issues
                     if i.severity == IssueSeverity.WARNING
                 )
                 if error_count:
@@ -161,10 +163,12 @@ def preview(
         for file_preview in result.loadable_files[:3]:  # Limit to 3 files
             if file_preview.sample_content:
                 console.print(f"\n[cyan]{file_preview.file_path.name}:[/cyan]")
-                console.print(Panel(
-                    file_preview.sample_content,
-                    border_style="dim",
-                ))
+                console.print(
+                    Panel(
+                        file_preview.sample_content,
+                        border_style="dim",
+                    )
+                )
 
     # Show issues
     all_issues = list(result.issues)

@@ -2,14 +2,13 @@
 Unit tests for evaluation models.
 """
 
-import pytest
-from datetime import datetime
 
+import pytest
 from persona.core.evaluation.criteria import EvaluationCriteria
 from persona.core.evaluation.models import (
+    BatchEvaluationResult,
     CriterionScore,
     EvaluationResult,
-    BatchEvaluationResult,
 )
 
 
@@ -80,9 +79,7 @@ class TestEvaluationResult:
     def test_get_score(self):
         """Test getting score for specific criterion."""
         scores = {
-            EvaluationCriteria.COHERENCE: CriterionScore(
-                score=0.85, reasoning="Good"
-            ),
+            EvaluationCriteria.COHERENCE: CriterionScore(score=0.85, reasoning="Good"),
         }
 
         result = EvaluationResult(
@@ -118,9 +115,7 @@ class TestEvaluationResult:
     def test_to_dict(self):
         """Test conversion to dictionary."""
         scores = {
-            EvaluationCriteria.COHERENCE: CriterionScore(
-                score=0.85, reasoning="Good"
-            ),
+            EvaluationCriteria.COHERENCE: CriterionScore(score=0.85, reasoning="Good"),
         }
 
         result = EvaluationResult(
@@ -162,9 +157,7 @@ class TestBatchEvaluationResult:
         result2 = EvaluationResult(
             persona_id="p2",
             scores={
-                EvaluationCriteria.COHERENCE: CriterionScore(
-                    score=0.75, reasoning="OK"
-                )
+                EvaluationCriteria.COHERENCE: CriterionScore(score=0.75, reasoning="OK")
             },
             overall_score=0.75,
             model="test",

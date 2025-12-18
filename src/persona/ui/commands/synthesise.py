@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.panel import Panel
 from rich.table import Table
 
 from persona.ui.console import get_console
@@ -214,18 +213,28 @@ def synthesise(
         val = result.validation
 
         # Quality score
-        quality_color = "green" if val.quality_score >= 0.85 else "yellow" if val.quality_score >= 0.70 else "red"
+        quality_color = (
+            "green"
+            if val.quality_score >= 0.85
+            else "yellow"
+            if val.quality_score >= 0.70
+            else "red"
+        )
         console.print(
             f"[bold]Quality Score:[/bold] [{quality_color}]{val.quality_score:.2%}[/{quality_color}]"
         )
 
         # Metrics
-        console.print(f"  Schema match: {'✓' if val.schema_match else '✗'} ({val.schema_match_score:.2%})")
+        console.print(
+            f"  Schema match: {'✓' if val.schema_match else '✗'} ({val.schema_match_score:.2%})"
+        )
         console.print(f"  Distribution similarity: {val.distribution_similarity:.2%}")
         console.print(f"  PII detected: {'✗ YES' if val.pii_detected else '✓ NO'}")
 
         if val.pii_detected:
-            console.print(f"    [red]Warning: {val.pii_entity_count} PII entities found![/red]")
+            console.print(
+                f"    [red]Warning: {val.pii_entity_count} PII entities found![/red]"
+            )
             console.print(f"    Types: {', '.join(val.pii_entity_types)}")
 
         if val.diversity_score:
@@ -327,7 +336,13 @@ def validate(
         return
 
     # Rich output
-    quality_color = "green" if result.quality_score >= 0.85 else "yellow" if result.quality_score >= 0.70 else "red"
+    quality_color = (
+        "green"
+        if result.quality_score >= 0.85
+        else "yellow"
+        if result.quality_score >= 0.70
+        else "red"
+    )
     console.print(
         f"[bold]Quality Score:[/bold] [{quality_color}]{result.quality_score:.2%}[/{quality_color}]"
     )
@@ -492,7 +507,11 @@ def preview(
 
         if col.numeric_stats:
             console.print("  Stats:")
-            console.print(f"    Range: {col.numeric_stats['min']:.2f} - {col.numeric_stats['max']:.2f}")
-            console.print(f"    Mean: {col.numeric_stats['mean']:.2f} (±{col.numeric_stats['std']:.2f})")
+            console.print(
+                f"    Range: {col.numeric_stats['min']:.2f} - {col.numeric_stats['max']:.2f}"
+            )
+            console.print(
+                f"    Mean: {col.numeric_stats['mean']:.2f} (±{col.numeric_stats['std']:.2f})"
+            )
 
         console.print()

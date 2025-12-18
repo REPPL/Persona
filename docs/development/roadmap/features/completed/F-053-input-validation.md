@@ -76,4 +76,3 @@ def validate_path(path: str, allowed_roots: list[Path]) -> Path:
 
 - [Milestone v0.6.0](../../milestones/v0.6.0.md)
 - [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
-

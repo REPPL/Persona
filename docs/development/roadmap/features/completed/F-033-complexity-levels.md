@@ -59,4 +59,3 @@ Different use cases require different levels of persona detail. A quick prototyp
 - [Milestone v0.3.0](../../milestones/v0.3.0.md)
 - [F-034: Detail Levels](F-034-detail-levels.md)
 - [F-035: Variation Combinations](F-035-variation-combinations.md)
-

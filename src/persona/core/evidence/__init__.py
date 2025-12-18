@@ -6,11 +6,11 @@ to their source evidence from the original data.
 """
 
 from persona.core.evidence.linker import (
-    EvidenceLinker,
-    Evidence,
-    EvidenceStrength,
-    EvidenceReport,
     AttributeEvidence,
+    Evidence,
+    EvidenceLinker,
+    EvidenceReport,
+    EvidenceStrength,
 )
 
 __all__ = [

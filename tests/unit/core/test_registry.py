@@ -3,7 +3,7 @@ Tests for formatter registry (F-039).
 """
 
 import pytest
-
+from persona.core.generation.parser import Persona
 from persona.core.output.registry import (
     BaseFormatterV2,
     FormatterInfo,
@@ -13,7 +13,6 @@ from persona.core.output.registry import (
     get_registry,
     register,
 )
-from persona.core.generation.parser import Persona
 
 
 class TestOutputSection:

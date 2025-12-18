@@ -5,11 +5,11 @@ This module provides the EvidenceLinker class for tracking and managing
 the provenance of persona attributes from source data.
 """
 
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
-import json
 
 
 class EvidenceStrength(Enum):
@@ -179,16 +179,14 @@ class EvidenceReport:
     @property
     def strong_count(self) -> int:
         """Number of strongly supported attributes."""
-        return sum(
-            1 for a in self.attributes
-            if a.strength == EvidenceStrength.STRONG
-        )
+        return sum(1 for a in self.attributes if a.strength == EvidenceStrength.STRONG)
 
     @property
     def weak_count(self) -> int:
         """Number of weakly supported attributes."""
         return sum(
-            1 for a in self.attributes
+            1
+            for a in self.attributes
             if a.strength in (EvidenceStrength.WEAK, EvidenceStrength.INFERRED)
         )
 
@@ -259,8 +257,7 @@ class EvidenceReport:
             persona_id=data["persona_id"],
             persona_name=data["persona_name"],
             attributes=[
-                AttributeEvidence.from_dict(a)
-                for a in data.get("attributes", [])
+                AttributeEvidence.from_dict(a) for a in data.get("attributes", [])
             ],
             source_files=[Path(f) for f in data.get("source_files", [])],
             overall_strength=strength,
@@ -368,8 +365,7 @@ class EvidenceLinker:
             List of AttributeEvidence for this attribute.
         """
         return [
-            ae for ae in self._attributes.values()
-            if ae.attribute_name == attribute
+            ae for ae in self._attributes.values() if ae.attribute_name == attribute
         ]
 
     def generate_report(
@@ -417,9 +413,9 @@ class EvidenceLinker:
             if key in self._attributes:
                 # Merge evidence lists
                 self._attributes[key].evidence.extend(attr_evidence.evidence)
-                self._attributes[key].strength = (
-                    self._attributes[key].calculate_strength()
-                )
+                self._attributes[key].strength = self._attributes[
+                    key
+                ].calculate_strength()
             else:
                 self._attributes[key] = attr_evidence
 
@@ -445,26 +441,28 @@ class EvidenceLinker:
         report = self.generate_report(persona_id, persona_name)
 
         lines = [
-            f"# Evidence Audit Report",
-            f"",
+            "# Evidence Audit Report",
+            "",
             f"**Persona:** {persona_name} ({persona_id})",
             f"**Generated:** {report.generated_at}",
             f"**Overall Strength:** {report.overall_strength.value.title()}",
             f"**Coverage:** {report.coverage_percentage:.1f}%",
             f"**Total Evidence Items:** {report.total_evidence_count}",
-            f"",
-            f"## Source Files",
-            f"",
+            "",
+            "## Source Files",
+            "",
         ]
 
         for source in report.source_files:
             lines.append(f"- {source}")
 
-        lines.extend([
-            f"",
-            f"## Attribute Evidence",
-            f"",
-        ])
+        lines.extend(
+            [
+                "",
+                "## Attribute Evidence",
+                "",
+            ]
+        )
 
         # Group by attribute
         by_attribute: dict[str, list[AttributeEvidence]] = {}
@@ -475,7 +473,7 @@ class EvidenceLinker:
 
         for attr_name, attr_list in sorted(by_attribute.items()):
             lines.append(f"### {attr_name.replace('_', ' ').title()}")
-            lines.append(f"")
+            lines.append("")
 
             for attr in attr_list:
                 strength_emoji = {
@@ -498,9 +496,9 @@ class EvidenceLinker:
                             if ev.line_number:
                                 source_info += f":{ev.line_number}"
 
-                        lines.append(f"> \"{ev.quote}\"{source_info}")
+                        lines.append(f'> "{ev.quote}"{source_info}')
 
-                lines.append(f"")
+                lines.append("")
 
         return "\n".join(lines)
 

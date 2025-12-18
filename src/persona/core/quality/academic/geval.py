@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from persona.core.evaluation.criteria import EvaluationCriteria
 from persona.core.evaluation.judge import PersonaJudge
 from persona.core.generation.parser import Persona
-from persona.core.quality.base import MetricCategory, QualityMetric
+from persona.core.quality.base import QualityMetric
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
@@ -175,7 +175,9 @@ class GevalMetric(QualityMetric):
         if fluency_score < 50:
             issues.append("Low fluency: persona text is unnatural or poorly written")
         if overall_score < 60:
-            issues.append("Low overall G-eval score: persona needs significant improvement")
+            issues.append(
+                "Low overall G-eval score: persona needs significant improvement"
+            )
 
         return DimensionScore(
             dimension=self.name,

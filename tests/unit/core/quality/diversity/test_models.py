@@ -1,6 +1,5 @@
 """Unit tests for diversity data models."""
 
-import pytest
 
 from persona.core.quality.diversity.models import (
     BatchDiversityReport,

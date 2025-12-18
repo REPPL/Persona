@@ -105,4 +105,3 @@ validation:
 - [F-019: Persona Validation](../../roadmap/features/completed/F-019-persona-validation.md)
 - [ADR-0011: Multi-Step Workflow](ADR-0011-multi-step-workflow.md)
 - [Persona Schema Reference](../../../reference/persona-schema.md)
-

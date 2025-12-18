@@ -66,17 +66,17 @@ class PersonaGenerationWorkflow:
     def generate(self, experiment: Experiment) -> List[Persona]:
         # 1. Load and validate data
         data = self.data_loader.load(experiment.data_path)
-        
+
         # 2. Estimate costs (user approval)
         cost = self.cost_estimator.estimate(data, experiment.config)
-        
+
         # 3. Generate with provenance
         personas = self.llm.generate(
             data=data,
             prompt=experiment.prompt_template,
             config=experiment.config
         )
-        
+
         # 4. Attach metadata
         for persona in personas:
             persona.metadata = {
@@ -85,7 +85,7 @@ class PersonaGenerationWorkflow:
                 "model": experiment.config.model,
                 "prompt_hash": hash(experiment.prompt_template)
             }
-        
+
         return personas
 ```
 

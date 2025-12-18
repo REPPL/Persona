@@ -4,7 +4,8 @@ Shell completion helpers for Persona CLI (F-095).
 Provides custom completers for provider names, model IDs, and output formats.
 """
 
-from typing import Iterator, Optional
+from collections.abc import Iterator
+from typing import Optional
 
 import typer
 

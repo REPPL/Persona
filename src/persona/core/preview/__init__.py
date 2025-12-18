@@ -8,9 +8,9 @@ before incurring LLM costs during persona generation.
 from persona.core.preview.previewer import (
     DataPreviewer,
     FilePreview,
-    PreviewResult,
-    PreviewIssue,
     IssueSeverity,
+    PreviewIssue,
+    PreviewResult,
 )
 
 __all__ = [

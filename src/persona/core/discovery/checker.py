@@ -296,6 +296,7 @@ class ModelChecker:
             # Lazy load model discovery
             if self._model_discovery is None:
                 from persona.core.discovery.model import ModelDiscovery
+
                 self._model_discovery = ModelDiscovery()
 
             # Try to discover available models

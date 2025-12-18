@@ -107,14 +107,14 @@ class CostEstimator:
             model=config.model,
             text=data
         )
-        
+
         # Load pricing from config
         pricing = self.load_pricing(config.model)
-        
+
         # Calculate costs
         input_cost = (input_tokens / 1000) * pricing.input_per_1k
         max_output_cost = (config.max_tokens / 1000) * pricing.output_per_1k
-        
+
         return CostEstimate(
             input_tokens=input_tokens,
             estimated_output_tokens=config.max_tokens,

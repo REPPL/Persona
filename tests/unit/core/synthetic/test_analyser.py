@@ -4,11 +4,9 @@ Unit tests for DataAnalyser.
 
 import csv
 import json
-from pathlib import Path
 
 import pytest
 import yaml
-
 from persona.core.synthetic.analyser import DataAnalyser
 from persona.core.synthetic.models import ColumnType
 

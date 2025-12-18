@@ -302,11 +302,13 @@ class VerificationReport:
         else:
             lines.append("*No attributes met agreement criteria*")
 
-        lines.extend([
-            "",
-            "## Disputed Attributes",
-            "",
-        ])
+        lines.extend(
+            [
+                "",
+                "## Disputed Attributes",
+                "",
+            ]
+        )
 
         if self.disputed_attributes:
             for attr in self.disputed_attributes:
@@ -314,19 +316,22 @@ class VerificationReport:
         else:
             lines.append("*No disputed attributes*")
 
-        lines.extend([
-            "",
-            "## Consensus Persona",
-            "",
-            "```json",
-            # Format consensus persona as pretty JSON
-            self._format_json(self.consensus_persona, indent=2),
-            "```",
-        ])
+        lines.extend(
+            [
+                "",
+                "## Consensus Persona",
+                "",
+                "```json",
+                # Format consensus persona as pretty JSON
+                self._format_json(self.consensus_persona, indent=2),
+                "```",
+            ]
+        )
 
         return "\n".join(lines)
 
     def _format_json(self, data: Any, indent: int = 2) -> str:
         """Format data as JSON string."""
         import json
+
         return json.dumps(data, indent=indent, ensure_ascii=False)

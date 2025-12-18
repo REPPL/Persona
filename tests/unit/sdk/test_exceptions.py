@@ -1,16 +1,15 @@
 """Tests for SDK exceptions."""
 
 import pytest
-
 from persona.sdk.exceptions import (
-    PersonaError,
-    ConfigurationError,
-    ProviderError,
-    ValidationError,
-    DataError,
     BudgetExceededError,
-    RateLimitError,
+    ConfigurationError,
+    DataError,
     GenerationError,
+    PersonaError,
+    ProviderError,
+    RateLimitError,
+    ValidationError,
 )
 
 
@@ -218,6 +217,7 @@ class TestExceptionHierarchy:
 
     def test_catch_all_with_persona_error(self):
         """Test catching all errors with PersonaError."""
+
         def raise_config_error():
             raise ConfigurationError("test")
 
@@ -233,6 +233,7 @@ class TestExceptionHierarchy:
 
     def test_specific_catch(self):
         """Test catching specific error types."""
+
         def raise_rate_limit():
             raise RateLimitError("rate limited")
 

@@ -5,7 +5,6 @@ This module provides specific registry implementations for formatters,
 loaders, providers, and validators.
 """
 
-from typing import Any
 
 from persona.core.plugins.base import PluginRegistry, PluginType
 
@@ -157,9 +156,9 @@ class ProviderPluginRegistry(PluginRegistry):
 
     def _register_builtins(self) -> None:
         """Register built-in providers."""
-        from persona.core.providers.openai import OpenAIProvider
         from persona.core.providers.anthropic import AnthropicProvider
         from persona.core.providers.gemini import GeminiProvider
+        from persona.core.providers.openai import OpenAIProvider
 
         self.register(
             name="openai",

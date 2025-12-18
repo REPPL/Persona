@@ -29,19 +29,27 @@ class QualityConfig:
     """
 
     # Dimension weights (must sum to 1.0)
-    weights: dict[str, float] = field(default_factory=lambda: {
-        "completeness": 0.25,
-        "consistency": 0.20,
-        "evidence_strength": 0.25,
-        "distinctiveness": 0.15,
-        "realism": 0.15,
-    })
+    weights: dict[str, float] = field(
+        default_factory=lambda: {
+            "completeness": 0.25,
+            "consistency": 0.20,
+            "evidence_strength": 0.25,
+            "distinctiveness": 0.15,
+            "realism": 0.15,
+        }
+    )
 
     # Completeness thresholds
     required_fields: list[str] = field(default_factory=lambda: ["id", "name"])
-    expected_fields: list[str] = field(default_factory=lambda: [
-        "demographics", "goals", "pain_points", "behaviours", "quotes"
-    ])
+    expected_fields: list[str] = field(
+        default_factory=lambda: [
+            "demographics",
+            "goals",
+            "pain_points",
+            "behaviours",
+            "quotes",
+        ]
+    )
     min_goals: int = 2
     min_pain_points: int = 1
     min_behaviours: int = 1
@@ -74,8 +82,12 @@ class QualityConfig:
             errors.append(f"Weights must sum to 1.0, got {weight_sum}")
 
         # Check thresholds are ordered correctly
-        if not (self.excellent_threshold > self.good_threshold >
-                self.acceptable_threshold > self.poor_threshold):
+        if not (
+            self.excellent_threshold
+            > self.good_threshold
+            > self.acceptable_threshold
+            > self.poor_threshold
+        ):
             errors.append("Thresholds must be in descending order")
 
         # Check numeric ranges

@@ -4,10 +4,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from persona.core.project.registry import (
     RegistryManager,
-    get_default_registry_path,
     get_registry_path,
     get_xdg_config_home,
 )

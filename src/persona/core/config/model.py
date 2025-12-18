@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ModelCapabilities(BaseModel):
@@ -78,7 +78,9 @@ class ModelConfig(BaseModel):
         default_factory=ModelCapabilities,
         description="Model capabilities",
     )
-    deployment_id: str | None = Field(None, description="Deployment ID (for Azure etc.)")
+    deployment_id: str | None = Field(
+        None, description="Deployment ID (for Azure etc.)"
+    )
     description: str | None = Field(None, description="Model description")
 
     @field_validator("id")

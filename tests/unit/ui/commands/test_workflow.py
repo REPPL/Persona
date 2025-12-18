@@ -5,11 +5,9 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-from typer.testing import CliRunner
-
-from persona.ui.cli import app
 from persona.core.config.workflow import CustomWorkflowLoader
+from persona.ui.cli import app
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -53,16 +51,22 @@ class TestWorkflowList:
         with tempfile.TemporaryDirectory() as tmpdir:
             user_dir = Path(tmpdir) / "user"
             user_dir.mkdir()
-            (user_dir / "custom.yaml").write_text("""
+            (user_dir / "custom.yaml").write_text(
+                """
 id: custom-workflow
 name: Custom Workflow
 steps:
   - name: step
     template: t
-""")
+"""
+            )
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     result = runner.invoke(app, ["workflow", "list"])
 
                     assert result.exit_code == 0
@@ -83,8 +87,14 @@ class TestWorkflowShow:
     def test_show_not_found(self):
         """Test showing nonexistent workflow."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch.object(
+                CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"
+            ):
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     result = runner.invoke(app, ["workflow", "show", "nonexistent"])
 
                     assert result.exit_code == 1
@@ -109,11 +119,21 @@ class TestWorkflowCreate:
             user_dir = Path(tmpdir) / "user"
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "create", "new-workflow",
-                        "--name", "New Workflow",
-                    ])
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "workflow",
+                            "create",
+                            "new-workflow",
+                            "--name",
+                            "New Workflow",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert "created" in result.output.lower()
@@ -125,14 +145,27 @@ class TestWorkflowCreate:
             user_dir = Path(tmpdir) / "user"
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "create", "custom",
-                        "--name", "Custom",
-                        "--provider", "openai",
-                        "--template", "builtin/healthcare",
-                        "--tags", "custom,test",
-                    ])
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "workflow",
+                            "create",
+                            "custom",
+                            "--name",
+                            "Custom",
+                            "--provider",
+                            "openai",
+                            "--template",
+                            "builtin/healthcare",
+                            "--tags",
+                            "custom,test",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert (user_dir / "custom.yaml").exists()
@@ -145,11 +178,21 @@ class TestWorkflowCreate:
             (user_dir / "existing.yaml").write_text("id: existing\nname: E")
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "create", "existing",
-                        "--name", "Updated",
-                    ])
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "workflow",
+                            "create",
+                            "existing",
+                            "--name",
+                            "Updated",
+                        ],
+                    )
 
                     assert result.exit_code == 1
                     assert "already exists" in result.output.lower()
@@ -162,12 +205,22 @@ class TestWorkflowCreate:
             (user_dir / "existing.yaml").write_text("id: existing\nname: Old")
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "create", "existing",
-                        "--name", "Updated",
-                        "--force",
-                    ])
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "workflow",
+                            "create",
+                            "existing",
+                            "--name",
+                            "Updated",
+                            "--force",
+                        ],
+                    )
 
                     assert result.exit_code == 0
 
@@ -176,13 +229,23 @@ class TestWorkflowCreate:
         with tempfile.TemporaryDirectory() as tmpdir:
             project_dir = Path(tmpdir) / "project"
 
-            with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", project_dir):
-                    result = runner.invoke(app, [
-                        "workflow", "create", "project-workflow",
-                        "--name", "Project Workflow",
-                        "--project",
-                    ])
+            with patch.object(
+                CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"
+            ):
+                with patch.object(
+                    CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", project_dir
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "workflow",
+                            "create",
+                            "project-workflow",
+                            "--name",
+                            "Project Workflow",
+                            "--project",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert (project_dir / "project-workflow.yaml").exists()
@@ -201,8 +264,14 @@ class TestWorkflowValidate:
     def test_validate_workflow_not_found(self):
         """Test validating nonexistent workflow."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch.object(
+                CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"
+            ):
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     result = runner.invoke(app, ["workflow", "validate", "nonexistent"])
 
                     assert result.exit_code == 1
@@ -219,10 +288,14 @@ class TestWorkflowRemove:
             (user_dir / "to-remove.yaml").write_text("id: to-remove\nname: R")
 
             with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "remove", "to-remove", "--force"
-                    ])
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app, ["workflow", "remove", "to-remove", "--force"]
+                    )
 
                     assert result.exit_code == 0
                     assert "removed" in result.output.lower()
@@ -231,20 +304,27 @@ class TestWorkflowRemove:
     def test_remove_workflow_not_found(self):
         """Test removing nonexistent workflow."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch.object(CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(CustomWorkflowLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "workflow", "remove", "nonexistent", "--force"
-                    ])
+            with patch.object(
+                CustomWorkflowLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"
+            ):
+                with patch.object(
+                    CustomWorkflowLoader,
+                    "DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app, ["workflow", "remove", "nonexistent", "--force"]
+                    )
 
                     assert result.exit_code == 1
                     assert "not found" in result.output.lower()
 
     def test_remove_builtin_workflow(self):
         """Test cannot remove built-in workflow."""
-        result = runner.invoke(app, [
-            "workflow", "remove", "default", "--force"
-        ])
+        result = runner.invoke(app, ["workflow", "remove", "default", "--force"])
 
         assert result.exit_code == 1
-        assert "cannot remove" in result.output.lower() or "built-in" in result.output.lower()
+        assert (
+            "cannot remove" in result.output.lower()
+            or "built-in" in result.output.lower()
+        )

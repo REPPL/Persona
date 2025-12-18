@@ -6,22 +6,20 @@ Provides real-time progress feedback during persona generation using Rich Live.
 
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Callable, Optional
+from typing import Optional
 
 from rich.console import Console, Group
 from rich.live import Live
-from rich.panel import Panel
 from rich.progress import (
-    Progress,
-    TextColumn,
     BarColumn,
-    TaskProgressColumn,
-    TimeRemainingColumn,
+    Progress,
     SpinnerColumn,
+    TaskProgressColumn,
+    TextColumn,
+    TimeRemainingColumn,
 )
-from rich.table import Table
 from rich.text import Text
 from rich.tree import Tree
 
@@ -57,9 +55,7 @@ class GenerationProgress:
     def __post_init__(self):
         """Initialize persona tracking."""
         if not self.personas:
-            self.personas = [
-                PersonaProgress(index=i + 1) for i in range(self.total)
-            ]
+            self.personas = [PersonaProgress(index=i + 1) for i in range(self.total)]
 
 
 class StreamingOutput:
@@ -148,7 +144,9 @@ class StreamingOutput:
             # Update persona info
             for i, persona in enumerate(personas):
                 if i < len(self._state.personas):
-                    self._state.personas[i].name = getattr(persona, "name", f"Persona {i + 1}")
+                    self._state.personas[i].name = getattr(
+                        persona, "name", f"Persona {i + 1}"
+                    )
                     self._state.personas[i].title = getattr(persona, "title", None)
                     self._state.personas[i].status = "complete"
 
@@ -255,7 +253,11 @@ class StreamingOutput:
         elapsed_str = f"{int(elapsed // 60)}m {int(elapsed % 60)}s"
 
         tokens_total = self._state.input_tokens + self._state.output_tokens
-        cost_str = f"${self._state.estimated_cost:.4f}" if self._state.estimated_cost else "calculating..."
+        cost_str = (
+            f"${self._state.estimated_cost:.4f}"
+            if self._state.estimated_cost
+            else "calculating..."
+        )
 
         return Text.from_markup(
             f"\n[dim]Elapsed: {elapsed_str} │ "
@@ -299,7 +301,9 @@ class StreamingOutput:
         # Update display
         if self.is_tty and self.show_progress:
             if self._progress_bar and self._task_id is not None:
-                completed = sum(1 for p in self._state.personas if p.status == "complete")
+                completed = sum(
+                    1 for p in self._state.personas if p.status == "complete"
+                )
                 self._progress_bar.update(self._task_id, completed=completed)
             self._update_display()
         else:
@@ -371,7 +375,9 @@ class SimpleProgress:
         """Handle progress message."""
         self.console.print(f"  {message}")
 
-    def finish(self, personas: list, input_tokens: int = 0, output_tokens: int = 0) -> None:
+    def finish(
+        self, personas: list, input_tokens: int = 0, output_tokens: int = 0
+    ) -> None:
         """Show completion."""
         self.console.print(f"\n[green]✓[/green] Generated {len(personas)} personas")
         self.console.print(f"  Tokens: {input_tokens + output_tokens:,}")

@@ -2,16 +2,16 @@
 Tests for workshop data import functionality (F-031).
 """
 
-import pytest
 from pathlib import Path
 
+import pytest
 from persona.core.data import (
-    WorkshopCategory,
+    MockVisionExtractor,
     PostItNote,
+    WorkshopCategory,
     WorkshopExtractionResult,
     WorkshopImportConfig,
     WorkshopImporter,
-    MockVisionExtractor,
 )
 
 
@@ -176,8 +176,7 @@ class TestMockVisionExtractor:
 
         # Should have tasks-focused extraction
         task_notes = [
-            n for n in result.post_its
-            if n.category == WorkshopCategory.TASKS
+            n for n in result.post_its if n.category == WorkshopCategory.TASKS
         ]
         assert len(task_notes) > 0
 
@@ -301,6 +300,7 @@ class TestWorkshopImporter:
         json_content = importer.to_json(results)
 
         import json
+
         data = json.loads(json_content)
 
         assert "workshop_results" in data
@@ -350,6 +350,7 @@ class TestWorkshopImportIntegration:
 
         # Verify YAML is valid
         import yaml
+
         parsed = yaml.safe_load(yaml_content)
 
         assert parsed["participants"] == 3

@@ -1,9 +1,7 @@
 """Tests for individual quality metrics."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
-from persona.core.quality.config import QualityConfig
 from persona.core.quality.metrics import (
     CompletenessMetric,
     ConsistencyMetric,
@@ -107,9 +105,7 @@ class TestConsistencyMetric:
         """Create a ConsistencyMetric instance."""
         return ConsistencyMetric()
 
-    def test_consistent_persona_scores_high(
-        self, metric: ConsistencyMetric
-    ) -> None:
+    def test_consistent_persona_scores_high(self, metric: ConsistencyMetric) -> None:
         """Consistent persona should score highly."""
         persona = Persona(
             id="p001",
@@ -161,9 +157,7 @@ class TestDistinctivenessMetric:
         """Create a DistinctivenessMetric instance."""
         return DistinctivenessMetric()
 
-    def test_single_persona_is_distinct(
-        self, metric: DistinctivenessMetric
-    ) -> None:
+    def test_single_persona_is_distinct(self, metric: DistinctivenessMetric) -> None:
         """Single persona should have max distinctiveness."""
         persona = Persona(id="p001", name="Solo Persona")
 
@@ -171,9 +165,7 @@ class TestDistinctivenessMetric:
 
         assert result.score == 100.0
 
-    def test_unique_personas_are_distinct(
-        self, metric: DistinctivenessMetric
-    ) -> None:
+    def test_unique_personas_are_distinct(self, metric: DistinctivenessMetric) -> None:
         """Unique personas should score as distinct."""
         persona = Persona(
             id="p001",
@@ -192,9 +184,7 @@ class TestDistinctivenessMetric:
 
         assert result.score > 60  # Should be fairly distinct
 
-    def test_similar_personas_score_lower(
-        self, metric: DistinctivenessMetric
-    ) -> None:
+    def test_similar_personas_score_lower(self, metric: DistinctivenessMetric) -> None:
         """Similar personas should have lower distinctiveness."""
         persona = Persona(
             id="p001",

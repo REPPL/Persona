@@ -75,41 +75,35 @@ OpenAI      ✓ API key configured
 
 **Checkpoint:** At least one provider should show ✓.
 
-## Step 4: Create an Experiment
+## Step 4: Create a Project
 
-Create a new experiment to organise your work:
+Create a new project to organise your work:
 
 ```bash
-persona experiment create
+persona project create my-first-project
 ```
-
-You'll be prompted for:
-- **Name:** `my-first-experiment`
-- **Description:** `Learning how to use Persona`
-- **Provider:** Select your configured provider
-- **Model:** Select a model (e.g., gpt-4o)
-- **Personas:** `3` (start small)
 
 This creates:
 
 ```
-experiments/
-└── my-first-experiment/
-    ├── config.yaml
-    ├── data/
-    └── outputs/
+my-first-project/
+├── persona.yaml
+├── data/
+├── output/
+└── templates/
 ```
+
+The `persona.yaml` file contains your project configuration with default settings.
 
 ## Step 5: Add Sample Data
 
-Copy some sample data to your experiment:
+Navigate to your project and add some sample data:
 
 ```bash
-# Use the provided synthetic data
-cp config/synthetic_data/*.csv experiments/my-first-experiment/data/
+cd my-first-project
 ```
 
-Or create your own `data.csv`:
+Create a `data/interviews.csv` file:
 
 ```csv
 respondent_id,feedback
@@ -120,38 +114,46 @@ respondent_id,feedback
 5,"Would recommend but needs better documentation"
 ```
 
-## Step 6: Generate Personas
-
-Run the generation:
+Or copy sample data from the examples:
 
 ```bash
-persona generate --from my-first-experiment
+cp ../examples/demo-project/data/*.csv data/
+```
+
+## Step 6: Generate Personas
+
+Run the generation from within your project directory:
+
+```bash
+persona generate --from data/interviews.csv
 ```
 
 **What happens:**
-1. Cost estimate is shown
-2. You confirm to proceed
-3. Data is sent to the LLM
-4. Personas are generated
-5. Results are saved
+1. Data is loaded and tokenised
+2. Cost estimate is shown
+3. You confirm to proceed
+4. Data is sent to the LLM
+5. Personas are generated
+6. Results are saved
 
 **Expected output:**
 
 ```
-Generating personas from my-first-experiment
+Persona 1.7.5
 
-Cost Estimate
-───────────────────────────────────
-Input tokens:  ~1,200
-Output tokens: ~2,000
-Estimated cost: $0.08
+Loading data from: data/interviews.csv
+✓ Loaded 324 characters (89 tokens)
 
-Proceed? [Y/n]: y
-
-Generating... ━━━━━━━━━━━━━━━━━━━━ 100%
+Generating 3 personas...
+━━━━━━━━━━━━━━━━━━━━ 100%
 
 ✓ Generated 3 personas
-  Output: experiments/my-first-experiment/outputs/20241213_143022/
+✓ Saved to: output/20241213_143022/
+
+Generated 3 personas:
+  1. Sarah Chen (persona_001)
+  2. James Wilson (persona_002)
+  3. Maria Garcia (persona_003)
 ```
 
 ## Step 7: Review Results
@@ -159,7 +161,7 @@ Generating... ━━━━━━━━━━━━━━━━━━━━ 100%
 Navigate to the output folder and examine the results:
 
 ```bash
-cd experiments/my-first-experiment/outputs/20241213_143022/
+cd output/20241213_143022/
 ls -la
 ```
 
@@ -167,30 +169,27 @@ ls -la
 
 ```
 20241213_143022/
-├── metadata.json      # Generation details
-├── prompt.json        # Template used
-├── files.txt          # Input files
-├── full_output.txt    # Complete LLM response
-└── personas/
-    ├── 01/
-    │   ├── persona.txt   # Human-readable
-    │   └── persona.json  # Structured data
-    ├── 02/
-    │   └── ...
-    └── 03/
-        └── ...
+├── metadata.json         # Generation details
+├── prompt.txt            # Prompt sent to LLM
+├── personas.json         # All personas (structured)
+├── persona_001.json      # Individual persona files
+├── persona_001.txt
+├── persona_002.json
+├── persona_002.txt
+├── persona_003.json
+└── persona_003.txt
 ```
 
 **Read a persona:**
 
 ```bash
-cat personas/01/persona.txt
+cat persona_001.txt
 ```
 
 **Example output:**
 
 ```
-# Sarah - The Mobile Professional
+# Sarah Chen - The Mobile Professional
 
 ## Demographics
 - Age: 32
@@ -205,7 +204,7 @@ cat personas/01/persona.txt
 ## Pain Points
 - Frustration when offline
 - Limited mobile functionality
-- ...
+- Needs better documentation
 ```
 
 ## What's Next?
@@ -215,21 +214,32 @@ You've completed the basics! Here's what to explore:
 ### Use Different Providers
 
 ```bash
-persona generate --from my-first-experiment --vendor anthropic --model claude-3-sonnet
+persona generate --from data/interviews.csv --provider anthropic --model claude-sonnet-4-20250514
 ```
 
 ### Adjust Persona Count
 
-Edit `experiments/my-first-experiment/config.yaml`:
+Edit your project's `persona.yaml`:
 
 ```yaml
-personas:
+project:
+  name: my-first-project
+
+defaults:
+  provider: anthropic
   count: 5
+  workflow: default
+```
+
+Then generate with project defaults:
+
+```bash
+persona generate --from data/interviews.csv
 ```
 
 ### Process Your Own Data
 
-Add your research data to `experiments/my-first-experiment/data/` and regenerate.
+Add your research data to the `data/` directory and regenerate.
 
 ## Troubleshooting
 
@@ -247,7 +257,7 @@ persona check
 
 ```bash
 # Check data directory
-ls experiments/my-first-experiment/data/
+ls data/
 
 # Ensure supported formats: .csv, .json, .txt, .md
 ```

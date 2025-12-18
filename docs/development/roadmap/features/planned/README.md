@@ -2,24 +2,28 @@
 
 Features designed and ready for implementation.
 
-## v1.8.0 - Technical Debt & Refactoring
+## v1.10.0 - Remote Data & Attribution
 
-v1.8.0 is a refactoring-focused release with no feature specifications. All work items are tracked in the [v1.8.0 milestone document](../../milestones/v1.8.0.md).
+| ID | Feature | Category | Priority | Status |
+|----|---------|----------|----------|--------|
+| [F-091](../active/F-091-url-data-ingestion.md) | URL Data Ingestion | Data | P1 | 🔄 Active |
 
-**Focus areas:**
-- Fix datetime.utcnow() deprecation
-- Replace bare exception handlers
-- Refactor large files (>750 lines)
-- Extract quality command base pattern
-- Replace CLI global state
-- Add missing docstrings
+*Note: F-091 is currently in progress - see [Active Features](../active/).*
 
-## v1.9.0 - Experiment Infrastructure
+---
 
-| ID | Feature | Category | Priority |
-|----|---------|----------|----------|
-| [F-124](F-124-experiment-management.md) | Experiment Management System | Research Infrastructure | P1 |
-| [F-125](F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure | P2 |
+## Completed Milestones
+
+### v1.8.0 - Technical Debt & Refactoring ✅
+
+v1.8.0 was a refactoring-focused release with no feature specifications. All work items are tracked in the [v1.8.0 milestone document](../../milestones/v1.8.0.md).
+
+### v1.9.0 - Experiment Infrastructure ✅
+
+| ID | Feature | Category | Priority | Status |
+|----|---------|----------|----------|--------|
+| [F-124](../completed/F-124-experiment-management.md) | Experiment Management System | Research Infrastructure | P1 | ✅ Complete |
+| [F-125](../completed/F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure | P2 | ✅ Complete |
 
 ---
 

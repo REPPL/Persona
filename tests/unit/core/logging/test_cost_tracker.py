@@ -2,17 +2,16 @@
 
 import json
 import tempfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
 from persona.core.logging.cost_tracker import (
-    CostTracker,
-    CostRecord,
     BudgetConfig,
     BudgetStatus,
+    CostRecord,
     CostSummary,
+    CostTracker,
     track_cost,
 )
 
@@ -350,9 +349,15 @@ class TestCostTracker:
         """Can retrieve recorded costs."""
         tracker = CostTracker()
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48)
-        tracker.record(experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52)
-        tracker.record(experiment_id="exp-456", run_id="run-3", estimated=0.50, actual=0.49)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48
+        )
+        tracker.record(
+            experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52
+        )
+        tracker.record(
+            experiment_id="exp-456", run_id="run-3", estimated=0.50, actual=0.49
+        )
 
         all_records = tracker.get_records()
         assert len(all_records) == 3
@@ -364,9 +369,27 @@ class TestCostTracker:
         """Can get cost summary."""
         tracker = CostTracker()
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48, model="claude")
-        tracker.record(experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52, model="claude")
-        tracker.record(experiment_id="exp-123", run_id="run-3", estimated=0.40, actual=0.38, model="gpt-4")
+        tracker.record(
+            experiment_id="exp-123",
+            run_id="run-1",
+            estimated=0.50,
+            actual=0.48,
+            model="claude",
+        )
+        tracker.record(
+            experiment_id="exp-123",
+            run_id="run-2",
+            estimated=0.50,
+            actual=0.52,
+            model="claude",
+        )
+        tracker.record(
+            experiment_id="exp-123",
+            run_id="run-3",
+            estimated=0.40,
+            actual=0.38,
+            model="gpt-4",
+        )
 
         summary = tracker.get_summary(experiment_id="exp-123")
 
@@ -380,8 +403,12 @@ class TestCostTracker:
         """Can get summary for all experiments."""
         tracker = CostTracker()
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48)
-        tracker.record(experiment_id="exp-456", run_id="run-2", estimated=0.50, actual=0.52)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48
+        )
+        tracker.record(
+            experiment_id="exp-456", run_id="run-2", estimated=0.50, actual=0.52
+        )
 
         summary = tracker.get_summary()
 
@@ -404,7 +431,9 @@ class TestCostTracker:
         tracker = CostTracker(budget=budget)
 
         # Record some costs
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=8.00, actual=8.50)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=8.00, actual=8.50
+        )
 
         statuses = tracker.check_budget()
 
@@ -419,7 +448,9 @@ class TestCostTracker:
         budget = BudgetConfig(daily=10.00)
         tracker = CostTracker(budget=budget)
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=10.00, actual=11.00)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=10.00, actual=11.00
+        )
 
         statuses = tracker.check_budget()
 
@@ -432,7 +463,9 @@ class TestCostTracker:
         budget = BudgetConfig(daily=10.00, warn_threshold=0.8)
         tracker = CostTracker(budget=budget)
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=5.00, actual=5.00)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=5.00, actual=5.00
+        )
 
         statuses = tracker.check_budget()
 
@@ -447,7 +480,9 @@ class TestCostTracker:
 
         assert tracker.should_block() is False
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=10.00, actual=11.00)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=10.00, actual=11.00
+        )
 
         assert tracker.should_block() is True
 
@@ -458,7 +493,9 @@ class TestCostTracker:
 
         assert tracker.should_warn() is False
 
-        tracker.record(experiment_id="exp-123", run_id="run-1", estimated=8.50, actual=8.50)
+        tracker.record(
+            experiment_id="exp-123", run_id="run-1", estimated=8.50, actual=8.50
+        )
 
         assert tracker.should_warn() is True
 
@@ -468,8 +505,12 @@ class TestCostTracker:
             storage_path = Path(tmpdir) / "costs.jsonl"
 
             tracker = CostTracker(storage_path=storage_path)
-            tracker.record(experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48)
-            tracker.record(experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52)
+            tracker.record(
+                experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48
+            )
+            tracker.record(
+                experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52
+            )
 
             assert storage_path.exists()
 
@@ -488,8 +529,12 @@ class TestCostTracker:
 
             # Create initial tracker and record costs
             tracker1 = CostTracker(storage_path=storage_path)
-            tracker1.record(experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48)
-            tracker1.record(experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52)
+            tracker1.record(
+                experiment_id="exp-123", run_id="run-1", estimated=0.50, actual=0.48
+            )
+            tracker1.record(
+                experiment_id="exp-123", run_id="run-2", estimated=0.50, actual=0.52
+            )
 
             # Create new tracker and load history
             tracker2 = CostTracker(storage_path=storage_path)
@@ -527,6 +572,6 @@ class TestTrackCostConvenience:
 
         # Verify timestamp is recent (within last minute)
         timestamp = datetime.fromisoformat(record.timestamp.replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         diff = (now - timestamp).total_seconds()
         assert diff < 60

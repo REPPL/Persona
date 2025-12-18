@@ -49,4 +49,3 @@ Experiments need persistent configuration that captures all parameters for repro
 
 - [F-006: Experiment Management](F-006-experiment-management.md)
 - [ADR-0006: YAML Configuration](../../../decisions/adrs/ADR-0006-yaml-configuration.md)
-

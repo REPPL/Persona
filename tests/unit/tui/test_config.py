@@ -1,8 +1,7 @@
 """Tests for TUI configuration."""
 
-import pytest
 
-from persona.tui.config import TUIConfig, TerminalRequirements, ResponsiveBreakpoint
+from persona.tui.config import ResponsiveBreakpoint, TerminalRequirements, TUIConfig
 
 
 def test_terminal_requirements_defaults():

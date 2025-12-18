@@ -4,12 +4,11 @@ Custom prompt template configuration.
 This module provides template management for custom Jinja2 prompt templates.
 """
 
-import shutil
 from pathlib import Path
 from typing import ClassVar
 
-from jinja2 import Environment, FileSystemLoader, BaseLoader, meta
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from jinja2 import BaseLoader, Environment, meta
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TemplateMetadata(BaseModel):
@@ -217,7 +216,9 @@ class TemplateLoader:
         ast = env.parse(content)
         return list(meta.find_undeclared_variables(ast))
 
-    def validate_template(self, template_id: str, **variables) -> tuple[bool, list[str]]:
+    def validate_template(
+        self, template_id: str, **variables
+    ) -> tuple[bool, list[str]]:
         """
         Validate a template with given variables.
 

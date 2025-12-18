@@ -8,7 +8,7 @@ all attributes, quality scores, and evidence links.
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical, VerticalScroll
 from textual.screen import Screen
-from textual.widgets import Button, Label, Static
+from textual.widgets import Button, Label
 
 from persona.core.generation.parser import Persona
 from persona.tui.widgets.quality_badge import QualityBadge

@@ -1,7 +1,6 @@
 """Tests for voting strategies."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.verification.models import AttributeAgreement
 from persona.core.quality.verification.voting import (
@@ -27,7 +26,9 @@ class TestMajorityVotingStrategy:
 
         attribute_details = {
             "name": AttributeAgreement("name", 3, 3, ["Alice", "Alice", "Bob"]),
-            "goals": AttributeAgreement("goals", 3, 3, [["Goal 1"], ["Goal 1"], ["Goal 2"]]),
+            "goals": AttributeAgreement(
+                "goals", 3, 3, [["Goal 1"], ["Goal 1"], ["Goal 2"]]
+            ),
         }
 
         consensus = strategy.extract_consensus(personas, attribute_details)
@@ -114,7 +115,9 @@ class TestUnanimousVotingStrategy:
 
         attribute_details = {
             "name": AttributeAgreement("name", 3, 3, ["Alice", "Alice", "Alice"]),
-            "goals": AttributeAgreement("goals", 3, 3, [["Goal 1"], ["Goal 2"], ["Goal 3"]]),
+            "goals": AttributeAgreement(
+                "goals", 3, 3, [["Goal 1"], ["Goal 2"], ["Goal 3"]]
+            ),
         }
 
         consensus = strategy.extract_consensus(personas, attribute_details)
@@ -203,7 +206,9 @@ class TestWeightedVotingStrategy:
 
         attribute_details = {
             "name": AttributeAgreement("name", 3, 3, ["Alice", "Alice", "Bob"]),
-            "goals": AttributeAgreement("goals", 3, 3, [["Goal 1"], ["Goal 1"], ["Goal 2"]]),
+            "goals": AttributeAgreement(
+                "goals", 3, 3, [["Goal 1"], ["Goal 1"], ["Goal 2"]]
+            ),
         }
 
         consensus = strategy.extract_consensus(personas, attribute_details)
@@ -276,9 +281,21 @@ class TestWeightedVotingStrategy:
         strategy = WeightedVotingStrategy(model_weights=model_weights)
 
         personas = [
-            Persona(id="p1", name="Alice", goals=["Goal 1"], additional={"model_source": "model1"}),
-            Persona(id="p2", name="Bob", goals=["Goal 1"], additional={"model_source": "model2"}),
-            Persona(id="p3", name="Charlie", additional={"model_source": "model2"}),  # No goals
+            Persona(
+                id="p1",
+                name="Alice",
+                goals=["Goal 1"],
+                additional={"model_source": "model1"},
+            ),
+            Persona(
+                id="p2",
+                name="Bob",
+                goals=["Goal 1"],
+                additional={"model_source": "model2"},
+            ),
+            Persona(
+                id="p3", name="Charlie", additional={"model_source": "model2"}
+            ),  # No goals
         ]
 
         presence = strategy._calculate_weighted_presence("goals", personas)

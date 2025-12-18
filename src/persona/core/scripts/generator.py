@@ -5,10 +5,8 @@ This module provides the main generator for creating privacy-preserving
 conversation scripts from personas.
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Any
 import uuid
+from dataclasses import dataclass
 
 from persona.core.generation.parser import Persona
 from persona.core.scripts.abstractors import (
@@ -28,10 +26,9 @@ from persona.core.scripts.models import (
     ScriptFormat,
 )
 from persona.core.scripts.privacy import (
-    PrivacyAuditResult,
     PrivacyAuditor,
+    PrivacyAuditResult,
     PrivacyConfig,
-    PrivacyLeakageError,
 )
 
 
@@ -184,7 +181,9 @@ class ConversationScriptGenerator:
             if "role" in persona.demographics:
                 demo_parts.append(persona.demographics["role"])
             if "experience" in persona.demographics:
-                demo_parts.append(f"with {persona.demographics['experience']} experience")
+                demo_parts.append(
+                    f"with {persona.demographics['experience']} experience"
+                )
 
         demographics_summary = ", ".join(demo_parts) if demo_parts else ""
 
@@ -201,7 +200,7 @@ class ConversationScriptGenerator:
 
         # Abstract goals (don't use raw goals directly to avoid leakage)
         abstracted_goals = []
-        for goal in (persona.goals or []):
+        for goal in persona.goals or []:
             # Generalise the goal
             words = goal.lower().split()
             if any(w in words for w in ["streamline", "improve", "enhance"]):
@@ -227,7 +226,7 @@ class ConversationScriptGenerator:
 
         # Abstract pain points
         abstracted_pain_points = []
-        for pain in (persona.pain_points or []):
+        for pain in persona.pain_points or []:
             words = pain.lower().split()
             if any(w in words for w in ["manual", "repetitive", "tedious"]):
                 abstracted_pain_points.append("frustrated by manual processes")
@@ -428,7 +427,7 @@ class ConversationScriptGenerator:
 
     def _format_as_jinja2_template(self, card: CharacterCard) -> str:
         """Format card as Jinja2 template."""
-        template = '''You are {{ identity.name }}, {{ identity.title }}.
+        template = """You are {{ identity.name }}, {{ identity.title }}.
 
 {% if context %}
 Current context: {{ context }}
@@ -464,5 +463,5 @@ Previous messages:
 {% endif %}
 
 [{{ provenance.synthetic_marker }}]
-'''
+"""
         return template

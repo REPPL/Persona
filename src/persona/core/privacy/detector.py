@@ -7,7 +7,7 @@ personally identifiable information in text.
 
 from typing import Any
 
-from persona.core.privacy.entities import PIIEntity, PIIType
+from persona.core.privacy.entities import PIIEntity
 
 
 class PIIDetector:

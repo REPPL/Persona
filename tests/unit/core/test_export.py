@@ -2,16 +2,16 @@
 Tests for export functionality (F-026).
 """
 
-import pytest
 import json
 from pathlib import Path
 
-from persona.core.generation.parser import Persona
+import pytest
 from persona.core.export import (
-    PersonaExporter,
     ExportFormat,
     ExportResult,
+    PersonaExporter,
 )
+from persona.core.generation.parser import Persona
 
 
 class TestExportFormat:

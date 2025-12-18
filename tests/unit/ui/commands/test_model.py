@@ -5,11 +5,9 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-from typer.testing import CliRunner
-
-from persona.ui.cli import app
 from persona.core.config.model import ModelConfig, ModelLoader
+from persona.ui.cli import app
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -30,7 +28,9 @@ class TestModelList:
         """Test listing with no custom models."""
         with tempfile.TemporaryDirectory() as tmpdir:
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
                     result = runner.invoke(app, ["model", "list"])
 
                     assert result.exit_code == 0
@@ -50,7 +50,9 @@ class TestModelList:
             config.to_yaml(user_dir / "custom-model.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
                     result = runner.invoke(app, ["model", "list"])
 
                     assert result.exit_code == 0
@@ -67,7 +69,9 @@ class TestModelList:
         """Test listing custom models only."""
         with tempfile.TemporaryDirectory() as tmpdir:
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
                     result = runner.invoke(app, ["model", "list", "--custom"])
 
                     assert result.exit_code == 0
@@ -103,7 +107,9 @@ class TestModelShow:
             config.to_yaml(user_dir / "show-model.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
                     result = runner.invoke(app, ["model", "show", "show-model"])
 
                     assert result.exit_code == 0
@@ -114,7 +120,9 @@ class TestModelShow:
         """Test showing nonexistent model."""
         with tempfile.TemporaryDirectory() as tmpdir:
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
                     result = runner.invoke(app, ["model", "show", "nonexistent"])
 
                     assert result.exit_code == 1
@@ -134,8 +142,12 @@ class TestModelShow:
             config.to_yaml(user_dir / "json-model.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, ["model", "show", "json-model", "--json"])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app, ["model", "show", "json-model", "--json"]
+                    )
 
                     assert result.exit_code == 0
                     data = json.loads(result.output)
@@ -153,11 +165,18 @@ class TestModelAdd:
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
                 with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", project_dir):
-                    result = runner.invoke(app, [
-                        "model", "add", "new-model",
-                        "--name", "New Model",
-                        "--provider", "openai",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "model",
+                            "add",
+                            "new-model",
+                            "--name",
+                            "New Model",
+                            "--provider",
+                            "openai",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert "added" in result.output.lower()
@@ -169,16 +188,29 @@ class TestModelAdd:
             user_dir = Path(tmpdir) / "user"
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "model", "add", "priced-model",
-                        "--name", "Priced Model",
-                        "--provider", "openai",
-                        "--input-price", "3.00",
-                        "--output-price", "15.00",
-                        "--context", "128000",
-                        "--max-output", "8192",
-                    ])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "model",
+                            "add",
+                            "priced-model",
+                            "--name",
+                            "Priced Model",
+                            "--provider",
+                            "openai",
+                            "--input-price",
+                            "3.00",
+                            "--output-price",
+                            "15.00",
+                            "--context",
+                            "128000",
+                            "--max-output",
+                            "8192",
+                        ],
+                    )
 
                     assert result.exit_code == 0
 
@@ -196,12 +228,21 @@ class TestModelAdd:
             config.to_yaml(user_dir / "existing.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "model", "add", "existing",
-                        "--name", "Updated",
-                        "--provider", "openai",
-                    ])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "model",
+                            "add",
+                            "existing",
+                            "--name",
+                            "Updated",
+                            "--provider",
+                            "openai",
+                        ],
+                    )
 
                     assert result.exit_code == 1
                     assert "already exists" in result.output.lower()
@@ -216,13 +257,22 @@ class TestModelAdd:
             config.to_yaml(user_dir / "overwrite.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "model", "add", "overwrite",
-                        "--name", "Updated",
-                        "--provider", "openai",
-                        "--force",
-                    ])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "model",
+                            "add",
+                            "overwrite",
+                            "--name",
+                            "Updated",
+                            "--provider",
+                            "openai",
+                            "--force",
+                        ],
+                    )
 
                     assert result.exit_code == 0
 
@@ -237,12 +287,19 @@ class TestModelAdd:
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
                 with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", project_dir):
-                    result = runner.invoke(app, [
-                        "model", "add", "project-model",
-                        "--name", "Project Model",
-                        "--provider", "openai",
-                        "--project",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "model",
+                            "add",
+                            "project-model",
+                            "--name",
+                            "Project Model",
+                            "--provider",
+                            "openai",
+                            "--project",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert (project_dir / "project-model.yaml").exists()
@@ -261,10 +318,12 @@ class TestModelRemove:
             config.to_yaml(user_dir / "to-remove.yaml")
 
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", user_dir):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "model", "remove", "to-remove", "--force"
-                    ])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app, ["model", "remove", "to-remove", "--force"]
+                    )
 
                     assert result.exit_code == 0
                     assert "removed" in result.output.lower()
@@ -274,10 +333,12 @@ class TestModelRemove:
         """Test removing nonexistent model."""
         with tempfile.TemporaryDirectory() as tmpdir:
             with patch.object(ModelLoader, "DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch.object(ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "model", "remove", "nonexistent", "--force"
-                    ])
+                with patch.object(
+                    ModelLoader, "DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"
+                ):
+                    result = runner.invoke(
+                        app, ["model", "remove", "nonexistent", "--force"]
+                    )
 
                     assert result.exit_code == 1
                     assert "not found" in result.output.lower()

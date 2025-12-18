@@ -6,12 +6,13 @@ from photos of post-it notes on boards, using vision LLMs to extract
 text and map it to empathy map categories.
 """
 
+import base64
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any, Protocol
-import base64
-import json
+
 import yaml
 
 

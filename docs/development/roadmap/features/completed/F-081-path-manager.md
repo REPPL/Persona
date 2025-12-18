@@ -108,4 +108,3 @@ PathManager is implemented in `src/persona/core/platform.py` and provides:
 ---
 
 **Status**: Complete
-

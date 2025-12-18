@@ -1,7 +1,6 @@
 """Unit tests for cost tracking."""
 
 import pytest
-
 from persona.core.hybrid.cost import CostTracker, estimate_cost
 
 

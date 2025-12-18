@@ -1,7 +1,6 @@
 """Unit tests for lexical diversity analyser."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.diversity import (
     DiversityConfig,
@@ -124,9 +123,7 @@ class TestLexicalDiversityAnalyser:
     def test_analyse_high_diversity_persona(self):
         """Test analysing persona with high lexical diversity."""
         # Create persona with many unique words - create enough for reliable MTLD
-        unique_words = [
-            f"word{i}" for i in range(80)
-        ]
+        unique_words = [f"word{i}" for i in range(80)]
         persona = Persona(
             id="p1",
             name="Diverse Speaker",

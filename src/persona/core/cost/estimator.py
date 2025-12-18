@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
-from persona.core.cost.pricing import PricingData, ModelPricing
+from persona.core.cost.pricing import ModelPricing, PricingData
 
 
 @dataclass
@@ -104,8 +104,12 @@ class CostEstimator:
 
         # Calculate costs
         if pricing:
-            input_cost = (Decimal(input_tokens) / Decimal(1_000_000)) * pricing.input_price
-            output_cost = (Decimal(output_tokens) / Decimal(1_000_000)) * pricing.output_price
+            input_cost = (
+                Decimal(input_tokens) / Decimal(1_000_000)
+            ) * pricing.input_price
+            output_cost = (
+                Decimal(output_tokens) / Decimal(1_000_000)
+            ) * pricing.output_price
             total_cost = input_cost + output_cost
             provider_name = pricing.provider
         else:

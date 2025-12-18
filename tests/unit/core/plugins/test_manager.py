@@ -1,7 +1,6 @@
 """Tests for the PluginManager."""
 
 import pytest
-
 from persona.core.plugins.base import PluginType
 from persona.core.plugins.exceptions import PluginNotFoundError
 from persona.core.plugins.manager import PluginManager, get_plugin_manager

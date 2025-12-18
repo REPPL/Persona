@@ -374,4 +374,3 @@ persona template validate my-template
 - [F-003: Prompt Templating](../development/roadmap/features/completed/F-003-prompt-templating.md)
 - [F-023: Persona Templates](../development/roadmap/features/completed/F-023-persona-templates.md)
 - [CLI Reference: template commands](../reference/cli-reference.md)
-

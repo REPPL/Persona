@@ -8,7 +8,7 @@
 | **Milestone** | v1.9.0 |
 | **Priority** | P1 |
 | **Category** | Research Infrastructure |
-| **Status** | Planned |
+| **Status** | Complete |
 
 ## Problem Statement
 
@@ -382,4 +382,4 @@ Default: File system with SQLite index for queries.
 
 ---
 
-**Status**: Planned
+**Status**: Complete

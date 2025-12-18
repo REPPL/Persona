@@ -3,12 +3,11 @@ Unit tests for evaluation criteria.
 """
 
 import pytest
-
 from persona.core.evaluation.criteria import (
-    EvaluationCriteria,
-    DEFAULT_CRITERIA,
-    COMPREHENSIVE_CRITERIA,
     BATCH_CRITERIA,
+    COMPREHENSIVE_CRITERIA,
+    DEFAULT_CRITERIA,
+    EvaluationCriteria,
 )
 
 

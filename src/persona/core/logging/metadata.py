@@ -4,14 +4,14 @@ Records comprehensive metadata about generation runs
 for reproducibility, auditing, and analysis.
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any
 import hashlib
 import json
 import platform
 import sys
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -28,6 +28,7 @@ class GenerationConfig:
         max_tokens: Max tokens setting.
         extra: Additional configuration.
     """
+
     model: str = ""
     provider: str = ""
     persona_count: int = 0
@@ -62,6 +63,7 @@ class DataSourceInfo:
         total_bytes: Total file size in bytes.
         checksums: File checksums.
     """
+
     files: list[str] = field(default_factory=list)
     total_files: int = 0
     total_tokens: int = 0
@@ -91,6 +93,7 @@ class EnvironmentInfo:
         timezone: System timezone.
         hostname: Machine hostname (optional).
     """
+
     persona_version: str = ""
     python_version: str = ""
     platform: str = ""
@@ -103,6 +106,7 @@ class EnvironmentInfo:
         """Capture current environment info."""
         try:
             from persona import __version__
+
             version = __version__
         except ImportError:
             version = "unknown"
@@ -139,6 +143,7 @@ class CostInfo:
         total_cost_usd: Total cost in USD.
         cost_per_persona: Average cost per persona.
     """
+
     input_tokens: int = 0
     output_tokens: int = 0
     total_cost_usd: float = 0.0
@@ -173,6 +178,7 @@ class GenerationMetadata:
         errors: Any errors encountered.
         warnings: Any warnings generated.
     """
+
     metadata_version: str = "1.0"
     experiment_id: str = ""
     run_id: str = ""
@@ -269,7 +275,7 @@ class MetadataRecorder:
 
     def start(self) -> None:
         """Mark the start of generation."""
-        self._metadata.timestamp_start = datetime.now(timezone.utc).isoformat()
+        self._metadata.timestamp_start = datetime.now(UTC).isoformat()
         self._started = True
 
     def set_config(
@@ -380,7 +386,7 @@ class MetadataRecorder:
         Returns:
             Complete GenerationMetadata.
         """
-        self._metadata.timestamp_end = datetime.now(timezone.utc).isoformat()
+        self._metadata.timestamp_end = datetime.now(UTC).isoformat()
 
         # Calculate duration
         if self._metadata.timestamp_start:

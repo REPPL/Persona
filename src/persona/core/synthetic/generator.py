@@ -5,12 +5,12 @@ This module provides the SyntheticDataGenerator class for creating
 realistic synthetic interview data for demos and testing.
 """
 
+import json
+import random
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
-import random
-import json
 from pathlib import Path
+from typing import Any
 
 
 class DataDomain(Enum):

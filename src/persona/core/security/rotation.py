@@ -6,13 +6,13 @@ support for multiple keys per provider, and key health monitoring.
 """
 
 import os
-import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Callable
+from typing import Any
 
-from persona.core.security.keys import SecureString, mask_api_key
+from persona.core.security.keys import SecureString
 
 
 class KeyStatus(Enum):
@@ -57,8 +57,12 @@ class KeyHealth:
             "key_id": self.key_id,
             "status": self.status.value,
             "last_used": self.last_used.isoformat() if self.last_used else None,
-            "last_success": self.last_success.isoformat() if self.last_success else None,
-            "last_failure": self.last_failure.isoformat() if self.last_failure else None,
+            "last_success": self.last_success.isoformat()
+            if self.last_success
+            else None,
+            "last_failure": self.last_failure.isoformat()
+            if self.last_failure
+            else None,
             "failure_count": self.failure_count,
             "success_count": self.success_count,
             "failure_reason": self.failure_reason,
@@ -113,7 +117,9 @@ class KeyManager:
     def __init__(self) -> None:
         """Initialise the key manager."""
         self._configs: dict[str, KeyConfig] = {}
-        self._health: dict[str, dict[str, KeyHealth]] = {}  # provider -> key_id -> health
+        self._health: dict[
+            str, dict[str, KeyHealth]
+        ] = {}  # provider -> key_id -> health
         self._current_index: dict[str, int] = {}  # provider -> current key index
         self._on_rotation_callbacks: list[Callable[[str, str, str], None]] = []
 
@@ -177,7 +183,9 @@ class KeyManager:
         """
         if provider not in self._configs:
             # Try default env var
-            env_var = self.DEFAULT_ENV_VARS.get(provider, [f"{provider.upper()}_API_KEY"])[0]
+            env_var = self.DEFAULT_ENV_VARS.get(
+                provider, [f"{provider.upper()}_API_KEY"]
+            )[0]
             value = os.environ.get(env_var)
             if value:
                 return SecureString(value)
@@ -261,7 +269,9 @@ class KeyManager:
 
                 # Mark as failed if auth failure or threshold exceeded
                 config = self._configs.get(provider)
-                if is_auth_failure or (config and health.failure_count >= config.failure_threshold):
+                if is_auth_failure or (
+                    config and health.failure_count >= config.failure_threshold
+                ):
                     health.status = KeyStatus.FAILED
 
                     # Attempt rotation
@@ -372,7 +382,9 @@ class KeyManager:
 
         return None
 
-    def _rotate_key(self, provider: str, failed_key_id: str, reason: str) -> SecureString | None:
+    def _rotate_key(
+        self, provider: str, failed_key_id: str, reason: str
+    ) -> SecureString | None:
         """Rotate to the next available key."""
         config = self._configs.get(provider)
         if not config or len(config.keys) <= 1:

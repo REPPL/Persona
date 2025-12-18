@@ -1,7 +1,6 @@
 """Tests for ROUGE-L metric."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.academic.rouge import RougeLMetric
 from persona.core.quality.config import QualityConfig

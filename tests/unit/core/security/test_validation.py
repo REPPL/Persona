@@ -1,12 +1,11 @@
 """Tests for input validation (F-053)."""
 
-import pytest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import pytest
 from persona.core.security.validation import (
     InputValidator,
-    ValidationError,
     PathValidationError,
     ValueValidationError,
     validate_path,

@@ -1,9 +1,7 @@
 """Tests for source matcher."""
 
-from unittest.mock import Mock
 
 import pytest
-
 from persona.core.embedding.base import (
     BatchEmbeddingResponse,
     EmbeddingProvider,

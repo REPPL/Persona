@@ -528,4 +528,3 @@ persona config show --merged
 - [Provider APIs](provider-apis.md) - API specifications
 - [CLI Reference](cli-reference.md) - Command-line usage
 - [F-012: Experiment Configuration](../development/roadmap/features/completed/F-012-experiment-configuration.md)
-

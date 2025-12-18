@@ -164,7 +164,10 @@ EXPERIMENT_SCHEMA = {
         "model": {"type": "string"},
         "count": {"type": "integer", "minimum": 1, "maximum": 100},
         "complexity": {"type": "string", "enum": ["simple", "moderate", "complex"]},
-        "detail": {"type": "string", "enum": ["minimal", "standard", "detailed", "comprehensive"]},
+        "detail": {
+            "type": "string",
+            "enum": ["minimal", "standard", "detailed", "comprehensive"],
+        },
         "template": {"type": "string"},
         "workflow": {"type": "string"},
     },
@@ -304,7 +307,9 @@ class ConfigValidator:
         elif config_type == "workflow":
             self._validate_workflow(data, result)
         else:
-            result.add_warning("type", f"Unknown config type, performing basic validation")
+            result.add_warning(
+                "type", "Unknown config type, performing basic validation"
+            )
             self._validate_basic(data, result)
 
         return result
@@ -457,7 +462,7 @@ class ConfigValidator:
             if "pattern" in schema and not re.match(schema["pattern"], value):
                 result.add_error(
                     field,
-                    f"String does not match required pattern",
+                    "String does not match required pattern",
                 )
             if "enum" in schema and value not in schema["enum"]:
                 result.add_error(
@@ -503,6 +508,7 @@ class ConfigValidator:
 
         if "auth_env" in data:
             import os
+
             if not os.environ.get(data["auth_env"]):
                 result.add_warning(
                     "auth_env",
@@ -516,7 +522,10 @@ class ConfigValidator:
         # Check provider exists
         if "provider" in data:
             provider = data["provider"].lower()
-            if provider not in self.KNOWN_PROVIDERS and provider not in self._custom_providers:
+            if (
+                provider not in self.KNOWN_PROVIDERS
+                and provider not in self._custom_providers
+            ):
                 result.add_warning(
                     "provider",
                     f"Unknown provider '{provider}'",
@@ -537,7 +546,10 @@ class ConfigValidator:
         # Cross-reference validation
         if "provider" in data:
             provider = data["provider"].lower()
-            if provider not in self.KNOWN_PROVIDERS and provider not in self._custom_providers:
+            if (
+                provider not in self.KNOWN_PROVIDERS
+                and provider not in self._custom_providers
+            ):
                 result.add_error(
                     "provider",
                     f"Unknown provider '{provider}'",

@@ -12,7 +12,7 @@ Quick Start:
     ...     print(f"{persona.name}: {persona.goals}")
 """
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 try:
     __version__ = version("persona")
@@ -22,29 +22,29 @@ except PackageNotFoundError:
 
 # High-level SDK exports
 from persona.sdk import (
-    # Main classes
-    PersonaGenerator,
-    ExperimentSDK,
+    AsyncExperimentSDK,
     # Async classes
     AsyncPersonaGenerator,
-    AsyncExperimentSDK,
-    agenerate_parallel,
+    BudgetExceededError,
+    ConfigurationError,
+    DataError,
+    ExperimentConfig,
+    ExperimentModel,
+    ExperimentSDK,
+    GenerationError,
+    GenerationResultModel,
     # Configuration models
     PersonaConfig,
-    ExperimentConfig,
-    # Result models
-    PersonaModel,
-    GenerationResultModel,
-    ExperimentModel,
     # Exceptions
     PersonaError,
-    ConfigurationError,
+    # Main classes
+    PersonaGenerator,
+    # Result models
+    PersonaModel,
     ProviderError,
-    ValidationError,
-    DataError,
-    BudgetExceededError,
     RateLimitError,
-    GenerationError,
+    ValidationError,
+    agenerate_parallel,
 )
 
 __all__ = [

@@ -13,7 +13,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.generation.parser import Persona
-from persona.core.quality import QualityScorer, QualityConfig, QualityLevel
+from persona.core.quality import QualityConfig, QualityLevel, QualityScorer
 from persona.ui.console import get_console
 
 quality_app = typer.Typer(
@@ -35,7 +35,8 @@ def score(
     output_format: Annotated[
         str,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output format: rich, json, markdown.",
         ),
     ] = "rich",
@@ -102,7 +103,9 @@ def score(
 
     if not personas:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": "No personas found"}, indent=2))
+            print(
+                json.dumps({"success": False, "error": "No personas found"}, indent=2)
+            )
         else:
             console.print("[yellow]No personas found to score.[/yellow]")
         raise typer.Exit(1)
@@ -161,24 +164,23 @@ def score(
 
 def _display_rich_output(console, result, personas) -> None:
     """Display results with Rich formatting."""
-    console.print(Panel.fit(
-        "[bold]Persona Quality Scores[/bold]",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Persona Quality Scores[/bold]",
+            border_style="blue",
+        )
+    )
 
     # Summary table
     summary = Table(show_header=False, box=None)
     summary.add_column("Metric", style="cyan")
     summary.add_column("Value")
     summary.add_row("Personas scored", str(len(result.scores)))
-    summary.add_row(
-        "Average score",
-        _colour_score(result.average_score)
-    )
+    summary.add_row("Average score", _colour_score(result.average_score))
     summary.add_row("Passing", f"[green]{result.passing_count}[/green]")
     summary.add_row(
         "Failing",
-        f"[red]{result.failing_count}[/red]" if result.failing_count > 0 else "0"
+        f"[red]{result.failing_count}[/red]" if result.failing_count > 0 else "0",
     )
     console.print(summary)
     console.print()
@@ -262,13 +264,15 @@ def _generate_markdown_report(result, personas) -> str:
         dim_display = dim.replace("_", " ").title()
         lines.append(f"| {dim_display} | {avg:.1f} |")
 
-    lines.extend([
-        "",
-        "## Individual Scores",
-        "",
-        "| Persona | Overall | Level | Comp | Cons | Evid | Dist | Real |",
-        "|---------|---------|-------|------|------|------|------|------|",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Individual Scores",
+            "",
+            "| Persona | Overall | Level | Comp | Cons | Evid | Dist | Real |",
+            "|---------|---------|-------|------|------|------|------|------|",
+        ]
+    )
 
     for score in result.scores:
         name = score.persona_name or score.persona_id
@@ -284,11 +288,13 @@ def _generate_markdown_report(result, personas) -> str:
     # Issues section
     low_scores = [s for s in result.scores if s.overall_score < 70]
     if low_scores:
-        lines.extend([
-            "",
-            "## Issues",
-            "",
-        ])
+        lines.extend(
+            [
+                "",
+                "## Issues",
+                "",
+            ]
+        )
         for score in low_scores:
             name = score.persona_name or score.persona_id
             lines.append(f"### {name} ({score.overall_score:.0f})")

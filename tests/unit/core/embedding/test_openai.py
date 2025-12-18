@@ -4,7 +4,6 @@ import os
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from persona.core.embedding.openai import (
     OPENAI_EMBEDDING_MODELS,
     OpenAIEmbeddingProvider,

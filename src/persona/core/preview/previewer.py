@@ -10,8 +10,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from persona.core.data import DataLoader
 from persona.core.cost import CostEstimator
+from persona.core.data import DataLoader
 
 
 class IssueSeverity(Enum):
@@ -219,10 +219,12 @@ class DataPreviewer:
         )
 
         if not path.exists():
-            result.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"Path does not exist: {path}",
-            ))
+            result.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"Path does not exist: {path}",
+                )
+            )
             return result
 
         # Discover files
@@ -232,11 +234,13 @@ class DataPreviewer:
             files = self._loader.discover_files(path)
 
         if not files:
-            result.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"No loadable files found in: {path}",
-                details={"supported_formats": self._loader.supported_extensions},
-            ))
+            result.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"No loadable files found in: {path}",
+                    details={"supported_formats": self._loader.supported_extensions},
+                )
+            )
             return result
 
         # Preview each file
@@ -313,27 +317,33 @@ class DataPreviewer:
         try:
             preview.size_bytes = path.stat().st_size
         except OSError as e:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"Cannot read file size: {e}",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"Cannot read file size: {e}",
+                    file_path=path,
+                )
+            )
             preview.loadable = False
             return preview
 
         # Check file size
         if preview.size_bytes > self.LARGE_FILE_BYTES:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.WARNING,
-                message=f"Large file ({preview.size_bytes / 1_000_000:.1f} MB)",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.WARNING,
+                    message=f"Large file ({preview.size_bytes / 1_000_000:.1f} MB)",
+                    file_path=path,
+                )
+            )
         elif preview.size_bytes < self.SMALL_FILE_BYTES:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.WARNING,
-                message="Very small file (may lack sufficient content)",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.WARNING,
+                    message="Very small file (may lack sufficient content)",
+                    file_path=path,
+                )
+            )
 
         # Try to load content
         try:
@@ -346,34 +356,42 @@ class DataPreviewer:
                 self.MAX_SAMPLE_LINES,
             )
         except UnicodeDecodeError as e:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"Encoding error: {e}",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"Encoding error: {e}",
+                    file_path=path,
+                )
+            )
             preview.loadable = False
         except ValueError as e:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"Format error: {e}",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"Format error: {e}",
+                    file_path=path,
+                )
+            )
             preview.loadable = False
         except Exception as e:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message=f"Load error: {e}",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message=f"Load error: {e}",
+                    file_path=path,
+                )
+            )
             preview.loadable = False
 
         # Check for empty content
         if preview.loadable and preview.token_count == 0:
-            preview.issues.append(PreviewIssue(
-                severity=IssueSeverity.WARNING,
-                message="File appears to be empty",
-                file_path=path,
-            ))
+            preview.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.WARNING,
+                    message="File appears to be empty",
+                    file_path=path,
+                )
+            )
 
         return preview
 
@@ -412,25 +430,31 @@ class DataPreviewer:
         """Check for global issues across all files."""
         # High token count warning
         if result.total_tokens > self.HIGH_TOKEN_WARNING:
-            result.issues.append(PreviewIssue(
-                severity=IssueSeverity.WARNING,
-                message=(
-                    f"High token count ({result.total_tokens:,}). "
-                    "Consider splitting data or using a model with larger context."
-                ),
-            ))
+            result.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.WARNING,
+                    message=(
+                        f"High token count ({result.total_tokens:,}). "
+                        "Consider splitting data or using a model with larger context."
+                    ),
+                )
+            )
 
         # No loadable files
         if not result.loadable_files:
-            result.issues.append(PreviewIssue(
-                severity=IssueSeverity.ERROR,
-                message="No files could be loaded successfully.",
-            ))
+            result.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.ERROR,
+                    message="No files could be loaded successfully.",
+                )
+            )
 
         # Some files failed
         failed_count = len(result.files) - len(result.loadable_files)
         if 0 < failed_count < len(result.files):
-            result.issues.append(PreviewIssue(
-                severity=IssueSeverity.WARNING,
-                message=f"{failed_count} file(s) could not be loaded.",
-            ))
+            result.issues.append(
+                PreviewIssue(
+                    severity=IssueSeverity.WARNING,
+                    message=f"{failed_count} file(s) could not be loaded.",
+                )
+            )

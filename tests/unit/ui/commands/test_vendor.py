@@ -5,11 +5,9 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-from typer.testing import CliRunner
-
+from persona.core.config.vendor import AuthType, VendorConfig
 from persona.ui.cli import app
-from persona.core.config.vendor import VendorConfig, AuthType
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -20,8 +18,14 @@ class TestVendorList:
     def test_list_no_custom_vendors(self):
         """Test listing with no custom vendors."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     result = runner.invoke(app, ["vendor", "list"])
 
                     assert result.exit_code == 0
@@ -43,10 +47,16 @@ class TestVendorList:
             )
             config.to_yaml(user_dir / "test-vendor.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     # Clear the factory cache
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
                     result = runner.invoke(app, ["vendor", "list"])
@@ -57,8 +67,14 @@ class TestVendorList:
     def test_list_json_output(self):
         """Test listing with JSON output."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     result = runner.invoke(app, ["vendor", "list", "--json"])
 
                     assert result.exit_code == 0
@@ -84,9 +100,15 @@ class TestVendorShow:
             )
             config.to_yaml(user_dir / "show-test.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
                     result = runner.invoke(app, ["vendor", "show", "show-test"])
@@ -98,9 +120,16 @@ class TestVendorShow:
     def test_show_not_found(self):
         """Test showing nonexistent vendor."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
                     result = runner.invoke(app, ["vendor", "show", "nonexistent"])
@@ -121,12 +150,20 @@ class TestVendorShow:
             )
             config.to_yaml(user_dir / "json-test.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, ["vendor", "show", "json-test", "--json"])
+                    result = runner.invoke(
+                        app, ["vendor", "show", "json-test", "--json"]
+                    )
 
                     assert result.exit_code == 0
                     data = json.loads(result.output)
@@ -142,16 +179,29 @@ class TestVendorAdd:
             user_dir = Path(tmpdir) / "user"
             project_dir = Path(tmpdir) / "project"
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", project_dir):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    project_dir,
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "add", "new-vendor",
-                        "--name", "New Vendor",
-                        "--api-base", "https://api.example.com",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "new-vendor",
+                            "--name",
+                            "New Vendor",
+                            "--api-base",
+                            "https://api.example.com",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert "added" in result.output.lower()
@@ -162,21 +212,39 @@ class TestVendorAdd:
         with tempfile.TemporaryDirectory() as tmpdir:
             user_dir = Path(tmpdir) / "user"
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "add", "full-vendor",
-                        "--name", "Full Vendor",
-                        "--api-base", "https://api.example.com",
-                        "--api-version", "2024-01-01",
-                        "--auth-type", "header",
-                        "--auth-env", "MY_API_KEY",
-                        "--default-model", "gpt-4",
-                        "--models", "gpt-4,gpt-3.5-turbo",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "full-vendor",
+                            "--name",
+                            "Full Vendor",
+                            "--api-base",
+                            "https://api.example.com",
+                            "--api-version",
+                            "2024-01-01",
+                            "--auth-type",
+                            "header",
+                            "--auth-env",
+                            "MY_API_KEY",
+                            "--default-model",
+                            "gpt-4",
+                            "--models",
+                            "gpt-4,gpt-3.5-turbo",
+                        ],
+                    )
 
                     assert result.exit_code == 0
 
@@ -199,16 +267,29 @@ class TestVendorAdd:
             )
             config.to_yaml(user_dir / "existing.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "add", "existing",
-                        "--name", "Updated",
-                        "--api-base", "https://new.example.com",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "existing",
+                            "--name",
+                            "Updated",
+                            "--api-base",
+                            "https://new.example.com",
+                        ],
+                    )
 
                     assert result.exit_code == 1
                     assert "already exists" in result.output.lower()
@@ -226,17 +307,30 @@ class TestVendorAdd:
             )
             config.to_yaml(user_dir / "overwrite.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "add", "overwrite",
-                        "--name", "Updated",
-                        "--api-base", "https://updated.example.com",
-                        "--force",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "overwrite",
+                            "--name",
+                            "Updated",
+                            "--api-base",
+                            "https://updated.example.com",
+                            "--force",
+                        ],
+                    )
 
                     assert result.exit_code == 0
 
@@ -247,14 +341,28 @@ class TestVendorAdd:
     def test_add_vendor_invalid_auth_type(self):
         """Test adding vendor with invalid auth type."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
-                    result = runner.invoke(app, [
-                        "vendor", "add", "invalid",
-                        "--name", "Invalid",
-                        "--api-base", "https://api.example.com",
-                        "--auth-type", "invalid",
-                    ])
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "invalid",
+                            "--name",
+                            "Invalid",
+                            "--api-base",
+                            "https://api.example.com",
+                            "--auth-type",
+                            "invalid",
+                        ],
+                    )
 
                     assert result.exit_code == 1
                     assert "invalid auth type" in result.output.lower()
@@ -265,17 +373,30 @@ class TestVendorAdd:
             user_dir = Path(tmpdir) / "user"
             project_dir = Path(tmpdir) / "project"
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", project_dir):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    project_dir,
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "add", "project-vendor",
-                        "--name", "Project Vendor",
-                        "--api-base", "https://api.example.com",
-                        "--project",
-                    ])
+                    result = runner.invoke(
+                        app,
+                        [
+                            "vendor",
+                            "add",
+                            "project-vendor",
+                            "--name",
+                            "Project Vendor",
+                            "--api-base",
+                            "https://api.example.com",
+                            "--project",
+                        ],
+                    )
 
                     assert result.exit_code == 0
                     assert (project_dir / "project-vendor.yaml").exists()
@@ -298,14 +419,20 @@ class TestVendorRemove:
             )
             config.to_yaml(user_dir / "to-remove.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "remove", "to-remove", "--force"
-                    ])
+                    result = runner.invoke(
+                        app, ["vendor", "remove", "to-remove", "--force"]
+                    )
 
                     assert result.exit_code == 0
                     assert "removed" in result.output.lower()
@@ -314,14 +441,21 @@ class TestVendorRemove:
     def test_remove_vendor_not_found(self):
         """Test removing nonexistent vendor."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
-                    result = runner.invoke(app, [
-                        "vendor", "remove", "nonexistent", "--force"
-                    ])
+                    result = runner.invoke(
+                        app, ["vendor", "remove", "nonexistent", "--force"]
+                    )
 
                     assert result.exit_code == 1
                     assert "not found" in result.output.lower()
@@ -351,9 +485,15 @@ class TestVendorTest:
             )
             config.to_yaml(user_dir / "test-custom.yaml")
 
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", user_dir
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
                     result = runner.invoke(app, ["vendor", "test", "test-custom"])
@@ -364,9 +504,16 @@ class TestVendorTest:
     def test_test_vendor_not_found(self):
         """Test testing nonexistent vendor."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR", Path(tmpdir) / "user"):
-                with patch("persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR", Path(tmpdir) / "project"):
+            with patch(
+                "persona.core.config.vendor.VendorLoader.DEFAULT_USER_DIR",
+                Path(tmpdir) / "user",
+            ):
+                with patch(
+                    "persona.core.config.vendor.VendorLoader.DEFAULT_PROJECT_DIR",
+                    Path(tmpdir) / "project",
+                ):
                     from persona.core.providers.factory import ProviderFactory
+
                     ProviderFactory.clear_vendor_cache()
 
                     result = runner.invoke(app, ["vendor", "test", "nonexistent"])

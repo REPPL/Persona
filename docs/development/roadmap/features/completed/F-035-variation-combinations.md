@@ -66,4 +66,3 @@ Users often want to compare different generation approaches to find optimal sett
 - [Milestone v0.3.0](../../milestones/v0.3.0.md)
 - [F-033: Complexity Levels](F-033-complexity-levels.md)
 - [F-034: Detail Levels](F-034-detail-levels.md)
-

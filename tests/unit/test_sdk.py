@@ -1,19 +1,16 @@
 """Tests for persona.sdk module."""
 
-import json
-import pytest
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 
+import pytest
 from persona.sdk import (
-    PersonaGenerator,
-    PersonaConfig,
-    GenerationResultModel,
-    PersonaModel,
-    ExperimentSDK,
     AsyncPersonaGenerator,
-    PersonaError,
     ConfigurationError,
+    ExperimentSDK,
+    GenerationResultModel,
+    PersonaConfig,
+    PersonaError,
+    PersonaGenerator,
+    PersonaModel,
     ProviderError,
 )
 
@@ -155,8 +152,8 @@ class TestModuleExports:
     def test_exceptions_exported(self):
         """Test exceptions are exported from persona."""
         from persona import (
-            PersonaError,
             ConfigurationError,
+            PersonaError,
             ProviderError,
         )
 

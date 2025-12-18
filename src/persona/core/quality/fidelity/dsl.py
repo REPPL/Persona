@@ -95,7 +95,9 @@ class ConstraintParser:
 
         # Validate types
         if not isinstance(required_fields, list):
-            raise ValueError(f"required_fields must be a list, got {type(required_fields)}")
+            raise ValueError(
+                f"required_fields must be a list, got {type(required_fields)}"
+            )
 
         if not isinstance(field_types, dict):
             raise ValueError(f"field_types must be a dict, got {type(field_types)}")
@@ -170,20 +172,26 @@ class ConstraintParser:
 
         # Structure
         if constraints.required_fields:
-            data["constraints"]["structure"]["required_fields"] = constraints.required_fields
+            data["constraints"]["structure"][
+                "required_fields"
+            ] = constraints.required_fields
 
         if constraints.field_types:
             data["constraints"]["structure"]["field_types"] = constraints.field_types
 
         # Content
         if constraints.occupation_keywords:
-            data["constraints"]["content"]["occupation_keywords"] = constraints.occupation_keywords
+            data["constraints"]["content"][
+                "occupation_keywords"
+            ] = constraints.occupation_keywords
 
         if constraints.goal_themes:
             data["constraints"]["content"]["goal_themes"] = constraints.goal_themes
 
         if constraints.required_keywords:
-            data["constraints"]["content"]["required_keywords"] = constraints.required_keywords
+            data["constraints"]["content"][
+                "required_keywords"
+            ] = constraints.required_keywords
 
         # Limits
         if constraints.age_range:
@@ -193,10 +201,14 @@ class ConstraintParser:
             data["constraints"]["limits"]["goal_count"] = list(constraints.goal_count)
 
         if constraints.pain_point_count:
-            data["constraints"]["limits"]["pain_point_count"] = list(constraints.pain_point_count)
+            data["constraints"]["limits"]["pain_point_count"] = list(
+                constraints.pain_point_count
+            )
 
         if constraints.behaviour_count:
-            data["constraints"]["limits"]["behaviour_count"] = list(constraints.behaviour_count)
+            data["constraints"]["limits"]["behaviour_count"] = list(
+                constraints.behaviour_count
+            )
 
         # Style
         if constraints.style:
@@ -209,8 +221,6 @@ class ConstraintParser:
             data["constraints"]["style"]["custom_rules"] = constraints.custom_rules
 
         # Remove empty sections
-        data["constraints"] = {
-            k: v for k, v in data["constraints"].items() if v
-        }
+        data["constraints"] = {k: v for k, v in data["constraints"].items() if v}
 
         return yaml.dump(data, default_flow_style=False, sort_keys=False)

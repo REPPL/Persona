@@ -110,17 +110,20 @@ class ModelDiscovery:
 
         if not provider or provider == "ollama":
             from persona.core.discovery.vendor import VendorDiscovery
+
             vendor_discovery = VendorDiscovery()
             ollama_result = vendor_discovery.discover_ollama()
             if ollama_result and ollama_result.models:
                 for model_name in ollama_result.models:
-                    results.append(ModelDiscoveryResult(
-                        model_id=model_name,
-                        status=ModelStatus.AVAILABLE,
-                        provider="ollama",
-                        source="api",
-                        name=model_name,
-                    ))
+                    results.append(
+                        ModelDiscoveryResult(
+                            model_id=model_name,
+                            status=ModelStatus.AVAILABLE,
+                            provider="ollama",
+                            source="api",
+                            name=model_name,
+                        )
+                    )
 
         return results
 
@@ -151,6 +154,7 @@ class ModelDiscovery:
 
         # Check custom models first
         from persona.core.config import ModelLoader
+
         loader = ModelLoader(
             user_dir=self._user_dir,
             project_dir=self._project_dir,
@@ -169,6 +173,7 @@ class ModelDiscovery:
 
         # Check built-in pricing data
         from persona.core.cost import PricingData
+
         pricing = PricingData.get_pricing(model_id, provider)
         if pricing:
             return ModelDiscoveryResult(
@@ -182,7 +187,9 @@ class ModelDiscovery:
 
         return None
 
-    def check_model(self, model_id: str, provider: str | None = None) -> tuple[bool, str]:
+    def check_model(
+        self, model_id: str, provider: str | None = None
+    ) -> tuple[bool, str]:
         """
         Check if a model is available and usable.
 
@@ -220,10 +227,13 @@ class ModelDiscovery:
             List of available model IDs.
         """
         results = self.discover_all(provider=provider)
-        return list(set(
-            r.model_id for r in results
-            if r.status in (ModelStatus.AVAILABLE, ModelStatus.DEPRECATED)
-        ))
+        return list(
+            set(
+                r.model_id
+                for r in results
+                if r.status in (ModelStatus.AVAILABLE, ModelStatus.DEPRECATED)
+            )
+        )
 
     def get_deprecated_models(self) -> list[ModelDiscoveryResult]:
         """
@@ -263,15 +273,17 @@ class ModelDiscovery:
                 status = ModelStatus.DEPRECATED
                 deprecation_msg = self.DEPRECATED_MODELS[pricing.model]
 
-            results.append(ModelDiscoveryResult(
-                model_id=pricing.model,
-                status=status,
-                provider=pricing.provider,
-                source="builtin",
-                name=pricing.description,
-                context_window=pricing.context_window,
-                deprecation_message=deprecation_msg,
-            ))
+            results.append(
+                ModelDiscoveryResult(
+                    model_id=pricing.model,
+                    status=status,
+                    provider=pricing.provider,
+                    source="builtin",
+                    name=pricing.description,
+                    context_window=pricing.context_window,
+                    deprecation_message=deprecation_msg,
+                )
+            )
 
         return results
 
@@ -291,20 +303,24 @@ class ModelDiscovery:
         for model_id in loader.list_models(provider=provider):
             try:
                 config = loader.load(model_id)
-                results.append(ModelDiscoveryResult(
-                    model_id=model_id,
-                    status=ModelStatus.AVAILABLE,
-                    provider=config.provider,
-                    source="custom",
-                    name=config.name,
-                    context_window=config.context_window,
-                ))
+                results.append(
+                    ModelDiscoveryResult(
+                        model_id=model_id,
+                        status=ModelStatus.AVAILABLE,
+                        provider=config.provider,
+                        source="custom",
+                        name=config.name,
+                        context_window=config.context_window,
+                    )
+                )
             except Exception:
                 continue
 
         return results
 
-    def _query_openai_models(self, force_refresh: bool = False) -> list[ModelDiscoveryResult]:
+    def _query_openai_models(
+        self, force_refresh: bool = False
+    ) -> list[ModelDiscoveryResult]:
         """Query OpenAI API for available models."""
         cache_key = "openai_api"
 
@@ -343,15 +359,17 @@ class ModelDiscovery:
                         status = ModelStatus.DEPRECATED
                         deprecation_msg = self.DEPRECATED_MODELS[model_id]
 
-                    results.append(ModelDiscoveryResult(
-                        model_id=model_id,
-                        status=status,
-                        provider="openai",
-                        source="api",
-                        name=model_id,
-                        deprecation_message=deprecation_msg,
-                        metadata={"owned_by": model.get("owned_by", "")},
-                    ))
+                    results.append(
+                        ModelDiscoveryResult(
+                            model_id=model_id,
+                            status=status,
+                            provider="openai",
+                            source="api",
+                            name=model_id,
+                            deprecation_message=deprecation_msg,
+                            metadata={"owned_by": model.get("owned_by", "")},
+                        )
+                    )
 
                 # Cache results
                 if self._cache_enabled:

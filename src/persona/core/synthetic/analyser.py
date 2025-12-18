@@ -78,7 +78,9 @@ class DataAnalyser:
         # Analyse the data
         return self._analyse_data(data, format_type)
 
-    def analyse_data(self, data: list[dict[str, Any]], format_type: str = "csv") -> DataSchema:
+    def analyse_data(
+        self, data: list[dict[str, Any]], format_type: str = "csv"
+    ) -> DataSchema:
         """
         Analyse structured data (list of dictionaries).
 
@@ -94,7 +96,7 @@ class DataAnalyser:
     def _load_csv(self, file_path: Path) -> list[dict[str, Any]]:
         """Load CSV file into list of dictionaries."""
         data = []
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 data.append(row)
@@ -102,7 +104,7 @@ class DataAnalyser:
 
     def _load_json(self, file_path: Path) -> list[dict[str, Any]]:
         """Load JSON file into list of dictionaries."""
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = json.load(f)
 
         # Handle different JSON structures
@@ -120,7 +122,7 @@ class DataAnalyser:
 
     def _load_yaml(self, file_path: Path) -> list[dict[str, Any]]:
         """Load YAML file into list of dictionaries."""
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = yaml.safe_load(f)
 
         # Handle different YAML structures
@@ -178,7 +180,11 @@ class DataAnalyser:
         # Extract values
         for row in data:
             value = row.get(col_name)
-            if value is None or value == "" or (isinstance(value, str) and value.strip() == ""):
+            if (
+                value is None
+                or value == ""
+                or (isinstance(value, str) and value.strip() == "")
+            ):
                 null_count += 1
             else:
                 values.append(value)
@@ -228,7 +234,18 @@ class DataAnalyser:
         sample = values[:100]
 
         # Check for boolean
-        bool_values = {True, False, "true", "false", "True", "False", "yes", "no", "Yes", "No"}
+        bool_values = {
+            True,
+            False,
+            "true",
+            "false",
+            "True",
+            "False",
+            "yes",
+            "no",
+            "Yes",
+            "No",
+        }
         if all(v in bool_values for v in sample):
             return ColumnType.BOOLEAN
 
@@ -285,7 +302,7 @@ class DataAnalyser:
 
         mean = sum(numeric_values) / len(numeric_values)
         variance = sum((x - mean) ** 2 for x in numeric_values) / len(numeric_values)
-        std = variance ** 0.5
+        std = variance**0.5
 
         return {
             "min": min(numeric_values),

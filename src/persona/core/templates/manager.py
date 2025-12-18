@@ -5,11 +5,12 @@ This module provides the TemplateManager class for managing persona
 templates across different domains and formats.
 """
 
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
-import json
+
 import yaml
 
 

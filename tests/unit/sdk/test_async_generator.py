@@ -3,10 +3,9 @@
 import asyncio
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch
 
 import pytest
-
 from persona.sdk import AsyncPersonaGenerator, PersonaConfig
 from persona.sdk.async_generator import agenerate_parallel
 from persona.sdk.exceptions import (
@@ -361,7 +360,9 @@ class TestAsyncProgressCallback:
                     callback("Loading...")
                     callback("Generating...")
 
-                mock_instance.set_progress_callback.side_effect = capture_and_call_callback
+                mock_instance.set_progress_callback.side_effect = (
+                    capture_and_call_callback
+                )
 
                 mock_result = Mock()
                 mock_result.personas = []

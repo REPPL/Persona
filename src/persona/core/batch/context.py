@@ -6,48 +6,49 @@ Provides context budget management and warnings for LLM interactions.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 
 class WarningLevel(Enum):
     """Warning severity levels."""
-    
-    GREEN = "green"       # < 70% usage
-    YELLOW = "yellow"     # 70-85% usage
-    ORANGE = "orange"     # 85-95% usage
-    RED = "red"           # > 95% usage
+
+    GREEN = "green"  # < 70% usage
+    YELLOW = "yellow"  # 70-85% usage
+    ORANGE = "orange"  # 85-95% usage
+    RED = "red"  # > 95% usage
 
 
 @dataclass
 class ContextBudget:
     """
     Context budget breakdown.
-    
+
     Tracks how context window is being used.
     """
-    
+
     total_tokens: int
     system_prompt_tokens: int = 0
     input_data_tokens: int = 0
     reserved_output_tokens: int = 0
-    
+
     @property
     def used_tokens(self) -> int:
         """Total tokens used (excluding reserved)."""
         return self.system_prompt_tokens + self.input_data_tokens
-    
+
     @property
     def available_tokens(self) -> int:
         """Tokens available for additional input."""
         return self.total_tokens - self.used_tokens - self.reserved_output_tokens
-    
+
     @property
     def usage_percentage(self) -> float:
         """Percentage of context used."""
         if self.total_tokens == 0:
             return 0.0
-        return (self.used_tokens + self.reserved_output_tokens) / self.total_tokens * 100
-    
+        return (
+            (self.used_tokens + self.reserved_output_tokens) / self.total_tokens * 100
+        )
+
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         return {
@@ -65,16 +66,16 @@ class ContextBudget:
 class ContextWarning:
     """
     Warning about context usage.
-    
+
     Provides actionable suggestions when approaching limits.
     """
-    
+
     level: WarningLevel
     message: str
     usage_percentage: float
     budget: ContextBudget
     suggestions: list[str] = field(default_factory=list)
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         return {
@@ -120,9 +121,9 @@ DEFAULT_OUTPUT_RESERVATION: dict[str, int] = {
 class ContextManager:
     """
     Manages context window budgets.
-    
+
     Tracks token usage and provides warnings when approaching limits.
-    
+
     Example:
         >>> manager = ContextManager()
         >>> budget = manager.calculate_budget(
@@ -134,14 +135,14 @@ class ContextManager:
         >>> if warning:
         ...     print(warning.message)
     """
-    
+
     # Warning thresholds (percentage)
     THRESHOLDS = {
         WarningLevel.GREEN: 70.0,
         WarningLevel.YELLOW: 85.0,
         WarningLevel.ORANGE: 95.0,
     }
-    
+
     def __init__(
         self,
         custom_windows: dict[str, int] | None = None,
@@ -149,7 +150,7 @@ class ContextManager:
     ):
         """
         Initialise the context manager.
-        
+
         Args:
             custom_windows: Custom context windows by model.
             output_reservation: Default output token reservation.
@@ -158,29 +159,29 @@ class ContextManager:
         if custom_windows:
             self._context_windows.update(custom_windows)
         self._default_reservation = output_reservation or 15000
-    
+
     def get_context_window(self, model: str) -> int:
         """
         Get context window size for a model.
-        
+
         Args:
             model: Model identifier.
-        
+
         Returns:
             Context window size in tokens.
         """
         # Direct match
         if model in self._context_windows:
             return self._context_windows[model]
-        
+
         # Prefix match
         for key, window in self._context_windows.items():
             if model.startswith(key.split("-")[0]):
                 return window
-        
+
         # Default
         return 128000
-    
+
     def calculate_budget(
         self,
         model: str,
@@ -190,26 +191,26 @@ class ContextManager:
     ) -> ContextBudget:
         """
         Calculate context budget.
-        
+
         Args:
             model: Model identifier.
             system_tokens: Tokens used by system prompt.
             input_tokens: Tokens used by input data.
             output_reservation: Tokens reserved for output.
-        
+
         Returns:
             ContextBudget instance.
         """
         total = self.get_context_window(model)
         reserved = output_reservation or self._default_reservation
-        
+
         return ContextBudget(
             total_tokens=total,
             system_prompt_tokens=system_tokens,
             input_data_tokens=input_tokens,
             reserved_output_tokens=reserved,
         )
-    
+
     def check_warning(
         self,
         budget: ContextBudget,
@@ -217,19 +218,19 @@ class ContextManager:
     ) -> ContextWarning | None:
         """
         Check if a warning should be displayed.
-        
+
         Args:
             budget: Context budget to check.
             model: Optional model name for suggestions.
-        
+
         Returns:
             ContextWarning if usage is concerning, None otherwise.
         """
         usage = budget.usage_percentage
-        
+
         if usage < self.THRESHOLDS[WarningLevel.GREEN]:
             return None
-        
+
         # Determine level
         if usage >= self.THRESHOLDS[WarningLevel.ORANGE]:
             level = WarningLevel.RED
@@ -240,10 +241,10 @@ class ContextManager:
         else:
             level = WarningLevel.YELLOW
             message = "Context usage approaching limit"
-        
+
         # Generate suggestions
         suggestions = self._generate_suggestions(budget, model, level)
-        
+
         return ContextWarning(
             level=level,
             message=message,
@@ -251,7 +252,7 @@ class ContextManager:
             budget=budget,
             suggestions=suggestions,
         )
-    
+
     def can_fit(
         self,
         budget: ContextBudget,
@@ -259,16 +260,16 @@ class ContextManager:
     ) -> bool:
         """
         Check if additional tokens can fit in the budget.
-        
+
         Args:
             budget: Current budget.
             additional_tokens: Tokens to add.
-        
+
         Returns:
             True if tokens can fit.
         """
         return budget.available_tokens >= additional_tokens
-    
+
     def suggest_chunk_size(
         self,
         budget: ContextBudget,
@@ -276,11 +277,11 @@ class ContextManager:
     ) -> int:
         """
         Suggest maximum chunk size to stay within target usage.
-        
+
         Args:
             budget: Current budget (excluding input_data_tokens).
             target_usage: Target usage percentage.
-        
+
         Returns:
             Maximum tokens for input data.
         """
@@ -290,7 +291,7 @@ class ContextManager:
             - budget.reserved_output_tokens
         )
         return max(0, int(available_for_input))
-    
+
     def _generate_suggestions(
         self,
         budget: ContextBudget,
@@ -299,7 +300,7 @@ class ContextManager:
     ) -> list[str]:
         """Generate suggestions for reducing context usage."""
         suggestions = []
-        
+
         # Suggest larger model
         if model and level in (WarningLevel.ORANGE, WarningLevel.RED):
             larger_models = self._find_larger_models(model, budget.total_tokens)
@@ -307,21 +308,21 @@ class ContextManager:
                 suggestions.append(
                     f"Use a larger context model ({', '.join(larger_models)})"
                 )
-        
+
         # Always suggest chunking
         if budget.input_data_tokens > budget.total_tokens * 0.5:
             suggestions.append("Split data into multiple runs")
-        
+
         # Suggest summarisation for very large inputs
         if budget.input_data_tokens > 100000:
             suggestions.append("Summarise input data first")
-        
+
         # Reduce output reservation
         if budget.reserved_output_tokens > 20000:
             suggestions.append("Reduce output token reservation")
-        
+
         return suggestions
-    
+
     def _find_larger_models(
         self,
         current_model: str,
@@ -342,12 +343,12 @@ def check_context_usage(
 ) -> ContextWarning | None:
     """
     Convenience function to check context usage.
-    
+
     Args:
         model: Model identifier.
         system_tokens: System prompt tokens.
         input_tokens: Input data tokens.
-    
+
     Returns:
         ContextWarning if concerning, None otherwise.
     """

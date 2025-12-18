@@ -5,9 +5,10 @@ This module provides complexity levels, detail levels, and variation
 combinations for persona generation (F-033, F-034, F-035).
 """
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Iterator
+from typing import Any
 
 
 class ComplexityLevel(Enum):
@@ -181,10 +182,7 @@ class PersonaVariation:
     @property
     def token_multiplier(self) -> float:
         """Combined token multiplier for cost estimation."""
-        return (
-            self.complexity_spec.token_multiplier
-            * self.detail_spec.token_multiplier
-        )
+        return self.complexity_spec.token_multiplier * self.detail_spec.token_multiplier
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -224,9 +222,7 @@ class VariationMatrix:
 
     def __init__(self) -> None:
         """Initialise the variation matrix."""
-        self._by_id: dict[str, PersonaVariation] = {
-            v.id: v for v in self.VARIATIONS
-        }
+        self._by_id: dict[str, PersonaVariation] = {v.id: v for v in self.VARIATIONS}
 
     def all(self) -> list[PersonaVariation]:
         """Get all variations."""
@@ -334,13 +330,9 @@ class VariationValidator:
         # Check goals count
         goals = getattr(persona, "goals", []) or []
         if len(goals) < spec.min_goals:
-            errors.append(
-                f"Too few goals: {len(goals)} < {spec.min_goals}"
-            )
+            errors.append(f"Too few goals: {len(goals)} < {spec.min_goals}")
         if len(goals) > spec.max_goals:
-            errors.append(
-                f"Too many goals: {len(goals)} > {spec.max_goals}"
-            )
+            errors.append(f"Too many goals: {len(goals)} > {spec.max_goals}")
 
         # Check pain points count
         pain_points = getattr(persona, "pain_points", []) or []

@@ -41,7 +41,9 @@ class ErrorResponse(BaseModel):
     success: bool = Field(default=False, description="Operation success status")
     error: str = Field(..., description="Error code")
     message: str = Field(..., description="Error message")
-    details: Optional[dict[str, Any]] = Field(default=None, description="Additional error details")
+    details: Optional[dict[str, Any]] = Field(
+        default=None, description="Additional error details"
+    )
 
 
 class HealthResponse(BaseModel):
@@ -75,7 +77,9 @@ class GenerateResponse(BaseModel):
     """
 
     job_id: str = Field(..., description="Job identifier")
-    status: str = Field(..., description="Job status (pending, running, completed, failed)")
+    status: str = Field(
+        ..., description="Job status (pending, running, completed, failed)"
+    )
     message: str = Field(..., description="Status message")
     status_url: str = Field(..., description="URL to check job status")
 
@@ -100,12 +104,18 @@ class JobStatusResponse(BaseModel):
 
     job_id: str = Field(..., description="Job identifier")
     status: str = Field(..., description="Job status")
-    progress: Optional[int] = Field(default=None, ge=0, le=100, description="Progress percentage")
+    progress: Optional[int] = Field(
+        default=None, ge=0, le=100, description="Progress percentage"
+    )
     created_at: datetime = Field(..., description="Job creation time")
     started_at: Optional[datetime] = Field(default=None, description="Job start time")
-    completed_at: Optional[datetime] = Field(default=None, description="Job completion time")
+    completed_at: Optional[datetime] = Field(
+        default=None, description="Job completion time"
+    )
     error: Optional[str] = Field(default=None, description="Error message if failed")
-    result: Optional[dict[str, Any]] = Field(default=None, description="Job result data")
+    result: Optional[dict[str, Any]] = Field(
+        default=None, description="Job result data"
+    )
 
 
 class QualityScoreResponse(BaseModel):

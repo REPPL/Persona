@@ -142,18 +142,18 @@ class PromptEngine:
             trim_blocks=True,
             lstrip_blocks=True
         )
-    
+
     def load_workflow(self, workflow_name: str) -> dict:
         """Load workflow definition."""
         workflow_path = self.templates_dir / "workflows" / f"{workflow_name}.yaml"
         with open(workflow_path) as f:
             return yaml.safe_load(f)
-    
+
     def render(self, template_name: str, **variables) -> str:
         """Render a template with variables."""
         template = self.env.get_template(template_name)
         return template.render(**variables)
-    
+
     def render_workflow_step(
         self,
         workflow: dict,
@@ -162,10 +162,10 @@ class PromptEngine:
     ) -> tuple[str, str]:
         """Render system and user prompts for a workflow step."""
         step = next(s for s in workflow["steps"] if s["name"] == step_name)
-        
+
         system_prompt = self.render(step["system_template"], **variables)
         user_prompt = self.render(step["user_template"], **variables)
-        
+
         return system_prompt, user_prompt
 ```
 

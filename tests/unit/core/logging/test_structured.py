@@ -1,15 +1,12 @@
 """Tests for structured logging (F-074)."""
 
 import json
-from typing import Any
-
-import pytest
 
 from persona.core.logging.structured import (
-    StructuredLogger,
     LogContext,
-    StructuredLogEntry,
     OutputFormat,
+    StructuredLogEntry,
+    StructuredLogger,
     configure_logging,
     get_logger,
 )

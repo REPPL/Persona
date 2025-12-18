@@ -1,17 +1,14 @@
 """Tests for configuration validation (F-055)."""
 
-import json
-import pytest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import yaml
-
 from persona.core.config.validator import (
     ConfigValidator,
-    ValidationResult,
     ValidationIssue,
     ValidationLevel,
+    ValidationResult,
     validate_config,
 )
 
@@ -336,11 +333,13 @@ class TestConfigValidator:
         with TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "experiment.yaml"
             path.write_text(
-                yaml.dump({
-                    "name": "test-experiment",
-                    "provider": "openai",
-                    "model": "gpt-4o",
-                })
+                yaml.dump(
+                    {
+                        "name": "test-experiment",
+                        "provider": "openai",
+                        "model": "gpt-4o",
+                    }
+                )
             )
 
             validator = ConfigValidator()
@@ -379,10 +378,7 @@ class TestConfigValidator:
         )
 
         # Should not report unknown provider error
-        assert not any(
-            "Unknown provider" in str(e)
-            for e in result.errors
-        )
+        assert not any("Unknown provider" in str(e) for e in result.errors)
 
 
 class TestValidateConfigFunction:

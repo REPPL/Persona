@@ -2,16 +2,11 @@
 Tests for global configuration (F-085).
 """
 
-import os
 import pytest
-from pathlib import Path
-
 from persona.core.config.global_config import (
-    GlobalConfig,
     ConfigManager,
     DefaultsConfig,
-    BudgetConfig,
-    get_global_config_path,
+    GlobalConfig,
 )
 
 
@@ -62,11 +57,13 @@ class TestConfigManager:
     def test_load_global_exists(self, tmp_path, monkeypatch):
         """Test loading global config from file."""
         config_path = tmp_path / "config.yaml"
-        config_path.write_text("""
+        config_path.write_text(
+            """
 defaults:
   provider: openai
   count: 10
-""")
+"""
+        )
 
         monkeypatch.setattr(
             "persona.core.config.global_config.get_global_config_path",
@@ -93,10 +90,12 @@ defaults:
     def test_get_value(self, tmp_path, monkeypatch):
         """Test getting config values by path."""
         config_path = tmp_path / "config.yaml"
-        config_path.write_text("""
+        config_path.write_text(
+            """
 defaults:
   provider: anthropic
-""")
+"""
+        )
 
         monkeypatch.setattr(
             "persona.core.config.global_config.get_global_config_path",
@@ -221,20 +220,24 @@ defaults:
         # Global config
         global_path = tmp_path / "global" / "config.yaml"
         global_path.parent.mkdir(parents=True)
-        global_path.write_text("""
+        global_path.write_text(
+            """
 defaults:
   provider: anthropic
   count: 3
   complexity: moderate
-""")
+"""
+        )
 
         # Project config (overrides some values)
         project_path = tmp_path / "project" / ".persona" / "config.yaml"
         project_path.parent.mkdir(parents=True)
-        project_path.write_text("""
+        project_path.write_text(
+            """
 defaults:
   count: 5
-""")
+"""
+        )
 
         monkeypatch.setattr(
             "persona.core.config.global_config.get_global_config_path",

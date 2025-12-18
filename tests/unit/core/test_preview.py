@@ -2,15 +2,14 @@
 Tests for data preview functionality (F-022).
 """
 
-import pytest
 from pathlib import Path
 
 from persona.core.preview import (
     DataPreviewer,
     FilePreview,
-    PreviewResult,
-    PreviewIssue,
     IssueSeverity,
+    PreviewIssue,
+    PreviewResult,
 )
 
 

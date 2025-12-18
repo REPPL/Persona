@@ -98,4 +98,3 @@ This persona set was generated from 2 data files:
 
 - [Milestone v0.7.0](../../milestones/v0.7.0.md)
 - [F-041: README Generation](F-041-automatic-readme-generation.md)
-

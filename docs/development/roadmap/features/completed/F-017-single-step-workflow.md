@@ -71,4 +71,3 @@ The v0.1.0 release requires a working persona generation pipeline. Before implem
 - [F-004: Persona Generation Pipeline](F-004-persona-generation.md)
 - [ADR-0011: Multi-Step Workflow](../../../decisions/adrs/ADR-0011-multi-step-workflow.md)
 - [v0.2.0 Milestone](../../milestones/v0.2.0.md) (multi-step workflows)
-

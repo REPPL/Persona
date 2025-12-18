@@ -2,14 +2,14 @@
 Tests for persona templates functionality (F-023).
 """
 
-import pytest
 from pathlib import Path
 
+import pytest
 from persona.core.templates import (
-    TemplateManager,
     PersonaTemplate,
-    TemplateField,
     TemplateCategory,
+    TemplateField,
+    TemplateManager,
 )
 
 
@@ -382,7 +382,8 @@ class TestTemplateManager:
         """Test loading a template from file."""
         # Create template file
         template_file = tmp_path / "test.yaml"
-        template_file.write_text("""
+        template_file.write_text(
+            """
 id: test-load
 name: Test Load Template
 fields:
@@ -390,7 +391,8 @@ fields:
     label: ID
   - name: name
     label: Name
-""")
+"""
+        )
 
         manager = TemplateManager()
         template = manager.load_template(template_file)
@@ -409,7 +411,8 @@ fields:
         """Test importing a template."""
         # Create template file
         template_file = tmp_path / "import.yaml"
-        template_file.write_text("""
+        template_file.write_text(
+            """
 id: imported
 name: Imported Template
 fields:
@@ -417,7 +420,8 @@ fields:
     label: ID
   - name: name
     label: Name
-""")
+"""
+        )
 
         manager = TemplateManager()
         template = manager.import_template(template_file)
@@ -497,7 +501,8 @@ fields:
 
         # Create template file directly
         template_file = tmp_path / "reload.yaml"
-        template_file.write_text("""
+        template_file.write_text(
+            """
 id: reloaded
 name: Reloaded Template
 fields:
@@ -505,7 +510,8 @@ fields:
     label: ID
   - name: name
     label: Name
-""")
+"""
+        )
 
         count = manager.reload_user_templates()
 

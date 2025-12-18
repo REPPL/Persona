@@ -2,15 +2,14 @@
 Tests for empathy map loading functionality (F-029).
 """
 
-import pytest
 import json
 from pathlib import Path
 
+import pytest
 from persona.core.data import (
     EmpathyMap,
     EmpathyMapDimension,
     EmpathyMapLoader,
-    EmpathyMapValidationResult,
     ParticipantTypeMap,
 )
 
@@ -296,19 +295,21 @@ data:
 
     def test_load_text_json(self):
         """Test loading from JSON text content."""
-        content = json.dumps({
-            "participants": 3,
-            "data": [
-                {
-                    "participant_type": "tester",
-                    "tasks": ["Test"],
-                    "feelings": ["Curious"],
-                    "influences": ["Tools"],
-                    "pain_points": ["Bugs"],
-                    "goals": ["Quality"],
-                }
-            ],
-        })
+        content = json.dumps(
+            {
+                "participants": 3,
+                "data": [
+                    {
+                        "participant_type": "tester",
+                        "tasks": ["Test"],
+                        "feelings": ["Curious"],
+                        "influences": ["Tools"],
+                        "pain_points": ["Bugs"],
+                        "goals": ["Quality"],
+                    }
+                ],
+            }
+        )
         loader = EmpathyMapLoader()
         em = loader.load_text(content, format="json")
 
@@ -344,11 +345,13 @@ data:
     def test_validation_missing_participant_type(self, tmp_path: Path):
         """Test validation error on missing participant type."""
         file_path = tmp_path / "invalid.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 data:
   - tasks:
       - "Task 1"
-""")
+"""
+        )
         loader = EmpathyMapLoader()
 
         with pytest.raises(ValueError, match="Participant type name is required"):
@@ -357,12 +360,14 @@ data:
     def test_strict_mode_empty_dimension(self, tmp_path: Path):
         """Test strict mode requires all dimensions."""
         file_path = tmp_path / "partial.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 data:
   - participant_type: "user"
     tasks:
       - "Task 1"
-""")
+"""
+        )
         loader = EmpathyMapLoader(strict=True)
 
         with pytest.raises(ValueError, match="has no items"):
@@ -371,12 +376,14 @@ data:
     def test_non_strict_mode_warnings(self, tmp_path: Path):
         """Test non-strict mode allows empty dimensions with warnings."""
         file_path = tmp_path / "partial.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 data:
   - participant_type: "user"
     tasks:
       - "Task 1"
-""")
+"""
+        )
         loader = EmpathyMapLoader(strict=False)
         em = loader.load(file_path)
 
@@ -386,7 +393,8 @@ data:
     def test_freeform_text_preserved(self, tmp_path: Path):
         """Test freeform text entries are preserved."""
         file_path = tmp_path / "freeform.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 data:
   - participant_type: "user"
     tasks:
@@ -400,7 +408,8 @@ data:
       - "Issue"
     goals:
       - "Goal"
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
 
@@ -413,7 +422,8 @@ data:
     def test_multiple_participant_types(self, tmp_path: Path):
         """Test loading multiple participant types."""
         file_path = tmp_path / "multi.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 participants: 30
 data:
   - participant_type: "power_user"
@@ -428,7 +438,8 @@ data:
     influences: ["Tutorials"]
     pain_points: ["Complexity"]
     goals: ["Learning"]
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
 
@@ -438,7 +449,8 @@ data:
     def test_normalise_single_string(self, tmp_path: Path):
         """Test normalising single string to list."""
         file_path = tmp_path / "single.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 data:
   - participant_type: "user"
     tasks: "Single task as string"
@@ -446,7 +458,8 @@ data:
     influences: ["Influence"]
     pain_points: ["Pain"]
     goals: ["Goal"]
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
 
@@ -456,7 +469,8 @@ data:
     def test_metadata_extraction(self, tmp_path: Path):
         """Test extra fields are captured as metadata."""
         file_path = tmp_path / "meta.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 participants: 10
 method: "workshop"
 date: "2024-01-15"
@@ -468,7 +482,8 @@ data:
     influences: ["Influence"]
     pain_points: ["Pain"]
     goals: ["Goal"]
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
 
@@ -512,11 +527,7 @@ class TestEmpathyMapValidation:
 
     def test_missing_participant_type_invalid(self):
         """Test missing participant type is invalid."""
-        em = EmpathyMap(
-            data=[
-                ParticipantTypeMap(participant_type="")
-            ]
-        )
+        em = EmpathyMap(data=[ParticipantTypeMap(participant_type="")])
 
         loader = EmpathyMapLoader()
         result = loader.validate(em)
@@ -565,7 +576,8 @@ class TestEmpathyMapIntegration:
     def test_load_validate_convert(self, tmp_path: Path):
         """Test full workflow: load, validate, convert to text."""
         file_path = tmp_path / "workshop.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 participants: 22
 method: "co-creation workshop"
 data:
@@ -585,7 +597,8 @@ data:
     goals:
       - "Complete collection"
       - "Build community"
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
 
@@ -601,7 +614,8 @@ data:
     def test_to_text_preserves_all_data(self, tmp_path: Path):
         """Test to_text includes all empathy map data."""
         file_path = tmp_path / "full.yaml"
-        file_path.write_text("""
+        file_path.write_text(
+            """
 participants: 10
 method: "interviews"
 custom_field: "custom_value"
@@ -618,7 +632,8 @@ data:
     influences: ["Influence B"]
     pain_points: ["Pain B"]
     goals: ["Goal B"]
-""")
+"""
+        )
         loader = EmpathyMapLoader()
         em = loader.load(file_path)
         text = em.to_text()

@@ -5,7 +5,6 @@ Unit tests for synthetic data models.
 from pathlib import Path
 
 import pytest
-
 from persona.core.synthetic.models import (
     ColumnType,
     DataSchema,
@@ -206,9 +205,7 @@ def test_validation_result_quality_score():
 def test_synthetic_result_creation():
     """Test SyntheticResult model creation."""
     schema = DataSchema(
-        columns=[
-            DistributionStats(column_name="name", column_type=ColumnType.TEXT)
-        ],
+        columns=[DistributionStats(column_name="name", column_type=ColumnType.TEXT)],
         row_count=100,
     )
 

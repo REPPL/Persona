@@ -6,7 +6,7 @@ This middleware provides simple in-memory rate limiting based on IP address.
 
 import time
 from collections import defaultdict
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -80,7 +80,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                     "Retry-After": str(retry_after),
                     "X-RateLimit-Limit": str(self.config.rate_limit_requests),
                     "X-RateLimit-Remaining": "0",
-                    "X-RateLimit-Reset": str(int(oldest_request + self.config.rate_limit_window)),
+                    "X-RateLimit-Reset": str(
+                        int(oldest_request + self.config.rate_limit_window)
+                    ),
                 },
             )
 
@@ -94,6 +96,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         remaining = self.config.rate_limit_requests - len(self.requests[client_ip])
         response.headers["X-RateLimit-Limit"] = str(self.config.rate_limit_requests)
         response.headers["X-RateLimit-Remaining"] = str(remaining)
-        response.headers["X-RateLimit-Reset"] = str(int(now + self.config.rate_limit_window))
+        response.headers["X-RateLimit-Reset"] = str(
+            int(now + self.config.rate_limit_window)
+        )
 
         return response

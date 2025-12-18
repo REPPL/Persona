@@ -109,4 +109,3 @@ Budget Status (Monthly):
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
 - [F-007: Cost Estimation](F-007-cost-estimation.md)
 - [ADR-0010: Cost Estimation](../../../decisions/adrs/ADR-0010-cost-estimation.md)
-

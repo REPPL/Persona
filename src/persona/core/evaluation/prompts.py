@@ -10,7 +10,6 @@ from typing import Any
 
 from persona.core.evaluation.criteria import EvaluationCriteria
 
-
 EVALUATION_SYSTEM_PROMPT = """You are an expert in user experience research and persona development. Your task is to evaluate the quality of user personas objectively and consistently.
 
 When evaluating personas, consider:
@@ -49,7 +48,9 @@ def build_single_evaluation_prompt(
     # Build criteria descriptions
     criteria_lines = []
     for i, criterion in enumerate(criteria, 1):
-        criteria_lines.append(f"{i}. **{criterion.value.upper()}**: {criterion.description}")
+        criteria_lines.append(
+            f"{i}. **{criterion.value.upper()}**: {criterion.description}"
+        )
 
     criteria_text = "\n".join(criteria_lines)
 
@@ -114,7 +115,9 @@ def build_batch_evaluation_prompt(
     # Build criteria descriptions
     criteria_lines = []
     for i, criterion in enumerate(criteria, 1):
-        criteria_lines.append(f"{i}. **{criterion.value.upper()}**: {criterion.description}")
+        criteria_lines.append(
+            f"{i}. **{criterion.value.upper()}**: {criterion.description}"
+        )
 
     criteria_text = "\n".join(criteria_lines)
 

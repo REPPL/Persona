@@ -2,11 +2,10 @@
 Tests for persona validation functionality (F-019).
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.validation import PersonaValidator, ValidationResult, ValidationRule
-from persona.core.validation.validator import ValidationLevel, ValidationIssue
+from persona.core.validation.validator import ValidationIssue, ValidationLevel
 
 
 class TestValidationIssue:
@@ -228,21 +227,26 @@ class TestPersonaValidator:
 
     def test_add_custom_rule(self):
         """Test adding a custom validation rule."""
+
         def check_name_length(persona: Persona) -> list[ValidationIssue]:
             if persona.name and len(persona.name) < 3:
-                return [ValidationIssue(
-                    rule="name_length",
-                    message="Name too short",
-                    level=ValidationLevel.WARNING,
-                )]
+                return [
+                    ValidationIssue(
+                        rule="name_length",
+                        message="Name too short",
+                        level=ValidationLevel.WARNING,
+                    )
+                ]
             return []
 
         validator = PersonaValidator()
-        validator.add_rule(ValidationRule(
-            name="name_length",
-            description="Name must be at least 3 characters",
-            check=check_name_length,
-        ))
+        validator.add_rule(
+            ValidationRule(
+                name="name_length",
+                description="Name must be at least 3 characters",
+                check=check_name_length,
+            )
+        )
 
         persona = Persona(id="p001", name="Al")
         result = validator.validate(persona)

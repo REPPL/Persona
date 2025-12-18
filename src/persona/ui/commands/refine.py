@@ -2,9 +2,9 @@
 Refine command for iteratively improving personas.
 """
 
+import json
 from pathlib import Path
 from typing import Annotated, Optional
-import json
 
 import typer
 from rich.panel import Panel
@@ -78,22 +78,32 @@ def refine(
         persona = _load_persona(persona_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "refine",
-                "success": False,
-                "error": str(e),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "refine",
+                        "success": False,
+                        "error": str(e),
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error loading persona:[/red] {e}")
         raise typer.Exit(1)
 
     if persona is None:
         if json_output:
-            print(json.dumps({
-                "command": "refine",
-                "success": False,
-                "error": "No persona found",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "refine",
+                        "success": False,
+                        "error": "No persona found",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print("[yellow]No persona found to refine.[/yellow]")
         raise typer.Exit(1)
@@ -101,19 +111,28 @@ def refine(
     if instruction is None:
         # No instruction provided - show current state and available templates
         if json_output:
-            print(json.dumps({
-                "command": "refine",
-                "success": True,
-                "data": {
-                    "persona": persona.to_dict() if hasattr(persona, "to_dict") else {"id": persona.id, "name": persona.name},
-                    "message": "No instruction provided. Use --instruction to refine.",
-                },
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "refine",
+                        "success": True,
+                        "data": {
+                            "persona": persona.to_dict()
+                            if hasattr(persona, "to_dict")
+                            else {"id": persona.id, "name": persona.name},
+                            "message": "No instruction provided. Use --instruction to refine.",
+                        },
+                    },
+                    indent=2,
+                )
+            )
         else:
-            console.print(Panel.fit(
-                f"[bold]Persona Refinement[/bold]\n{persona.name} ({persona.id})",
-                border_style="blue",
-            ))
+            console.print(
+                Panel.fit(
+                    f"[bold]Persona Refinement[/bold]\n{persona.name} ({persona.id})",
+                    border_style="blue",
+                )
+            )
             console.print("\n[yellow]No instruction provided.[/yellow]")
             console.print("Use [cyan]--instruction[/cyan] to apply a refinement.\n")
             _show_persona_summary(console, persona)
@@ -127,11 +146,16 @@ def refine(
 
     if not result.success:
         if json_output:
-            print(json.dumps({
-                "command": "refine",
-                "success": False,
-                "error": result.error,
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "refine",
+                        "success": False,
+                        "error": result.error,
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Refinement failed:[/red] {result.error}")
         raise typer.Exit(1)
@@ -142,34 +166,48 @@ def refine(
         _save_persona(result.persona, output_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "refine",
-                "success": False,
-                "error": f"Failed to save: {e}",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "refine",
+                        "success": False,
+                        "error": f"Failed to save: {e}",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Failed to save:[/red] {e}")
         raise typer.Exit(1)
 
     if json_output:
-        print(json.dumps({
-            "command": "refine",
-            "version": __version__,
-            "success": True,
-            "data": {
-                "changes": result.changes,
-                "version": result.version,
-                "output_path": str(output_path),
-                "persona": result.persona.to_dict() if hasattr(result.persona, "to_dict") else None,
-            },
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "command": "refine",
+                    "version": __version__,
+                    "success": True,
+                    "data": {
+                        "changes": result.changes,
+                        "version": result.version,
+                        "output_path": str(output_path),
+                        "persona": result.persona.to_dict()
+                        if hasattr(result.persona, "to_dict")
+                        else None,
+                    },
+                },
+                indent=2,
+            )
+        )
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]Persona Refined[/bold]\n{persona.name} ({persona.id})",
-        border_style="green",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Refined[/bold]\n{persona.name} ({persona.id})",
+            border_style="green",
+        )
+    )
 
     console.print(f"\n[bold]Instruction:[/bold] {instruction}")
     console.print(f"[bold]Version:[/bold] {result.version}")
@@ -193,6 +231,7 @@ def list_templates() -> None:
     console = get_console()
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     refiner = PersonaRefiner()
@@ -252,6 +291,7 @@ def show_diff(
     console = get_console()
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     # Load persona
@@ -275,11 +315,13 @@ def show_diff(
         console.print("[green]No differences found.[/green]")
         return
 
-    console.print(Panel.fit(
-        f"[bold]Version Diff[/bold]\n"
-        f"Version {version_a} → {version_b or session.version}",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Version Diff[/bold]\n"
+            f"Version {version_a} → {version_b or session.version}",
+            border_style="blue",
+        )
+    )
 
     for field, changes in diff.items():
         console.print(f"\n[cyan]{field}:[/cyan]")
@@ -296,7 +338,9 @@ def show_diff(
             else:
                 for key, val in changes.items():
                     if isinstance(val, dict) and "from" in val:
-                        console.print(f"  {key}: [red]{val['from']}[/red] → [green]{val['to']}[/green]")
+                        console.print(
+                            f"  {key}: [red]{val['from']}[/red] → [green]{val['to']}[/green]"
+                        )
 
 
 def _show_persona_summary(console, persona) -> None:
@@ -321,11 +365,11 @@ def _show_instruction_examples(console) -> None:
     console.print("\n[bold]Example Instructions:[/bold]")
     examples = [
         'Add goal: "Improve team collaboration"',
-        'Remove last goal',
+        "Remove last goal",
         'Add pain point: "Lacks time for learning"',
         'Rename to "Alex Developer"',
-        'Make more technical',
-        'Simplify the summary',
+        "Make more technical",
+        "Simplify the summary",
     ]
     for example in examples:
         console.print(f"  [dim]--instruction[/dim] [cyan]{example}[/cyan]")

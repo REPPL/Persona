@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any, TypeVar
 from urllib.parse import urlparse
 
-
 T = TypeVar("T")
 
 
@@ -167,7 +166,7 @@ class InputValidator:
                     return PathValidationResult(
                         valid=False,
                         resolved_path=resolved,
-                        error=f"Path is not within allowed directories",
+                        error="Path is not within allowed directories",
                     )
 
             # Check existence
@@ -487,7 +486,9 @@ class InputValidator:
         except ValueError:
             return False
 
-    def _suggest_similar(self, value: str, candidates: set[str], max_suggestions: int = 3) -> list[str]:
+    def _suggest_similar(
+        self, value: str, candidates: set[str], max_suggestions: int = 3
+    ) -> list[str]:
         """Suggest similar values from candidates."""
         if not candidates:
             return []

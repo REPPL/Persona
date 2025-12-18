@@ -1,11 +1,10 @@
 """Tests for plugin exceptions."""
 
-import pytest
 
 from persona.core.plugins.exceptions import (
     PluginError,
-    PluginNotFoundError,
     PluginLoadError,
+    PluginNotFoundError,
     PluginValidationError,
 )
 

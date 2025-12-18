@@ -127,9 +127,7 @@ class AcademicValidator:
         requires_source = {"rouge_l", "bertscore", "gpt_similarity"}
         selected_requiring_source = requires_source & set(metrics)
         if selected_requiring_source and not source_data:
-            raise ValueError(
-                f"Metrics {selected_requiring_source} require source_data"
-            )
+            raise ValueError(f"Metrics {selected_requiring_source} require source_data")
 
         # Compute requested metrics
         rouge_l = None
@@ -184,9 +182,7 @@ class AcademicValidator:
             raise ValueError("At least one persona is required")
 
         # Validate each persona
-        reports = [
-            self.validate(persona, source_data, metrics) for persona in personas
-        ]
+        reports = [self.validate(persona, source_data, metrics) for persona in personas]
 
         # Create batch report (automatically calculates averages)
         return BatchAcademicValidationReport(reports=reports)

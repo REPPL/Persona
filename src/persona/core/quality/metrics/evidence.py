@@ -9,11 +9,10 @@ from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.base import QualityMetric
-from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
-    from persona.core.evidence.linker import EvidenceReport, EvidenceStrength
+    from persona.core.evidence.linker import EvidenceReport
 
 
 class EvidenceStrengthMetric(QualityMetric):
@@ -73,15 +72,11 @@ class EvidenceStrengthMetric(QualityMetric):
 
         if evidence_report:
             # Use actual evidence data
-            coverage_score = self._calculate_coverage(
-                evidence_report, issues, details
-            )
+            coverage_score = self._calculate_coverage(evidence_report, issues, details)
             strength_score = self._calculate_strength_distribution(
                 evidence_report, issues, details
             )
-            diversity_score = self._calculate_source_diversity(
-                evidence_report, details
-            )
+            diversity_score = self._calculate_source_diversity(evidence_report, details)
         else:
             # No evidence available - provide structural baseline
             coverage_score = self._estimate_coverage_potential(persona, details)
@@ -89,11 +84,7 @@ class EvidenceStrengthMetric(QualityMetric):
             diversity_score = 50.0  # Unknown
             issues.append("No evidence linking data available")
 
-        overall = (
-            coverage_score * 0.50 +
-            strength_score * 0.30 +
-            diversity_score * 0.20
-        )
+        overall = coverage_score * 0.50 + strength_score * 0.30 + diversity_score * 0.20
 
         return DimensionScore(
             dimension="evidence_strength",

@@ -7,28 +7,26 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from persona.core.platform import (
-    IS_WINDOWS,
-    IS_MACOS,
     IS_LINUX,
+    IS_MACOS,
     IS_POSIX,
+    IS_WINDOWS,
     PLATFORM,
+    PathManager,
+    ensure_dir,
+    find_executable,
+    get_cache_dir,
     get_config_dir,
     get_data_dir,
-    get_cache_dir,
     get_log_dir,
-    get_temp_dir,
-    ensure_dir,
+    get_path_manager,
+    get_python_executable,
     get_shell_info,
+    get_temp_dir,
+    is_executable,
     normalise_path,
     path_to_posix,
-    is_executable,
-    find_executable,
-    get_python_executable,
-    PathManager,
-    get_path_manager,
 )
 
 
@@ -79,6 +77,7 @@ class TestConfigDir:
         monkeypatch.setattr("persona.core.platform.IS_WINDOWS", True)
         # Need to reimport to pick up the monkeypatched value
         from persona.core import platform
+
         monkeypatch.setattr(platform, "IS_WINDOWS", True)
 
         # Since we can't easily reload the module, test the function logic

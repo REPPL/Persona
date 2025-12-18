@@ -198,9 +198,7 @@ class PluginRegistry(ABC, Generic[T]):
         """
         if name not in self._plugins:
             available = ", ".join(self.list_names())
-            raise KeyError(
-                f"Plugin '{name}' not found. Available: {available}"
-            )
+            raise KeyError(f"Plugin '{name}' not found. Available: {available}")
 
         info = self._plugins[name]
         if not info.enabled:
@@ -258,9 +256,7 @@ class PluginRegistry(ABC, Generic[T]):
         Returns:
             Sorted list of enabled plugin names.
         """
-        return sorted(
-            name for name, info in self._plugins.items() if info.enabled
-        )
+        return sorted(name for name, info in self._plugins.items() if info.enabled)
 
     def list_builtin(self) -> list[str]:
         """
@@ -269,9 +265,7 @@ class PluginRegistry(ABC, Generic[T]):
         Returns:
             Sorted list of built-in plugin names.
         """
-        return sorted(
-            name for name, info in self._plugins.items() if info.builtin
-        )
+        return sorted(name for name, info in self._plugins.items() if info.builtin)
 
     def list_external(self) -> list[str]:
         """
@@ -280,9 +274,7 @@ class PluginRegistry(ABC, Generic[T]):
         Returns:
             Sorted list of external plugin names.
         """
-        return sorted(
-            name for name, info in self._plugins.items() if not info.builtin
-        )
+        return sorted(name for name, info in self._plugins.items() if not info.builtin)
 
     def list_all(self) -> list[PluginInfo]:
         """

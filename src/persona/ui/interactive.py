@@ -42,7 +42,8 @@ def get_configured_providers() -> list[tuple[str, str, bool]]:
         try:
             provider = ProviderFactory.create(name)
             is_configured = provider.is_configured()
-        except Exception:
+        except (ValueError, ImportError, OSError):
+            # Provider unavailable or not properly installed
             is_configured = False
         result.append((name, display, is_configured))
 
@@ -140,7 +141,9 @@ class InteractivePrompts:
             self.console.print(f"[yellow]No models found for {provider}[/yellow]")
             return None
 
-        choices = [Choice(title=display, value=model_id) for model_id, display, _ in models]
+        choices = [
+            Choice(title=display, value=model_id) for model_id, display, _ in models
+        ]
 
         # Find default
         default_value = default
@@ -193,6 +196,7 @@ class InteractivePrompts:
         Returns:
             Path or None if cancelled.
         """
+
         def validate_path(text: str) -> bool | str:
             if not text:
                 return "Path cannot be empty"
@@ -211,9 +215,7 @@ class InteractivePrompts:
             return None
         return Path(result).expanduser()
 
-    def select_output_format(
-        self, default: str = "json"
-    ) -> Optional[str]:
+    def select_output_format(self, default: str = "json") -> Optional[str]:
         """Prompt user to select output format.
 
         Args:
@@ -339,6 +341,7 @@ class GenerateWizard:
             Dictionary with generation parameters or None if cancelled.
         """
         from persona import __version__
+
         self.console.print(f"[dim]Persona {__version__}[/dim]\n")
         self.console.print("[bold]Generate Personas - Interactive Mode[/bold]\n")
 
@@ -403,9 +406,12 @@ class GenerateWizard:
                 provider=provider,
             )
             if estimate.pricing:
-                self.console.print(f"  Estimated cost: {estimator.format_cost(estimate.total_cost)}")
-        except Exception:
-            pass  # Cost estimate is optional
+                self.console.print(
+                    f"  Estimated cost: {estimator.format_cost(estimate.total_cost)}"
+                )
+        except (ValueError, KeyError, AttributeError):
+            # Cost estimate is optional - continue if pricing data unavailable
+            pass
 
         self.console.print()
 
@@ -441,6 +447,7 @@ class ConfigWizard:
             Dictionary with configuration values or None if cancelled.
         """
         from persona import __version__
+
         self.console.print(f"[dim]Persona {__version__}[/dim]\n")
         self.console.print("[bold]Configure Persona - Interactive Mode[/bold]\n")
 
@@ -877,7 +884,10 @@ class ConfigEditor:
             "Generate README with output?",
             default=config.output.include_readme,
         ).ask()
-        if include_readme is not None and include_readme != config.output.include_readme:
+        if (
+            include_readme is not None
+            and include_readme != config.output.include_readme
+        ):
             result["output.include_readme"] = include_readme
 
         # Timestamp folders
@@ -885,7 +895,10 @@ class ConfigEditor:
             "Use timestamp folders?",
             default=config.output.timestamp_folders,
         ).ask()
-        if timestamp_folders is not None and timestamp_folders != config.output.timestamp_folders:
+        if (
+            timestamp_folders is not None
+            and timestamp_folders != config.output.timestamp_folders
+        ):
             result["output.timestamp_folders"] = timestamp_folders
 
         return result if result else None

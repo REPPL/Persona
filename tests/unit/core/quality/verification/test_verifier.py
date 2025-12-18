@@ -1,14 +1,12 @@
 """Tests for MultiModelVerifier."""
 
 import pytest
-
 from persona.core.quality.verification import (
     MultiModelVerifier,
     VerificationConfig,
     verify_multi_model,
     verify_self_consistency,
 )
-
 
 # Test model names with proper provider prefixes
 MODEL1 = "anthropic:claude-sonnet-4"

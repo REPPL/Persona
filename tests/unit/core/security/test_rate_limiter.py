@@ -1,15 +1,12 @@
 """Tests for rate limiting (F-057)."""
 
-import asyncio
-import time
 import pytest
-
 from persona.core.security.rate_limiter import (
-    RateLimiter,
-    SyncRateLimiter,
-    RateLimitConfig,
-    RateLimitExceeded,
     DEFAULT_RATE_LIMITS,
+    RateLimitConfig,
+    RateLimiter,
+    RateLimitExceeded,
+    SyncRateLimiter,
 )
 
 

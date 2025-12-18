@@ -4,11 +4,10 @@ Tests for content checker.
 Tests ContentChecker for content requirement validation.
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.content import ContentChecker
-from persona.core.quality.fidelity.models import PromptConstraints, Severity
+from persona.core.quality.fidelity.models import PromptConstraints
 
 
 class TestContentChecker:

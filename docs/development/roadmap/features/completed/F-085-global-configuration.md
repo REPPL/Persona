@@ -162,4 +162,3 @@ def load_config() -> Config:
 ---
 
 **Status**: Complete
-

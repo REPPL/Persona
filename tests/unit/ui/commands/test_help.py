@@ -3,15 +3,14 @@ Tests for the help system (F-082).
 """
 
 import pytest
-from typer.testing import CliRunner
-
 from persona.ui.cli import app
 from persona.ui.commands.help import (
-    get_topic_list,
-    get_topic_content,
-    get_topic_title,
     HELP_TOPICS,
+    get_topic_content,
+    get_topic_list,
+    get_topic_title,
 )
+from typer.testing import CliRunner
 
 
 @pytest.fixture
@@ -183,7 +182,9 @@ class TestMainHelpFlag:
         """Test persona generate --help."""
         result = runner.invoke(app, ["generate", "--help"])
         assert result.exit_code == 0
-        assert "Generate personas" in result.output or "generate" in result.output.lower()
+        assert (
+            "Generate personas" in result.output or "generate" in result.output.lower()
+        )
 
     def test_check_help(self, runner):
         """Test persona check --help."""

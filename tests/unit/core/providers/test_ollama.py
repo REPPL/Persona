@@ -2,15 +2,15 @@
 Tests for Ollama provider functionality.
 """
 
-import pytest
-import httpx
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from persona.core.providers.ollama import OllamaProvider
+import httpx
+import pytest
 from persona.core.providers.base import (
     AuthenticationError,
     ModelNotFoundError,
 )
+from persona.core.providers.ollama import OllamaProvider
 
 
 class TestOllamaProvider:
@@ -92,9 +92,7 @@ class TestOllamaProvider:
             models = provider.list_available_models()
 
             assert models == ["llama3:8b", "mistral:7b", "qwen2.5:7b"]
-            mock_instance.get.assert_called_once_with(
-                "http://localhost:11434/api/tags"
-            )
+            mock_instance.get.assert_called_once_with("http://localhost:11434/api/tags")
 
     def test_list_available_models_connection_error(self):
         """Test listing models when Ollama is not running."""
@@ -104,7 +102,9 @@ class TestOllamaProvider:
             mock_instance = MagicMock()
             mock_instance.__enter__ = MagicMock(return_value=mock_instance)
             mock_instance.__exit__ = MagicMock(return_value=None)
-            mock_instance.get = MagicMock(side_effect=httpx.ConnectError("Connection refused"))
+            mock_instance.get = MagicMock(
+                side_effect=httpx.ConnectError("Connection refused")
+            )
             mock_client.return_value = mock_instance
 
             with pytest.raises(RuntimeError, match="Cannot connect to Ollama"):
@@ -134,7 +134,9 @@ class TestOllamaProvider:
             mock_instance = MagicMock()
             mock_instance.__enter__ = MagicMock(return_value=mock_instance)
             mock_instance.__exit__ = MagicMock(return_value=None)
-            mock_instance.get = MagicMock(side_effect=httpx.ConnectError("Connection refused"))
+            mock_instance.get = MagicMock(
+                side_effect=httpx.ConnectError("Connection refused")
+            )
             mock_client.return_value = mock_instance
 
             assert provider.is_configured() is False
@@ -227,8 +229,7 @@ class TestOllamaProvider:
                 mock_client.return_value = mock_instance
 
                 response = provider.generate(
-                    "Test prompt",
-                    system_prompt="You are a helpful assistant"
+                    "Test prompt", system_prompt="You are a helpful assistant"
                 )
 
                 # Verify the request included system message
@@ -236,7 +237,9 @@ class TestOllamaProvider:
                 payload = call_args[1]["json"]
                 assert len(payload["messages"]) == 2
                 assert payload["messages"][0]["role"] == "system"
-                assert payload["messages"][0]["content"] == "You are a helpful assistant"
+                assert (
+                    payload["messages"][0]["content"] == "You are a helpful assistant"
+                )
                 assert payload["messages"][1]["role"] == "user"
                 assert payload["messages"][1]["content"] == "Test prompt"
 
@@ -254,7 +257,9 @@ class TestOllamaProvider:
 
         with patch.object(provider, "is_configured", return_value=True):
             provider._available_models_cache = ["llama3:8b"]
-            with pytest.raises(ModelNotFoundError, match="Model 'invalid-model' not available"):
+            with pytest.raises(
+                ModelNotFoundError, match="Model 'invalid-model' not available"
+            ):
                 provider.generate("Test prompt", model="invalid-model")
 
     def test_generate_custom_parameters(self):
@@ -282,9 +287,7 @@ class TestOllamaProvider:
                 mock_client.return_value = mock_instance
 
                 response = provider.generate(
-                    "Test prompt",
-                    temperature=0.9,
-                    max_tokens=2048
+                    "Test prompt", temperature=0.9, max_tokens=2048
                 )
 
                 # Verify custom parameters were used
@@ -304,7 +307,9 @@ class TestOllamaProvider:
                 mock_instance = MagicMock()
                 mock_instance.__enter__ = MagicMock(return_value=mock_instance)
                 mock_instance.__exit__ = MagicMock(return_value=None)
-                mock_instance.post = MagicMock(side_effect=httpx.TimeoutException("Timeout"))
+                mock_instance.post = MagicMock(
+                    side_effect=httpx.TimeoutException("Timeout")
+                )
                 mock_client.return_value = mock_instance
 
                 with pytest.raises(RuntimeError, match="Ollama request timed out"):
@@ -338,9 +343,7 @@ class TestOllamaProvider:
 
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "models": [{"name": "llama3:8b"}]
-        }
+        mock_response.json.return_value = {"models": [{"name": "llama3:8b"}]}
 
         with patch("httpx.Client") as mock_client:
             mock_instance = MagicMock()
@@ -422,10 +425,7 @@ class TestOllamaProviderIntegration:
             model = available[0]
 
         response = provider.generate(
-            "Say hello in exactly 3 words",
-            model=model,
-            max_tokens=20,
-            temperature=0.7
+            "Say hello in exactly 3 words", model=model, max_tokens=20, temperature=0.7
         )
 
         assert response.content

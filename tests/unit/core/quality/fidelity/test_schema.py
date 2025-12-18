@@ -4,7 +4,6 @@ Tests for schema validator.
 Tests SchemaValidator for structural fidelity checks.
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.models import PromptConstraints, Severity

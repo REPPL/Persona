@@ -36,11 +36,21 @@ pip install persona
 ## Quick Setup
 
 1. **Set up an API key** (at least one required):
+
+   **Option A - Persistent (recommended):**
+   Add to your `.env` file:
+   ```
+   ANTHROPIC_API_KEY=your-key
+   ```
+
+   **Option B - Current session only:**
    ```bash
    export ANTHROPIC_API_KEY=your-key  # Claude
    export OPENAI_API_KEY=your-key     # GPT
    export GOOGLE_API_KEY=your-key     # Gemini
    ```
+
+   Run `persona help api-keys` for detailed setup instructions.
 
 2. **Check your setup**:
    ```bash
@@ -143,11 +153,27 @@ export PERSONA_BUDGETS_PER_RUN=10.00
 
 Persona supports multiple LLM providers. You need at least one configured.
 
-## Anthropic (Claude)
+## Setting API Keys
 
+**Option A - Persistent (recommended):**
+Add to your `.env` file in the project root:
+```
+ANTHROPIC_API_KEY=your-key
+OPENAI_API_KEY=your-key
+GOOGLE_API_KEY=your-key
+```
+
+**Option B - Current session only:**
 ```bash
 export ANTHROPIC_API_KEY=your-key
 ```
+
+Note: `export` only sets the variable for your current terminal session.
+For persistent configuration, use `.env` or add to your shell profile.
+
+## Anthropic (Claude)
+
+API key: `ANTHROPIC_API_KEY`
 
 Available models:
 - `claude-opus-4-20250514` - Most capable, highest cost
@@ -156,9 +182,7 @@ Available models:
 
 ## OpenAI (GPT)
 
-```bash
-export OPENAI_API_KEY=your-key
-```
+API key: `OPENAI_API_KEY`
 
 Available models:
 - `gpt-4.1` - Latest flagship model
@@ -167,9 +191,7 @@ Available models:
 
 ## Google (Gemini)
 
-```bash
-export GOOGLE_API_KEY=your-key
-```
+API key: `GOOGLE_API_KEY`
 
 Available models:
 - `gemini-2.5-pro` - Most capable
@@ -548,6 +570,12 @@ persona cost --from data.csv --count 3
     },
 }
 
+# Alias: api-keys points to providers content
+HELP_TOPICS["api-keys"] = {
+    "title": "API Key Setup",
+    "content": HELP_TOPICS["providers"]["content"],
+}
+
 
 def get_topic_list() -> list[tuple[str, str]]:
     """Get list of (topic_name, title) tuples."""
@@ -613,11 +641,13 @@ def _show_overview(console: Console) -> None:
 
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
-    console.print(Panel(
-        "[bold]Persona Help System[/bold]\n\n"
-        "Generate realistic user personas from your data using AI.",
-        border_style="blue",
-    ))
+    console.print(
+        Panel(
+            "[bold]Persona Help System[/bold]\n\n"
+            "Generate realistic user personas from your data using AI.",
+            border_style="blue",
+        )
+    )
 
     console.print("\n[bold]Quick Commands:[/bold]")
     console.print("  persona check          Check installation status")

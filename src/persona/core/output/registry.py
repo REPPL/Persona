@@ -6,9 +6,10 @@ enabling registration of custom formatters and discovery via entry points.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Protocol, TypeVar
+from typing import Any, Protocol
 
 from persona.core.generation.parser import Persona
 
@@ -32,50 +33,58 @@ class OutputSection(Enum):
 class SectionConfig:
     """Configuration for output sections."""
 
-    include: set[OutputSection] = field(default_factory=lambda: {
-        OutputSection.DEMOGRAPHICS,
-        OutputSection.GOALS,
-        OutputSection.PAIN_POINTS,
-        OutputSection.BEHAVIOURS,
-        OutputSection.MOTIVATIONS,
-        OutputSection.QUOTES,
-    })
-    exclude: set[OutputSection] = field(default_factory=set)
-
-    # Presets
-    @classmethod
-    def minimal(cls) -> "SectionConfig":
-        """Minimal output: demographics, goals, pain points only."""
-        return cls(include={
-            OutputSection.DEMOGRAPHICS,
-            OutputSection.GOALS,
-            OutputSection.PAIN_POINTS,
-        })
-
-    @classmethod
-    def design(cls) -> "SectionConfig":
-        """Design-focused output for UX/design teams."""
-        return cls(include={
-            OutputSection.DEMOGRAPHICS,
-            OutputSection.GOALS,
-            OutputSection.PAIN_POINTS,
-            OutputSection.BEHAVIOURS,
-            OutputSection.QUOTES,
-        })
-
-    @classmethod
-    def research(cls) -> "SectionConfig":
-        """Research-focused output with evidence and reasoning."""
-        return cls(include={
+    include: set[OutputSection] = field(
+        default_factory=lambda: {
             OutputSection.DEMOGRAPHICS,
             OutputSection.GOALS,
             OutputSection.PAIN_POINTS,
             OutputSection.BEHAVIOURS,
             OutputSection.MOTIVATIONS,
             OutputSection.QUOTES,
-            OutputSection.EVIDENCE,
-            OutputSection.REASONING,
-        })
+        }
+    )
+    exclude: set[OutputSection] = field(default_factory=set)
+
+    # Presets
+    @classmethod
+    def minimal(cls) -> "SectionConfig":
+        """Minimal output: demographics, goals, pain points only."""
+        return cls(
+            include={
+                OutputSection.DEMOGRAPHICS,
+                OutputSection.GOALS,
+                OutputSection.PAIN_POINTS,
+            }
+        )
+
+    @classmethod
+    def design(cls) -> "SectionConfig":
+        """Design-focused output for UX/design teams."""
+        return cls(
+            include={
+                OutputSection.DEMOGRAPHICS,
+                OutputSection.GOALS,
+                OutputSection.PAIN_POINTS,
+                OutputSection.BEHAVIOURS,
+                OutputSection.QUOTES,
+            }
+        )
+
+    @classmethod
+    def research(cls) -> "SectionConfig":
+        """Research-focused output with evidence and reasoning."""
+        return cls(
+            include={
+                OutputSection.DEMOGRAPHICS,
+                OutputSection.GOALS,
+                OutputSection.PAIN_POINTS,
+                OutputSection.BEHAVIOURS,
+                OutputSection.MOTIVATIONS,
+                OutputSection.QUOTES,
+                OutputSection.EVIDENCE,
+                OutputSection.REASONING,
+            }
+        )
 
     @classmethod
     def full(cls) -> "SectionConfig":
@@ -178,9 +187,7 @@ class BaseFormatterV2(ABC):
             Formatted string representation.
         """
         effective_sections = sections or self._sections
-        return "\n\n---\n\n".join(
-            self.format(p, effective_sections) for p in personas
-        )
+        return "\n\n---\n\n".join(self.format(p, effective_sections) for p in personas)
 
     @abstractmethod
     def extension(self) -> str:
@@ -306,7 +313,9 @@ class FormatterRegistry:
             KeyError: If formatter not found.
         """
         if name not in self._formatters:
-            raise KeyError(f"Formatter '{name}' not found. Available: {self.list_names()}")
+            raise KeyError(
+                f"Formatter '{name}' not found. Available: {self.list_names()}"
+            )
 
         info = self._formatters[name]
         return info.formatter_class(**kwargs)
@@ -401,6 +410,7 @@ def register(
     Returns:
         Decorator function.
     """
+
     def decorator(cls: type) -> type:
         registry = get_registry()
         registry.register(

@@ -20,6 +20,10 @@ P0 (Critical)
 
 v0.1.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed and configured
@@ -29,12 +33,12 @@ v0.1.0
 
 ## Success Criteria
 
-- [ ] User can generate personas from a single file
-- [ ] User can generate personas from an experiment folder
-- [ ] Cost estimation shown before generation proceeds
-- [ ] Progress feedback shown during generation
-- [ ] Output includes structured personas (JSON + Markdown)
-- [ ] Generation metadata saved with output
+- [x] User can generate personas from a single file
+- [x] User can generate personas from an experiment folder
+- [x] Cost estimation shown before generation proceeds
+- [x] Progress feedback shown during generation
+- [x] Output includes structured personas (JSON + Markdown)
+- [x] Generation metadata saved with output
 
 ## Derives Features
 

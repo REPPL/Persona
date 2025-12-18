@@ -2,8 +2,6 @@
 
 from unittest.mock import Mock
 
-import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.providers.base import LLMProvider, LLMResponse
 from persona.core.quality.faithfulness.extractor import ClaimExtractor

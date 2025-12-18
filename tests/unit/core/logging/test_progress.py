@@ -4,7 +4,6 @@ import time
 from datetime import datetime
 
 import pytest
-
 from persona.core.logging.progress import (
     ProgressTracker,
     TaskProgress,
@@ -348,6 +347,7 @@ class TestTrackProgressConvenience:
 
     def test_with_custom_total(self) -> None:
         """Can specify custom total."""
+
         # Using generator with known total
         def gen():
             yield 1

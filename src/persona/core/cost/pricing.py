@@ -213,7 +213,9 @@ class PricingData:
     }
 
     @classmethod
-    def get_pricing(cls, model: str, provider: str | None = None) -> ModelPricing | None:
+    def get_pricing(
+        cls, model: str, provider: str | None = None
+    ) -> ModelPricing | None:
         """
         Get pricing for a specific model.
 
@@ -252,9 +254,11 @@ class PricingData:
             models = cls._get_provider_models(provider)
             return list(models.values())
 
-        return list(cls.ANTHROPIC_MODELS.values()) + \
-               list(cls.OPENAI_MODELS.values()) + \
-               list(cls.GEMINI_MODELS.values())
+        return (
+            list(cls.ANTHROPIC_MODELS.values())
+            + list(cls.OPENAI_MODELS.values())
+            + list(cls.GEMINI_MODELS.values())
+        )
 
     @classmethod
     def _get_provider_models(cls, provider: str) -> dict[str, ModelPricing]:

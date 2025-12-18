@@ -167,9 +167,7 @@ class PersonaComparator:
         )
 
         # Calculate similarity scores
-        result.similarity = self._calculate_similarity(
-            persona_a, persona_b, result
-        )
+        result.similarity = self._calculate_similarity(persona_a, persona_b, result)
 
         return result
 
@@ -245,7 +243,7 @@ class PersonaComparator:
         duplicates = []
 
         for i, persona_a in enumerate(personas):
-            for persona_b in personas[i + 1:]:
+            for persona_b in personas[i + 1 :]:
                 result = self.compare(persona_a, persona_b)
                 if result.similarity.overall >= threshold:
                     duplicates.append((persona_a, persona_b, result))
@@ -331,12 +329,14 @@ class PersonaComparator:
                     # Simple string similarity
                     similarity = self._string_similarity(str(val_a), str(val_b))
 
-                differences.append(FieldDifference(
-                    field=key,
-                    persona_a=val_a,
-                    persona_b=val_b,
-                    similarity=similarity,
-                ))
+                differences.append(
+                    FieldDifference(
+                        field=key,
+                        persona_a=val_a,
+                        persona_b=val_b,
+                        similarity=similarity,
+                    )
+                )
 
         return differences
 
@@ -370,24 +370,24 @@ class PersonaComparator:
         """Calculate similarity scores."""
         # Goals similarity
         goals_total = (
-            len(result.shared_goals) +
-            len(result.unique_goals_a) +
-            len(result.unique_goals_b)
+            len(result.shared_goals)
+            + len(result.unique_goals_a)
+            + len(result.unique_goals_b)
         )
         goals_sim = (
-            (len(result.shared_goals) / goals_total * 100)
-            if goals_total > 0 else 0.0
+            (len(result.shared_goals) / goals_total * 100) if goals_total > 0 else 0.0
         )
 
         # Pain points similarity
         pains_total = (
-            len(result.shared_pain_points) +
-            len(result.unique_pain_points_a) +
-            len(result.unique_pain_points_b)
+            len(result.shared_pain_points)
+            + len(result.unique_pain_points_a)
+            + len(result.unique_pain_points_b)
         )
         pains_sim = (
             (len(result.shared_pain_points) / pains_total * 100)
-            if pains_total > 0 else 0.0
+            if pains_total > 0
+            else 0.0
         )
 
         # Demographics similarity
@@ -396,10 +396,7 @@ class PersonaComparator:
         all_demo_keys = set(demo_a.keys()) | set(demo_b.keys())
 
         if all_demo_keys:
-            matching = sum(
-                1 for k in all_demo_keys
-                if demo_a.get(k) == demo_b.get(k)
-            )
+            matching = sum(1 for k in all_demo_keys if demo_a.get(k) == demo_b.get(k))
             demo_sim = (matching / len(all_demo_keys)) * 100
         else:
             demo_sim = 0.0
@@ -411,7 +408,8 @@ class PersonaComparator:
         behaviours_total = len(set(behaviours_a) | set(behaviours_b))
         behaviours_sim = (
             (len(shared_behaviours) / behaviours_total * 100)
-            if behaviours_total > 0 else 0.0
+            if behaviours_total > 0
+            else 0.0
         )
 
         # Overall (weighted average)
@@ -423,10 +421,10 @@ class PersonaComparator:
         }
 
         overall = (
-            goals_sim * weights["goals"] +
-            pains_sim * weights["pain_points"] +
-            demo_sim * weights["demographics"] +
-            behaviours_sim * weights["behaviours"]
+            goals_sim * weights["goals"]
+            + pains_sim * weights["pain_points"]
+            + demo_sim * weights["demographics"]
+            + behaviours_sim * weights["behaviours"]
         )
 
         return SimilarityScore(

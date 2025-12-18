@@ -9,14 +9,13 @@ from typing import Optional
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
 
 from persona.core.plugins import (
-    PluginManager,
-    PluginType,
     PluginInfo,
+    PluginType,
     get_plugin_manager,
 )
 
@@ -56,22 +55,26 @@ def _get_status_badge(info: PluginInfo) -> Text:
 def list_plugins(
     plugin_type: Optional[str] = typer.Option(
         None,
-        "--type", "-t",
+        "--type",
+        "-t",
         help="Filter by plugin type (formatter, loader, provider, validator)",
     ),
     builtin_only: bool = typer.Option(
         False,
-        "--builtin", "-b",
+        "--builtin",
+        "-b",
         help="Show only built-in plugins",
     ),
     external_only: bool = typer.Option(
         False,
-        "--external", "-e",
+        "--external",
+        "-e",
         help="Show only external plugins",
     ),
     output: str = typer.Option(
         "rich",
-        "--output", "-o",
+        "--output",
+        "-o",
         help="Output format: rich, json",
     ),
 ) -> None:
@@ -126,7 +129,9 @@ def list_plugins(
         table.add_row(
             info.name,
             Text(info.plugin_type.value, style=type_colour),
-            info.description[:50] + "..." if len(info.description) > 50 else info.description,
+            info.description[:50] + "..."
+            if len(info.description) > 50
+            else info.description,
             info.version,
             status,
         )
@@ -140,12 +145,14 @@ def plugin_info(
     name: str = typer.Argument(..., help="Plugin name"),
     plugin_type: str = typer.Option(
         ...,
-        "--type", "-t",
+        "--type",
+        "-t",
         help="Plugin type (formatter, loader, provider, validator)",
     ),
     output: str = typer.Option(
         "rich",
-        "--output", "-o",
+        "--output",
+        "-o",
         help="Output format: rich, json",
     ),
 ) -> None:
@@ -203,7 +210,8 @@ def plugin_info(
 def plugin_summary(
     output: str = typer.Option(
         "rich",
-        "--output", "-o",
+        "--output",
+        "-o",
         help="Output format: rich, json",
     ),
 ) -> None:
@@ -253,7 +261,8 @@ def plugin_summary(
 def check_plugins(
     plugin_type: Optional[str] = typer.Option(
         None,
-        "--type", "-t",
+        "--type",
+        "-t",
         help="Check only plugins of this type",
     ),
 ) -> None:

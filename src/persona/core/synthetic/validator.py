@@ -272,8 +272,8 @@ class SyntheticValidator:
             Tuple of (pii_detected, entity_count, entity_types).
         """
         try:
-            from persona.core.privacy import PIIDetector
             from persona.core.data import DataLoader
+            from persona.core.privacy import PIIDetector
 
             # Check if PII detection is available
             detector = PIIDetector(score_threshold=0.5)

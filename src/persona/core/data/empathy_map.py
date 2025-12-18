@@ -10,12 +10,12 @@ References:
     https://boagworld.com/usability/adapting-empathy-maps-for-ux-design/
 """
 
+import json
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
-import json
 import yaml
 
 

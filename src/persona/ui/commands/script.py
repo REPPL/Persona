@@ -2,19 +2,18 @@
 Script generation commands for creating conversation scripts from personas.
 """
 
+import json
 from pathlib import Path
 from typing import Annotated, Optional
-import json
 
 import typer
 from rich.panel import Panel
-from rich.table import Table
 
 from persona.core.generation.parser import Persona
 from persona.core.scripts import (
     ConversationScriptGenerator,
-    ScriptFormat,
     PrivacyConfig,
+    ScriptFormat,
 )
 from persona.ui.console import get_console
 
@@ -82,6 +81,7 @@ def generate(
     console = get_console()
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     # Load persona
@@ -96,7 +96,9 @@ def generate(
                 console.print("[red]Error:[/red] No personas found in file.")
                 raise typer.Exit(1)
             elif len(persona_data) > 1:
-                console.print(f"[yellow]Warning:[/yellow] Multiple personas found, using first one.")
+                console.print(
+                    "[yellow]Warning:[/yellow] Multiple personas found, using first one."
+                )
             persona_dict = persona_data[0]
         else:
             persona_dict = persona_data
@@ -128,7 +130,9 @@ def generate(
             script_format = ScriptFormat.JINJA2_TEMPLATE
         else:
             console.print(f"[red]Error:[/red] Unknown format: {format}")
-            console.print("Valid formats: character_card, system_prompt, jinja2_template")
+            console.print(
+                "Valid formats: character_card, system_prompt, jinja2_template"
+            )
             raise typer.Exit(1)
     except ValueError as e:
         console.print(f"[red]Error:[/red] Invalid format: {e}")
@@ -140,7 +144,7 @@ def generate(
     )
 
     # Generate script
-    console.print(f"\n[bold]Generating conversation script...[/bold]")
+    console.print("\n[bold]Generating conversation script...[/bold]")
     console.print(f"Format: {format}")
     console.print(f"Privacy threshold: {threshold}")
     console.print()
@@ -161,14 +165,18 @@ def generate(
         console.print("[red]✗ Script generation blocked by privacy audit[/red]")
         console.print(f"\n[yellow]Details:[/yellow] {result.error}")
         console.print("\nThe script contains potential source data leakage.")
-        console.print("This is a safety measure to prevent exposing original quotes/data.")
+        console.print(
+            "This is a safety measure to prevent exposing original quotes/data."
+        )
         raise typer.Exit(1)
 
     # Show privacy audit results
     audit = result.privacy_audit
     if audit.leakage_score > 0:
         status = "⚠️" if audit.leakage_score < threshold else "✗"
-        console.print(f"[yellow]{status} Privacy audit:[/yellow] Leakage score: {audit.leakage_score:.3f}")
+        console.print(
+            f"[yellow]{status} Privacy audit:[/yellow] Leakage score: {audit.leakage_score:.3f}"
+        )
         if audit.leakages:
             console.print(f"  Detected {len(audit.leakages)} potential leakage(s)")
     else:
@@ -178,6 +186,7 @@ def generate(
     if script_format == ScriptFormat.CHARACTER_CARD:
         if yaml:
             from persona.core.scripts.formatters import CharacterCardFormatter
+
             formatter = CharacterCardFormatter(use_yaml=True)
             output_text = formatter.format(result.character_card)
         else:
@@ -252,6 +261,7 @@ def batch_generate(
     console = get_console()
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     # Find persona files
@@ -329,14 +339,19 @@ def batch_generate(
                 result = generator.generate(persona, format=script_format)
 
                 if result.blocked:
-                    console.print(f"[yellow]⚠️[/yellow] {persona.name}: Blocked by privacy audit")
+                    console.print(
+                        f"[yellow]⚠️[/yellow] {persona.name}: Blocked by privacy audit"
+                    )
                     blocked_count += 1
                     continue
 
                 # Format output
                 if script_format == ScriptFormat.CHARACTER_CARD:
                     if yaml:
-                        from persona.core.scripts.formatters import CharacterCardFormatter
+                        from persona.core.scripts.formatters import (
+                            CharacterCardFormatter,
+                        )
+
                         formatter = CharacterCardFormatter(use_yaml=True)
                         output_text = formatter.format(result.character_card)
                         extension = ".yaml"
@@ -362,7 +377,7 @@ def batch_generate(
             error_count += 1
 
     # Summary
-    console.print(f"\n[bold]Summary:[/bold]")
+    console.print("\n[bold]Summary:[/bold]")
     console.print(f"  Success: {success_count}")
     if blocked_count > 0:
         console.print(f"  Blocked: {blocked_count} (privacy audit)")

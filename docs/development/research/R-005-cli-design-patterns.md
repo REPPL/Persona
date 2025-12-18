@@ -95,7 +95,7 @@ class Settings(BaseSettings):
     anthropic_api_key: Optional[str] = None
     google_ai_api_key: Optional[str] = None
     default_vendor: str = "openai"
-    
+
     class Config:
         env_file = ".env"
         env_prefix = ""  # Use OPENAI_API_KEY directly

@@ -1,14 +1,12 @@
 """Tests for AcademicValidator orchestrator."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.academic.validator import (
     AcademicValidator,
     validate_persona,
     validate_personas,
 )
-from persona.core.quality.config import QualityConfig
 
 
 class TestAcademicValidator:

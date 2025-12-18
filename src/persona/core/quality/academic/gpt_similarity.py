@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from persona.core.embedding.factory import EmbeddingFactory
 from persona.core.generation.parser import Persona
-from persona.core.quality.base import MetricCategory, QualityMetric
+from persona.core.quality.base import QualityMetric
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 

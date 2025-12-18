@@ -4,17 +4,18 @@ Provides parallel, sequential, and consensus execution modes
 for generating personas with multiple LLM models.
 """
 
+import time
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
 from pathlib import Path
-import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any
 
 
 class ExecutionMode(Enum):
     """Execution mode for multi-model generation."""
+
     PARALLEL = "parallel"
     SEQUENTIAL = "sequential"
     CONSENSUS = "consensus"
@@ -30,6 +31,7 @@ class StrategyConfig:
         pass_context: Whether to pass context between models (sequential).
         consensus_threshold: Similarity threshold for consensus.
     """
+
     timeout_seconds: int = 300
     max_workers: int = 4
     pass_context: bool = True
@@ -144,14 +146,16 @@ class ExecutionStrategy(ABC):
         personas = []
         context_suffix = " (with context)" if context else ""
         for i in range(count):
-            personas.append({
-                "id": f"persona-{i+1}",
-                "name": f"Persona {i+1} ({model.model}){context_suffix}",
-                "role": "User",
-                "goals": ["Goal 1", "Goal 2"],
-                "frustrations": ["Frustration 1"],
-                "model_source": f"{model.provider}:{model.model}",
-            })
+            personas.append(
+                {
+                    "id": f"persona-{i+1}",
+                    "name": f"Persona {i+1} ({model.model}){context_suffix}",
+                    "role": "User",
+                    "goals": ["Goal 1", "Goal 2"],
+                    "frustrations": ["Frustration 1"],
+                    "model_source": f"{model.provider}:{model.model}",
+                }
+            )
         return personas
 
     def _estimate_cost(self, model, tokens_input: int, tokens_output: int) -> float:
@@ -202,7 +206,9 @@ class ParallelStrategy(ExecutionStrategy):
         start_time = time.time()
         model_outputs = []
 
-        with ThreadPoolExecutor(max_workers=min(len(models), self.max_workers)) as executor:
+        with ThreadPoolExecutor(
+            max_workers=min(len(models), self.max_workers)
+        ) as executor:
             futures = {
                 executor.submit(
                     self._generate_single,
@@ -222,10 +228,13 @@ class ParallelStrategy(ExecutionStrategy):
                 except Exception as e:
                     model = futures[future]
                     from persona.core.multimodel.generator import ModelOutput
-                    model_outputs.append(ModelOutput(
-                        model_spec=model,
-                        error=str(e),
-                    ))
+
+                    model_outputs.append(
+                        ModelOutput(
+                            model_spec=model,
+                            error=str(e),
+                        )
+                    )
 
         total_latency = (time.time() - start_time) * 1000
 
@@ -305,7 +314,9 @@ class SequentialStrategy(ExecutionStrategy):
         """Format personas as context for next model."""
         lines = ["Previous model generated these personas:"]
         for p in personas:
-            lines.append(f"- {p.get('name', 'Unknown')}: {p.get('role', 'Unknown role')}")
+            lines.append(
+                f"- {p.get('name', 'Unknown')}: {p.get('role', 'Unknown role')}"
+            )
         return "\n".join(lines)
 
 
@@ -400,7 +411,9 @@ class ConsensusStrategy(ExecutionStrategy):
             # Merge personas in group
             merged = self._merge_personas(group)
             merged["consensus_count"] = len(group)
-            merged["consensus_confidence"] = min(1.0, len(group) / len(all_personas) * 2)
+            merged["consensus_confidence"] = min(
+                1.0, len(group) / len(all_personas) * 2
+            )
             consolidated.append(merged)
 
         return consolidated

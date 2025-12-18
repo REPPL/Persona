@@ -9,10 +9,13 @@ persona generate    Generate personas from data
 persona check       Verify installation and configuration
 persona preview     Preview data before processing
 persona validate    Validate personas against source
-persona compare     Compare persona similarity
+persona export      Export personas to various formats
 persona project     Manage Persona projects
+persona config      Manage configuration
 persona help        Show help for any command
 ```
+
+*Note: Additional commands (`experiment`, `variant`, `lineage`, `compare`, `cluster`, `refine`, etc.) are available but hidden from the main help. Use `persona <command> --help` to see them.*
 
 ## Command Groups
 
@@ -57,6 +60,10 @@ Manage experiments and projects.
 | `experiment sources` | List data sources for an experiment |
 | `experiment record-run` | Record a generation run in history |
 | `experiment clear-history` | Clear run history for an experiment |
+| `experiment runs` | Show tracked generation runs for an experiment |
+| `experiment register` | Register an external experiment in the global registry |
+| `experiment unregister` | Remove an experiment from the global registry |
+| `experiment registry` | List all globally registered experiments |
 
 ### Project Commands
 
@@ -131,15 +138,32 @@ persona generate [OPTIONS]
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--from`, `-f` | PATH | Required | Data source (file, folder, or experiment name) |
+| `--from`, `-f` | PATH | Required | Data source (file, folder, URL, or experiment name) |
 | `--output`, `-o` | PATH | ./outputs | Output directory |
 | `--count`, `-n` | INT | 3 | Number of personas |
-| `--provider`, `-p` | STRING | anthropic | LLM provider (anthropic, openai, gemini) |
+| `--provider`, `-p` | STRING | anthropic | LLM provider (anthropic, openai, gemini, ollama) |
 | `--model`, `-m` | STRING | Provider default | Model name |
 | `--workflow`, `-w` | STRING | default | Workflow to use (default, research, quick) |
 | `--experiment`, `-e` | STRING | - | Experiment name to save results under |
 | `--dry-run` | FLAG | False | Preview without calling LLM |
-| `--no-progress` | FLAG | False | Disable progress bar |
+| `--no-progress` | FLAG | False | Disable progress bar and streaming output |
+| `--anonymise` | FLAG | False | Anonymise PII in data before generation |
+| `--anonymise-strategy` | STRING | redact | Anonymisation strategy: redact, replace, hash |
+| `--hybrid` | FLAG | False | Use hybrid local/frontier pipeline for cost-efficient generation |
+| `--local-model` | STRING | qwen2.5:7b | Local model for hybrid mode |
+| `--frontier-provider` | STRING | - | Frontier provider for hybrid refinement (anthropic, openai, gemini) |
+| `--frontier-model` | STRING | - | Frontier model for hybrid refinement |
+| `--quality-threshold` | FLOAT | 0.7 | Minimum quality score to skip frontier refinement (0.0-1.0) |
+| `--max-cost` | FLOAT | - | Maximum budget in USD for hybrid generation |
+| `--no-frontier` | FLAG | False | Use local-only mode in hybrid pipeline (no frontier refinement) |
+| `--verify` | FLAG | False | Run multi-model verification after generation |
+| `--verify-models` | STRING | claude,gpt-4o,gemini | Comma-separated models for verification |
+| `--verify-threshold` | FLOAT | 0.7 | Consistency threshold for verification (0-1) |
+| `--local` | FLAG | False | Use all available local models (via Ollama) |
+| `--cloud` | FLAG | False | Use cloud/frontier providers (default behaviour) |
+| `--all` | FLAG | False | Use all available models (local and cloud) |
+| `--accept-terms` | FLAG | False | Accept terms for URL data sources (required for remote URLs) |
+| `--no-cache` | FLAG | False | Bypass cache and fetch fresh data from URL sources |
 
 **Smart Path Resolution:**
 
@@ -1145,6 +1169,64 @@ persona export ./outputs/personas.json --format figma
 # Preview export without writing
 persona export ./outputs/personas.json --format csv --preview
 ```
+
+---
+
+## Hidden/Advanced Commands
+
+The following commands are available but hidden from the main help output. They provide advanced functionality for power users and researchers.
+
+### Analysis Commands
+
+| Command | Description |
+|---------|-------------|
+| `compare <path>` | Compare personas to identify similarities and differences |
+| `cluster <path>` | Cluster personas to identify similar groups and suggest consolidation |
+| `refine <path>` | Interactively refine personas with natural language instructions |
+
+### Quality & Validation Commands
+
+| Command | Description |
+|---------|-------------|
+| `score <path>` | Score persona quality using multiple metrics |
+| `evaluate <path>` | Evaluate personas using LLM-as-judge methodology |
+| `academic <path>` | Run academic validation metrics (BERTScore, ROUGE, etc.) |
+| `faithfulness <path>` | Check persona faithfulness to source data |
+| `fidelity <path>` | Score prompt fidelity and constraint adherence |
+| `diversity <path>` | Analyse lexical diversity across personas |
+| `bias <path>` | Detect bias and stereotypes in personas |
+| `verify <path>` | Run multi-model verification |
+
+### Data & Privacy Commands
+
+| Command | Description |
+|---------|-------------|
+| `privacy scan <path>` | Scan data for PII |
+| `privacy anonymise <path>` | Anonymise PII in data files |
+| `synthesise <path>` | Generate synthetic research data |
+
+### Infrastructure Commands
+
+| Command | Description |
+|---------|-------------|
+| `audit list` | List audit trail records |
+| `audit show <id>` | Show audit record details |
+| `audit export` | Export audit records |
+| `serve` | Start the REST API server |
+| `dashboard` | Launch the TUI dashboard |
+
+### Configuration Discovery Commands
+
+| Command | Description |
+|---------|-------------|
+| `vendor list` | List available vendors |
+| `vendor discover` | Discover configured vendors |
+| `model list` | List available models |
+| `model discover` | Discover available models |
+| `template list` | List available templates |
+| `workflow list` | List available workflows |
+| `plugin list` | List available plugins |
+| `script generate` | Generate conversation scripts |
 
 ---
 

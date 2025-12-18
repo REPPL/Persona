@@ -1,7 +1,6 @@
 """Tests for PII anonymiser."""
 
 import pytest
-
 from persona.core.privacy.anonymiser import PIIAnonymiser
 from persona.core.privacy.entities import AnonymisationStrategy, PIIEntity
 
@@ -113,9 +112,7 @@ class TestPIIAnonymiserWithPresidio:
         """Test anonymising with no entities."""
         anonymiser = PIIAnonymiser()
 
-        result = anonymiser.anonymise(
-            sample_text, [], AnonymisationStrategy.REDACT
-        )
+        result = anonymiser.anonymise(sample_text, [], AnonymisationStrategy.REDACT)
 
         # Text should be unchanged
         assert result.text == sample_text
@@ -220,7 +217,9 @@ class TestPIIAnonymiserWithPresidio:
         text = "John at john@ex.com"
         entities = [
             PIIEntity(type="PERSON", text="John", start=0, end=4, score=0.9),
-            PIIEntity(type="EMAIL_ADDRESS", text="john@ex.com", start=8, end=19, score=1.0),
+            PIIEntity(
+                type="EMAIL_ADDRESS", text="john@ex.com", start=8, end=19, score=1.0
+            ),
         ]
 
         anonymiser = PIIAnonymiser()

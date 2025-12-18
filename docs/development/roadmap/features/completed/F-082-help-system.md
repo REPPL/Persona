@@ -111,4 +111,3 @@ $ persona generate --help
 ---
 
 **Status**: Complete
-

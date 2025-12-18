@@ -12,7 +12,11 @@ from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.generation.pipeline import GenerationResult
-from persona.core.output.formatters import JSONFormatter, MarkdownFormatter, TextFormatter
+from persona.core.output.formatters import (
+    JSONFormatter,
+    MarkdownFormatter,
+    TextFormatter,
+)
 
 
 class OutputManager:
@@ -175,10 +179,13 @@ class OutputManager:
         if not self._base_dir.exists():
             return []
 
-        return sorted([
-            d for d in self._base_dir.iterdir()
-            if d.is_dir() and (d / "metadata.json").exists()
-        ])
+        return sorted(
+            [
+                d
+                for d in self._base_dir.iterdir()
+                if d.is_dir() and (d / "metadata.json").exists()
+            ]
+        )
 
     def get_latest_output(self) -> Path | None:
         """

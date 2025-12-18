@@ -2,9 +2,9 @@
 Tests for prompt templating functionality (F-003).
 """
 
-import pytest
 from pathlib import Path
 
+import pytest
 from persona.core.prompts import PromptTemplate, Workflow, WorkflowLoader
 from persona.core.prompts.template import DEFAULT_PERSONA_TEMPLATE
 
@@ -44,9 +44,7 @@ class TestPromptTemplate:
 
     def test_render_loop(self):
         """Test rendering with loop."""
-        template = PromptTemplate(
-            "{% for item in items %}- {{ item }}\n{% endfor %}"
-        )
+        template = PromptTemplate("{% for item in items %}- {{ item }}\n{% endfor %}")
         result = template.render(items=["a", "b", "c"])
         assert "- a" in result
         assert "- b" in result
@@ -198,14 +196,16 @@ class TestWorkflowLoader:
     def test_load_from_file(self, tmp_path: Path):
         """Test loading workflow from YAML file."""
         workflow_file = tmp_path / "workflow.yaml"
-        workflow_file.write_text("""
+        workflow_file.write_text(
+            """
 name: custom
 description: Custom workflow
 provider: openai
 temperature: 0.5
 variables:
   complexity: simple
-""")
+"""
+        )
 
         loader = WorkflowLoader()
         workflow = loader.load(workflow_file)
@@ -237,11 +237,13 @@ variables:
     def test_create_from_dict(self):
         """Test creating workflow from dictionary."""
         loader = WorkflowLoader()
-        workflow = loader.create_from_dict({
-            "name": "dict-workflow",
-            "provider": "gemini",
-            "max_tokens": 2000,
-        })
+        workflow = loader.create_from_dict(
+            {
+                "name": "dict-workflow",
+                "provider": "gemini",
+                "max_tokens": 2000,
+            }
+        )
 
         assert workflow.name == "dict-workflow"
         assert workflow.provider == "gemini"

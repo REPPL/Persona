@@ -4,10 +4,10 @@ Compares personas across generations, calculates similarity,
 and provides merge recommendations.
 """
 
-from dataclasses import dataclass, field
-from typing import Any
 import re
 from collections import Counter
+from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -23,6 +23,7 @@ class PersonaSimilarity:
         merge_recommendation: Whether merging is recommended.
         merge_reasoning: Reasoning for recommendation.
     """
+
     persona_a_id: str
     persona_b_id: str
     similarity_score: float
@@ -54,6 +55,7 @@ class MergeRecommendation:
         confidence: Confidence in the merge (0.0 to 1.0).
         reasoning: Explanation of the merge decision.
     """
+
     personas_to_merge: list[str]
     merged_persona: dict[str, Any]
     confidence: float
@@ -80,6 +82,7 @@ class ConsolidationMap:
         unique_personas: Personas with no close matches.
         consolidated_count: Number of personas after consolidation.
     """
+
     similarities: list[PersonaSimilarity] = field(default_factory=list)
     clusters: list[list[str]] = field(default_factory=list)
     merge_recommendations: list[MergeRecommendation] = field(default_factory=list)
@@ -287,8 +290,7 @@ class ConsolidationMapper:
         merge_rec = overall >= self.merge_threshold
         if merge_rec:
             reasoning = (
-                f"High similarity ({overall:.0%}) - "
-                f"matching: {', '.join(matching)}"
+                f"High similarity ({overall:.0%}) - " f"matching: {', '.join(matching)}"
             )
         else:
             reasoning = (
@@ -326,9 +328,7 @@ class ConsolidationMapper:
 
         # Use first persona as base
         merged = dict(personas[0])
-        merged["id"] = "merged-" + "-".join(
-            p.get("id", "x")[:8] for p in personas
-        )
+        merged["id"] = "merged-" + "-".join(p.get("id", "x")[:8] for p in personas)
 
         # Merge name (keep first)
         # merged["name"] stays as is
@@ -363,7 +363,7 @@ class ConsolidationMapper:
         """Calculate similarities between all persona pairs."""
         similarities = []
         for i, p1 in enumerate(personas):
-            for p2 in personas[i + 1:]:
+            for p2 in personas[i + 1 :]:
                 sim = self.calculate_similarity(p1, p2)
                 similarities.append(sim)
         return similarities
@@ -420,12 +420,14 @@ class ConsolidationMapper:
 
                 merged = self.merge_personas([p_a, p_b])
 
-                recommendations.append(MergeRecommendation(
-                    personas_to_merge=[sim.persona_a_id, sim.persona_b_id],
-                    merged_persona=merged,
-                    confidence=sim.similarity_score,
-                    reasoning=sim.merge_reasoning,
-                ))
+                recommendations.append(
+                    MergeRecommendation(
+                        personas_to_merge=[sim.persona_a_id, sim.persona_b_id],
+                        merged_persona=merged,
+                        confidence=sim.similarity_score,
+                        reasoning=sim.merge_reasoning,
+                    )
+                )
 
         return recommendations
 

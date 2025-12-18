@@ -6,14 +6,13 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from persona.core.config.model import (
+    ModelCapabilities,
     ModelConfig,
     ModelLoader,
     ModelPricing,
-    ModelCapabilities,
-    get_builtin_models,
     get_all_models,
+    get_builtin_models,
 )
 
 
@@ -135,16 +134,19 @@ class TestModelConfigYaml:
     def test_from_yaml(self):
         """Test loading config from YAML file."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            yaml.safe_dump({
-                "id": "test-model",
-                "name": "Test Model",
-                "provider": "openai",
-                "context_window": 128000,
-                "pricing": {
-                    "input": 3.0,
-                    "output": 15.0,
+            yaml.safe_dump(
+                {
+                    "id": "test-model",
+                    "name": "Test Model",
+                    "provider": "openai",
+                    "context_window": 128000,
+                    "pricing": {
+                        "input": 3.0,
+                        "output": 15.0,
+                    },
                 },
-            }, f)
+                f,
+            )
             f.flush()
 
             config = ModelConfig.from_yaml(Path(f.name))
@@ -253,9 +255,9 @@ class TestModelLoader:
             ModelConfig(id="openai-model", name="OpenAI", provider="openai").to_yaml(
                 user_dir / "openai-model.yaml"
             )
-            ModelConfig(id="anthropic-model", name="Anthropic", provider="anthropic").to_yaml(
-                user_dir / "anthropic-model.yaml"
-            )
+            ModelConfig(
+                id="anthropic-model", name="Anthropic", provider="anthropic"
+            ).to_yaml(user_dir / "anthropic-model.yaml")
 
             loader = ModelLoader(
                 user_dir=user_dir,
@@ -456,7 +458,9 @@ class TestGetAllModels:
                 models = get_all_models(include_custom=True)
                 # Custom models should be included
                 assert "custom-provider" in models or any(
-                    "custom-model" in m for provider_models in models.values() for m in provider_models
+                    "custom-model" in m
+                    for provider_models in models.values()
+                    for m in provider_models
                 )
             finally:
                 ModelLoader.DEFAULT_USER_DIR = original_user_dir

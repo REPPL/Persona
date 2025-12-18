@@ -237,10 +237,7 @@ class PluginManager:
                 return 0
             return len(self._registries[plugin_type].list_names())
 
-        return sum(
-            len(registry.list_names())
-            for registry in self._registries.values()
-        )
+        return sum(len(registry.list_names()) for registry in self._registries.values())
 
     def get_summary(self) -> dict[str, Any]:
         """

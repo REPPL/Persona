@@ -7,7 +7,7 @@ and request queueing.
 
 import asyncio
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 
@@ -356,6 +356,7 @@ class SyncRateLimiter:
         self._configs = configs or DEFAULT_RATE_LIMITS.copy()
         self._state: dict[str, RateLimitState] = {}
         import threading
+
         self._locks: dict[str, threading.Lock] = {}
 
     def get_config(self, provider: str) -> RateLimitConfig:
@@ -375,6 +376,7 @@ class SyncRateLimiter:
     def _get_lock(self, provider: str):
         """Get or create lock for a provider."""
         import threading
+
         if provider not in self._locks:
             self._locks[provider] = threading.Lock()
         return self._locks[provider]

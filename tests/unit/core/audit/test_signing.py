@@ -1,7 +1,6 @@
 """Tests for audit record signing (F-123)."""
 
 import pytest
-
 from persona.core.audit.models import (
     AuditRecord,
     GenerationRecord,
@@ -65,10 +64,10 @@ class TestSigning:
         """Test different records produce different signatures."""
         session = SessionInfo(user="test", platform="Linux", python_version="3.12.0")
         input_rec = InputRecord(data_hash="abc", record_count=1)
-        generation = GenerationRecord(
-            provider="test", model="test", prompt_hash="def"
+        generation = GenerationRecord(provider="test", model="test", prompt_hash="def")
+        output = OutputRecord(
+            personas_hash="ghi", persona_count=1, generation_time_ms=1
         )
-        output = OutputRecord(personas_hash="ghi", persona_count=1, generation_time_ms=1)
 
         record1 = AuditRecord(
             audit_id="test-1",

@@ -4,10 +4,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from persona.core.config.template import (
     TemplateLoader,
-    TemplateInfo,
     TemplateMetadata,
     get_builtin_templates,
 )

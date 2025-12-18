@@ -2,10 +2,10 @@
 Tests for experiment management functionality (F-006).
 """
 
-import pytest
 from pathlib import Path
 
-from persona.core.experiments import ExperimentManager, Experiment
+import pytest
+from persona.core.experiments import Experiment, ExperimentManager
 from persona.core.experiments.manager import ExperimentConfig
 
 

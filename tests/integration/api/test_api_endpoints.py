@@ -4,7 +4,6 @@ Integration tests for API endpoints.
 
 import pytest
 from fastapi.testclient import TestClient
-
 from persona.api.app import create_app
 from persona.api.config import APIConfig
 

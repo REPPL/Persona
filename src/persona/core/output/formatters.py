@@ -7,7 +7,6 @@ various output formats (JSON, Markdown, etc.).
 
 import json
 from abc import ABC, abstractmethod
-from typing import Any
 
 from persona.core.generation.parser import Persona
 
@@ -108,7 +107,7 @@ class MarkdownFormatter(BaseFormatter):
             lines.append("## Quotes")
             lines.append("")
             for quote in persona.quotes:
-                lines.append(f"> \"{quote}\"")
+                lines.append(f'> "{quote}"')
                 lines.append("")
 
         # Additional fields

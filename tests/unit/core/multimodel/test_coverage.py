@@ -1,12 +1,11 @@
 """Tests for coverage analysis (F-068)."""
 
-import pytest
 
 from persona.core.multimodel.coverage import (
     CoverageAnalyser,
     CoverageAnalysis,
-    ThemeCoverage,
     SourceUtilisation,
+    ThemeCoverage,
     analyse_coverage,
 )
 
@@ -221,14 +220,26 @@ class TestCoverageAnalyser:
         """Identifies persona overlaps."""
         analyser = CoverageAnalyser()
         personas = [
-            {"id": "1", "role": "Developer", "goals": ["Goal A"], "frustrations": ["Frust A"]},
-            {"id": "2", "role": "Developer", "goals": ["Goal A"], "frustrations": ["Frust A"]},
+            {
+                "id": "1",
+                "role": "Developer",
+                "goals": ["Goal A"],
+                "frustrations": ["Frust A"],
+            },
+            {
+                "id": "2",
+                "role": "Developer",
+                "goals": ["Goal A"],
+                "frustrations": ["Frust A"],
+            },
         ]
 
         analysis = analyser.analyse(personas=personas)
 
         # These personas should have high overlap
-        assert len(analysis.overlaps) >= 0  # May or may not detect depending on threshold
+        assert (
+            len(analysis.overlaps) >= 0
+        )  # May or may not detect depending on threshold
 
     def test_analyse_generates_suggestions(self):
         """Generates actionable suggestions."""

@@ -2,16 +2,15 @@
 Validate command for checking persona quality.
 """
 
-from pathlib import Path
-from typing import Annotated, Optional
 import json
+from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.validation import PersonaValidator, ValidationLevel
-from persona.core.output import OutputManager
 from persona.ui.console import get_console
 
 validate_app = typer.Typer(
@@ -70,22 +69,32 @@ def validate(
         personas = _load_personas(persona_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "validate",
-                "success": False,
-                "error": str(e),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "validate",
+                        "success": False,
+                        "error": str(e),
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error loading personas:[/red] {e}")
         raise typer.Exit(1)
 
     if not personas:
         if json_output:
-            print(json.dumps({
-                "command": "validate",
-                "success": False,
-                "error": "No personas found",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "validate",
+                        "success": False,
+                        "error": "No personas found",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print("[yellow]No personas found to validate.[/yellow]")
         raise typer.Exit(1)
@@ -125,10 +134,12 @@ def validate(
         return
 
     # Rich output mode
-    console.print(Panel.fit(
-        f"[bold]Persona Validation[/bold]\n{persona_path}",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Validation[/bold]\n{persona_path}",
+            border_style="blue",
+        )
+    )
 
     # Summary
     summary_table = Table(show_header=False, box=None)
@@ -137,20 +148,20 @@ def validate(
 
     summary_table.add_row("Personas", str(total))
     summary_table.add_row(
-        "Passed",
-        f"[green]{passed}[/green]" if passed == total else str(passed)
+        "Passed", f"[green]{passed}[/green]" if passed == total else str(passed)
     )
     summary_table.add_row(
-        "Failed",
-        f"[red]{failed}[/red]" if failed > 0 else str(failed)
+        "Failed", f"[red]{failed}[/red]" if failed > 0 else str(failed)
     )
     summary_table.add_row(
         "Errors",
-        f"[red]{total_errors}[/red]" if total_errors > 0 else str(total_errors)
+        f"[red]{total_errors}[/red]" if total_errors > 0 else str(total_errors),
     )
     summary_table.add_row(
         "Warnings",
-        f"[yellow]{total_warnings}[/yellow]" if total_warnings > 0 else str(total_warnings)
+        f"[yellow]{total_warnings}[/yellow]"
+        if total_warnings > 0
+        else str(total_warnings),
     )
     summary_table.add_row("Average score", f"{avg_score:.0f}/100")
     summary_table.add_row("Strict mode", "Yes" if strict else "No")
@@ -228,10 +239,14 @@ def validate(
 
     # Final status
     if failed > 0:
-        console.print(f"\n[red]Validation failed: {failed} persona(s) have issues.[/red]")
+        console.print(
+            f"\n[red]Validation failed: {failed} persona(s) have issues.[/red]"
+        )
         raise typer.Exit(1)
     elif total_warnings > 0:
-        console.print(f"\n[yellow]Validation passed with {total_warnings} warning(s).[/yellow]")
+        console.print(
+            f"\n[yellow]Validation passed with {total_warnings} warning(s).[/yellow]"
+        )
     else:
         console.print("\n[green]All personas passed validation.[/green]")
 

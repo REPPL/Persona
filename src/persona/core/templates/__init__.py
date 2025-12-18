@@ -6,10 +6,10 @@ in different domain-specific formats.
 """
 
 from persona.core.templates.manager import (
-    TemplateManager,
     PersonaTemplate,
-    TemplateField,
     TemplateCategory,
+    TemplateField,
+    TemplateManager,
 )
 
 __all__ = [

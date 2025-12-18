@@ -2,14 +2,13 @@
 Unit tests for evaluation prompts.
 """
 
-import json
 
 from persona.core.evaluation.criteria import EvaluationCriteria
 from persona.core.evaluation.prompts import (
     EVALUATION_SYSTEM_PROMPT,
-    build_single_evaluation_prompt,
     build_batch_evaluation_prompt,
     build_distinctiveness_prompt,
+    build_single_evaluation_prompt,
 )
 
 

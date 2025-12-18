@@ -105,4 +105,3 @@ outputs/2025-12-14_103000/
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
 - [Persona Schema](../../../../reference/persona-schema.md)
-

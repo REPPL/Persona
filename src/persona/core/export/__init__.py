@@ -6,9 +6,9 @@ to various design tool formats.
 """
 
 from persona.core.export.exporter import (
-    PersonaExporter,
     ExportFormat,
     ExportResult,
+    PersonaExporter,
 )
 
 __all__ = [

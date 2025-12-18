@@ -6,16 +6,16 @@ for discovering data files.
 """
 
 import fnmatch
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Iterator
 
 
 class FileOrder(Enum):
     """File ordering options."""
-    
+
     ALPHABETICAL = "alphabetical"
     MODIFIED_ASC = "modified_asc"
     MODIFIED_DESC = "modified_desc"
@@ -26,13 +26,13 @@ class FileOrder(Enum):
 @dataclass
 class FileInfo:
     """Information about a discovered file."""
-    
+
     path: Path
     size_bytes: int
     modified: datetime
     format: str
     relative_path: str = ""
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         return {
@@ -47,13 +47,13 @@ class FileInfo:
 @dataclass
 class ScanResult:
     """Result of a folder scan."""
-    
+
     files: list[FileInfo] = field(default_factory=list)
     total_files: int = 0
     total_size_bytes: int = 0
     excluded_count: int = 0
     scan_path: Path | None = None
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         return {
@@ -68,21 +68,27 @@ class ScanResult:
 class FolderScanner:
     """
     Scans folders for data files.
-    
+
     Supports recursive scanning, glob patterns, and exclusion patterns.
-    
+
     Example:
         >>> scanner = FolderScanner()
         >>> result = scanner.scan("./interviews/")
         >>> for file in result.files:
         ...     print(file.path)
     """
-    
+
     # Supported file extensions
     SUPPORTED_EXTENSIONS: set[str] = {
-        ".csv", ".json", ".md", ".markdown", ".txt", ".yaml", ".yml",
+        ".csv",
+        ".json",
+        ".md",
+        ".markdown",
+        ".txt",
+        ".yaml",
+        ".yml",
     }
-    
+
     def __init__(
         self,
         extensions: set[str] | None = None,
@@ -91,7 +97,7 @@ class FolderScanner:
     ):
         """
         Initialise the scanner.
-        
+
         Args:
             extensions: Supported file extensions. Defaults to common data formats.
             exclude_patterns: Glob patterns for files to exclude.
@@ -100,7 +106,7 @@ class FolderScanner:
         self._extensions = extensions or self.SUPPORTED_EXTENSIONS
         self._exclude_patterns = exclude_patterns or []
         self._order = order
-    
+
     def scan(
         self,
         path: str | Path,
@@ -109,18 +115,18 @@ class FolderScanner:
     ) -> ScanResult:
         """
         Scan a folder for data files.
-        
+
         Args:
             path: Folder path or glob pattern.
             recursive: Whether to scan subdirectories.
             pattern: Optional glob pattern to filter files.
-        
+
         Returns:
             ScanResult with discovered files.
         """
         path = Path(path)
         result = ScanResult(scan_path=path)
-        
+
         # Handle glob patterns in path
         if "*" in str(path) or "?" in str(path):
             files = self._scan_glob(path)
@@ -133,27 +139,27 @@ class FolderScanner:
         else:
             # Path doesn't exist
             return result
-        
+
         # Process discovered files
         excluded = 0
         for file_path in files:
             if self._is_excluded(file_path):
                 excluded += 1
                 continue
-            
+
             file_info = self._create_file_info(file_path, path)
             result.files.append(file_info)
-        
+
         # Sort files
         result.files = self._sort_files(result.files)
-        
+
         # Calculate totals
         result.total_files = len(result.files)
         result.total_size_bytes = sum(f.size_bytes for f in result.files)
         result.excluded_count = excluded
-        
+
         return result
-    
+
     def scan_multiple(
         self,
         paths: list[str | Path],
@@ -161,17 +167,17 @@ class FolderScanner:
     ) -> ScanResult:
         """
         Scan multiple folders.
-        
+
         Args:
             paths: List of folder paths.
             recursive: Whether to scan subdirectories.
-        
+
         Returns:
             Combined ScanResult.
         """
         combined = ScanResult()
         seen_paths: set[Path] = set()
-        
+
         for path in paths:
             result = self.scan(path, recursive)
             for file_info in result.files:
@@ -179,21 +185,21 @@ class FolderScanner:
                     combined.files.append(file_info)
                     seen_paths.add(file_info.path)
             combined.excluded_count += result.excluded_count
-        
+
         combined.files = self._sort_files(combined.files)
         combined.total_files = len(combined.files)
         combined.total_size_bytes = sum(f.size_bytes for f in combined.files)
-        
+
         return combined
-    
+
     def add_exclude_pattern(self, pattern: str) -> None:
         """Add an exclusion pattern."""
         self._exclude_patterns.append(pattern)
-    
+
     def set_order(self, order: FileOrder) -> None:
         """Set file ordering."""
         self._order = order
-    
+
     def _scan_directory(
         self,
         directory: Path,
@@ -211,7 +217,7 @@ class FolderScanner:
             for file_path in directory.glob(glob_pattern):
                 if file_path.is_file() and self._is_supported(file_path):
                     yield file_path
-    
+
     def _scan_glob(self, pattern: Path) -> Iterator[Path]:
         """Scan using a glob pattern."""
         # Get the base directory (first part without glob chars)
@@ -221,24 +227,24 @@ class FolderScanner:
             if "*" in part or "?" in part:
                 break
             base_parts.append(part)
-        
+
         if base_parts:
             base_dir = Path(*base_parts)
         else:
             base_dir = Path(".")
-        
+
         # Build the remaining glob pattern
         remaining = str(pattern).replace(str(base_dir), "").lstrip("/\\")
-        
+
         if base_dir.exists():
             for file_path in base_dir.glob(remaining):
                 if file_path.is_file() and self._is_supported(file_path):
                     yield file_path
-    
+
     def _is_supported(self, path: Path) -> bool:
         """Check if file extension is supported."""
         return path.suffix.lower() in self._extensions
-    
+
     def _is_excluded(self, path: Path) -> bool:
         """Check if file matches exclusion patterns."""
         path_str = str(path)
@@ -248,11 +254,11 @@ class FolderScanner:
             if fnmatch.fnmatch(path.name, pattern):
                 return True
         return False
-    
+
     def _create_file_info(self, path: Path, base_path: Path) -> FileInfo:
         """Create FileInfo from a path."""
         stat = path.stat()
-        
+
         # Calculate relative path
         try:
             if base_path.is_dir():
@@ -261,7 +267,7 @@ class FolderScanner:
                 relative = path.name
         except ValueError:
             relative = path.name
-        
+
         return FileInfo(
             path=path.resolve(),
             size_bytes=stat.st_size,
@@ -269,7 +275,7 @@ class FolderScanner:
             format=self._detect_format(path),
             relative_path=str(relative),
         )
-    
+
     def _detect_format(self, path: Path) -> str:
         """Detect file format from extension."""
         ext = path.suffix.lower()
@@ -283,7 +289,7 @@ class FolderScanner:
             ".yml": "yaml",
         }
         return format_map.get(ext, "unknown")
-    
+
     def _sort_files(self, files: list[FileInfo]) -> list[FileInfo]:
         """Sort files according to configured order."""
         if self._order == FileOrder.ALPHABETICAL:
@@ -306,12 +312,12 @@ def scan_folder(
 ) -> ScanResult:
     """
     Convenience function to scan a folder.
-    
+
     Args:
         path: Folder path.
         recursive: Whether to scan subdirectories.
         exclude: Patterns to exclude.
-    
+
     Returns:
         ScanResult with discovered files.
     """

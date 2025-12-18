@@ -64,4 +64,3 @@ effective_date: 2024-02-29
 - [F-007: Cost Estimation](F-007-cost-estimation.md)
 - [ADR-0010: Cost Estimation](../../../decisions/adrs/ADR-0010-cost-estimation.md)
 - [Model Cards](../../../../reference/model-cards.md)
-

@@ -7,7 +7,6 @@ descriptions of personas, suitable for presentations and empathy-building.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.output.registry import (
@@ -111,10 +110,9 @@ class NarrativeFormatter(BaseFormatterV2):
 
         # What drives them (goals and motivations)
         if self._config.include_what_drives:
-            if (
-                effective_sections.should_include(OutputSection.GOALS)
-                or effective_sections.should_include(OutputSection.MOTIVATIONS)
-            ):
+            if effective_sections.should_include(
+                OutputSection.GOALS
+            ) or effective_sections.should_include(OutputSection.MOTIVATIONS):
                 drives_narrative = self._format_what_drives(persona, effective_sections)
                 if drives_narrative:
                     lines.append(drives_narrative)
@@ -130,7 +128,10 @@ class NarrativeFormatter(BaseFormatterV2):
 
         # Quotes
         if self._config.include_quotes:
-            if effective_sections.should_include(OutputSection.QUOTES) and persona.quotes:
+            if (
+                effective_sections.should_include(OutputSection.QUOTES)
+                and persona.quotes
+            ):
                 quotes_narrative = self._format_quotes(persona)
                 if quotes_narrative:
                     lines.append(quotes_narrative)
@@ -268,7 +269,9 @@ class NarrativeFormatter(BaseFormatterV2):
                 parts.append(f"{goals_intro}{goal_list}.")
 
         # Motivations (from additional fields)
-        motivations = persona.additional.get("motivations", []) if persona.additional else []
+        motivations = (
+            persona.additional.get("motivations", []) if persona.additional else []
+        )
         if sections.should_include(OutputSection.MOTIVATIONS) and motivations:
             if self._config.perspective == Perspective.FIRST_PERSON:
                 mot_intro = "I'm motivated by "
@@ -325,7 +328,10 @@ class NarrativeFormatter(BaseFormatterV2):
             return f"{items[0].lower()} and {items[1].lower()}"
 
         # Oxford comma style
-        return ", ".join(item.lower() for item in items[:-1]) + f", and {items[-1].lower()}"
+        return (
+            ", ".join(item.lower() for item in items[:-1])
+            + f", and {items[-1].lower()}"
+        )
 
 
 # Register the formatter

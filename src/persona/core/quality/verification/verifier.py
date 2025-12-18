@@ -9,12 +9,10 @@ import asyncio
 from pathlib import Path
 from typing import Any
 
-from persona.core.generation.parser import Persona
 from persona.core.multimodel.generator import ModelSpec
 from persona.core.quality.verification.consistency import ConsistencyChecker
 from persona.core.quality.verification.dispatcher import (
     ModelDispatcher,
-    ModelGenerationResult,
 )
 from persona.core.quality.verification.models import (
     VerificationConfig,
@@ -123,9 +121,7 @@ class MultiModelVerifier:
         attribute_details = self.checker.get_attribute_details(all_personas)
 
         # Apply voting strategy
-        voting_strategy = get_voting_strategy(
-            self.config.voting_strategy
-        )
+        voting_strategy = get_voting_strategy(self.config.voting_strategy)
 
         agreed_attributes = voting_strategy.get_agreed_attributes(attribute_details)
         disputed_attributes = voting_strategy.get_disputed_attributes(attribute_details)
@@ -208,9 +204,7 @@ class MultiModelVerifier:
         attribute_details = self.checker.get_attribute_details(all_personas)
 
         # Apply voting strategy
-        voting_strategy = get_voting_strategy(
-            self.config.voting_strategy
-        )
+        voting_strategy = get_voting_strategy(self.config.voting_strategy)
 
         agreed_attributes = voting_strategy.get_agreed_attributes(attribute_details)
         disputed_attributes = voting_strategy.get_disputed_attributes(attribute_details)

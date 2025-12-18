@@ -8,16 +8,16 @@ LLMs to evaluate persona quality across multiple criteria.
 import json
 from typing import Any
 
-from persona.core.evaluation.criteria import EvaluationCriteria, DEFAULT_CRITERIA
+from persona.core.evaluation.criteria import DEFAULT_CRITERIA, EvaluationCriteria
 from persona.core.evaluation.models import (
+    BatchEvaluationResult,
     CriterionScore,
     EvaluationResult,
-    BatchEvaluationResult,
 )
 from persona.core.evaluation.prompts import (
     EVALUATION_SYSTEM_PROMPT,
-    build_single_evaluation_prompt,
     build_batch_evaluation_prompt,
+    build_single_evaluation_prompt,
 )
 from persona.core.providers import ProviderFactory
 
@@ -305,9 +305,7 @@ class PersonaJudge:
             raise ValueError("Batch response must be a JSON array")
 
         if len(data) != len(personas):
-            raise ValueError(
-                f"Expected {len(personas)} evaluations, got {len(data)}"
-            )
+            raise ValueError(f"Expected {len(personas)} evaluations, got {len(data)}")
 
         # Parse each evaluation
         results = []

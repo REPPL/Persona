@@ -5,9 +5,8 @@ This module provides utilities to estimate and track API costs across
 local and frontier LLM providers.
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, Optional
-
+from dataclasses import dataclass
+from typing import Optional
 
 # Pricing per 1M tokens (USD)
 # Sources: Provider pricing pages as of January 2025
@@ -212,7 +211,7 @@ class CostTracker:
             + self.judge_output_tokens
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Convert tracker to dictionary."""
         return {
             "local": {

@@ -10,11 +10,11 @@ from typing import Any
 import httpx
 
 from persona.core.providers.base import (
+    AuthenticationError,
     LLMProvider,
     LLMResponse,
-    AuthenticationError,
-    RateLimitError,
     ModelNotFoundError,
+    RateLimitError,
 )
 
 
@@ -170,7 +170,9 @@ class AnthropicProvider(LLMProvider):
 
         try:
             async with httpx.AsyncClient(timeout=120.0) as client:
-                response = await client.post(self.API_URL, headers=headers, json=payload)
+                response = await client.post(
+                    self.API_URL, headers=headers, json=payload
+                )
 
             if response.status_code == 401:
                 raise AuthenticationError("Invalid Anthropic API key")

@@ -1,16 +1,20 @@
 """Tests for bias detector orchestrator."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.bias.detector import BiasDetector
-from persona.core.quality.bias.models import BiasCategory, BiasConfig, BiasFinding, Severity
+from persona.core.quality.bias.models import (
+    BiasCategory,
+    BiasConfig,
+    BiasFinding,
+    Severity,
+)
 
 
 class MockLLMProvider:
     """Mock LLM provider for testing."""
 
-    def __init__(self, response='[]'):
+    def __init__(self, response="[]"):
         self.response = response
         self.calls = []
 
@@ -26,37 +30,41 @@ class TestBiasDetector:
     @pytest.fixture
     def clean_persona(self):
         """Create a clean persona."""
-        return Persona.from_dict({
-            "id": "clean-1",
-            "name": "Clean Person",
-            "demographics": {
-                "age": 30,
-                "occupation": "engineer",
-            },
-            "behaviours": ["Works systematically"],
-            "goals": ["Build great products"],
-            "pain_points": ["Time constraints"],
-        })
+        return Persona.from_dict(
+            {
+                "id": "clean-1",
+                "name": "Clean Person",
+                "demographics": {
+                    "age": 30,
+                    "occupation": "engineer",
+                },
+                "behaviours": ["Works systematically"],
+                "goals": ["Build great products"],
+                "pain_points": ["Time constraints"],
+            }
+        )
 
     @pytest.fixture
     def biased_persona(self):
         """Create a biased persona."""
-        return Persona.from_dict({
-            "id": "biased-1",
-            "name": "Biased Person",
-            "demographics": {
-                "age": 28,
-                "gender": "female",
-                "occupation": "nurse",
-            },
-            "behaviours": [
-                "Very emotional and nurturing",
-                "Technophobic and confused by computers",
-            ],
-            "goals": ["Care for others"],
-            "pain_points": ["Too sensitive for leadership"],
-            "quote": "I'm naturally caring",
-        })
+        return Persona.from_dict(
+            {
+                "id": "biased-1",
+                "name": "Biased Person",
+                "demographics": {
+                    "age": 28,
+                    "gender": "female",
+                    "occupation": "nurse",
+                },
+                "behaviours": [
+                    "Very emotional and nurturing",
+                    "Technophobic and confused by computers",
+                ],
+                "goals": ["Care for others"],
+                "pain_points": ["Too sensitive for leadership"],
+                "quote": "I'm naturally caring",
+            }
+        )
 
     def test_detector_initialization(self):
         """Test detector initialization."""
@@ -108,7 +116,7 @@ class TestBiasDetector:
     def test_analyse_with_llm_judge(self, biased_persona):
         """Test analysis with LLM judge."""
         # Mock LLM response with bias findings
-        mock_llm_response = '''[
+        mock_llm_response = """[
             {
                 "category": "gender",
                 "description": "Gender stereotype detected",
@@ -116,7 +124,7 @@ class TestBiasDetector:
                 "severity": "medium",
                 "confidence": 0.8
             }
-        ]'''
+        ]"""
 
         mock_llm = MockLLMProvider(response=mock_llm_response)
         config = BiasConfig(methods=["llm"], categories=["gender"])
@@ -238,14 +246,16 @@ class TestBiasDetector:
         config = BiasConfig(methods=["lexicon"])
         detector = BiasDetector(config)
 
-        empty_persona = Persona.from_dict({
-            "id": "empty-1",
-            "name": "Empty",
-            "demographics": {},
-            "behaviours": [],
-            "goals": [],
-            "pain_points": [],
-        })
+        empty_persona = Persona.from_dict(
+            {
+                "id": "empty-1",
+                "name": "Empty",
+                "demographics": {},
+                "behaviours": [],
+                "goals": [],
+                "pain_points": [],
+            }
+        )
 
         report = detector.analyse(empty_persona)
 

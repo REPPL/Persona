@@ -2,17 +2,17 @@
 Tests for empathy map table output functionality (F-030).
 """
 
-import pytest
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 
+import pytest
+from persona.core.data import EmpathyMap, ParticipantTypeMap
 from persona.core.output import (
+    EmpathyTableConfig,
     EmpathyTableFormatter,
     EmpathyTableRow,
-    EmpathyTableConfig,
     TableFormat,
 )
-from persona.core.data import ParticipantTypeMap, EmpathyMap
 
 
 class TestTableFormat:
@@ -188,7 +188,10 @@ class TestEmpathyTableFormatter:
 
         # Check structure
         assert "# Empathy Map" in result
-        assert "| Persona | Tasks | Feelings | Influences | Pain Points | Goals |" in result
+        assert (
+            "| Persona | Tasks | Feelings | Influences | Pain Points | Goals |"
+            in result
+        )
         assert "|---|---|---|---|---|---|" in result
 
         # Check data
@@ -452,9 +455,7 @@ class TestEmpathyTableIntegration:
         )
 
         # Convert to table rows
-        formatter = EmpathyTableFormatter(
-            EmpathyTableConfig(title="Workshop Results")
-        )
+        formatter = EmpathyTableFormatter(EmpathyTableConfig(title="Workshop Results"))
         rows = formatter.from_empathy_map(em)
 
         # Export to all formats
@@ -477,8 +478,7 @@ class TestEmpathyTableIntegration:
     def test_multiple_personas_single_table(self, tmp_path: Path):
         """Test multiple personas in single table."""
         rows = [
-            EmpathyTableRow(name=f"Persona {i}", goals=[f"Goal {i}"])
-            for i in range(5)
+            EmpathyTableRow(name=f"Persona {i}", goals=[f"Goal {i}"]) for i in range(5)
         ]
 
         formatter = EmpathyTableFormatter()

@@ -59,4 +59,3 @@ PersonaCraft research shows domain-specific templates improve persona quality. U
 - [UC-007: Customise Persona Format](../../../../use-cases/briefs/UC-007-custom-format.md)
 - [F-003: Prompt Templating](F-003-prompt-templating.md)
 - [R-008: Template-Driven Architecture](../../../../explanation/template-architecture.md)
-

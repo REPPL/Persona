@@ -3,7 +3,7 @@ Tests for example usage output (F-038).
 """
 
 import pytest
-
+from persona.core.generation.parser import Persona
 from persona.core.output.usage import (
     FeaturePrediction,
     InteractionPoint,
@@ -15,7 +15,6 @@ from persona.core.output.usage import (
     UsageScenario,
     UsageScenarioGenerator,
 )
-from persona.core.generation.parser import Persona
 
 
 @pytest.fixture
@@ -249,14 +248,20 @@ class TestUsageScenarioGenerator:
         generator = UsageScenarioGenerator()
         scenario = generator.generate(sample_persona)
         combined_insights = " ".join(scenario.key_insights)
-        assert "streamline" in combined_insights.lower() or "workflow" in combined_insights.lower()
+        assert (
+            "streamline" in combined_insights.lower()
+            or "workflow" in combined_insights.lower()
+        )
 
     def test_insights_mention_pain_points(self, sample_persona):
         """Test insights mention pain points."""
         generator = UsageScenarioGenerator()
         scenario = generator.generate(sample_persona)
         combined_insights = " ".join(scenario.key_insights)
-        assert "manual" in combined_insights.lower() or "friction" in combined_insights.lower()
+        assert (
+            "manual" in combined_insights.lower()
+            or "friction" in combined_insights.lower()
+        )
 
     def test_generate_minimal_persona(self, minimal_persona):
         """Test generating scenario for minimal persona."""
@@ -320,7 +325,9 @@ class TestUsageFormatter:
         # Should include at least one of the icons
         assert "⚠️" in result or "✨" in result or "•" in result
 
-    def test_format_multiple_separates_with_divider(self, sample_persona, minimal_persona):
+    def test_format_multiple_separates_with_divider(
+        self, sample_persona, minimal_persona
+    ):
         """Test format_multiple separates personas."""
         formatter = UsageFormatter()
         result = formatter.format_multiple([sample_persona, minimal_persona])
@@ -396,7 +403,10 @@ class TestUsageFormatterEdgeCases:
         generator = UsageScenarioGenerator()
         scenario = generator.generate(persona)
         combined_insights = " ".join(scenario.key_insights)
-        assert "overwhelm" in combined_insights.lower() or "competing" in combined_insights.lower()
+        assert (
+            "overwhelm" in combined_insights.lower()
+            or "competing" in combined_insights.lower()
+        )
 
 
 class TestUsageFormatterRegistration:

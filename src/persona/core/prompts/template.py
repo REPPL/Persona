@@ -8,7 +8,7 @@ with variable injection.
 from pathlib import Path
 from typing import Any
 
-from jinja2 import Environment, BaseLoader, TemplateError, StrictUndefined
+from jinja2 import BaseLoader, Environment, StrictUndefined, TemplateError
 
 
 class StringLoader(BaseLoader):
@@ -119,7 +119,9 @@ class PromptTemplate:
         missing = required - provided
 
         if missing:
-            raise ValueError(f"Missing required variables: {', '.join(sorted(missing))}")
+            raise ValueError(
+                f"Missing required variables: {', '.join(sorted(missing))}"
+            )
 
         return True
 

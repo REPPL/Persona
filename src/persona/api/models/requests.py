@@ -28,11 +28,19 @@ class GenerateRequest(BaseModel):
     """
 
     data: str = Field(..., description="Path or URL to data source")
-    count: Optional[int] = Field(default=3, ge=1, le=20, description="Number of personas to generate")
-    provider: Optional[str] = Field(default=None, description="LLM provider (anthropic, openai, gemini)")
+    count: Optional[int] = Field(
+        default=3, ge=1, le=20, description="Number of personas to generate"
+    )
+    provider: Optional[str] = Field(
+        default=None, description="LLM provider (anthropic, openai, gemini)"
+    )
     model: Optional[str] = Field(default=None, description="Model identifier")
-    config: Optional[dict[str, Any]] = Field(default=None, description="Generation configuration")
-    webhook_url: Optional[str] = Field(default=None, description="URL for completion webhook")
+    config: Optional[dict[str, Any]] = Field(
+        default=None, description="Generation configuration"
+    )
+    webhook_url: Optional[str] = Field(
+        default=None, description="URL for completion webhook"
+    )
 
     class Config:
         """Pydantic configuration."""
@@ -64,8 +72,12 @@ class QualityScoreRequest(BaseModel):
     """
 
     persona_id: Optional[str] = Field(default=None, description="Persona ID to score")
-    experiment_id: Optional[str] = Field(default=None, description="Experiment ID to score")
-    data: Optional[dict[str, Any]] = Field(default=None, description="Raw persona data to score")
+    experiment_id: Optional[str] = Field(
+        default=None, description="Experiment ID to score"
+    )
+    data: Optional[dict[str, Any]] = Field(
+        default=None, description="Raw persona data to score"
+    )
 
     class Config:
         """Pydantic configuration."""

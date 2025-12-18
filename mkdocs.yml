@@ -8,68 +8,68 @@ repo_name: REPPL/Persona
 theme:
   name: material
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
   features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.expand
-    - navigation.top
-    - search.highlight
-    - search.suggest
-    - content.code.copy
+  - navigation.tabs
+  - navigation.sections
+  - navigation.expand
+  - navigation.top
+  - search.highlight
+  - search.suggest
+  - content.code.copy
 
 plugins:
-  - search
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            show_source: true
-            show_root_heading: true
-            show_root_toc_entry: false
-            heading_level: 2
-            docstring_style: google
-            show_signature_annotations: true
+- search
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_source: true
+          show_root_heading: true
+          show_root_toc_entry: false
+          heading_level: 2
+          docstring_style: google
+          show_signature_annotations: true
 
 markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - admonition
-  - pymdownx.details
-  - tables
-  - toc:
-      permalink: true
+- pymdownx.highlight:
+    anchor_linenums: true
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+- admonition
+- pymdownx.details
+- tables
+- toc:
+    permalink: true
 
 nav:
-  - Home: index.md
-  - Getting Started:
-    - tutorials/index.md
-  - User Guides:
-    - guides/index.md
-  - Reference:
-    - CLI Reference: reference/cli-reference.md
-    - API Reference: reference/api.md
-    - Configuration: reference/configuration-reference.md
-  - Development:
-    - development/README.md
+- Home: index.md
+- Getting Started:
+  - tutorials/index.md
+- User Guides:
+  - guides/index.md
+- Reference:
+  - CLI Reference: reference/cli-reference.md
+  - API Reference: reference/api.md
+  - Configuration: reference/configuration-reference.md
+- Development:
+  - development/README.md
 
 extra:
   social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/REPPL/Persona
+  - icon: fontawesome/brands/github
+    link: https://github.com/REPPL/Persona

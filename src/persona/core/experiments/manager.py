@@ -6,12 +6,12 @@ listing, and managing experiments, and the ExperimentEditor class
 for editing experiment configurations.
 """
 
+import copy
+import shutil
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-import copy
-import shutil
 
 import yaml
 
@@ -106,10 +106,13 @@ class Experiment:
         """List all output directories."""
         if not self.outputs_dir.exists():
             return []
-        return sorted([
-            d for d in self.outputs_dir.iterdir()
-            if d.is_dir() and (d / "metadata.json").exists()
-        ])
+        return sorted(
+            [
+                d
+                for d in self.outputs_dir.iterdir()
+                if d.is_dir() and (d / "metadata.json").exists()
+            ]
+        )
 
 
 class ExperimentManager:
@@ -262,6 +265,7 @@ class ExperimentManager:
             raise FileNotFoundError(f"Experiment not found: {name}")
 
         import shutil
+
         shutil.rmtree(exp_path)
         return True
 
@@ -461,8 +465,14 @@ class ExperimentEditor:
 
         # Validate field exists
         valid_fields = {
-            "name", "description", "provider", "model",
-            "workflow", "count", "complexity", "detail_level"
+            "name",
+            "description",
+            "provider",
+            "model",
+            "workflow",
+            "count",
+            "complexity",
+            "detail_level",
         }
         if field_name not in valid_fields:
             raise ValueError(
@@ -613,10 +623,13 @@ class ExperimentEditor:
         if not experiment.data_dir.exists():
             return []
 
-        return sorted([
-            f.name for f in experiment.data_dir.iterdir()
-            if f.is_file() and not f.name.startswith(".")
-        ])
+        return sorted(
+            [
+                f.name
+                for f in experiment.data_dir.iterdir()
+                if f.is_file() and not f.name.startswith(".")
+            ]
+        )
 
     def get_history(self, name: str) -> list[EditHistoryEntry]:
         """
@@ -640,10 +653,7 @@ class ExperimentEditor:
         if not data or "history" not in data:
             return []
 
-        return [
-            EditHistoryEntry.from_dict(entry)
-            for entry in data["history"]
-        ]
+        return [EditHistoryEntry.from_dict(entry) for entry in data["history"]]
 
     def rollback(self, name: str, steps: int = 1) -> ExperimentConfig | None:
         """
@@ -757,9 +767,7 @@ class ExperimentEditor:
         """Save complete history."""
         history_path = exp_path / self.HISTORY_FILE
 
-        data = {
-            "history": [entry.to_dict() for entry in history]
-        }
+        data = {"history": [entry.to_dict() for entry in history]}
 
         with open(history_path, "w", encoding="utf-8") as f:
             yaml.dump(data, f, default_flow_style=False)
@@ -1095,8 +1103,13 @@ class RunHistory:
 
         # Compare fields
         fields_to_compare = [
-            "model", "provider", "persona_count",
-            "cost", "status", "input_tokens", "output_tokens"
+            "model",
+            "provider",
+            "persona_count",
+            "cost",
+            "status",
+            "input_tokens",
+            "output_tokens",
         ]
 
         for field in fields_to_compare:
@@ -1143,16 +1156,11 @@ class RunHistory:
         if not data or "runs" not in data:
             return []
 
-        return [
-            RunMetadata.from_dict(run)
-            for run in data["runs"]
-        ]
+        return [RunMetadata.from_dict(run) for run in data["runs"]]
 
     def _save_runs(self, history_path: Path, runs: list[RunMetadata]) -> None:
         """Save runs to history file."""
-        data = {
-            "runs": [run.to_dict() for run in runs]
-        }
+        data = {"runs": [run.to_dict() for run in runs]}
 
         with open(history_path, "w", encoding="utf-8") as f:
             yaml.dump(data, f, default_flow_style=False)

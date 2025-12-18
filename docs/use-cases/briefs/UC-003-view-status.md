@@ -20,18 +20,22 @@ P1 (Important)
 
 v0.1.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed
 
 ## Success Criteria
 
-- [ ] Shows configured providers and their status
-- [ ] Validates API key availability (without exposing keys)
-- [ ] Shows available models per provider
-- [ ] Indicates any configuration issues
-- [ ] Clear pass/fail output
-- [ ] Suggestions for resolving issues
+- [x] Shows configured providers and their status
+- [x] Validates API key availability (without exposing keys)
+- [x] Shows available models per provider
+- [x] Indicates any configuration issues
+- [x] Clear pass/fail output
+- [x] Suggestions for resolving issues
 
 ## Derives Features
 

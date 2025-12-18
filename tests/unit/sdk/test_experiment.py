@@ -1,13 +1,11 @@
 """Tests for ExperimentSDK class."""
 
 import tempfile
-from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-
-from persona.sdk import ExperimentSDK, ExperimentConfig, PersonaConfig
+from persona.sdk import ExperimentConfig, ExperimentSDK, PersonaConfig
 from persona.sdk.exceptions import ConfigurationError, DataError
 
 
@@ -379,10 +377,12 @@ class TestExperimentSDKGenerate:
         """Test generate with data files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             sdk = ExperimentSDK(tmpdir)
-            exp = sdk.create(ExperimentConfig(
-                name="gen-test",
-                provider="anthropic",
-            ))
+            exp = sdk.create(
+                ExperimentConfig(
+                    name="gen-test",
+                    provider="anthropic",
+                )
+            )
 
             # Add data
             source = Path(tmpdir) / "interviews.csv"

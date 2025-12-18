@@ -1,7 +1,7 @@
 # Anthropic Claude Opus 4.5 Configuration
 name: claude-opus-4-20250514
 provider: anthropic
-description: "Claude Opus 4.5 - most capable Claude model"
+description: Claude Opus 4.5 - most capable Claude model
 
 parameters:
   max_tokens: 4096

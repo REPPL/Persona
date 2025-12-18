@@ -5,7 +5,6 @@ This module coordinates all fidelity checks and produces
 comprehensive fidelity reports for personas.
 """
 
-from typing import TYPE_CHECKING
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.constraints import ConstraintValidator
@@ -96,9 +95,10 @@ class FidelityScorer:
 
         # Run constraint validation
         if self.config.check_constraints:
-            constraint_score, constraint_violations = self.constraint_validator.validate(
-                persona, constraints
-            )
+            (
+                constraint_score,
+                constraint_violations,
+            ) = self.constraint_validator.validate(persona, constraints)
             scores["constraint"] = constraint_score
             all_violations.extend(constraint_violations)
             details["constraint"] = {

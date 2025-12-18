@@ -3,7 +3,7 @@ Tests for table output formatters (F-037).
 """
 
 import pytest
-
+from persona.core.generation.parser import Persona
 from persona.core.output.tables import (
     ASCIITableFormatter,
     CSVTableFormatter,
@@ -14,7 +14,6 @@ from persona.core.output.tables import (
     TableConfig,
     TableOutputFormat,
 )
-from persona.core.generation.parser import Persona
 
 
 @pytest.fixture

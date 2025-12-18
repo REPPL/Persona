@@ -2,11 +2,10 @@
 Tests for batch processing functionality (F-020).
 """
 
-import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from persona.core.batch import BatchProcessor, BatchResult, BatchConfig
+from persona.core.batch import BatchConfig, BatchProcessor, BatchResult
 from persona.core.batch.processor import FileResult
 from persona.core.generation.parser import Persona
 
@@ -98,13 +97,21 @@ class TestBatchResult:
         result = BatchResult(
             config=BatchConfig(),
             file_results=[
-                FileResult(Path("a.csv"), success=True, personas=[
-                    Persona(id="p001", name="Alice"),
-                ]),
-                FileResult(Path("b.csv"), success=True, personas=[
-                    Persona(id="p002", name="Bob"),
-                    Persona(id="p003", name="Carol"),
-                ]),
+                FileResult(
+                    Path("a.csv"),
+                    success=True,
+                    personas=[
+                        Persona(id="p001", name="Alice"),
+                    ],
+                ),
+                FileResult(
+                    Path("b.csv"),
+                    success=True,
+                    personas=[
+                        Persona(id="p002", name="Bob"),
+                        Persona(id="p003", name="Carol"),
+                    ],
+                ),
                 FileResult(Path("c.csv"), success=False, error="Error"),
             ],
             total_personas=3,
@@ -150,6 +157,7 @@ class TestBatchProcessor:
         processor = BatchProcessor()
 
         called = []
+
         def callback(file, current, total):
             called.append((file, current, total))
 
@@ -267,7 +275,9 @@ class TestBatchProcessor:
 
     @patch("persona.core.batch.processor.GenerationPipeline")
     @patch("persona.core.batch.processor.ProviderFactory")
-    def test_progress_callback_called(self, mock_factory, mock_pipeline, tmp_path: Path):
+    def test_progress_callback_called(
+        self, mock_factory, mock_pipeline, tmp_path: Path
+    ):
         """Test progress callback is called."""
         file1 = tmp_path / "file1.csv"
         file1.write_text("id,data\n1,test\n")
@@ -284,6 +294,7 @@ class TestBatchProcessor:
         mock_pipeline.return_value.generate.return_value = mock_result
 
         progress_calls = []
+
         def callback(file, current, total):
             progress_calls.append((current, total))
 

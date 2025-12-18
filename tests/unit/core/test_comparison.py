@@ -2,10 +2,9 @@
 Tests for persona comparison functionality (F-021).
 """
 
-import pytest
 
+from persona.core.comparison import ComparisonResult, PersonaComparator, SimilarityScore
 from persona.core.generation.parser import Persona
-from persona.core.comparison import PersonaComparator, ComparisonResult, SimilarityScore
 
 
 class TestSimilarityScore:

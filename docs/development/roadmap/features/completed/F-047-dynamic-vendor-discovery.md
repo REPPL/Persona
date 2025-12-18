@@ -51,4 +51,3 @@ Users with custom vendor configurations or Ollama installations need their avail
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
 - [F-043: Custom Vendor Configuration](F-043-custom-vendor-configuration.md)
-

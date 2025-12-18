@@ -1,7 +1,6 @@
 """Unit tests for metrics module."""
 
 import pytest
-
 from persona.core.quality.diversity.metrics import (
     calculate_hapax_ratio,
     calculate_mattr,

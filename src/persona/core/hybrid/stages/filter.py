@@ -5,7 +5,7 @@ This stage uses PersonaJudge to evaluate generated personas and separate
 high-quality personas from those that need refinement.
 """
 
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from persona.core.evaluation.criteria import EvaluationCriteria
 from persona.core.evaluation.judge import PersonaJudge
@@ -14,10 +14,10 @@ from persona.core.hybrid.cost import CostTracker
 
 
 async def filter_personas(
-    personas: List[Dict[str, Any]],
+    personas: list[dict[str, Any]],
     config: HybridConfig,
     cost_tracker: CostTracker,
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """
     Filter personas based on quality threshold.
 
@@ -95,7 +95,7 @@ async def filter_personas(
     return passing_personas, needs_refinement
 
 
-def get_evaluation_score(persona: Dict[str, Any]) -> float:
+def get_evaluation_score(persona: dict[str, Any]) -> float:
     """
     Get evaluation score from persona metadata.
 
@@ -112,7 +112,7 @@ def get_evaluation_score(persona: Dict[str, Any]) -> float:
     return evaluation.get("overall_score", 0.0)
 
 
-def get_evaluation_feedback(persona: Dict[str, Any]) -> Dict[str, str]:
+def get_evaluation_feedback(persona: dict[str, Any]) -> dict[str, str]:
     """
     Extract evaluation feedback for refinement.
 

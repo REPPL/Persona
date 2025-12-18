@@ -5,11 +5,11 @@ This module provides the PersonaExporter class for exporting
 personas to various design tool formats.
 """
 
-from dataclasses import dataclass, field
+import json
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any
-import json
 
 
 class ExportFormat(Enum):
@@ -350,14 +350,18 @@ class PersonaExporter:
             if hasattr(persona, "to_dict"):
                 data.append(persona.to_dict())
             else:
-                data.append({
-                    "id": getattr(persona, "id", "unknown"),
-                    "name": getattr(persona, "name", "Unknown"),
-                    "goals": list(getattr(persona, "goals", []) or []),
-                    "pain_points": list(getattr(persona, "pain_points", []) or []),
-                    "behaviours": list(getattr(persona, "behaviours", []) or []),
-                    "demographics": dict(getattr(persona, "demographics", {}) or {}),
-                })
+                data.append(
+                    {
+                        "id": getattr(persona, "id", "unknown"),
+                        "name": getattr(persona, "name", "Unknown"),
+                        "goals": list(getattr(persona, "goals", []) or []),
+                        "pain_points": list(getattr(persona, "pain_points", []) or []),
+                        "behaviours": list(getattr(persona, "behaviours", []) or []),
+                        "demographics": dict(
+                            getattr(persona, "demographics", {}) or {}
+                        ),
+                    }
+                )
 
         return json.dumps({"personas": data}, indent=2)
 
@@ -369,11 +373,13 @@ class PersonaExporter:
             name = getattr(persona, "name", "Unknown")
             persona_id = getattr(persona, "id", "unknown")
 
-            lines.extend([
-                f"## {name}",
-                f"**ID:** {persona_id}",
-                "",
-            ])
+            lines.extend(
+                [
+                    f"## {name}",
+                    f"**ID:** {persona_id}",
+                    "",
+                ]
+            )
 
             # Demographics
             demographics = getattr(persona, "demographics", {}) or {}
@@ -439,8 +445,8 @@ class PersonaExporter:
             persona_id = getattr(persona, "id", "unknown")
 
             html_parts.append('<div class="persona">')
-            html_parts.append(f'<h2>{name}</h2>')
-            html_parts.append(f'<p><small>ID: {persona_id}</small></p>')
+            html_parts.append(f"<h2>{name}</h2>")
+            html_parts.append(f"<p><small>ID: {persona_id}</small></p>")
 
             # Demographics
             demographics = getattr(persona, "demographics", {}) or {}
@@ -475,10 +481,12 @@ class PersonaExporter:
 
             html_parts.append("</div>")
 
-        html_parts.extend([
-            "</body>",
-            "</html>",
-        ])
+        html_parts.extend(
+            [
+                "</body>",
+                "</html>",
+            ]
+        )
 
         return "\n".join(html_parts)
 
@@ -537,10 +545,10 @@ class PersonaExporter:
                 "type": "card",
                 "title": name,
                 "description": (
-                    "**Goals:**\n" +
-                    "\n".join(f"- {g}" for g in goals) +
-                    "\n\n**Pain Points:**\n" +
-                    "\n".join(f"- {p}" for p in pain_points)
+                    "**Goals:**\n"
+                    + "\n".join(f"- {g}" for g in goals)
+                    + "\n\n**Pain Points:**\n"
+                    + "\n".join(f"- {p}" for p in pain_points)
                 ),
                 "position": {"x": x_offset, "y": 0},
             }

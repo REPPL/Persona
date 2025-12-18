@@ -16,8 +16,8 @@ from persona.core.plugins.discovery import (
 )
 from persona.core.plugins.exceptions import (
     PluginError,
-    PluginNotFoundError,
     PluginLoadError,
+    PluginNotFoundError,
     PluginValidationError,
 )
 from persona.core.plugins.manager import PluginManager, get_plugin_manager

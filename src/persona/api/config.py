@@ -4,7 +4,6 @@ API configuration.
 This module provides configuration for the FastAPI application.
 """
 
-import os
 from typing import Optional
 
 from pydantic import Field
@@ -42,21 +41,33 @@ class APIConfig(BaseSettings):
 
     # Authentication
     auth_enabled: bool = Field(default=False, description="Enable API authentication")
-    auth_token: Optional[str] = Field(default=None, description="API authentication token")
+    auth_token: Optional[str] = Field(
+        default=None, description="API authentication token"
+    )
 
     # Rate limiting
     rate_limit_enabled: bool = Field(default=True, description="Enable rate limiting")
-    rate_limit_requests: int = Field(default=100, ge=1, description="Max requests per window")
-    rate_limit_window: int = Field(default=60, ge=1, description="Rate limit window (seconds)")
+    rate_limit_requests: int = Field(
+        default=100, ge=1, description="Max requests per window"
+    )
+    rate_limit_window: int = Field(
+        default=60, ge=1, description="Rate limit window (seconds)"
+    )
 
     # CORS
     cors_enabled: bool = Field(default=True, description="Enable CORS")
     cors_origins: list[str] = Field(default=["*"], description="Allowed CORS origins")
 
     # Webhooks
-    webhook_timeout: int = Field(default=30, ge=1, le=300, description="Webhook timeout (seconds)")
-    webhook_max_retries: int = Field(default=3, ge=0, le=10, description="Webhook retry attempts")
-    webhook_retry_delay: float = Field(default=1.0, ge=0.1, description="Initial retry delay (seconds)")
+    webhook_timeout: int = Field(
+        default=30, ge=1, le=300, description="Webhook timeout (seconds)"
+    )
+    webhook_max_retries: int = Field(
+        default=3, ge=0, le=10, description="Webhook retry attempts"
+    )
+    webhook_retry_delay: float = Field(
+        default=1.0, ge=0.1, description="Initial retry delay (seconds)"
+    )
 
     class Config:
         """Pydantic configuration."""

@@ -2,10 +2,9 @@
 Tests for cost estimation functionality (F-007, F-014).
 """
 
-import pytest
 from decimal import Decimal
 
-from persona.core.cost import CostEstimator, PricingData, ModelPricing
+from persona.core.cost import CostEstimator, ModelPricing, PricingData
 
 
 class TestModelPricing:
@@ -90,7 +89,9 @@ class TestPricingData:
 
     def test_get_pricing_with_provider_hint(self):
         """Test getting pricing with provider hint."""
-        pricing = PricingData.get_pricing("claude-sonnet-4-20250514", provider="anthropic")
+        pricing = PricingData.get_pricing(
+            "claude-sonnet-4-20250514", provider="anthropic"
+        )
 
         assert pricing is not None
         assert pricing.provider == "anthropic"

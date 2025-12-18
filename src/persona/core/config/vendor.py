@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class AuthType(str, Enum):
@@ -78,8 +78,12 @@ class VendorConfig(BaseModel):
         description="Available models for this vendor",
     )
     timeout: int = Field(120, description="Request timeout in seconds")
-    request_format: str = Field("openai", description="Request format (openai, anthropic)")
-    response_format: str = Field("openai", description="Response format (openai, anthropic)")
+    request_format: str = Field(
+        "openai", description="Request format (openai, anthropic)"
+    )
+    response_format: str = Field(
+        "openai", description="Response format (openai, anthropic)"
+    )
 
     @field_validator("id")
     @classmethod
@@ -113,6 +117,7 @@ class VendorConfig(BaseModel):
         pattern = re.compile(r"\$\{([^}]+)\}")
 
         for key, value in self.headers.items():
+
             def replace_env(match: re.Match[str]) -> str:
                 env_var = match.group(1)
                 return os.getenv(env_var, "")

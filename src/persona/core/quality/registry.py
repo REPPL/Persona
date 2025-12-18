@@ -5,8 +5,9 @@ This module provides a plugin architecture for quality metrics,
 enabling registration of custom metrics and discovery via entry points.
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Callable
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import Any
 
 from persona.core.quality.base import MetricCategory, QualityMetric
 from persona.core.quality.config import QualityConfig
@@ -194,9 +195,7 @@ class MetricRegistry:
             KeyError: If metric not found.
         """
         if name not in self._metrics:
-            raise KeyError(
-                f"Metric '{name}' not found. Available: {self.list_names()}"
-            )
+            raise KeyError(f"Metric '{name}' not found. Available: {self.list_names()}")
 
         info = self._metrics[name]
         return info.metric_class(config=config, **kwargs)
@@ -246,10 +245,7 @@ class MetricRegistry:
         Returns:
             List of MetricInfo objects in that category.
         """
-        return [
-            info for info in self._metrics.values()
-            if info.category == category
-        ]
+        return [info for info in self._metrics.values() if info.category == category]
 
     def has(self, name: str) -> bool:
         """
@@ -280,7 +276,8 @@ class MetricRegistry:
             List of academic metric names.
         """
         return [
-            name for name, info in self._metrics.items()
+            name
+            for name, info in self._metrics.items()
             if info.category == MetricCategory.ACADEMIC
         ]
 
@@ -292,7 +289,8 @@ class MetricRegistry:
             List of compliance metric names.
         """
         return [
-            name for name, info in self._metrics.items()
+            name
+            for name, info in self._metrics.items()
             if info.category == MetricCategory.COMPLIANCE
         ]
 
@@ -345,6 +343,7 @@ def register_metric(
     Returns:
         Decorator function.
     """
+
     def decorator(cls: type[QualityMetric]) -> type[QualityMetric]:
         registry = get_registry()
         registry.register(

@@ -6,7 +6,7 @@ based on token counts and model-specific pricing.
 """
 
 from persona.core.cost.estimator import CostEstimator
-from persona.core.cost.pricing import PricingData, ModelPricing
+from persona.core.cost.pricing import ModelPricing, PricingData
 
 __all__ = [
     "CostEstimator",

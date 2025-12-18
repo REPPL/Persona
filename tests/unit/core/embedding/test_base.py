@@ -1,7 +1,6 @@
 """Tests for embedding base classes."""
 
 import pytest
-
 from persona.core.embedding.base import (
     BatchEmbeddingResponse,
     EmbeddingProvider,

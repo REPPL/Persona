@@ -5,22 +5,24 @@ This module provides discovery of available vendors and models
 through configuration scanning and API probing.
 """
 
-from persona.core.discovery.vendor import (
-    VendorDiscovery,
-    VendorStatus,
-    DiscoveryResult,
+from persona.core.discovery.checker import (
+    ModelAvailability,
+    ModelChecker,
+    check_model,
+    warn_if_deprecated,
+)
+from persona.core.discovery.checker import (
+    ModelStatus as AvailabilityStatus,
 )
 from persona.core.discovery.model import (
     ModelDiscovery,
-    ModelStatus,
     ModelDiscoveryResult,
+    ModelStatus,
 )
-from persona.core.discovery.checker import (
-    ModelChecker,
-    ModelAvailability,
-    ModelStatus as AvailabilityStatus,
-    check_model,
-    warn_if_deprecated,
+from persona.core.discovery.vendor import (
+    DiscoveryResult,
+    VendorDiscovery,
+    VendorStatus,
 )
 
 __all__ = [

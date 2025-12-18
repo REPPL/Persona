@@ -9,9 +9,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from typer.testing import CliRunner
-
 from persona.ui.cli import app
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -63,7 +62,9 @@ def test_fidelity_command_exists():
     # but should still work when invoked directly
     result = runner.invoke(app, ["fidelity", "--help"])
     assert result.exit_code == 0
-    assert "fidelity" in result.output.lower() or "Check prompt fidelity" in result.output
+    assert (
+        "fidelity" in result.output.lower() or "Check prompt fidelity" in result.output
+    )
 
 
 def test_fidelity_with_persona_file(sample_persona_file, sample_constraints_file):

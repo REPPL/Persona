@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.base import QualityMetric
-from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
@@ -96,10 +95,10 @@ class ConsistencyMetric(QualityMetric):
 
         # Weighted combination
         overall = (
-            demo_goal_score * 0.35 +
-            behaviour_pain_score * 0.30 +
-            quote_score * 0.20 +
-            uniqueness_score * 0.15
+            demo_goal_score * 0.35
+            + behaviour_pain_score * 0.30
+            + quote_score * 0.20
+            + uniqueness_score * 0.15
         )
 
         return DimensionScore(
@@ -138,7 +137,9 @@ class ConsistencyMetric(QualityMetric):
                 # Young person - shouldn't have senior goals
                 for goal in persona.goals:
                     goal_lower = goal.lower()
-                    if any(kw in goal_lower for kw in self.AGE_CAREER_PATTERNS["senior"]):
+                    if any(
+                        kw in goal_lower for kw in self.AGE_CAREER_PATTERNS["senior"]
+                    ):
                         conflicts.append(
                             f"Age-goal mismatch: young person with senior goal '{goal[:50]}'"
                         )
@@ -147,7 +148,9 @@ class ConsistencyMetric(QualityMetric):
                 # Senior person - shouldn't have early-career goals
                 for goal in persona.goals:
                     goal_lower = goal.lower()
-                    if any(kw in goal_lower for kw in self.AGE_CAREER_PATTERNS["young"]):
+                    if any(
+                        kw in goal_lower for kw in self.AGE_CAREER_PATTERNS["young"]
+                    ):
                         conflicts.append(
                             f"Age-goal mismatch: senior person with early-career goal '{goal[:50]}'"
                         )
@@ -201,8 +204,8 @@ class ConsistencyMetric(QualityMetric):
         for pos, neg in contradiction_pairs:
             if pos in behaviour and neg in pain:
                 # Check if discussing same topic
-                behaviour_words = set(re.findall(r'\w+', behaviour))
-                pain_words = set(re.findall(r'\w+', pain))
+                behaviour_words = set(re.findall(r"\w+", behaviour))
+                pain_words = set(re.findall(r"\w+", pain))
                 overlap = behaviour_words & pain_words
                 # Need shared context words beyond the contradiction pair
                 overlap -= {pos, neg}
@@ -226,27 +229,44 @@ class ConsistencyMetric(QualityMetric):
 
         # Build set of trait words from goals and pain points
         all_traits: set[str] = set()
-        for goal in (persona.goals or []):
-            all_traits.update(re.findall(r'\w{4,}', goal.lower()))
-        for pain in (persona.pain_points or []):
-            all_traits.update(re.findall(r'\w{4,}', pain.lower()))
+        for goal in persona.goals or []:
+            all_traits.update(re.findall(r"\w{4,}", goal.lower()))
+        for pain in persona.pain_points or []:
+            all_traits.update(re.findall(r"\w{4,}", pain.lower()))
 
         # Remove common words
         stopwords = {
-            "the", "and", "for", "that", "this", "with", "have", "from",
-            "they", "what", "when", "where", "which", "their", "there",
-            "would", "could", "should", "about", "just", "been", "being",
+            "the",
+            "and",
+            "for",
+            "that",
+            "this",
+            "with",
+            "have",
+            "from",
+            "they",
+            "what",
+            "when",
+            "where",
+            "which",
+            "their",
+            "there",
+            "would",
+            "could",
+            "should",
+            "about",
+            "just",
+            "been",
+            "being",
         }
         all_traits -= stopwords
 
         for quote in persona.quotes:
-            quote_words = set(re.findall(r'\w{4,}', quote.lower()))
+            quote_words = set(re.findall(r"\w{4,}", quote.lower()))
             if quote_words & all_traits:
                 aligned += 1
 
-        details["quote_alignment_rate"] = round(
-            aligned / total if total > 0 else 0, 2
-        )
+        details["quote_alignment_rate"] = round(aligned / total if total > 0 else 0, 2)
 
         return (aligned / total) * 100 if total > 0 else 75.0
 

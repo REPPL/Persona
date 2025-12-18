@@ -5,10 +5,10 @@ This module provides common fixtures used across unit and integration tests,
 including mock LLM providers, test data, and CLI helpers.
 """
 
-import os
 import json
+from collections.abc import Generator
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import pytest
 import responses
@@ -189,7 +189,9 @@ def mock_gemini_success(env_mock_api_keys: dict[str, str]) -> Generator:
             callback=lambda req: (
                 200,
                 {},
-                json.dumps(load_mock_response("gemini", "generate_content_success.json")),
+                json.dumps(
+                    load_mock_response("gemini", "generate_content_success.json")
+                ),
             ),
         )
         yield rsps
@@ -270,6 +272,7 @@ def valid_persona_schema() -> dict[str, Any]:
 def cli_runner():
     """Provide Typer CLI test runner."""
     from typer.testing import CliRunner
+
     return CliRunner()
 
 

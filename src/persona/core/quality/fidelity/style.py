@@ -6,7 +6,6 @@ adheres to style requirements like tone, detail level, and voice.
 """
 
 import json
-from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.models import (
@@ -62,7 +61,7 @@ class StyleChecker:
         # Use LLM to evaluate style
         try:
             return self._llm_style_check(persona, constraints, original_prompt)
-        except Exception as e:
+        except Exception:
             # Fall back to simple check if LLM fails
             return self._simple_style_check(persona, constraints)
 
@@ -204,7 +203,7 @@ class StyleChecker:
         """
         persona_json = json.dumps(persona.to_dict(), indent=2)
 
-        prompt = f"""You are evaluating whether a generated persona adheres to style requirements.
+        prompt = """You are evaluating whether a generated persona adheres to style requirements.
 
 # Style Requirements
 

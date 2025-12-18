@@ -5,16 +5,15 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from persona.core.logging.metadata import (
-    MetadataRecorder,
-    GenerationMetadata,
-    GenerationConfig,
+    CostInfo,
     DataSourceInfo,
     EnvironmentInfo,
-    CostInfo,
-    record_metadata,
+    GenerationConfig,
+    GenerationMetadata,
+    MetadataRecorder,
     calculate_checksum,
+    record_metadata,
 )
 
 
@@ -453,6 +452,7 @@ class TestMetadataRecorder:
 
         # Small delay to ensure measurable duration
         import time
+
         time.sleep(0.1)
 
         metadata = recorder.finish()
@@ -520,7 +520,10 @@ class TestCalculateChecksum:
 
         assert checksum.startswith("sha256:")
         # Known SHA-256 of "hello world"
-        assert checksum == "sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        assert (
+            checksum
+            == "sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        )
 
     def test_calculates_sha256_from_bytes(self) -> None:
         """Calculates SHA-256 from bytes."""

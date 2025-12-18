@@ -1,16 +1,14 @@
 """Tests for API key rotation (F-052)."""
 
 import os
-import pytest
 from unittest.mock import patch
 
 from persona.core.security.rotation import (
+    KeyConfig,
+    KeyHealth,
     KeyManager,
     KeyStatus,
-    KeyHealth,
-    KeyConfig,
 )
-from persona.core.security.keys import SecureString
 
 
 class TestKeyHealth:

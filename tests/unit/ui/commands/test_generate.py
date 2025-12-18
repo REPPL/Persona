@@ -1,12 +1,9 @@
 """Tests for generate command."""
 
-import pytest
 from unittest.mock import MagicMock, patch
 
-from typer.testing import CliRunner
-
 from persona.ui.cli import app
-
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
@@ -40,11 +37,13 @@ class TestOllamaModelSelection:
     def test_handle_ollama_model_selection_import(self):
         """Test that the helper function can be imported."""
         from persona.ui.commands.generate import _handle_ollama_model_selection
+
         assert callable(_handle_ollama_model_selection)
 
     def test_handle_multi_model_generation_import(self):
         """Test that the multi-model helper function can be imported."""
         from persona.ui.commands.generate import _handle_multi_model_generation
+
         assert callable(_handle_multi_model_generation)
 
     @patch("persona.core.providers.ProviderFactory")
@@ -69,8 +68,9 @@ class TestMultiModelGeneration:
 
     def test_multi_model_generation_dry_run(self, tmp_path):
         """Test multi-model generation in dry run mode."""
-        from persona.ui.commands.generate import _handle_multi_model_generation
         from unittest.mock import MagicMock, patch
+
+        from persona.ui.commands.generate import _handle_multi_model_generation
 
         # Create test data
         data_file = tmp_path / "test.csv"
@@ -81,15 +81,23 @@ class TestMultiModelGeneration:
         with patch("persona.ui.commands.generate.ProviderFactory") as mock_factory:
             mock_provider = MagicMock()
             mock_provider.is_configured.return_value = True
-            mock_provider.list_available_models.return_value = ["llama3:8b", "qwen2.5:7b"]
+            mock_provider.list_available_models.return_value = [
+                "llama3:8b",
+                "qwen2.5:7b",
+            ]
             mock_factory.create.return_value = mock_provider
 
-            with patch("persona.ui.commands.generate._resolve_data_path") as mock_resolve:
+            with patch(
+                "persona.ui.commands.generate._resolve_data_path"
+            ) as mock_resolve:
                 mock_resolve.return_value = data_file
 
                 with patch("persona.ui.commands.generate.DataLoader") as mock_loader:
                     loader_instance = MagicMock()
-                    loader_instance.load_path.return_value = ("test data", [str(data_file)])
+                    loader_instance.load_path.return_value = (
+                        "test data",
+                        [str(data_file)],
+                    )
                     loader_instance.count_tokens.return_value = 100
                     mock_loader.return_value = loader_instance
 

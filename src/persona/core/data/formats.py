@@ -7,7 +7,6 @@ in qualitative research data.
 
 import csv
 import json
-from io import StringIO
 from pathlib import Path
 from typing import Any
 
@@ -32,8 +31,24 @@ class CSVLoader(FormatLoader):
         path = Path(path)
 
         with open(path, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            rows = list(reader)
+            content = f.read()
+
+        return self.load_content(content)
+
+    def load_content(self, content: str) -> str:
+        """
+        Load CSV content from string and convert to readable text format.
+
+        Args:
+            content: Raw CSV content.
+
+        Returns:
+            Formatted readable text.
+        """
+        import io
+
+        reader = csv.DictReader(io.StringIO(content))
+        rows = list(reader)
 
         if not rows:
             return ""
@@ -66,8 +81,21 @@ class JSONLoader(FormatLoader):
         path = Path(path)
 
         with open(path, encoding="utf-8") as f:
-            data = json.load(f)
+            content = f.read()
 
+        return self.load_content(content)
+
+    def load_content(self, content: str) -> str:
+        """
+        Load JSON content from string and convert to readable text format.
+
+        Args:
+            content: Raw JSON content.
+
+        Returns:
+            Formatted readable text.
+        """
+        data = json.loads(content)
         return self._format_json(data)
 
     def _format_json(self, data: Any, depth: int = 0) -> str:
@@ -138,7 +166,21 @@ class YAMLLoader(FormatLoader):
         path = Path(path)
 
         with open(path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+            content = f.read()
+
+        return self.load_content(content)
+
+    def load_content(self, content: str) -> str:
+        """
+        Load YAML content from string and convert to readable text format.
+
+        Args:
+            content: Raw YAML content.
+
+        Returns:
+            Formatted readable text.
+        """
+        data = yaml.safe_load(content)
 
         if data is None:
             return ""
@@ -214,17 +256,34 @@ class HTMLLoader(FormatLoader):
 
         Strips HTML tags and returns plain text content.
         """
-        import re
-
         path = Path(path)
         content = path.read_text(encoding="utf-8")
+        return self.load_content(content)
+
+    def load_content(self, content: str) -> str:
+        """
+        Load HTML content from string and extract text content.
+
+        Args:
+            content: Raw HTML content.
+
+        Returns:
+            Extracted plain text.
+        """
+        import re
 
         # Remove script and style elements
-        content = re.sub(r"<script[^>]*>.*?</script>", "", content, flags=re.DOTALL | re.IGNORECASE)
-        content = re.sub(r"<style[^>]*>.*?</style>", "", content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(
+            r"<script[^>]*>.*?</script>", "", content, flags=re.DOTALL | re.IGNORECASE
+        )
+        content = re.sub(
+            r"<style[^>]*>.*?</style>", "", content, flags=re.DOTALL | re.IGNORECASE
+        )
 
         # Convert common block elements to newlines
-        content = re.sub(r"<(br|p|div|h[1-6]|li|tr)[^>]*>", "\n", content, flags=re.IGNORECASE)
+        content = re.sub(
+            r"<(br|p|div|h[1-6]|li|tr)[^>]*>", "\n", content, flags=re.IGNORECASE
+        )
 
         # Remove all remaining HTML tags
         content = re.sub(r"<[^>]+>", "", content)

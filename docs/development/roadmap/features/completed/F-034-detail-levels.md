@@ -59,4 +59,3 @@ Beyond structural complexity, users need control over the narrative detail in pe
 - [Milestone v0.3.0](../../milestones/v0.3.0.md)
 - [F-033: Complexity Levels](F-033-complexity-levels.md)
 - [F-035: Variation Combinations](F-035-variation-combinations.md)
-

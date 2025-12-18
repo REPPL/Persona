@@ -10,7 +10,7 @@ Optional dependency: requires transformers library.
 import logging
 from typing import Any
 
-from persona.core.quality.faithfulness.models import Claim, SourceMatch
+from persona.core.quality.faithfulness.models import SourceMatch
 
 logger = logging.getLogger(__name__)
 
@@ -269,15 +269,17 @@ class HHEMClassifier:
                 results.append(result)
             except Exception as e:
                 logger.warning(f"Batch classification failed for pair: {e}")
-                results.append({
-                    "label": "neutral",
-                    "score": 0.0,
-                    "is_hallucination": False,
-                    "probabilities": {
-                        "entailment": 0.0,
-                        "neutral": 1.0,
-                        "contradiction": 0.0,
-                    },
-                })
+                results.append(
+                    {
+                        "label": "neutral",
+                        "score": 0.0,
+                        "is_hallucination": False,
+                        "probabilities": {
+                            "entailment": 0.0,
+                            "neutral": 1.0,
+                            "contradiction": 0.0,
+                        },
+                    }
+                )
 
         return results

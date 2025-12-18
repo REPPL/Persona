@@ -2,16 +2,14 @@
 
 import json
 import tempfile
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
-
-import pytest
 
 from persona.core.logging.experiment_logger import (
+    EventType,
     ExperimentLogger,
     LogEvent,
     LogLevel,
-    EventType,
     log_event,
     read_log_file,
 )
@@ -368,7 +366,7 @@ class TestLogEventConvenienceFunction:
 
         # Verify timestamp is recent (within last minute)
         event_time = datetime.fromisoformat(event.timestamp.replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         diff = (now - event_time).total_seconds()
         assert diff < 60
 

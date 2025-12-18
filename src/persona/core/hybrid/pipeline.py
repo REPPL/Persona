@@ -8,7 +8,7 @@ optionally refining them with frontier models.
 
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.cost import CostTracker
@@ -31,14 +31,14 @@ class HybridResult:
         metadata: Additional execution metadata.
     """
 
-    personas: List[Dict[str, Any]]
+    personas: list[dict[str, Any]]
     draft_count: int
     passing_count: int
     refined_count: int
     cost_tracker: CostTracker
     config: HybridConfig
     generation_time: float
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def persona_count(self) -> int:
@@ -55,7 +55,7 @@ class HybridResult:
         """Return total tokens used."""
         return self.cost_tracker.total_tokens
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert result to dictionary."""
         return {
             "persona_count": self.persona_count,
@@ -110,7 +110,7 @@ class HybridPipeline:
 
     async def generate(
         self,
-        input_data: str | List[Dict[str, Any]],
+        input_data: str | list[dict[str, Any]],
         count: int,
     ) -> HybridResult:
         """
@@ -215,7 +215,7 @@ class HybridPipeline:
 
     def generate_sync(
         self,
-        input_data: str | List[Dict[str, Any]],
+        input_data: str | list[dict[str, Any]],
         count: int,
     ) -> HybridResult:
         """

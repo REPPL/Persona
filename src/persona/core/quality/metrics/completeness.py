@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.base import QualityMetric
-from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
@@ -89,10 +88,10 @@ class CompletenessMetric(QualityMetric):
 
         # Weighted combination
         overall = (
-            required_score * 0.40 +
-            expected_score * 0.30 +
-            depth_score * 0.20 +
-            richness_score * 0.10
+            required_score * 0.40
+            + expected_score * 0.30
+            + depth_score * 0.20
+            + richness_score * 0.10
         )
 
         return DimensionScore(
@@ -103,9 +102,7 @@ class CompletenessMetric(QualityMetric):
             details=details,
         )
 
-    def _check_required_fields(
-        self, persona: Persona, issues: list[str]
-    ) -> float:
+    def _check_required_fields(self, persona: Persona, issues: list[str]) -> float:
         """Check required fields are present and non-empty."""
         present = 0
         total = len(self.config.required_fields)
@@ -160,9 +157,7 @@ class CompletenessMetric(QualityMetric):
         depth_details["goals_count"] = goals_count
         depth_scores.append(goals_score)
         if goals_count < self.config.min_goals:
-            issues.append(
-                f"Insufficient goals: {goals_count}/{self.config.min_goals}"
-            )
+            issues.append(f"Insufficient goals: {goals_count}/{self.config.min_goals}")
 
         # Pain points
         pains_count = len(persona.pain_points or [])
@@ -207,9 +202,9 @@ class CompletenessMetric(QualityMetric):
 
         # Check average goal length (penalise very short goals)
         if persona.goals:
-            avg_goal_words = sum(
-                len(g.split()) for g in persona.goals
-            ) / len(persona.goals)
+            avg_goal_words = sum(len(g.split()) for g in persona.goals) / len(
+                persona.goals
+            )
             # 5+ words is considered good
             goal_richness = min(100, (avg_goal_words / 5) * 100)
             richness_scores.append(goal_richness)
@@ -226,9 +221,9 @@ class CompletenessMetric(QualityMetric):
 
         # Check pain point specificity
         if persona.pain_points:
-            avg_pain_words = sum(
-                len(p.split()) for p in persona.pain_points
-            ) / len(persona.pain_points)
+            avg_pain_words = sum(len(p.split()) for p in persona.pain_points) / len(
+                persona.pain_points
+            )
             pain_richness = min(100, (avg_pain_words / 5) * 100)
             richness_scores.append(pain_richness)
             details["avg_pain_point_words"] = round(avg_pain_words, 1)

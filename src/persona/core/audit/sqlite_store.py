@@ -4,7 +4,6 @@ SQLite storage backend for audit records (F-123).
 Default storage backend using SQLite database.
 """
 
-import json
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -31,7 +30,8 @@ class SqliteStore(AuditStore):
         """Initialise database schema."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS audit_records (
                     audit_id TEXT PRIMARY KEY,
                     timestamp TEXT NOT NULL,
@@ -43,19 +43,26 @@ class SqliteStore(AuditStore):
                     personas_hash TEXT,
                     record_json TEXT NOT NULL
                 )
-            """)
-            cursor.execute("""
+            """
+            )
+            cursor.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_timestamp
                 ON audit_records(timestamp)
-            """)
-            cursor.execute("""
+            """
+            )
+            cursor.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_provider
                 ON audit_records(provider)
-            """)
-            cursor.execute("""
+            """
+            )
+            cursor.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_model
                 ON audit_records(model)
-            """)
+            """
+            )
             conn.commit()
 
     def save(self, record: AuditRecord) -> None:

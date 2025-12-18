@@ -27,6 +27,7 @@ class ModelCapabilities:
         best_for: List of use cases this model excels at.
         pricing_tier: Pricing tier (budget, standard, premium).
     """
+
     provider: str
     model: str
     context_window: int = 128000
@@ -117,6 +118,7 @@ class CapabilityQuery:
         pricing_tier: Preferred pricing tier.
         use_case: Specific use case to match.
     """
+
     min_context_window: int | None = None
     requires_vision: bool = False
     requires_structured_output: bool = False
@@ -139,6 +141,7 @@ class ModelComparison:
         winner_by_price: Most cost-effective model.
         recommendation: Overall recommendation.
     """
+
     models: list[ModelCapabilities]
     winner_by_context: str | None = None
     winner_by_output: str | None = None
@@ -176,15 +179,11 @@ class ModelComparison:
         lines.append("-" * len(header_line))
 
         # Context window
-        row = ["Context Window"] + [
-            f"{m.context_window:,}" for m in self.models
-        ]
+        row = ["Context Window"] + [f"{m.context_window:,}" for m in self.models]
         lines.append(" | ".join(c.ljust(col_width) for c in row))
 
         # Max output
-        row = ["Max Output"] + [
-            f"{m.max_output:,}" for m in self.models
-        ]
+        row = ["Max Output"] + [f"{m.max_output:,}" for m in self.models]
         lines.append(" | ".join(c.ljust(col_width) for c in row))
 
         # Features
@@ -197,9 +196,7 @@ class ModelComparison:
         ]
 
         for name, attr in features:
-            row = [name] + [
-                "✓" if getattr(m, attr) else "✗" for m in self.models
-            ]
+            row = [name] + ["✓" if getattr(m, attr) else "✗" for m in self.models]
             lines.append(" | ".join(c.ljust(col_width) for c in row))
 
         # Pricing tier
@@ -207,16 +204,18 @@ class ModelComparison:
         lines.append(" | ".join(c.ljust(col_width) for c in row))
 
         # Winners
-        lines.extend([
-            "",
-            "Winners:",
-            f"  Largest Context: {self.winner_by_context}",
-            f"  Largest Output:  {self.winner_by_output}",
-            f"  Most Features:   {self.winner_by_features}",
-            f"  Best Value:      {self.winner_by_price}",
-            "",
-            f"Recommendation: {self.recommendation}",
-        ])
+        lines.extend(
+            [
+                "",
+                "Winners:",
+                f"  Largest Context: {self.winner_by_context}",
+                f"  Largest Output:  {self.winner_by_output}",
+                f"  Most Features:   {self.winner_by_features}",
+                f"  Best Value:      {self.winner_by_price}",
+                "",
+                f"Recommendation: {self.recommendation}",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -249,7 +248,11 @@ class CapabilityChecker:
             extended_thinking=True,
             batch_api=True,
             strengths=["reasoning", "coding", "analysis", "creativity"],
-            best_for=["Complex persona generation", "Research synthesis", "Creative writing"],
+            best_for=[
+                "Complex persona generation",
+                "Research synthesis",
+                "Creative writing",
+            ],
             pricing_tier="premium",
         ),
         ("anthropic", "claude-sonnet-4-5-20250929"): ModelCapabilities(
@@ -438,8 +441,7 @@ class CapabilityChecker:
             return False
         if query.use_case:
             use_case_match = any(
-                query.use_case.lower() in uc.lower()
-                for uc in caps.best_for
+                query.use_case.lower() in uc.lower() for uc in caps.best_for
             )
             if not use_case_match:
                 return False
@@ -473,14 +475,16 @@ class CapabilityChecker:
 
         # Count features
         def feature_count(c: ModelCapabilities) -> int:
-            return sum([
-                c.structured_output,
-                c.vision,
-                c.function_calling,
-                c.streaming,
-                c.extended_thinking,
-                c.batch_api,
-            ])
+            return sum(
+                [
+                    c.structured_output,
+                    c.vision,
+                    c.function_calling,
+                    c.streaming,
+                    c.extended_thinking,
+                    c.batch_api,
+                ]
+            )
 
         winner_features = max(caps_list, key=feature_count)
 
@@ -491,7 +495,9 @@ class CapabilityChecker:
         else:
             winner_price = min(
                 caps_list,
-                key=lambda c: {"budget": 1, "standard": 2, "premium": 3}[c.pricing_tier]
+                key=lambda c: {"budget": 1, "standard": 2, "premium": 3}[
+                    c.pricing_tier
+                ],
             )
 
         # Generate recommendation

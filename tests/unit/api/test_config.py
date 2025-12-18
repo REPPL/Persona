@@ -2,10 +2,8 @@
 Tests for API configuration.
 """
 
-import os
 
 import pytest
-
 from persona.api.config import APIConfig
 
 

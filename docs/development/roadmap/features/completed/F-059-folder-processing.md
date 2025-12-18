@@ -78,4 +78,3 @@ persona generate --from ./data/ --exclude "*.draft.md"
 
 - [Milestone v0.7.0](../../milestones/v0.7.0.md)
 - [F-001: Data Loading](F-001-data-loading.md)
-

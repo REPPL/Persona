@@ -7,7 +7,7 @@ evaluation feedback.
 """
 
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.cost import CostTracker
@@ -16,10 +16,10 @@ from persona.core.providers import ProviderFactory
 
 
 async def refine_personas(
-    personas: List[Dict[str, Any]],
+    personas: list[dict[str, Any]],
     config: HybridConfig,
     cost_tracker: CostTracker,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Refine personas using frontier model.
 
@@ -122,8 +122,8 @@ CRITICAL: Return only valid JSON, no additional text."""
 
 
 def _build_refinement_prompt(
-    persona: Dict[str, Any],
-    feedback: Dict[str, str],
+    persona: dict[str, Any],
+    feedback: dict[str, str],
 ) -> str:
     """Build prompt for persona refinement."""
     prompt_parts = [
@@ -136,34 +136,38 @@ def _build_refinement_prompt(
     ]
 
     if feedback:
-        prompt_parts.extend([
-            "# Evaluation Feedback",
-            "",
-        ])
+        prompt_parts.extend(
+            [
+                "# Evaluation Feedback",
+                "",
+            ]
+        )
         for criterion, reasoning in feedback.items():
             prompt_parts.append(f"**{criterion}**: {reasoning}")
         prompt_parts.append("")
 
-    prompt_parts.extend([
-        "# Instructions",
-        "",
-        "Improve this persona by:",
-        "1. Addressing the specific issues mentioned in the feedback",
-        "2. Enhancing coherence - ensure all details are consistent",
-        "3. Improving realism - make it more believable and grounded",
-        "4. Adding useful details - include actionable information for designers",
-        "",
-        "Maintain the same structure and ID, but improve the content.",
-        "Return ONLY the improved persona as valid JSON, no additional text.",
-    ])
+    prompt_parts.extend(
+        [
+            "# Instructions",
+            "",
+            "Improve this persona by:",
+            "1. Addressing the specific issues mentioned in the feedback",
+            "2. Enhancing coherence - ensure all details are consistent",
+            "3. Improving realism - make it more believable and grounded",
+            "4. Adding useful details - include actionable information for designers",
+            "",
+            "Maintain the same structure and ID, but improve the content.",
+            "Return ONLY the improved persona as valid JSON, no additional text.",
+        ]
+    )
 
     return "\n".join(prompt_parts)
 
 
 def _parse_refined_persona(
     content: str,
-    original: Dict[str, Any],
-) -> Dict[str, Any]:
+    original: dict[str, Any],
+) -> dict[str, Any]:
     """
     Parse refined persona from LLM response.
 

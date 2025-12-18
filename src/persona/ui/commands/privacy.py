@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
-from rich.panel import Panel
 from rich.table import Table
 
 from persona.core.data import DataLoader
@@ -158,9 +157,7 @@ def scan(
 
     if not entities_found:
         console.print("[green]✓[/green] No PII detected!")
-        console.print(
-            "[dim]Your data appears safe to use without anonymisation.[/dim]"
-        )
+        console.print("[dim]Your data appears safe to use without anonymisation.[/dim]")
         return
 
     # Show summary
@@ -280,9 +277,9 @@ def anonymise(
     # Check if privacy module is available
     try:
         from persona.core.privacy import (
-            PIIDetector,
-            PIIAnonymiser,
             AnonymisationStrategy,
+            PIIAnonymiser,
+            PIIDetector,
         )
     except ImportError:
         console.print(

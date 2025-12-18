@@ -345,4 +345,3 @@ After integration, verify personas are usable:
 - [T-02: Understanding Output](../tutorials/02-understanding-output.md)
 - [T-05: Building a Library](../tutorials/05-building-library.md)
 - [F-026: Export to Persona Tools](../development/roadmap/features/completed/F-026-export-to-persona-tools.md)
-

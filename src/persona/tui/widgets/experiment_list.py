@@ -7,7 +7,7 @@ This module provides widgets for displaying and selecting experiments.
 from pathlib import Path
 
 from textual.app import ComposeResult
-from textual.containers import Vertical, VerticalScroll
+from textual.containers import VerticalScroll
 from textual.message import Message
 from textual.widgets import Button, Label, ListItem, ListView, Static
 

@@ -101,7 +101,8 @@ class MajorityVotingStrategy(VotingStrategy):
     ) -> list[str]:
         """Get attributes with >50% agreement."""
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score > 0.5
         ]
 
@@ -111,7 +112,8 @@ class MajorityVotingStrategy(VotingStrategy):
     ) -> list[str]:
         """Get attributes with ≤50% agreement."""
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score <= 0.5
         ]
 
@@ -181,7 +183,8 @@ class UnanimousVotingStrategy(VotingStrategy):
     ) -> list[str]:
         """Get attributes with 100% agreement."""
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score == 1.0
         ]
 
@@ -191,7 +194,8 @@ class UnanimousVotingStrategy(VotingStrategy):
     ) -> list[str]:
         """Get attributes without unanimous agreement."""
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score < 1.0
         ]
 
@@ -222,9 +226,7 @@ class UnanimousVotingStrategy(VotingStrategy):
             for value_list in values:
                 for item in value_list:
                     item_key = (
-                        tuple(sorted(item.items()))
-                        if isinstance(item, dict)
-                        else item
+                        tuple(sorted(item.items())) if isinstance(item, dict) else item
                     )
                     if item_key not in seen:
                         combined.append(item)
@@ -276,15 +278,11 @@ class WeightedVotingStrategy(VotingStrategy):
 
         for attr, details in attribute_details.items():
             # Calculate weighted presence
-            weighted_presence = self._calculate_weighted_presence(
-                attr, personas
-            )
+            weighted_presence = self._calculate_weighted_presence(attr, personas)
 
             if weighted_presence > threshold:
                 # Select value weighted by model capabilities
-                consensus[attr] = self._select_weighted_value(
-                    attr, personas
-                )
+                consensus[attr] = self._select_weighted_value(attr, personas)
 
         return consensus
 
@@ -296,7 +294,8 @@ class WeightedVotingStrategy(VotingStrategy):
         # This requires access to personas to calculate weights
         # For simplicity, fall back to simple majority
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score > 0.5
         ]
 
@@ -306,7 +305,8 @@ class WeightedVotingStrategy(VotingStrategy):
     ) -> list[str]:
         """Get attributes not meeting weighted majority."""
         return [
-            attr for attr, details in attribute_details.items()
+            attr
+            for attr, details in attribute_details.items()
             if details.agreement_score <= 0.5
         ]
 

@@ -74,4 +74,3 @@ persona generate --from data.csv --count "about 4"
 
 - [Milestone v0.7.0](../../milestones/v0.7.0.md)
 - [F-004: Persona Generation](F-004-persona-generation.md)
-

@@ -88,4 +88,3 @@ Lycett, M., Cundle, M., Grasso, L., Meechao, K., & Reppel, A. (2025). Materialis
 - [UC-009: Empathy Mapping](../../../../use-cases/briefs/UC-009-empathy-mapping.md)
 - [F-030: Empathy Map Table Output](F-030-empathy-map-table-output.md)
 - [F-001: Data Loading](F-001-data-loading.md)
-

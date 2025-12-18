@@ -359,4 +359,3 @@ Extract → Consolidate → Generate → [Validate] → Output
 - [ADR-0019: Persona Validation Methodology](../decisions/adrs/ADR-0019-persona-validation-methodology.md) (to be created)
 - [R-003: Persona Generation Methodology](R-003-persona-generation-methodology.md)
 - [Persona Schema Reference](../../reference/persona-schema.md)
-

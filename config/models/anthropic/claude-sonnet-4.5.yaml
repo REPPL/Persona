@@ -1,7 +1,7 @@
 # Anthropic Claude Sonnet 4.5 Configuration
 name: claude-sonnet-4-20250514
 provider: anthropic
-description: "Claude Sonnet 4.5 - balanced performance and speed"
+description: Claude Sonnet 4.5 - balanced performance and speed
 
 parameters:
   max_tokens: 4096

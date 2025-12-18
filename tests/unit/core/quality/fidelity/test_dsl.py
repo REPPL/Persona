@@ -9,7 +9,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from persona.core.quality.fidelity.dsl import ConstraintParser
 from persona.core.quality.fidelity.models import PromptConstraints
 
@@ -198,6 +197,11 @@ constraints:
         parsed_constraints = parser.parse_dict(data)
 
         # Verify roundtrip
-        assert parsed_constraints.required_fields == original_constraints.required_fields
+        assert (
+            parsed_constraints.required_fields == original_constraints.required_fields
+        )
         assert parsed_constraints.age_range == original_constraints.age_range
-        assert parsed_constraints.occupation_keywords == original_constraints.occupation_keywords
+        assert (
+            parsed_constraints.occupation_keywords
+            == original_constraints.occupation_keywords
+        )

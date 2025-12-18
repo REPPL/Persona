@@ -5,9 +5,10 @@ This module provides the PersonaValidator class for checking
 persona quality and consistency.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable
+from typing import Any
 
 from persona.core.generation.parser import Persona
 
@@ -137,70 +138,88 @@ class PersonaValidator:
     def _register_builtin_rules(self) -> None:
         """Register built-in validation rules."""
         # Required fields
-        self.add_rule(ValidationRule(
-            name="required_id",
-            description="Persona must have an ID",
-            check=self._check_required_id,
-            level=ValidationLevel.ERROR,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="required_id",
+                description="Persona must have an ID",
+                check=self._check_required_id,
+                level=ValidationLevel.ERROR,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="required_name",
-            description="Persona must have a name",
-            check=self._check_required_name,
-            level=ValidationLevel.ERROR,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="required_name",
+                description="Persona must have a name",
+                check=self._check_required_name,
+                level=ValidationLevel.ERROR,
+            )
+        )
 
         # Completeness checks
-        self.add_rule(ValidationRule(
-            name="has_goals",
-            description="Persona should have at least one goal",
-            check=self._check_has_goals,
-            level=ValidationLevel.WARNING,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="has_goals",
+                description="Persona should have at least one goal",
+                check=self._check_has_goals,
+                level=ValidationLevel.WARNING,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="has_pain_points",
-            description="Persona should have at least one pain point",
-            check=self._check_has_pain_points,
-            level=ValidationLevel.WARNING,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="has_pain_points",
+                description="Persona should have at least one pain point",
+                check=self._check_has_pain_points,
+                level=ValidationLevel.WARNING,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="has_demographics",
-            description="Persona should have demographics",
-            check=self._check_has_demographics,
-            level=ValidationLevel.WARNING,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="has_demographics",
+                description="Persona should have demographics",
+                check=self._check_has_demographics,
+                level=ValidationLevel.WARNING,
+            )
+        )
 
         # Quality checks
-        self.add_rule(ValidationRule(
-            name="name_not_generic",
-            description="Persona name should not be generic placeholder",
-            check=self._check_name_not_generic,
-            level=ValidationLevel.WARNING,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="name_not_generic",
+                description="Persona name should not be generic placeholder",
+                check=self._check_name_not_generic,
+                level=ValidationLevel.WARNING,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="goals_not_empty",
-            description="Goals should not be empty strings",
-            check=self._check_goals_not_empty,
-            level=ValidationLevel.ERROR,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="goals_not_empty",
+                description="Goals should not be empty strings",
+                check=self._check_goals_not_empty,
+                level=ValidationLevel.ERROR,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="unique_goals",
-            description="Goals should be unique",
-            check=self._check_unique_goals,
-            level=ValidationLevel.WARNING,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="unique_goals",
+                description="Goals should be unique",
+                check=self._check_unique_goals,
+                level=ValidationLevel.WARNING,
+            )
+        )
 
-        self.add_rule(ValidationRule(
-            name="minimum_detail",
-            description="Persona should have minimum level of detail",
-            check=self._check_minimum_detail,
-            level=ValidationLevel.INFO,
-        ))
+        self.add_rule(
+            ValidationRule(
+                name="minimum_detail",
+                description="Persona should have minimum level of detail",
+                check=self._check_minimum_detail,
+                level=ValidationLevel.INFO,
+            )
+        )
 
     def add_rule(self, rule: ValidationRule) -> None:
         """Add a validation rule."""
@@ -250,11 +269,13 @@ class PersonaValidator:
                 rule_issues = rule.check(persona)
                 issues.extend(rule_issues)
             except Exception as e:
-                issues.append(ValidationIssue(
-                    rule=rule.name,
-                    message=f"Rule check failed: {e}",
-                    level=ValidationLevel.ERROR,
-                ))
+                issues.append(
+                    ValidationIssue(
+                        rule=rule.name,
+                        message=f"Rule check failed: {e}",
+                        level=ValidationLevel.ERROR,
+                    )
+                )
 
         # Calculate validity
         if self._strict:
@@ -303,74 +324,94 @@ class PersonaValidator:
     def _check_required_id(self, persona: Persona) -> list[ValidationIssue]:
         """Check that persona has an ID."""
         if not persona.id or not persona.id.strip():
-            return [ValidationIssue(
-                rule="required_id",
-                message="Persona is missing required ID",
-                level=ValidationLevel.ERROR,
-                field="id",
-            )]
+            return [
+                ValidationIssue(
+                    rule="required_id",
+                    message="Persona is missing required ID",
+                    level=ValidationLevel.ERROR,
+                    field="id",
+                )
+            ]
         return []
 
     def _check_required_name(self, persona: Persona) -> list[ValidationIssue]:
         """Check that persona has a name."""
         if not persona.name or not persona.name.strip():
-            return [ValidationIssue(
-                rule="required_name",
-                message="Persona is missing required name",
-                level=ValidationLevel.ERROR,
-                field="name",
-            )]
+            return [
+                ValidationIssue(
+                    rule="required_name",
+                    message="Persona is missing required name",
+                    level=ValidationLevel.ERROR,
+                    field="name",
+                )
+            ]
         return []
 
     def _check_has_goals(self, persona: Persona) -> list[ValidationIssue]:
         """Check that persona has goals."""
         if not persona.goals:
-            return [ValidationIssue(
-                rule="has_goals",
-                message="Persona has no goals defined",
-                level=ValidationLevel.WARNING,
-                field="goals",
-            )]
+            return [
+                ValidationIssue(
+                    rule="has_goals",
+                    message="Persona has no goals defined",
+                    level=ValidationLevel.WARNING,
+                    field="goals",
+                )
+            ]
         return []
 
     def _check_has_pain_points(self, persona: Persona) -> list[ValidationIssue]:
         """Check that persona has pain points."""
         if not persona.pain_points:
-            return [ValidationIssue(
-                rule="has_pain_points",
-                message="Persona has no pain points defined",
-                level=ValidationLevel.WARNING,
-                field="pain_points",
-            )]
+            return [
+                ValidationIssue(
+                    rule="has_pain_points",
+                    message="Persona has no pain points defined",
+                    level=ValidationLevel.WARNING,
+                    field="pain_points",
+                )
+            ]
         return []
 
     def _check_has_demographics(self, persona: Persona) -> list[ValidationIssue]:
         """Check that persona has demographics."""
         if not persona.demographics:
-            return [ValidationIssue(
-                rule="has_demographics",
-                message="Persona has no demographics defined",
-                level=ValidationLevel.WARNING,
-                field="demographics",
-            )]
+            return [
+                ValidationIssue(
+                    rule="has_demographics",
+                    message="Persona has no demographics defined",
+                    level=ValidationLevel.WARNING,
+                    field="demographics",
+                )
+            ]
         return []
 
     def _check_name_not_generic(self, persona: Persona) -> list[ValidationIssue]:
         """Check that name is not a generic placeholder."""
         generic_names = {
-            "user", "persona", "customer", "person",
-            "user 1", "persona 1", "test", "example",
-            "john doe", "jane doe", "placeholder",
+            "user",
+            "persona",
+            "customer",
+            "person",
+            "user 1",
+            "persona 1",
+            "test",
+            "example",
+            "john doe",
+            "jane doe",
+            "placeholder",
         }
 
         if persona.name and persona.name.lower().strip() in generic_names:
-            return [ValidationIssue(
-                rule="name_not_generic",
-                message=f"Persona name '{persona.name}' appears to be a generic placeholder",
-                level=ValidationLevel.WARNING,
-                field="name",
-                value=persona.name,
-            )]
+            return [
+                ValidationIssue(
+                    rule="name_not_generic",
+                    message=f"Persona name '{persona.name}' appears to be a generic placeholder",
+                    level=ValidationLevel.WARNING,
+                    field="name",
+                    value=persona.name,
+                )
+            ]
         return []
 
     def _check_goals_not_empty(self, persona: Persona) -> list[ValidationIssue]:
@@ -378,12 +419,14 @@ class PersonaValidator:
         issues = []
         for i, goal in enumerate(persona.goals or []):
             if not goal or not goal.strip():
-                issues.append(ValidationIssue(
-                    rule="goals_not_empty",
-                    message=f"Goal at index {i} is empty",
-                    level=ValidationLevel.ERROR,
-                    field=f"goals[{i}]",
-                ))
+                issues.append(
+                    ValidationIssue(
+                        rule="goals_not_empty",
+                        message=f"Goal at index {i} is empty",
+                        level=ValidationLevel.ERROR,
+                        field=f"goals[{i}]",
+                    )
+                )
         return issues
 
     def _check_unique_goals(self, persona: Persona) -> list[ValidationIssue]:
@@ -401,13 +444,15 @@ class PersonaValidator:
             seen.add(normalised)
 
         if duplicates:
-            return [ValidationIssue(
-                rule="unique_goals",
-                message=f"Found {len(duplicates)} duplicate goal(s)",
-                level=ValidationLevel.WARNING,
-                field="goals",
-                value=duplicates,
-            )]
+            return [
+                ValidationIssue(
+                    rule="unique_goals",
+                    message=f"Found {len(duplicates)} duplicate goal(s)",
+                    level=ValidationLevel.WARNING,
+                    field="goals",
+                    value=duplicates,
+                )
+            ]
         return []
 
     def _check_minimum_detail(self, persona: Persona) -> list[ValidationIssue]:
@@ -428,10 +473,12 @@ class PersonaValidator:
             detail_score += len(persona.quotes)
 
         if detail_score < 5:
-            return [ValidationIssue(
-                rule="minimum_detail",
-                message=f"Persona has low detail level (score: {detail_score}/5 minimum)",
-                level=ValidationLevel.INFO,
-                value=detail_score,
-            )]
+            return [
+                ValidationIssue(
+                    rule="minimum_detail",
+                    message=f"Persona has low detail level (score: {detail_score}/5 minimum)",
+                    level=ValidationLevel.INFO,
+                    value=detail_score,
+                )
+            ]
         return []

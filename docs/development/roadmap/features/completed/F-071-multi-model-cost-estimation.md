@@ -88,4 +88,3 @@ Budget Status: ✓ Within $5.00 limit
 - [Milestone v0.8.0](../../milestones/v0.8.0.md)
 - [F-007: Cost Estimation](F-007-cost-estimation.md)
 - [Model Cards](../../../../reference/model-cards.md)
-

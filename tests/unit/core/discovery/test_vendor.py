@@ -3,14 +3,12 @@
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
-
-import pytest
+from unittest.mock import MagicMock, patch
 
 from persona.core.discovery.vendor import (
+    DiscoveryResult,
     VendorDiscovery,
     VendorStatus,
-    DiscoveryResult,
 )
 
 
@@ -99,7 +97,9 @@ class TestVendorDiscovery:
             with patch("httpx.Client") as mock_client:
                 mock_response = MagicMock()
                 mock_response.status_code = 401  # Auth error but reachable
-                mock_client.return_value.__enter__.return_value.request.return_value = mock_response
+                mock_client.return_value.__enter__.return_value.request.return_value = (
+                    mock_response
+                )
 
                 discovery = VendorDiscovery(cache_enabled=False)
                 result = discovery.discover("anthropic")
@@ -113,7 +113,9 @@ class TestVendorDiscovery:
         import httpx
 
         with patch("httpx.Client") as mock_client:
-            mock_client.return_value.__enter__.return_value.get.side_effect = httpx.ConnectError("Connection refused")
+            mock_client.return_value.__enter__.return_value.get.side_effect = (
+                httpx.ConnectError("Connection refused")
+            )
 
             discovery = VendorDiscovery(cache_enabled=False)
             result = discovery.discover_ollama()
@@ -133,7 +135,9 @@ class TestVendorDiscovery:
                     {"name": "codellama"},
                 ],
             }
-            mock_client.return_value.__enter__.return_value.get.return_value = mock_response
+            mock_client.return_value.__enter__.return_value.get.return_value = (
+                mock_response
+            )
 
             discovery = VendorDiscovery(cache_enabled=False)
             result = discovery.discover_ollama()
@@ -154,8 +158,11 @@ class TestVendorDiscovery:
 
                 # Mock ollama as not running
                 import httpx
+
                 with patch("httpx.Client") as mock_client:
-                    mock_client.return_value.__enter__.return_value.get.side_effect = httpx.ConnectError("refused")
+                    mock_client.return_value.__enter__.return_value.get.side_effect = (
+                        httpx.ConnectError("refused")
+                    )
 
                     results = discovery.discover_all()
 
@@ -172,7 +179,9 @@ class TestVendorDiscovery:
             with patch("httpx.Client") as mock_client:
                 mock_response = MagicMock()
                 mock_response.status_code = 401
-                mock_client.return_value.__enter__.return_value.request.return_value = mock_response
+                mock_client.return_value.__enter__.return_value.request.return_value = (
+                    mock_response
+                )
 
                 discovery = VendorDiscovery(cache_enabled=False)
                 assert discovery.check_availability("anthropic") is True
@@ -183,8 +192,12 @@ class TestVendorDiscovery:
             with patch("httpx.Client") as mock_client:
                 mock_response = MagicMock()
                 mock_response.status_code = 401
-                mock_client.return_value.__enter__.return_value.request.return_value = mock_response
-                mock_client.return_value.__enter__.return_value.get.side_effect = Exception("Not running")
+                mock_client.return_value.__enter__.return_value.request.return_value = (
+                    mock_response
+                )
+                mock_client.return_value.__enter__.return_value.get.side_effect = (
+                    Exception("Not running")
+                )
 
                 discovery = VendorDiscovery(cache_enabled=False)
                 available = discovery.get_available_vendors()

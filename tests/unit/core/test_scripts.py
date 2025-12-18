@@ -3,11 +3,10 @@ Tests for conversation scripts (F-086).
 """
 
 import json
-import pytest
 
+import pytest
 from persona.core.generation.parser import Persona
 from persona.core.scripts.abstractors import (
-    AbstractorResult,
     BehaviourAbstractor,
     CharacterSynthesiser,
     QuoteAbstractor,
@@ -35,10 +34,8 @@ from persona.core.scripts.models import (
 )
 from persona.core.scripts.privacy import (
     LeakageType,
-    PrivacyAuditResult,
     PrivacyAuditor,
     PrivacyConfig,
-    PrivacyLeakageError,
 )
 
 
@@ -145,7 +142,9 @@ class TestQuoteAbstractor:
     def test_technical_detection(self):
         """Test detection of technical language."""
         abstractor = QuoteAbstractor()
-        result = abstractor.abstract(["The API integration with the database is broken."])
+        result = abstractor.abstract(
+            ["The API integration with the database is broken."]
+        )
         assert "comfortable with technical terminology" in result.abstracted_content
 
     def test_concise_detection(self):

@@ -5,10 +5,9 @@ This module provides privacy auditing to ensure conversation scripts
 don't leak source data. Output is BLOCKED if leakage exceeds threshold.
 """
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
-import re
 
 from persona.core.generation.parser import Persona
 from persona.core.scripts.models import CharacterCard
@@ -309,17 +308,93 @@ class PrivacyAuditor:
     def _extract_significant_words(self, text: str) -> list[str]:
         """Extract significant words (excluding stopwords)."""
         stopwords = {
-            "the", "a", "an", "is", "are", "was", "were", "be", "been",
-            "being", "have", "has", "had", "do", "does", "did", "will",
-            "would", "could", "should", "may", "might", "must", "shall",
-            "i", "you", "he", "she", "it", "we", "they", "me", "him",
-            "her", "us", "them", "my", "your", "his", "its", "our",
-            "their", "this", "that", "these", "those", "and", "or",
-            "but", "if", "then", "else", "when", "where", "why", "how",
-            "all", "each", "every", "both", "few", "more", "most",
-            "other", "some", "such", "no", "not", "only", "same", "so",
-            "than", "too", "very", "just", "can", "with", "from", "to",
-            "of", "for", "on", "in", "at", "by", "as", "into",
+            "the",
+            "a",
+            "an",
+            "is",
+            "are",
+            "was",
+            "were",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "do",
+            "does",
+            "did",
+            "will",
+            "would",
+            "could",
+            "should",
+            "may",
+            "might",
+            "must",
+            "shall",
+            "i",
+            "you",
+            "he",
+            "she",
+            "it",
+            "we",
+            "they",
+            "me",
+            "him",
+            "her",
+            "us",
+            "them",
+            "my",
+            "your",
+            "his",
+            "its",
+            "our",
+            "their",
+            "this",
+            "that",
+            "these",
+            "those",
+            "and",
+            "or",
+            "but",
+            "if",
+            "then",
+            "else",
+            "when",
+            "where",
+            "why",
+            "how",
+            "all",
+            "each",
+            "every",
+            "both",
+            "few",
+            "more",
+            "most",
+            "other",
+            "some",
+            "such",
+            "no",
+            "not",
+            "only",
+            "same",
+            "so",
+            "than",
+            "too",
+            "very",
+            "just",
+            "can",
+            "with",
+            "from",
+            "to",
+            "of",
+            "for",
+            "on",
+            "in",
+            "at",
+            "by",
+            "as",
+            "into",
         }
 
         words = re.findall(r"\b[a-z]+\b", text.lower())
@@ -355,7 +430,9 @@ class PrivacyAuditor:
         else:
             lines.append("Privacy audit FAILED - Output BLOCKED")
 
-        lines.append(f"Leakage score: {score:.3f} (threshold: {self._config.max_leakage_score})")
+        lines.append(
+            f"Leakage score: {score:.3f} (threshold: {self._config.max_leakage_score})"
+        )
 
         if leakages:
             lines.append(f"Detected {len(leakages)} potential leakages:")

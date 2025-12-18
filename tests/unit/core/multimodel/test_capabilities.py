@@ -1,14 +1,13 @@
 """Tests for model capabilities tracking (F-072)."""
 
-import pytest
 
 from persona.core.multimodel.capabilities import (
-    ModelCapabilities,
-    CapabilityQuery,
-    ModelComparison,
     CapabilityChecker,
-    get_model_capabilities,
+    CapabilityQuery,
+    ModelCapabilities,
+    ModelComparison,
     compare_models,
+    get_model_capabilities,
 )
 
 

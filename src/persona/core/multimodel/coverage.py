@@ -4,10 +4,10 @@ Analyses how well generated personas represent the source data,
 identifying gaps, overlaps, and theme coverage.
 """
 
+import re
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any
-from collections import Counter
-import re
 
 
 @dataclass
@@ -21,6 +21,7 @@ class ThemeCoverage:
         persona_ids: IDs of personas covering this theme.
         evidence_count: Number of evidence mentions.
     """
+
     theme: str
     coverage_percent: float
     persona_count: int
@@ -62,6 +63,7 @@ class SourceUtilisation:
         persona_ids: IDs of personas this source supports.
         token_count: Approximate tokens in source.
     """
+
     source: str
     utilisation: str
     persona_count: int
@@ -92,6 +94,7 @@ class CoverageAnalysis:
         suggestions: Actionable suggestions.
         overall_score: Overall coverage score (0-100).
     """
+
     theme_coverage: list[ThemeCoverage] = field(default_factory=list)
     source_utilisation: list[SourceUtilisation] = field(default_factory=list)
     persona_backing: dict[str, list[str]] = field(default_factory=dict)
@@ -175,20 +178,118 @@ class CoverageAnalyser:
 
     # Common stopwords to ignore in theme extraction
     STOPWORDS = {
-        "the", "a", "an", "is", "are", "was", "were", "be", "been",
-        "being", "have", "has", "had", "do", "does", "did", "will",
-        "would", "could", "should", "may", "might", "must", "shall",
-        "can", "need", "dare", "ought", "used", "to", "of", "in",
-        "for", "on", "with", "at", "by", "from", "as", "into", "through",
-        "during", "before", "after", "above", "below", "between", "under",
-        "again", "further", "then", "once", "here", "there", "when",
-        "where", "why", "how", "all", "each", "every", "both", "few",
-        "more", "most", "other", "some", "such", "no", "nor", "not",
-        "only", "own", "same", "so", "than", "too", "very", "just",
-        "and", "but", "if", "or", "because", "until", "while", "that",
-        "this", "these", "those", "what", "which", "who", "whom",
-        "i", "me", "my", "myself", "we", "our", "you", "your", "he",
-        "him", "his", "she", "her", "it", "its", "they", "them", "their",
+        "the",
+        "a",
+        "an",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "could",
+        "should",
+        "may",
+        "might",
+        "must",
+        "shall",
+        "can",
+        "need",
+        "dare",
+        "ought",
+        "used",
+        "to",
+        "of",
+        "in",
+        "for",
+        "on",
+        "with",
+        "at",
+        "by",
+        "from",
+        "as",
+        "into",
+        "through",
+        "during",
+        "before",
+        "after",
+        "above",
+        "below",
+        "between",
+        "under",
+        "again",
+        "further",
+        "then",
+        "once",
+        "here",
+        "there",
+        "when",
+        "where",
+        "why",
+        "how",
+        "all",
+        "each",
+        "every",
+        "both",
+        "few",
+        "more",
+        "most",
+        "other",
+        "some",
+        "such",
+        "no",
+        "nor",
+        "not",
+        "only",
+        "own",
+        "same",
+        "so",
+        "than",
+        "too",
+        "very",
+        "just",
+        "and",
+        "but",
+        "if",
+        "or",
+        "because",
+        "until",
+        "while",
+        "that",
+        "this",
+        "these",
+        "those",
+        "what",
+        "which",
+        "who",
+        "whom",
+        "i",
+        "me",
+        "my",
+        "myself",
+        "we",
+        "our",
+        "you",
+        "your",
+        "he",
+        "him",
+        "his",
+        "she",
+        "her",
+        "it",
+        "its",
+        "they",
+        "them",
+        "their",
     }
 
     def __init__(self, min_theme_mentions: int = 3):
@@ -234,9 +335,7 @@ class CoverageAnalyser:
         source_utilisation = []
         persona_backing = {}
         if source_data:
-            source_utilisation = self._analyse_source_utilisation(
-                personas, source_data
-            )
+            source_utilisation = self._analyse_source_utilisation(personas, source_data)
             persona_backing = self._build_persona_backing(personas, source_data)
 
         # Find gaps
@@ -269,13 +368,12 @@ class CoverageAnalyser:
         words = re.findall(r"\b[a-z]{4,}\b", all_text)
 
         # Count words, excluding stopwords
-        word_counts = Counter(
-            w for w in words if w not in self.STOPWORDS
-        )
+        word_counts = Counter(w for w in words if w not in self.STOPWORDS)
 
         # Get top themes
         themes = [
-            word for word, count in word_counts.most_common(20)
+            word
+            for word, count in word_counts.most_common(20)
             if count >= self.min_theme_mentions
         ]
 
@@ -319,13 +417,15 @@ class CoverageAnalyser:
 
             for persona in personas:
                 # Check all text fields
-                persona_text = " ".join([
-                    persona.get("name", ""),
-                    persona.get("role", ""),
-                    " ".join(persona.get("goals", [])),
-                    " ".join(persona.get("frustrations", [])),
-                    persona.get("background", ""),
-                ]).lower()
+                persona_text = " ".join(
+                    [
+                        persona.get("name", ""),
+                        persona.get("role", ""),
+                        " ".join(persona.get("goals", [])),
+                        " ".join(persona.get("frustrations", [])),
+                        persona.get("background", ""),
+                    ]
+                ).lower()
 
                 if theme.lower() in persona_text:
                     matching_personas.append(persona.get("id", "unknown"))
@@ -334,13 +434,15 @@ class CoverageAnalyser:
             # Calculate coverage percentage
             coverage_percent = (len(matching_personas) / len(personas)) * 100
 
-            coverage.append(ThemeCoverage(
-                theme=theme,
-                coverage_percent=coverage_percent,
-                persona_count=len(matching_personas),
-                persona_ids=matching_personas,
-                evidence_count=evidence_count,
-            ))
+            coverage.append(
+                ThemeCoverage(
+                    theme=theme,
+                    coverage_percent=coverage_percent,
+                    persona_count=len(matching_personas),
+                    persona_ids=matching_personas,
+                    evidence_count=evidence_count,
+                )
+            )
 
         return coverage
 
@@ -359,12 +461,14 @@ class CoverageAnalyser:
 
             matching_personas = []
             for persona in personas:
-                persona_text = " ".join([
-                    persona.get("name", ""),
-                    persona.get("role", ""),
-                    " ".join(persona.get("goals", [])),
-                    " ".join(persona.get("frustrations", [])),
-                ]).lower()
+                persona_text = " ".join(
+                    [
+                        persona.get("name", ""),
+                        persona.get("role", ""),
+                        " ".join(persona.get("goals", [])),
+                        " ".join(persona.get("frustrations", [])),
+                    ]
+                ).lower()
                 persona_words = set(re.findall(r"\b[a-z]{4,}\b", persona_text))
 
                 # Check overlap
@@ -380,13 +484,15 @@ class CoverageAnalyser:
             else:
                 level = "low"
 
-            utilisation.append(SourceUtilisation(
-                source=source,
-                utilisation=level,
-                persona_count=len(matching_personas),
-                persona_ids=matching_personas,
-                token_count=len(content.split()),
-            ))
+            utilisation.append(
+                SourceUtilisation(
+                    source=source,
+                    utilisation=level,
+                    persona_count=len(matching_personas),
+                    persona_ids=matching_personas,
+                    token_count=len(content.split()),
+                )
+            )
 
         return utilisation
 
@@ -402,11 +508,13 @@ class CoverageAnalyser:
             persona_id = persona.get("id", "unknown")
             backing[persona_id] = []
 
-            persona_text = " ".join([
-                persona.get("name", ""),
-                persona.get("role", ""),
-                " ".join(persona.get("goals", [])),
-            ]).lower()
+            persona_text = " ".join(
+                [
+                    persona.get("name", ""),
+                    persona.get("role", ""),
+                    " ".join(persona.get("goals", [])),
+                ]
+            ).lower()
             persona_words = set(re.findall(r"\b[a-z]{4,}\b", persona_text))
 
             for source, content in source_data.items():
@@ -425,14 +533,16 @@ class CoverageAnalyser:
         overlaps = []
 
         for i, p1 in enumerate(personas):
-            for p2 in personas[i + 1:]:
+            for p2 in personas[i + 1 :]:
                 overlap = self._calculate_persona_overlap(p1, p2)
                 if overlap >= 0.7:
-                    overlaps.append((
-                        p1.get("id", "unknown"),
-                        p2.get("id", "unknown"),
-                        overlap,
-                    ))
+                    overlaps.append(
+                        (
+                            p1.get("id", "unknown"),
+                            p2.get("id", "unknown"),
+                            overlap,
+                        )
+                    )
 
         return overlaps
 
@@ -470,9 +580,7 @@ class CoverageAnalyser:
 
         # Suggest for gaps
         if gaps:
-            suggestions.append(
-                f"Add more data sources covering: {', '.join(gaps[:3])}"
-            )
+            suggestions.append(f"Add more data sources covering: {', '.join(gaps[:3])}")
 
         # Suggest for overlaps
         if overlaps:

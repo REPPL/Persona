@@ -10,11 +10,11 @@ from typing import Any
 import httpx
 
 from persona.core.providers.base import (
+    AuthenticationError,
     LLMProvider,
     LLMResponse,
-    AuthenticationError,
-    RateLimitError,
     ModelNotFoundError,
+    RateLimitError,
 )
 
 

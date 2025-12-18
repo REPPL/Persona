@@ -69,4 +69,3 @@ capabilities:
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
 - [Model Cards](../../../../reference/model-cards.md)
-

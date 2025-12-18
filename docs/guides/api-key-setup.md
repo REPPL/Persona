@@ -189,4 +189,3 @@ Persona will:
 - [Model Cards](../reference/model-cards.md) - Model capabilities and pricing
 - [Provider APIs](../reference/provider-apis.md) - API specifications
 - [Configuration Reference](../reference/configuration-reference.md) - All configuration options
-

@@ -9,7 +9,11 @@ The package uses a registry pattern for extensible metrics, allowing custom
 metrics to be registered and discovered via entry points.
 """
 
-from persona.core.quality.base import MetricCategory, QualityMetric, get_metric_requirements
+from persona.core.quality.base import (
+    MetricCategory,
+    QualityMetric,
+    get_metric_requirements,
+)
 from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import (
     BatchQualityResult,

@@ -5,47 +5,47 @@ Provides multi-model persona generation, execution strategies,
 coverage analysis, confidence scoring, and consolidation mapping.
 """
 
-from persona.core.multimodel.generator import (
-    MultiModelGenerator,
-    ModelSpec,
-    MultiModelResult,
-    ModelOutput,
+from persona.core.multimodel.capabilities import (
+    CapabilityChecker,
+    CapabilityQuery,
+    ModelCapabilities,
+    ModelComparison,
 )
-from persona.core.multimodel.strategies import (
-    ExecutionStrategy,
-    ParallelStrategy,
-    SequentialStrategy,
-    ConsensusStrategy,
-    ExecutionMode,
+from persona.core.multimodel.confidence import (
+    AttributeConfidence,
+    ConfidenceLevel,
+    ConfidenceScorer,
+    PersonaConfidence,
+)
+from persona.core.multimodel.consolidation import (
+    ConsolidationMap,
+    ConsolidationMapper,
+    MergeRecommendation,
+    PersonaSimilarity,
+)
+from persona.core.multimodel.cost import (
+    ModelCostDetail,
+    MultiModelCostBreakdown,
+    MultiModelCostEstimator,
 )
 from persona.core.multimodel.coverage import (
     CoverageAnalyser,
     CoverageAnalysis,
-    ThemeCoverage,
     SourceUtilisation,
+    ThemeCoverage,
 )
-from persona.core.multimodel.confidence import (
-    ConfidenceScorer,
-    ConfidenceLevel,
-    AttributeConfidence,
-    PersonaConfidence,
+from persona.core.multimodel.generator import (
+    ModelOutput,
+    ModelSpec,
+    MultiModelGenerator,
+    MultiModelResult,
 )
-from persona.core.multimodel.consolidation import (
-    ConsolidationMapper,
-    PersonaSimilarity,
-    ConsolidationMap,
-    MergeRecommendation,
-)
-from persona.core.multimodel.cost import (
-    MultiModelCostEstimator,
-    MultiModelCostBreakdown,
-    ModelCostDetail,
-)
-from persona.core.multimodel.capabilities import (
-    ModelCapabilities,
-    CapabilityChecker,
-    CapabilityQuery,
-    ModelComparison,
+from persona.core.multimodel.strategies import (
+    ConsensusStrategy,
+    ExecutionMode,
+    ExecutionStrategy,
+    ParallelStrategy,
+    SequentialStrategy,
 )
 
 __all__ = [

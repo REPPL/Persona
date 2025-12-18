@@ -79,7 +79,9 @@ This survey will take approximately {self.estimated_time_minutes} minutes to com
         """
         return [q for q in self.questions if q.dimension == dimension]
 
-    def get_questions_by_type(self, question_type: QuestionType) -> list[SurveyQuestion]:
+    def get_questions_by_type(
+        self, question_type: QuestionType
+    ) -> list[SurveyQuestion]:
         """
         Get all questions of a specific type.
 

@@ -47,7 +47,9 @@ class SchemaValidator:
 
         total_checks = len(constraints.required_fields) + len(constraints.field_types)
         failed_checks = len(violations)
-        score = max(0.0, 1.0 - (failed_checks / total_checks)) if total_checks > 0 else 1.0
+        score = (
+            max(0.0, 1.0 - (failed_checks / total_checks)) if total_checks > 0 else 1.0
+        )
 
         return score, violations
 

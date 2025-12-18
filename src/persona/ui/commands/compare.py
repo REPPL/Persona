@@ -2,9 +2,9 @@
 Compare command for analysing persona similarities and differences.
 """
 
+import json
 from pathlib import Path
 from typing import Annotated, Optional
-import json
 
 import typer
 from rich.panel import Panel
@@ -86,22 +86,32 @@ def compare(
         personas = _load_personas(persona_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "compare",
-                "success": False,
-                "error": str(e),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "compare",
+                        "success": False,
+                        "error": str(e),
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error loading personas:[/red] {e}")
         raise typer.Exit(1)
 
     if len(personas) < 2:
         if json_output:
-            print(json.dumps({
-                "command": "compare",
-                "success": False,
-                "error": "Need at least 2 personas to compare",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "compare",
+                        "success": False,
+                        "error": "Need at least 2 personas to compare",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print("[yellow]Need at least 2 personas to compare.[/yellow]")
         raise typer.Exit(1)
@@ -117,7 +127,11 @@ def compare(
         if not persona_a:
             msg = f"Persona not found: {persona_id_a}"
             if json_output:
-                print(json.dumps({"command": "compare", "success": False, "error": msg}, indent=2))
+                print(
+                    json.dumps(
+                        {"command": "compare", "success": False, "error": msg}, indent=2
+                    )
+                )
             else:
                 console.print(f"[red]{msg}[/red]")
             raise typer.Exit(1)
@@ -125,7 +139,11 @@ def compare(
         if not persona_b:
             msg = f"Persona not found: {persona_id_b}"
             if json_output:
-                print(json.dumps({"command": "compare", "success": False, "error": msg}, indent=2))
+                print(
+                    json.dumps(
+                        {"command": "compare", "success": False, "error": msg}, indent=2
+                    )
+                )
             else:
                 console.print(f"[red]{msg}[/red]")
             raise typer.Exit(1)
@@ -133,12 +151,17 @@ def compare(
         result = comparator.compare(persona_a, persona_b)
 
         if json_output:
-            print(json.dumps({
-                "command": "compare",
-                "version": __version__,
-                "success": True,
-                "data": result.to_dict(),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "compare",
+                        "version": __version__,
+                        "success": True,
+                        "data": result.to_dict(),
+                    },
+                    indent=2,
+                )
+            )
             return
 
         # Rich output for single comparison
@@ -152,18 +175,23 @@ def compare(
         duplicates = [r for r in results if r.similarity.overall >= threshold]
 
         if json_output:
-            print(json.dumps({
-                "command": "compare",
-                "version": __version__,
-                "success": True,
-                "data": {
-                    "total_personas": len(personas),
-                    "comparisons": len(results),
-                    "threshold": threshold,
-                    "similar_pairs": len(duplicates),
-                    "comparisons_data": [r.to_dict() for r in results],
-                },
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "compare",
+                        "version": __version__,
+                        "success": True,
+                        "data": {
+                            "total_personas": len(personas),
+                            "comparisons": len(results),
+                            "threshold": threshold,
+                            "similar_pairs": len(duplicates),
+                            "comparisons_data": [r.to_dict() for r in results],
+                        },
+                    },
+                    indent=2,
+                )
+            )
             return
 
         # Rich output for all comparisons
@@ -172,11 +200,13 @@ def compare(
 
 def _display_single_comparison(console, persona_a, persona_b, result) -> None:
     """Display comparison between two personas."""
-    console.print(Panel.fit(
-        f"[bold]Persona Comparison[/bold]\n"
-        f"{persona_a.name} vs {persona_b.name}",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Comparison[/bold]\n"
+            f"{persona_a.name} vs {persona_b.name}",
+            border_style="blue",
+        )
+    )
 
     # Similarity scores
     sim = result.similarity
@@ -223,28 +253,32 @@ def _display_single_comparison(console, persona_a, persona_b, result) -> None:
         console.print("\n[bold]Demographic Differences:[/bold]")
         for diff in result.demographic_differences:
             console.print(
-                f"  [cyan]{diff.field}:[/cyan] "
-                f"{diff.persona_a} → {diff.persona_b}"
+                f"  [cyan]{diff.field}:[/cyan] " f"{diff.persona_a} → {diff.persona_b}"
             )
 
     # Summary
     if result.is_similar:
-        console.print(f"\n[yellow]These personas are similar ({sim.overall:.0f}%).[/yellow]")
+        console.print(
+            f"\n[yellow]These personas are similar ({sim.overall:.0f}%).[/yellow]"
+        )
         console.print("Consider consolidating or differentiating them.")
     else:
-        console.print(f"\n[green]These personas are distinct ({sim.overall:.0f}% similarity).[/green]")
+        console.print(
+            f"\n[green]These personas are distinct ({sim.overall:.0f}% similarity).[/green]"
+        )
 
 
 def _display_all_comparisons(console, personas, results, duplicates, threshold) -> None:
     """Display all pairwise comparisons."""
-    console.print(Panel.fit(
-        f"[bold]Persona Comparison[/bold]\n"
-        f"Analysing {len(personas)} personas",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Comparison[/bold]\n" f"Analysing {len(personas)} personas",
+            border_style="blue",
+        )
+    )
 
     # Summary
-    console.print(f"\n[bold]Summary:[/bold]")
+    console.print("\n[bold]Summary:[/bold]")
     console.print(f"  Total personas: {len(personas)}")
     console.print(f"  Comparisons: {len(results)}")
     console.print(f"  Similar pairs (>{threshold}%): {len(duplicates)}")
@@ -259,9 +293,17 @@ def _display_all_comparisons(console, personas, results, duplicates, threshold) 
         similar_table.add_column("Similarity", justify="right")
         similar_table.add_column("Relationship")
 
-        for result in sorted(duplicates, key=lambda r: r.similarity.overall, reverse=True):
-            name_a = next((p.name for p in personas if p.id == result.persona_a_id), result.persona_a_id)
-            name_b = next((p.name for p in personas if p.id == result.persona_b_id), result.persona_b_id)
+        for result in sorted(
+            duplicates, key=lambda r: r.similarity.overall, reverse=True
+        ):
+            name_a = next(
+                (p.name for p in personas if p.id == result.persona_a_id),
+                result.persona_a_id,
+            )
+            name_b = next(
+                (p.name for p in personas if p.id == result.persona_b_id),
+                result.persona_b_id,
+            )
 
             sim = result.similarity.overall
             if sim >= 90:
@@ -294,8 +336,14 @@ def _display_all_comparisons(console, personas, results, duplicates, threshold) 
     sorted_results = sorted(results, key=lambda r: r.similarity.overall, reverse=True)
 
     for result in sorted_results[:20]:  # Limit to top 20
-        name_a = next((p.name for p in personas if p.id == result.persona_a_id), result.persona_a_id)
-        name_b = next((p.name for p in personas if p.id == result.persona_b_id), result.persona_b_id)
+        name_a = next(
+            (p.name for p in personas if p.id == result.persona_a_id),
+            result.persona_a_id,
+        )
+        name_b = next(
+            (p.name for p in personas if p.id == result.persona_b_id),
+            result.persona_b_id,
+        )
 
         all_table.add_row(
             name_a[:20],
@@ -312,7 +360,9 @@ def _display_all_comparisons(console, personas, results, duplicates, threshold) 
 
     # Recommendations
     if duplicates:
-        console.print(f"\n[yellow]Recommendation:[/yellow] Review {len(duplicates)} similar pair(s) for potential consolidation.")
+        console.print(
+            f"\n[yellow]Recommendation:[/yellow] Review {len(duplicates)} similar pair(s) for potential consolidation."
+        )
     else:
         console.print("\n[green]All personas appear distinct.[/green]")
 

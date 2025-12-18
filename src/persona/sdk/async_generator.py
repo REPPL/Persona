@@ -6,20 +6,20 @@ with async applications like FastAPI.
 """
 
 import asyncio
+from collections.abc import Callable, Coroutine
 from pathlib import Path
-from typing import Any, Callable, Coroutine
+from typing import Any
 
-from persona.sdk.models import (
-    PersonaConfig,
-    GenerationResultModel,
-)
 from persona.sdk.exceptions import (
-    ConfigurationError,
     DataError,
     GenerationError,
     ProviderError,
 )
 from persona.sdk.generator import PersonaGenerator
+from persona.sdk.models import (
+    GenerationResultModel,
+    PersonaConfig,
+)
 
 
 class AsyncPersonaGenerator:
@@ -75,7 +75,9 @@ class AsyncPersonaGenerator:
         self._provider = provider
         self._model = model
         self._api_key = api_key
-        self._progress_callback: Callable[[str, int, int], Coroutine[Any, Any, None]] | None = None
+        self._progress_callback: Callable[
+            [str, int, int], Coroutine[Any, Any, None]
+        ] | None = None
 
     @property
     def provider(self) -> str:
@@ -153,6 +155,7 @@ class AsyncPersonaGenerator:
 
         # Set up sync progress callback that calls async one
         if self._progress_callback:
+
             def sync_callback(message: str, step: int, total: int) -> None:
                 # Schedule async callback
                 asyncio.run_coroutine_threadsafe(

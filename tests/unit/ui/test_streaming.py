@@ -2,16 +2,14 @@
 Tests for streaming output display (F-094).
 """
 
-import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from persona.ui.streaming import (
-    StreamingOutput,
-    SimpleProgress,
     GenerationProgress,
     PersonaProgress,
+    SimpleProgress,
+    StreamingOutput,
     get_progress_handler,
 )
 

@@ -53,4 +53,3 @@ Design teams use various persona tools (Figma, Miro, UXPressia, Adobe XD) for vi
 - [UC-007: Customise Persona Format](../../../../use-cases/briefs/UC-007-custom-format.md)
 - [G-03: Design Integration](../../../../guides/design-integration.md)
 - [F-005: Output Formatting](F-005-output-formatting.md)
-

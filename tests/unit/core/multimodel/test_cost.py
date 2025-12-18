@@ -1,14 +1,13 @@
 """Tests for multi-model cost estimation (F-071)."""
 
-import pytest
 
-from persona.core.multimodel.generator import ModelSpec
 from persona.core.multimodel.cost import (
     ModelCostDetail,
     MultiModelCostBreakdown,
     MultiModelCostEstimator,
     estimate_multi_model_cost,
 )
+from persona.core.multimodel.generator import ModelSpec
 
 
 class TestModelCostDetail:

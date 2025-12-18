@@ -20,6 +20,10 @@ P1 (Important)
 
 v0.2.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Background
 
 The Boag empathy mapping method structures user insights around five dimensions:
@@ -76,11 +80,11 @@ Structured table (following Lycett et al. 2025, Table 1):
 
 ## Success Criteria
 
-- [ ] Accepts empathy map structured YAML/JSON input
-- [ ] Handles messy, freeform text within categories
-- [ ] Generates distinct personas from clustered data
-- [ ] Outputs in table format suitable for stakeholder presentations
-- [ ] Shows which input data points map to which persona attributes
+- [x] Accepts empathy map structured YAML/JSON input
+- [x] Handles messy, freeform text within categories
+- [x] Generates distinct personas from clustered data
+- [x] Outputs in table format suitable for stakeholder presentations
+- [x] Shows which input data points map to which persona attributes
 - [ ] Optional: Accept workshop photos and extract text via vision LLM
 
 ## Derives Features

@@ -1,10 +1,8 @@
 """Tests for project manager."""
 
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from persona.core.project.manager import (
     ProjectManager,
     create_project,
@@ -12,7 +10,6 @@ from persona.core.project.manager import (
 )
 from persona.core.project.models import (
     DataSourceType,
-    ProjectDefaults,
     ProjectTemplate,
 )
 

@@ -6,10 +6,9 @@ for various input formats supported by Persona.
 """
 
 import csv
-import json
 import io
+import json
 from pathlib import Path
-from typing import Any
 
 
 def generate_interview_csv(

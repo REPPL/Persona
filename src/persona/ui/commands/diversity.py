@@ -5,7 +5,6 @@ Provides comprehensive lexical diversity metrics including TTR, MATTR, MTLD,
 and Hapax Ratio to assess vocabulary richness.
 """
 
-import json
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -19,7 +18,6 @@ from persona.core.quality.diversity import (
 )
 from persona.ui.commands.quality_base import (
     QualityOutputFormatter,
-    colour_score,
     create_panel,
     create_summary_table,
     display_version_header,
@@ -123,16 +121,20 @@ def diversity(
 
 def _display_rich_output(console, result) -> None:
     """Display results with Rich formatting."""
-    console.print(create_panel("[bold]Lexical Diversity Analysis[/bold]", border_style="blue"))
+    console.print(
+        create_panel("[bold]Lexical Diversity Analysis[/bold]", border_style="blue")
+    )
 
     # Summary table
-    summary = create_summary_table([
-        ("Personas analysed", str(len(result.reports))),
-        ("Average TTR", f"{result.average_ttr:.4f}"),
-        ("Average MATTR", f"{result.average_mattr:.4f}"),
-        ("Average MTLD", _colour_mtld(result.average_mtld)),
-        ("Average Hapax Ratio", f"{result.average_hapax_ratio:.4f}"),
-    ])
+    summary = create_summary_table(
+        [
+            ("Personas analysed", str(len(result.reports))),
+            ("Average TTR", f"{result.average_ttr:.4f}"),
+            ("Average MATTR", f"{result.average_mattr:.4f}"),
+            ("Average MTLD", _colour_mtld(result.average_mtld)),
+            ("Average Hapax Ratio", f"{result.average_hapax_ratio:.4f}"),
+        ]
+    )
     console.print(summary)
     console.print()
 

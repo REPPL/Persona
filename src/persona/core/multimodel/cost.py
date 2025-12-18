@@ -21,6 +21,7 @@ class ModelCostDetail:
         cost_output: Cost for output tokens (USD).
         total_cost: Total cost (USD).
     """
+
     provider: str
     model: str
     tokens_input: int
@@ -57,6 +58,7 @@ class MultiModelCostBreakdown:
         within_budget: Whether cost is within budget.
         budget_limit: The budget limit if set.
     """
+
     model_costs: list[ModelCostDetail] = field(default_factory=list)
     subtotal: float = 0.0
     mode_overhead: float = 0.0
@@ -101,10 +103,12 @@ class MultiModelCostBreakdown:
                 f"{mc.tokens_output:>10,} ${mc.total_cost:>7.4f}"
             )
 
-        lines.extend([
-            "─" * 50,
-            f"{'Subtotal:':<47} ${self.subtotal:>7.4f}",
-        ])
+        lines.extend(
+            [
+                "─" * 50,
+                f"{'Subtotal:':<47} ${self.subtotal:>7.4f}",
+            ]
+        )
 
         if self.mode_overhead > 0:
             lines.append(
@@ -112,14 +116,16 @@ class MultiModelCostBreakdown:
                 f"${self.mode_overhead:>7.4f}"
             )
 
-        lines.extend([
-            "─" * 50,
-            f"{'Total Estimated Cost:':<47} ${self.total_cost:>7.4f}",
-            "",
-            "Comparison:",
-            f"  Single model (cheapest): ${self.comparison_single_model:.4f}",
-            f"  Multi-model overhead: +{self.overhead_percentage:.0f}%",
-        ])
+        lines.extend(
+            [
+                "─" * 50,
+                f"{'Total Estimated Cost:':<47} ${self.total_cost:>7.4f}",
+                "",
+                "Comparison:",
+                f"  Single model (cheapest): ${self.comparison_single_model:.4f}",
+                f"  Multi-model overhead: +{self.overhead_percentage:.0f}%",
+            ]
+        )
 
         if self.budget_limit is not None:
             status = "✓ Within" if self.within_budget else "✗ Exceeds"
@@ -269,8 +275,7 @@ class MultiModelCostEstimator:
         # Get pricing for provider/model
         provider_pricing = self.PRICING.get(provider, {})
         model_pricing = provider_pricing.get(
-            model,
-            provider_pricing.get("default", {"input": 3.0, "output": 15.0})
+            model, provider_pricing.get("default", {"input": 3.0, "output": 15.0})
         )
 
         # Calculate costs

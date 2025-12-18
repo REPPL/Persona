@@ -172,7 +172,9 @@ class ModelDispatcher:
             List of results (one per sample).
         """
         tasks = [
-            self._generate_with_model(data, model, count=1, prompt_template=prompt_template)
+            self._generate_with_model(
+                data, model, count=1, prompt_template=prompt_template
+            )
             for _ in range(samples)
         ]
 
@@ -282,10 +284,11 @@ class ModelDispatcher:
 
         # Mock response
         import json
-        response_data = {
-            "personas": [p.to_dict() for p in personas]
-        }
-        raw_response = f"<output>\n```json\n{json.dumps(response_data, indent=2)}\n```\n</output>"
+
+        response_data = {"personas": [p.to_dict() for p in personas]}
+        raw_response = (
+            f"<output>\n```json\n{json.dumps(response_data, indent=2)}\n```\n</output>"
+        )
 
         return personas, tokens_in, tokens_out, raw_response
 

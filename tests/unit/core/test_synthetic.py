@@ -2,16 +2,16 @@
 Tests for synthetic data generation functionality (F-028).
 """
 
-import pytest
 import json
 from pathlib import Path
 
+import pytest
 from persona.core.synthetic import (
+    DataDomain,
+    GenerationConfig,
     SyntheticDataGenerator,
     SyntheticInterview,
     SyntheticParticipant,
-    DataDomain,
-    GenerationConfig,
 )
 
 
@@ -267,7 +267,9 @@ class TestSyntheticDataGenerator:
         participant = generator.generate_participant(DataDomain.FINTECH, 1)
 
         assert participant.id == "P001"
-        assert participant.role in SyntheticDataGenerator.DOMAIN_ROLES[DataDomain.FINTECH]
+        assert (
+            participant.role in SyntheticDataGenerator.DOMAIN_ROLES[DataDomain.FINTECH]
+        )
 
     def test_generate_interview(self):
         """Test interview generation for participant."""
@@ -467,8 +469,18 @@ class TestBiasMitigation:
         """Test all roles are descriptive, not gendered names."""
         # Common gendered names to check against
         gendered_names = {
-            "john", "jane", "michael", "sarah", "david", "emily",
-            "james", "mary", "robert", "jennifer", "william", "linda",
+            "john",
+            "jane",
+            "michael",
+            "sarah",
+            "david",
+            "emily",
+            "james",
+            "mary",
+            "robert",
+            "jennifer",
+            "william",
+            "linda",
         }
 
         for domain in DataDomain:
@@ -476,9 +488,9 @@ class TestBiasMitigation:
             for role in roles:
                 role_lower = role.lower()
                 for name in gendered_names:
-                    assert name not in role_lower, (
-                        f"Role '{role}' contains gendered name '{name}'"
-                    )
+                    assert (
+                        name not in role_lower
+                    ), f"Role '{role}' contains gendered name '{name}'"
 
     def test_age_distribution_is_balanced(self):
         """Test age groups have equal probability."""
@@ -525,9 +537,9 @@ class TestBiasMitigation:
                 for item in items:
                     item_lower = item.lower()
                     for stereotype in stereotypes:
-                        assert stereotype not in item_lower, (
-                            f"Fragment '{item}' contains stereotype '{stereotype}'"
-                        )
+                        assert (
+                            stereotype not in item_lower
+                        ), f"Fragment '{item}' contains stereotype '{stereotype}'"
 
     def test_no_assumed_demographic_behaviour_correlation(self):
         """Test that demographics don't deterministically affect responses."""

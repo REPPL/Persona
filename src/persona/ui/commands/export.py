@@ -2,15 +2,15 @@
 Export command for exporting personas to various formats.
 """
 
-from pathlib import Path
-from typing import Annotated, Optional
 import json
+from pathlib import Path
+from typing import Annotated
 
 import typer
 from rich.panel import Panel
 from rich.table import Table
 
-from persona.core.export import PersonaExporter, ExportFormat
+from persona.core.export import ExportFormat, PersonaExporter
 from persona.ui.console import get_console
 
 export_app = typer.Typer(
@@ -87,11 +87,16 @@ def export(
     except ValueError:
         valid_formats = ", ".join(f.value for f in ExportFormat)
         if json_output:
-            print(json.dumps({
-                "command": "export",
-                "success": False,
-                "error": f"Invalid format: {format}. Valid formats: {valid_formats}",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "export",
+                        "success": False,
+                        "error": f"Invalid format: {format}. Valid formats: {valid_formats}",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Invalid format:[/red] {format}")
             console.print(f"Valid formats: {valid_formats}")
@@ -102,22 +107,32 @@ def export(
         personas = _load_personas(persona_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "export",
-                "success": False,
-                "error": str(e),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "export",
+                        "success": False,
+                        "error": str(e),
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error loading personas:[/red] {e}")
         raise typer.Exit(1)
 
     if not personas:
         if json_output:
-            print(json.dumps({
-                "command": "export",
-                "success": False,
-                "error": "No personas found to export",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "export",
+                        "success": False,
+                        "error": "No personas found to export",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print("[yellow]No personas found to export.[/yellow]")
         raise typer.Exit(1)
@@ -129,22 +144,29 @@ def export(
         preview_content = exporter.preview(personas, export_format)
 
         if json_output:
-            print(json.dumps({
-                "command": "export",
-                "version": __version__,
-                "success": True,
-                "data": {
-                    "format": export_format.value,
-                    "persona_count": len(personas),
-                    "preview": preview_content,
-                },
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "export",
+                        "version": __version__,
+                        "success": True,
+                        "data": {
+                            "format": export_format.value,
+                            "persona_count": len(personas),
+                            "preview": preview_content,
+                        },
+                    },
+                    indent=2,
+                )
+            )
         else:
-            console.print(Panel.fit(
-                f"[bold]Export Preview[/bold]\n"
-                f"Format: {export_format.value} | Personas: {len(personas)}",
-                border_style="blue",
-            ))
+            console.print(
+                Panel.fit(
+                    f"[bold]Export Preview[/bold]\n"
+                    f"Format: {export_format.value} | Personas: {len(personas)}",
+                    border_style="blue",
+                )
+            )
             console.print(Panel(preview_content, title="Preview", border_style="dim"))
         return
 
@@ -152,21 +174,28 @@ def export(
     result = exporter.export(personas, export_format, output)
 
     if json_output:
-        print(json.dumps({
-            "command": "export",
-            "version": __version__,
-            "success": result.success,
-            "data": result.to_dict(),
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "command": "export",
+                    "version": __version__,
+                    "success": result.success,
+                    "data": result.to_dict(),
+                },
+                indent=2,
+            )
+        )
         if not result.success:
             raise typer.Exit(1)
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]Persona Export[/bold]\n{persona_path}",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Export[/bold]\n{persona_path}",
+            border_style="blue",
+        )
+    )
 
     if result.success:
         console.print(f"[green]✓[/green] Exported {result.persona_count} persona(s)")
@@ -189,6 +218,7 @@ def list_formats() -> None:
     console = get_console()
 
     from persona import __version__
+
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
     exporter = PersonaExporter()

@@ -96,4 +96,3 @@ Use delimiter tags in prompts:
 - [ADR-0020: Reasoning Capture Architecture](../../../decisions/adrs/ADR-0020-reasoning-capture-architecture.md)
 - [ADR-0011: Multi-Step Workflow](../../../decisions/adrs/ADR-0011-multi-step-workflow.md)
 - [Reproducibility](../../../../explanation/reproducibility.md)
-

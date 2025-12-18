@@ -8,13 +8,11 @@ Base Directory Specification and legacy ~/.persona/ location.
 
 import os
 from pathlib import Path
-from typing import Any
 
 import yaml
 
 from persona.core.project.models import (
     GlobalDefaults,
-    ProjectMetadata,
     ProjectRegistry,
 )
 

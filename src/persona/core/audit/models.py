@@ -5,7 +5,7 @@ Pydantic models for audit records and configuration.
 """
 
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal, Optional
 
@@ -75,7 +75,7 @@ class AuditRecord(BaseModel):
 
     audit_id: str = Field(..., description="Unique audit record identifier")
     timestamp: datetime = Field(
-        default_factory=datetime.utcnow, description="UTC timestamp"
+        default_factory=lambda: datetime.now(UTC), description="UTC timestamp"
     )
     tool_version: str = Field(..., description="Persona version")
     session: SessionInfo = Field(..., description="Session information")
@@ -101,9 +101,7 @@ class AuditConfig(BaseModel):
     retention_days: int = Field(
         default=180, description="Retention period in days (EU AI Act: 180)"
     )
-    sign_records: bool = Field(
-        default=False, description="Enable HMAC-SHA256 signing"
-    )
+    sign_records: bool = Field(default=False, description="Enable HMAC-SHA256 signing")
     signing_key: Optional[str] = Field(None, description="HMAC signing key")
 
     def get_store_path(self) -> Path:

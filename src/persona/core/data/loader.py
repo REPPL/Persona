@@ -2,15 +2,22 @@
 Base data loader and file discovery functionality.
 
 This module provides the core DataLoader class that handles loading
-qualitative research data from various file formats.
+qualitative research data from various file formats and remote URLs.
 """
+
+from __future__ import annotations
 
 import asyncio
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING
 
 import tiktoken
+
+if TYPE_CHECKING:
+    from persona.core.data.attribution import Attribution
+    from persona.core.data.url import URLFetcher, URLFetchResult, URLSource
+    from persona.core.data.url_cache import URLCache
 
 
 class FormatLoader(ABC):
@@ -39,6 +46,21 @@ class FormatLoader(ABC):
         """
         ...
 
+    def load_content(self, content: str) -> str:
+        """
+        Load content from a string directly.
+
+        Default implementation returns content unchanged.
+        Override for formats that need parsing (CSV, JSON, etc.).
+
+        Args:
+            content: Raw content string.
+
+        Returns:
+            Processed content string.
+        """
+        return content
+
     def can_load(self, path: Path) -> bool:
         """Check if this loader can handle the given file."""
         return path.suffix.lower() in self.extensions
@@ -48,13 +70,19 @@ class DataLoader:
     """
     Main data loader that discovers and combines files from various formats.
 
-    Supports loading from single files or directories, combining content
-    with clear separators for LLM processing.
+    Supports loading from single files, directories, or remote URLs,
+    combining content with clear separators for LLM processing.
 
     Example:
         loader = DataLoader()
         content, files = loader.load_path("./data")
         token_count = loader.count_tokens(content)
+
+        # Load from URL (requires terms acceptance)
+        content, sources = loader.load_path(
+            "https://example.com/data.csv",
+            accept_terms=True
+        )
     """
 
     # File separator used when combining multiple files
@@ -85,6 +113,37 @@ class DataLoader:
             YAMLLoader(),
         ]
         self._encoding: tiktoken.Encoding | None = None
+        self._url_fetcher: URLFetcher | None = None
+        self._url_cache: URLCache | None = None
+
+    @property
+    def url_fetcher(self) -> URLFetcher:
+        """Lazy-initialise URL fetcher."""
+        if self._url_fetcher is None:
+            from persona.core.data.url import URLFetcher
+
+            self._url_fetcher = URLFetcher()
+        return self._url_fetcher
+
+    @property
+    def url_cache(self) -> URLCache:
+        """Lazy-initialise URL cache."""
+        if self._url_cache is None:
+            from persona.core.data.url_cache import URLCache
+
+            self._url_cache = URLCache()
+        return self._url_cache
+
+    def is_url(self, path: str) -> bool:
+        """Check if a path is a URL.
+
+        Args:
+            path: Path or URL string.
+
+        Returns:
+            True if the path is a URL.
+        """
+        return str(path).startswith(("http://", "https://"))
 
     @property
     def supported_extensions(self) -> list[str]:
@@ -158,21 +217,41 @@ class DataLoader:
         self,
         path: str | Path,
         recursive: bool = True,
-    ) -> tuple[str, list[Path]]:
+        accept_terms: bool = False,
+        no_cache: bool = False,
+        attribution: Attribution | None = None,
+    ) -> tuple[str, list[Path | URLSource]]:
         """
-        Load and combine content from a file or directory.
+        Load and combine content from a file, directory, or URL.
 
         Args:
-            path: File or directory path.
+            path: File path, directory path, or URL.
             recursive: Whether to search subdirectories (default: True).
+            accept_terms: Whether to accept terms for URL sources (default: False).
+            no_cache: Whether to bypass cache for URL sources (default: False).
+            attribution: Optional attribution metadata for URL sources.
 
         Returns:
-            Tuple of (combined content, list of loaded files).
+            Tuple of (combined content, list of sources).
+            Sources can be Path objects (local files) or URLSource objects (URLs).
 
         Raises:
             FileNotFoundError: If the path does not exist.
             ValueError: If no loadable files are found.
+            TermsNotAcceptedError: If URL source and terms not accepted.
         """
+        path_str = str(path)
+
+        # Handle URL sources
+        if self.is_url(path_str):
+            return self._load_from_url(
+                path_str,
+                accept_terms=accept_terms,
+                no_cache=no_cache,
+                attribution=attribution,
+            )
+
+        # Handle local file/directory
         path = Path(path)
         files = self.discover_files(path, recursive=recursive)
 
@@ -189,7 +268,7 @@ class DataLoader:
                 # Add file header for context
                 header = f"# Source: {file_path.name}\n\n"
                 contents.append(header + file_content)
-            except Exception as e:
+            except Exception:
                 # Skip files that fail to load, but log the error
                 # TODO: Add proper logging
                 pass
@@ -199,6 +278,114 @@ class DataLoader:
 
         combined = self.FILE_SEPARATOR.join(contents)
         return combined, files
+
+    def _load_from_url(
+        self,
+        url: str,
+        accept_terms: bool = False,
+        no_cache: bool = False,
+        attribution: Attribution | None = None,
+    ) -> tuple[str, list[URLSource]]:
+        """
+        Load content from a URL.
+
+        Args:
+            url: URL to load.
+            accept_terms: Whether to accept terms.
+            no_cache: Whether to bypass cache.
+            attribution: Optional attribution metadata.
+
+        Returns:
+            Tuple of (content, list containing URLSource).
+
+        Raises:
+            TermsNotAcceptedError: If terms not accepted.
+            URLValidationError: If URL validation fails.
+        """
+        from persona.core.data.url import URLSource
+
+        # Check cache first (unless no_cache is True)
+        if not no_cache:
+            cached_entry = self.url_cache.get(url)
+            if cached_entry and not cached_entry.is_expired:
+                # Use cached content
+                content = cached_entry.get_content()
+
+                # Build source from cache
+                source = URLSource(
+                    original_url=url,
+                    resolved_url=cached_entry.resolved_url,
+                    etag=cached_entry.etag,
+                    fetched_at=cached_entry.fetched_at or __import__("datetime").datetime.now(),
+                    size_bytes=cached_entry.size_bytes,
+                    terms_accepted=True,
+                    attribution=attribution,
+                )
+
+                # Process content through appropriate loader
+                fmt = self.url_fetcher.infer_format(url)
+                if fmt:
+                    loader = self._get_loader_for_extension(f".{fmt}")
+                    if loader:
+                        content = loader.load_content(content)
+
+                header = f"# Source: {url}\n\n"
+                return header + content, [source]
+
+        # Fetch from URL
+        etag = None if no_cache else self.url_cache.get_etag(url)
+
+        result = self.url_fetcher.fetch(
+            url,
+            accept_terms=accept_terms,
+            etag=etag,
+            attribution=attribution,
+        )
+
+        # Handle 304 Not Modified
+        if result.from_cache and not result.content:
+            # Content unchanged, use cached version
+            cached_entry = self.url_cache.get(url)
+            if cached_entry:
+                content = cached_entry.get_content()
+
+                # Process content through appropriate loader
+                fmt = self.url_fetcher.infer_format(url)
+                if fmt:
+                    loader = self._get_loader_for_extension(f".{fmt}")
+                    if loader:
+                        content = loader.load_content(content)
+
+                header = f"# Source: {url}\n\n"
+                return header + content, [result.source]
+
+        # Store in cache
+        self.url_cache.put(url, result.content, result.source)
+
+        # Process content through appropriate loader
+        content = result.content
+        fmt = self.url_fetcher.infer_format(url, result.source.content_type)
+        if fmt:
+            loader = self._get_loader_for_extension(f".{fmt}")
+            if loader:
+                content = loader.load_content(content)
+
+        header = f"# Source: {url}\n\n"
+        return header + content, [result.source]
+
+    def _get_loader_for_extension(self, extension: str) -> FormatLoader | None:
+        """Get a loader that handles the given extension.
+
+        Args:
+            extension: File extension (with dot, e.g., ".csv").
+
+        Returns:
+            FormatLoader if found, None otherwise.
+        """
+        for loader in self._loaders:
+            if extension.lower() in loader.extensions:
+                return loader
+        return None
 
     def count_tokens(self, text: str, model: str | None = None) -> int:
         """
@@ -287,21 +474,40 @@ class DataLoader:
         self,
         path: str | Path,
         recursive: bool = True,
-    ) -> tuple[str, list[Path]]:
+        accept_terms: bool = False,
+        no_cache: bool = False,
+        attribution: Attribution | None = None,
+    ) -> tuple[str, list[Path | URLSource]]:
         """
-        Load and combine content from a file or directory asynchronously.
+        Load and combine content from a file, directory, or URL asynchronously.
 
         Args:
-            path: File or directory path.
+            path: File path, directory path, or URL.
             recursive: Whether to search subdirectories (default: True).
+            accept_terms: Whether to accept terms for URL sources (default: False).
+            no_cache: Whether to bypass cache for URL sources (default: False).
+            attribution: Optional attribution metadata for URL sources.
 
         Returns:
-            Tuple of (combined content, list of loaded files).
+            Tuple of (combined content, list of sources).
 
         Raises:
             FileNotFoundError: If the path does not exist.
             ValueError: If no loadable files are found.
+            TermsNotAcceptedError: If URL source and terms not accepted.
         """
+        path_str = str(path)
+
+        # Handle URL sources
+        if self.is_url(path_str):
+            return await self._load_from_url_async(
+                path_str,
+                accept_terms=accept_terms,
+                no_cache=no_cache,
+                attribution=attribution,
+            )
+
+        # Handle local file/directory
         path = Path(path)
         files = self.discover_files(path, recursive=recursive)
 
@@ -335,3 +541,97 @@ class DataLoader:
 
         combined = self.FILE_SEPARATOR.join(valid_contents)
         return combined, files
+
+    async def _load_from_url_async(
+        self,
+        url: str,
+        accept_terms: bool = False,
+        no_cache: bool = False,
+        attribution: Attribution | None = None,
+    ) -> tuple[str, list[URLSource]]:
+        """
+        Load content from a URL asynchronously.
+
+        Args:
+            url: URL to load.
+            accept_terms: Whether to accept terms.
+            no_cache: Whether to bypass cache.
+            attribution: Optional attribution metadata.
+
+        Returns:
+            Tuple of (content, list containing URLSource).
+
+        Raises:
+            TermsNotAcceptedError: If terms not accepted.
+            URLValidationError: If URL validation fails.
+        """
+        from persona.core.data.url import URLSource
+
+        # Check cache first (unless no_cache is True)
+        if not no_cache:
+            cached_entry = self.url_cache.get(url)
+            if cached_entry and not cached_entry.is_expired:
+                # Use cached content
+                content = cached_entry.get_content()
+
+                # Build source from cache
+                source = URLSource(
+                    original_url=url,
+                    resolved_url=cached_entry.resolved_url,
+                    etag=cached_entry.etag,
+                    fetched_at=cached_entry.fetched_at or __import__("datetime").datetime.now(),
+                    size_bytes=cached_entry.size_bytes,
+                    terms_accepted=True,
+                    attribution=attribution,
+                )
+
+                # Process content through appropriate loader
+                fmt = self.url_fetcher.infer_format(url)
+                if fmt:
+                    loader = self._get_loader_for_extension(f".{fmt}")
+                    if loader:
+                        content = loader.load_content(content)
+
+                header = f"# Source: {url}\n\n"
+                return header + content, [source]
+
+        # Fetch from URL
+        etag = None if no_cache else self.url_cache.get_etag(url)
+
+        result = await self.url_fetcher.fetch_async(
+            url,
+            accept_terms=accept_terms,
+            etag=etag,
+            attribution=attribution,
+        )
+
+        # Handle 304 Not Modified
+        if result.from_cache and not result.content:
+            # Content unchanged, use cached version
+            cached_entry = self.url_cache.get(url)
+            if cached_entry:
+                content = cached_entry.get_content()
+
+                # Process content through appropriate loader
+                fmt = self.url_fetcher.infer_format(url)
+                if fmt:
+                    loader = self._get_loader_for_extension(f".{fmt}")
+                    if loader:
+                        content = loader.load_content(content)
+
+                header = f"# Source: {url}\n\n"
+                return header + content, [result.source]
+
+        # Store in cache
+        self.url_cache.put(url, result.content, result.source)
+
+        # Process content through appropriate loader
+        content = result.content
+        fmt = self.url_fetcher.infer_format(url, result.source.content_type)
+        if fmt:
+            loader = self._get_loader_for_extension(f".{fmt}")
+            if loader:
+                content = loader.load_content(content)
+
+        header = f"# Source: {url}\n\n"
+        return header + content, [result.source]

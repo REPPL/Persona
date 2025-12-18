@@ -6,7 +6,7 @@ complete LLM responses including metadata, tokens, and timing information.
 """
 
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -67,7 +67,9 @@ class ResponseCapture:
     provider_metadata: dict[str, Any] = field(default_factory=dict)
 
     # Unique identifier for this capture
-    capture_id: str = field(default_factory=lambda: datetime.now().strftime("%Y%m%d_%H%M%S_%f"))
+    capture_id: str = field(
+        default_factory=lambda: datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    )
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -194,7 +196,7 @@ class ResponseCaptureStore:
         if not filepath.exists():
             raise FileNotFoundError(f"Capture not found: {capture_id}")
 
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             data = json.load(f)
 
         return ResponseCapture.from_dict(data)

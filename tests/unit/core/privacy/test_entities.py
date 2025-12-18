@@ -1,7 +1,6 @@
 """Tests for privacy entities."""
 
 import pytest
-
 from persona.core.privacy.entities import (
     AnonymisationResult,
     AnonymisationStrategy,

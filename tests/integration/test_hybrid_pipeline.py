@@ -9,7 +9,6 @@ Run with:
 """
 
 import pytest
-
 from persona.core.hybrid import HybridConfig, HybridPipeline
 
 
@@ -68,14 +67,16 @@ async def test_hybrid_pipeline_local_only():
 
     # Print results for manual verification
     print(f"\n{'=' * 60}")
-    print(f"Hybrid Pipeline Test Results (Local-Only Mode)")
+    print("Hybrid Pipeline Test Results (Local-Only Mode)")
     print(f"{'=' * 60}")
     print(f"Generated: {result.persona_count} personas")
     print(f"Time: {result.generation_time:.2f}s")
     print(f"Cost: ${result.total_cost:.4f}")
-    print(f"\nPersonas:")
+    print("\nPersonas:")
     for i, persona in enumerate(result.personas, 1):
-        print(f"  {i}. {persona.get('name', 'Unknown')} ({persona.get('id', 'unknown')})")
+        print(
+            f"  {i}. {persona.get('name', 'Unknown')} ({persona.get('id', 'unknown')})"
+        )
     print(f"{'=' * 60}\n")
 
 
@@ -125,7 +126,7 @@ async def test_hybrid_pipeline_full_hybrid():
 
     # Print results
     print(f"\n{'=' * 60}")
-    print(f"Hybrid Pipeline Test Results (Full Hybrid Mode)")
+    print("Hybrid Pipeline Test Results (Full Hybrid Mode)")
     print(f"{'=' * 60}")
     print(f"Generated: {result.persona_count} personas")
     print(f"Drafts: {result.draft_count}")
@@ -133,7 +134,7 @@ async def test_hybrid_pipeline_full_hybrid():
     print(f"Refined: {result.refined_count}")
     print(f"Time: {result.generation_time:.2f}s")
     print(f"Cost: ${result.total_cost:.4f}")
-    print(f"\nPersonas:")
+    print("\nPersonas:")
     for i, persona in enumerate(result.personas, 1):
         status = "[refined]" if persona.get("_refined", False) else "[draft]"
         print(f"  {i}. {persona.get('name', 'Unknown')} {status}")

@@ -11,7 +11,7 @@ from typing import Any
 
 import yaml
 
-from persona.core.prompts.template import PromptTemplate, DEFAULT_PERSONA_TEMPLATE
+from persona.core.prompts.template import DEFAULT_PERSONA_TEMPLATE, PromptTemplate
 
 
 @dataclass
@@ -35,7 +35,9 @@ class Workflow:
 
     name: str
     description: str = ""
-    template: PromptTemplate = field(default_factory=lambda: PromptTemplate(DEFAULT_PERSONA_TEMPLATE))
+    template: PromptTemplate = field(
+        default_factory=lambda: PromptTemplate(DEFAULT_PERSONA_TEMPLATE)
+    )
     provider: str = "anthropic"
     model: str | None = None
     temperature: float = 0.7
@@ -149,8 +151,7 @@ class WorkflowLoader:
         if name not in self.BUILTIN_WORKFLOWS:
             available = ", ".join(self.list_builtin())
             raise ValueError(
-                f"Unknown built-in workflow: {name}. "
-                f"Available: {available}"
+                f"Unknown built-in workflow: {name}. " f"Available: {available}"
             )
 
         config = self.BUILTIN_WORKFLOWS[name].copy()

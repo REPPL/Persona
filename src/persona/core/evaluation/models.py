@@ -104,7 +104,9 @@ class BatchEvaluationResult(BaseModel):
     """
 
     results: list[EvaluationResult] = Field(..., description="Individual results")
-    average_overall: float = Field(..., ge=0.0, le=1.0, description="Mean overall score")
+    average_overall: float = Field(
+        ..., ge=0.0, le=1.0, description="Mean overall score"
+    )
     average_by_criterion: dict[EvaluationCriteria, float] = Field(
         ..., description="Mean scores by criterion"
     )

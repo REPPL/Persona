@@ -13,7 +13,6 @@ from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
-    from persona.core.comparison.comparator import ComparisonResult
     from persona.core.evidence.linker import EvidenceReport
 
 
@@ -66,6 +65,7 @@ class DistinctivenessMetric(QualityMetric):
         """Lazy load comparator to avoid circular imports."""
         if self._comparator is None:
             from persona.core.comparison.comparator import PersonaComparator
+
             self._comparator = PersonaComparator()
         return self._comparator
 
@@ -129,9 +129,7 @@ class DistinctivenessMetric(QualityMetric):
         details["max_similarity"] = round(max_sim, 2)
 
         if max_sim > self.config.max_similarity_threshold * 100:
-            similar_to = next(
-                s for s in similarities if s["similarity"] == max_sim
-            )
+            similar_to = next(s for s in similarities if s["similarity"] == max_sim)
             issues.append(
                 f"Too similar to '{similar_to['other_name']}' "
                 f"({max_sim:.0f}% similarity)"
@@ -147,11 +145,7 @@ class DistinctivenessMetric(QualityMetric):
             persona, other_personas, details
         )
 
-        overall = (
-            max_sim_score * 0.50 +
-            avg_sim_score * 0.30 +
-            unique_score * 0.20
-        )
+        overall = max_sim_score * 0.50 + avg_sim_score * 0.30 + unique_score * 0.20
 
         details["similarity_details"] = [
             {
@@ -182,19 +176,23 @@ class DistinctivenessMetric(QualityMetric):
         for other in others:
             try:
                 result = comparator.compare(persona, other)
-                similarities.append({
-                    "other_id": other.id,
-                    "other_name": other.name,
-                    "similarity": result.similarity.overall,
-                })
+                similarities.append(
+                    {
+                        "other_id": other.id,
+                        "other_name": other.name,
+                        "similarity": result.similarity.overall,
+                    }
+                )
             except Exception:
                 # If comparison fails, estimate based on text overlap
                 similarity = self._estimate_similarity(persona, other)
-                similarities.append({
-                    "other_id": other.id,
-                    "other_name": other.name,
-                    "similarity": similarity,
-                })
+                similarities.append(
+                    {
+                        "other_id": other.id,
+                        "other_name": other.name,
+                        "similarity": similarity,
+                    }
+                )
 
         return similarities
 
@@ -204,14 +202,14 @@ class DistinctivenessMetric(QualityMetric):
         p1_items = set()
         p2_items = set()
 
-        for goal in (p1.goals or []):
+        for goal in p1.goals or []:
             p1_items.update(goal.lower().split())
-        for pain in (p1.pain_points or []):
+        for pain in p1.pain_points or []:
             p1_items.update(pain.lower().split())
 
-        for goal in (p2.goals or []):
+        for goal in p2.goals or []:
             p2_items.update(goal.lower().split())
-        for pain in (p2.pain_points or []):
+        for pain in p2.pain_points or []:
             p2_items.update(pain.lower().split())
 
         if not p1_items or not p2_items:

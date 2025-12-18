@@ -4,10 +4,10 @@ Tracks token usage per LLM call with breakdown by component
 and aggregation for analysis.
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any
 import json
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from typing import Any
 
 
 @dataclass
@@ -21,6 +21,7 @@ class TokenBreakdown:
         output: Output tokens.
         other: Other/unclassified tokens.
     """
+
     system: int = 0
     data: int = 0
     instructions: int = 0
@@ -66,6 +67,7 @@ class TokenUsage:
         cost_usd: Cost in USD.
         latency_ms: Call latency in milliseconds.
     """
+
     timestamp: str
     run_id: str
     step: str
@@ -119,6 +121,7 @@ class TokenUsageSummary:
         by_model: Usage by model.
         breakdown: Aggregate breakdown.
     """
+
     total_input: int = 0
     total_output: int = 0
     total_cost_usd: float = 0.0
@@ -171,29 +174,35 @@ class TokenUsageSummary:
                 f"{data['output']:>6,} │ ${data['cost']:>5.2f} │"
             )
 
-        lines.extend([
-            "└─────────────────────────┴────────┴────────┴───────┘",
-            f"Total:                     {self.total_input:>6,}   "
-            f"{self.total_output:>6,}   ${self.total_cost_usd:>5.2f}",
-            "",
-            "By Prompt Component:",
-        ])
+        lines.extend(
+            [
+                "└─────────────────────────┴────────┴────────┴───────┘",
+                f"Total:                     {self.total_input:>6,}   "
+                f"{self.total_output:>6,}   ${self.total_cost_usd:>5.2f}",
+                "",
+                "By Prompt Component:",
+            ]
+        )
 
         if self.total_tokens > 0:
             bd = self.breakdown
-            lines.extend([
-                f"  System prompt:    {bd.system:>6,} tokens ({100*bd.system/self.total_tokens:.1f}%)",
-                f"  Data context:     {bd.data:>6,} tokens ({100*bd.data/self.total_tokens:.1f}%)",
-                f"  Instructions:     {bd.instructions:>6,} tokens ({100*bd.instructions/self.total_tokens:.1f}%)",
-                f"  Output:           {bd.output:>6,} tokens ({100*bd.output/self.total_tokens:.1f}%)",
-            ])
+            lines.extend(
+                [
+                    f"  System prompt:    {bd.system:>6,} tokens ({100*bd.system/self.total_tokens:.1f}%)",
+                    f"  Data context:     {bd.data:>6,} tokens ({100*bd.data/self.total_tokens:.1f}%)",
+                    f"  Instructions:     {bd.instructions:>6,} tokens ({100*bd.instructions/self.total_tokens:.1f}%)",
+                    f"  Output:           {bd.output:>6,} tokens ({100*bd.output/self.total_tokens:.1f}%)",
+                ]
+            )
 
-        lines.extend([
-            "",
-            "Efficiency Metrics:",
-            f"  Output/Input ratio: {self.output_input_ratio:.1%}",
-            f"  Total calls: {self.call_count}",
-        ])
+        lines.extend(
+            [
+                "",
+                "Efficiency Metrics:",
+                f"  Output/Input ratio: {self.output_input_ratio:.1%}",
+                f"  Total calls: {self.call_count}",
+            ]
+        )
 
         return "\n".join(lines)
 
@@ -260,7 +269,7 @@ class TokenUsageLogger:
             Created TokenUsage record.
         """
         usage = TokenUsage(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             run_id=run_id or self.run_id,
             step=step,
             model=model,
@@ -294,18 +303,14 @@ class TokenUsageLogger:
 
             # Aggregate by step
             if usage.step not in summary.by_step:
-                summary.by_step[usage.step] = {
-                    "input": 0, "output": 0, "cost": 0.0
-                }
+                summary.by_step[usage.step] = {"input": 0, "output": 0, "cost": 0.0}
             summary.by_step[usage.step]["input"] += usage.input_tokens
             summary.by_step[usage.step]["output"] += usage.output_tokens
             summary.by_step[usage.step]["cost"] += usage.cost_usd
 
             # Aggregate by model
             if usage.model not in summary.by_model:
-                summary.by_model[usage.model] = {
-                    "input": 0, "output": 0, "cost": 0.0
-                }
+                summary.by_model[usage.model] = {"input": 0, "output": 0, "cost": 0.0}
             summary.by_model[usage.model]["input"] += usage.input_tokens
             summary.by_model[usage.model]["output"] += usage.output_tokens
             summary.by_model[usage.model]["cost"] += usage.cost_usd
@@ -364,7 +369,7 @@ def log_token_usage(
         TokenUsage record.
     """
     return TokenUsage(
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         run_id="",
         step=step,
         model=model,

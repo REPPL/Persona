@@ -3,14 +3,12 @@
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
-
-import pytest
+from unittest.mock import MagicMock, patch
 
 from persona.core.discovery.model import (
     ModelDiscovery,
-    ModelStatus,
     ModelDiscoveryResult,
+    ModelStatus,
 )
 
 
@@ -109,12 +107,14 @@ class TestModelDiscovery:
             user_dir.mkdir()
 
             # Create custom model config
-            (user_dir / "custom-model.yaml").write_text("""
+            (user_dir / "custom-model.yaml").write_text(
+                """
 id: custom-model
 name: Custom Model
 provider: custom
 context_window: 128000
-""")
+"""
+            )
 
             discovery = ModelDiscovery(
                 user_dir=user_dir,
@@ -250,10 +250,15 @@ context_window: 128000
                     "data": [
                         {"id": "gpt-4o", "owned_by": "openai"},
                         {"id": "gpt-4o-mini", "owned_by": "openai"},
-                        {"id": "dall-e-3", "owned_by": "openai"},  # Should be filtered out
+                        {
+                            "id": "dall-e-3",
+                            "owned_by": "openai",
+                        },  # Should be filtered out
                     ],
                 }
-                mock_client.return_value.__enter__.return_value.get.return_value = mock_response
+                mock_client.return_value.__enter__.return_value.get.return_value = (
+                    mock_response
+                )
 
                 discovery = ModelDiscovery(cache_enabled=False)
                 results = discovery._query_openai_models()

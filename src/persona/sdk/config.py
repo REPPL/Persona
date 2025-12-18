@@ -193,7 +193,7 @@ class SDKConfig(BaseModel):
             )
 
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 data = yaml.safe_load(f)
         except yaml.YAMLError as e:
             raise ConfigurationError(
@@ -294,9 +294,7 @@ class SDKConfig(BaseModel):
         path = Path(path).expanduser()
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        data = {
-            "sdk": self.model_dump(exclude={"config_file_path"}, exclude_none=True)
-        }
+        data = {"sdk": self.model_dump(exclude={"config_file_path"}, exclude_none=True)}
 
         with open(path, "w", encoding="utf-8") as f:
             yaml.safe_dump(data, f, default_flow_style=False, sort_keys=False)

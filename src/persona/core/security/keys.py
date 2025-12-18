@@ -10,7 +10,6 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-
 # Common API key patterns for different providers
 API_KEY_PATTERNS = [
     # Anthropic - more flexible pattern

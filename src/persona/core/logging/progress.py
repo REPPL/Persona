@@ -4,11 +4,12 @@ Provides visual progress tracking for long-running operations
 with ETA calculation and nested progress support.
 """
 
+import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Iterator
-from contextlib import contextmanager
-import sys
+from typing import Any
 
 
 @dataclass
@@ -25,6 +26,7 @@ class TaskProgress:
         end_time: When the task ended.
         subtasks: Nested subtasks.
     """
+
     task_id: str
     description: str
     total: int = 100
@@ -115,6 +117,7 @@ class ProgressTracker:
         """Check if Rich is available and TTY is attached."""
         try:
             from rich.progress import Progress
+
             return sys.stdout.isatty()
         except ImportError:
             return False
@@ -158,7 +161,6 @@ class ProgressTracker:
         self._tasks[task_id] = task
 
         if self.use_rich and self._rich_progress:
-            from rich.progress import TaskID
             rich_task = self._rich_progress.add_task(description, total=total)
             self._rich_tasks[task_id] = rich_task
 
@@ -321,7 +323,9 @@ class ProgressTracker:
                 "failed": "✗",
             }.get(task.status, "?")
 
-            percent_bar = "━" * int(task.percent / 5) + "─" * (20 - int(task.percent / 5))
+            percent_bar = "━" * int(task.percent / 5) + "─" * (
+                20 - int(task.percent / 5)
+            )
             eta = self._format_time(task.eta_seconds)
 
             lines.append(
@@ -339,7 +343,16 @@ class ProgressTracker:
         """Context manager entry."""
         if self.use_rich:
             try:
-                from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn, TimeElapsedColumn, TimeRemainingColumn
+                from rich.progress import (
+                    BarColumn,
+                    Progress,
+                    SpinnerColumn,
+                    TaskProgressColumn,
+                    TextColumn,
+                    TimeElapsedColumn,
+                    TimeRemainingColumn,
+                )
+
                 self._rich_progress = Progress(
                     SpinnerColumn(),
                     TextColumn("[progress.description]{task.description}"),

@@ -9,18 +9,17 @@ import asyncio
 from pathlib import Path
 from typing import Any
 
-from persona.sdk.models import (
-    ExperimentConfig,
-    ExperimentModel,
-    PersonaConfig,
-    GenerationResultModel,
-)
+from persona.sdk.async_generator import AsyncPersonaGenerator
 from persona.sdk.exceptions import (
-    ConfigurationError,
     DataError,
 )
 from persona.sdk.experiment import ExperimentSDK
-from persona.sdk.async_generator import AsyncPersonaGenerator
+from persona.sdk.models import (
+    ExperimentConfig,
+    ExperimentModel,
+    GenerationResultModel,
+    PersonaConfig,
+)
 
 
 class AsyncExperimentSDK:

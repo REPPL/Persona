@@ -4,16 +4,18 @@ Provides structured logging with consistent field naming,
 context binding, and multiple output formats.
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Any, Callable
 import json
 import sys
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from enum import Enum
+from typing import Any
 
 
 class OutputFormat(Enum):
     """Log output formats."""
+
     JSON = "json"
     CONSOLE = "console"
     BOTH = "both"
@@ -30,6 +32,7 @@ class LogContext:
         model: Current model being used.
         extra: Additional context fields.
     """
+
     experiment_id: str | None = None
     run_id: str | None = None
     step: str | None = None
@@ -72,6 +75,7 @@ class StructuredLogEntry:
         context: Associated context.
         data: Event-specific data.
     """
+
     timestamp: str
     level: str
     event: str
@@ -159,7 +163,7 @@ class StructuredLogger:
     ) -> StructuredLogEntry:
         """Create a structured log entry."""
         return StructuredLogEntry(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             level=level,
             event=event,
             context=self.context,

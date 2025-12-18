@@ -369,8 +369,7 @@ class EmpathyTableFormatter:
             List of EmpathyTableRow objects.
         """
         return [
-            EmpathyTableRow.from_participant_type_map(ptm)
-            for ptm in empathy_map.data
+            EmpathyTableRow.from_participant_type_map(ptm) for ptm in empathy_map.data
         ]
 
     def _format_cell_markdown(self, value: Any) -> str:
@@ -399,8 +398,7 @@ class EmpathyTableFormatter:
                 return "<em>-</em>"
             items = value[: self.config.max_items_per_cell]
             list_items = [
-                f"<li>{self._escape_html(self._truncate(str(i)))}</li>"
-                for i in items
+                f"<li>{self._escape_html(self._truncate(str(i)))}</li>" for i in items
             ]
             return f"<ul>{''.join(list_items)}</ul>"
 

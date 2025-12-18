@@ -4,11 +4,11 @@ Tracks actual costs after generation, compares to estimates,
 and supports budget alerts.
 """
 
+import json
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-import json
 
 
 @dataclass
@@ -22,6 +22,7 @@ class BudgetConfig:
         warn_threshold: Percentage to trigger warning (0.0-1.0).
         block_threshold: Percentage to block operations (0.0-1.0).
     """
+
     daily: float | None = None
     weekly: float | None = None
     monthly: float | None = None
@@ -68,6 +69,7 @@ class CostRecord:
         output_tokens: Output tokens used.
         breakdown: Cost breakdown by step.
     """
+
     timestamp: str
     experiment_id: str
     run_id: str
@@ -125,6 +127,7 @@ class BudgetStatus:
         percent_used: Percentage used.
         status: Status (ok, warning, exceeded).
     """
+
     period: str
     limit: float
     used: float
@@ -158,6 +161,7 @@ class CostSummary:
         by_model: Costs by model.
         budget_status: Current budget status.
     """
+
     experiment_id: str
     total_runs: int = 0
     total_estimated: float = 0.0
@@ -192,34 +196,48 @@ class CostSummary:
 
         if self.total_runs > 0:
             variance_sign = "+" if self.total_variance >= 0 else ""
-            variance_pct = (self.total_variance / self.total_estimated * 100) if self.total_estimated > 0 else 0
+            variance_pct = (
+                (self.total_variance / self.total_estimated * 100)
+                if self.total_estimated > 0
+                else 0
+            )
             lines.append(
                 f"  Actual:    ${self.total_actual:.4f} "
                 f"({variance_sign}{variance_pct:.1f}%)"
             )
 
         if self.total_runs > 1:
-            lines.extend([
-                "",
-                f"Experiment Total ({self.total_runs} runs):",
-                f"  Total cost: ${self.total_actual:.4f}",
-                f"  Average per run: ${self.average_per_run:.4f}",
-            ])
+            lines.extend(
+                [
+                    "",
+                    f"Experiment Total ({self.total_runs} runs):",
+                    f"  Total cost: ${self.total_actual:.4f}",
+                    f"  Average per run: ${self.average_per_run:.4f}",
+                ]
+            )
 
         # Budget status
         for budget in self.budget_status:
-            lines.extend([
-                "",
-                f"Budget Status ({budget.period.title()}):",
-                f"  Used: ${budget.used:.2f} / ${budget.limit:.2f} ({budget.percent_used:.1f}%)",
-                f"  Remaining: ${budget.remaining:.2f}",
-                "",
-            ])
+            lines.extend(
+                [
+                    "",
+                    f"Budget Status ({budget.period.title()}):",
+                    f"  Used: ${budget.used:.2f} / ${budget.limit:.2f} ({budget.percent_used:.1f}%)",
+                    f"  Remaining: ${budget.remaining:.2f}",
+                    "",
+                ]
+            )
 
             # Progress bar
             filled = int(budget.percent_used / 5)
             bar = "█" * filled + "░" * (20 - filled)
-            status_icon = "✓" if budget.status == "ok" else "⚠" if budget.status == "warning" else "✗"
+            status_icon = (
+                "✓"
+                if budget.status == "ok"
+                else "⚠"
+                if budget.status == "warning"
+                else "✗"
+            )
             lines.append(f"  {status_icon} {bar} {budget.percent_used:.0f}%")
 
         return "\n".join(lines)
@@ -269,7 +287,7 @@ class CostTracker:
         if not self.storage_path:
             return
         try:
-            with open(self.storage_path, "r", encoding="utf-8") as f:
+            with open(self.storage_path, encoding="utf-8") as f:
                 for line in f:
                     data = json.loads(line)
                     # Reconstruct CostRecord
@@ -337,7 +355,7 @@ class CostTracker:
             Created CostRecord.
         """
         record = CostRecord(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             experiment_id=experiment_id,
             run_id=run_id,
             estimated_cost=estimated,
@@ -383,14 +401,16 @@ class CostTracker:
             else:
                 status = "ok"
 
-            statuses.append(BudgetStatus(
-                period=period,
-                limit=limit,
-                used=used,
-                remaining=remaining,
-                percent_used=percent,
-                status=status,
-            ))
+            statuses.append(
+                BudgetStatus(
+                    period=period,
+                    limit=limit,
+                    used=used,
+                    remaining=remaining,
+                    percent_used=percent,
+                    status=status,
+                )
+            )
 
         return statuses
 
@@ -488,7 +508,7 @@ def track_cost(
         CostRecord.
     """
     return CostRecord(
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         experiment_id=experiment_id,
         run_id=run_id,
         estimated_cost=estimated,

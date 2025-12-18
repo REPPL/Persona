@@ -3,13 +3,11 @@ Tests for CLI functionality (F-008, F-015, F-086).
 """
 
 import json
-import os
-import pytest
 from pathlib import Path
+
+import pytest
+from persona.ui.cli import _reset_globals, app
 from typer.testing import CliRunner
-
-from persona.ui.cli import app, _reset_globals
-
 
 runner = CliRunner()
 
@@ -239,7 +237,14 @@ class TestCostCommand:
         """Test cost command JSON output for single model."""
         result = runner.invoke(
             app,
-            ["cost", "--tokens", "5000", "--model", "claude-sonnet-4-20250514", "--json"],
+            [
+                "cost",
+                "--tokens",
+                "5000",
+                "--model",
+                "claude-sonnet-4-20250514",
+                "--json",
+            ],
         )
 
         assert result.exit_code == 0
@@ -283,7 +288,9 @@ class TestInitCommand:
         config_path.write_text("existing: config\n")
 
         # Use input="n\n" to answer "no" to the continue anyway prompt
-        runner.invoke(app, ["init", "test-project", "--path", str(tmp_path)], input="n\n")
+        runner.invoke(
+            app, ["init", "test-project", "--path", str(tmp_path)], input="n\n"
+        )
 
         content = config_path.read_text()
         assert "existing: config" in content
@@ -308,11 +315,17 @@ class TestExperimentCommands:
         result = runner.invoke(
             app,
             [
-                "experiment", "create", "my-exp",
-                "--description", "Test description",
-                "--provider", "openai",
-                "--count", "5",
-                "--base-dir", str(tmp_path),
+                "experiment",
+                "create",
+                "my-exp",
+                "--description",
+                "Test description",
+                "--provider",
+                "openai",
+                "--count",
+                "5",
+                "--base-dir",
+                str(tmp_path),
             ],
         )
 
@@ -332,8 +345,12 @@ class TestExperimentCommands:
     def test_experiment_list_with_experiments(self, tmp_path: Path):
         """Test listing experiments."""
         # Create some experiments
-        runner.invoke(app, ["experiment", "create", "exp-1", "--base-dir", str(tmp_path)])
-        runner.invoke(app, ["experiment", "create", "exp-2", "--base-dir", str(tmp_path)])
+        runner.invoke(
+            app, ["experiment", "create", "exp-1", "--base-dir", str(tmp_path)]
+        )
+        runner.invoke(
+            app, ["experiment", "create", "exp-2", "--base-dir", str(tmp_path)]
+        )
 
         result = runner.invoke(app, ["experiment", "list", "--base-dir", str(tmp_path)])
 
@@ -343,7 +360,9 @@ class TestExperimentCommands:
 
     def test_experiment_list_json_output(self, tmp_path: Path):
         """Test experiment list with JSON output."""
-        runner.invoke(app, ["experiment", "create", "json-exp", "--base-dir", str(tmp_path)])
+        runner.invoke(
+            app, ["experiment", "create", "json-exp", "--base-dir", str(tmp_path)]
+        )
 
         result = runner.invoke(
             app,
@@ -374,9 +393,13 @@ class TestExperimentCommands:
         runner.invoke(
             app,
             [
-                "experiment", "create", "show-test",
-                "--description", "Test description",
-                "--base-dir", str(tmp_path),
+                "experiment",
+                "create",
+                "show-test",
+                "--description",
+                "Test description",
+                "--base-dir",
+                str(tmp_path),
             ],
         )
 
@@ -401,11 +424,20 @@ class TestExperimentCommands:
 
     def test_experiment_delete_with_force(self, tmp_path: Path):
         """Test deleting experiment with force flag."""
-        runner.invoke(app, ["experiment", "create", "deletable", "--base-dir", str(tmp_path)])
+        runner.invoke(
+            app, ["experiment", "create", "deletable", "--base-dir", str(tmp_path)]
+        )
 
         result = runner.invoke(
             app,
-            ["experiment", "delete", "deletable", "--force", "--base-dir", str(tmp_path)],
+            [
+                "experiment",
+                "delete",
+                "deletable",
+                "--force",
+                "--base-dir",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 0
@@ -416,7 +448,14 @@ class TestExperimentCommands:
         """Test deleting nonexistent experiment."""
         result = runner.invoke(
             app,
-            ["experiment", "delete", "nonexistent", "--force", "--base-dir", str(tmp_path)],
+            [
+                "experiment",
+                "delete",
+                "nonexistent",
+                "--force",
+                "--base-dir",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 1

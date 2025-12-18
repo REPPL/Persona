@@ -1,7 +1,6 @@
 """Unit tests for hybrid configuration."""
 
 import pytest
-
 from persona.core.hybrid.config import HybridConfig
 
 

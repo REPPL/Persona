@@ -11,10 +11,10 @@ As a researcher, I want to organise my persona generation runs into experiments,
 ## Trigger
 
 CLI commands:
-- `persona create experiment`
-- `persona list experiments`
-- `persona show experiment <name>`
-- `persona delete experiment <name>`
+- `persona project create <name>`
+- `persona project list`
+- `persona project show <name>`
+- `persona project unregister <name>`
 
 ## Priority
 
@@ -24,18 +24,22 @@ P0 (Critical)
 
 v0.1.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed
 
 ## Success Criteria
 
-- [ ] User can create a new experiment interactively
-- [ ] User can list all existing experiments
-- [ ] User can view experiment details
-- [ ] User can delete experiments with confirmation
-- [ ] Experiment configuration persisted (YAML)
-- [ ] Output organised by experiment and timestamp
+- [x] User can create a new experiment interactively
+- [x] User can list all existing experiments
+- [x] User can view experiment details
+- [x] User can delete experiments with confirmation
+- [x] Experiment configuration persisted (YAML)
+- [x] Output organised by experiment and timestamp
 
 ## Derives Features
 

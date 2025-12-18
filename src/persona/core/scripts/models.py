@@ -5,11 +5,12 @@ This module defines the schema for conversation script output,
 including character cards, communication styles, and knowledge boundaries.
 """
 
+import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import Any
-import json
+
 import yaml
 
 

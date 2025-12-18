@@ -1,12 +1,11 @@
 """Tests for consolidation mapping (F-070)."""
 
-import pytest
 
 from persona.core.multimodel.consolidation import (
-    PersonaSimilarity,
-    MergeRecommendation,
     ConsolidationMap,
     ConsolidationMapper,
+    MergeRecommendation,
+    PersonaSimilarity,
     consolidate_personas,
 )
 
@@ -105,8 +104,18 @@ class TestConsolidationMapper:
         """Clusters identical personas."""
         mapper = ConsolidationMapper()
         personas = [
-            {"id": "1", "role": "Developer", "goals": ["testing"], "frustrations": ["bugs"]},
-            {"id": "2", "role": "Developer", "goals": ["testing"], "frustrations": ["bugs"]},
+            {
+                "id": "1",
+                "role": "Developer",
+                "goals": ["testing"],
+                "frustrations": ["bugs"],
+            },
+            {
+                "id": "2",
+                "role": "Developer",
+                "goals": ["testing"],
+                "frustrations": ["bugs"],
+            },
         ]
 
         result = mapper.consolidate(personas)
@@ -119,7 +128,12 @@ class TestConsolidationMapper:
         """Keeps different personas separate."""
         mapper = ConsolidationMapper()
         personas = [
-            {"id": "1", "role": "Developer", "goals": ["coding"], "frustrations": ["bugs"]},
+            {
+                "id": "1",
+                "role": "Developer",
+                "goals": ["coding"],
+                "frustrations": ["bugs"],
+            },
             {"id": "2", "role": "Designer", "goals": ["UX"], "frustrations": ["tools"]},
         ]
 
@@ -156,8 +170,18 @@ class TestConsolidationMapper:
     def test_calculate_similarity_different(self):
         """Different personas have low similarity."""
         mapper = ConsolidationMapper()
-        p1 = {"id": "1", "role": "Developer", "goals": ["coding"], "frustrations": ["bugs"]}
-        p2 = {"id": "2", "role": "Manager", "goals": ["budgeting"], "frustrations": ["delays"]}
+        p1 = {
+            "id": "1",
+            "role": "Developer",
+            "goals": ["coding"],
+            "frustrations": ["bugs"],
+        }
+        p2 = {
+            "id": "2",
+            "role": "Manager",
+            "goals": ["budgeting"],
+            "frustrations": ["delays"],
+        }
 
         sim = mapper.calculate_similarity(p1, p2)
 
@@ -208,8 +232,18 @@ class TestConsolidationMapper:
         """Merges multiple personas correctly."""
         mapper = ConsolidationMapper()
         personas = [
-            {"id": "1", "role": "Developer", "goals": ["A", "B"], "frustrations": ["X"]},
-            {"id": "2", "role": "Developer", "goals": ["B", "C"], "frustrations": ["Y"]},
+            {
+                "id": "1",
+                "role": "Developer",
+                "goals": ["A", "B"],
+                "frustrations": ["X"],
+            },
+            {
+                "id": "2",
+                "role": "Developer",
+                "goals": ["B", "C"],
+                "frustrations": ["Y"],
+            },
         ]
 
         merged = mapper.merge_personas(personas)

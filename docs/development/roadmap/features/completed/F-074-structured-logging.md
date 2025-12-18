@@ -105,4 +105,3 @@ logger.info("generation_started", model="claude-sonnet-4-5")
 
 - [Milestone v0.9.0](../../milestones/v0.9.0.md)
 - [structlog Documentation](https://www.structlog.org/)
-

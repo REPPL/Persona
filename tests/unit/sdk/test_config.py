@@ -1,10 +1,8 @@
 """Tests for SDK configuration management."""
 
-import os
-import pytest
-from pathlib import Path
 from unittest.mock import patch
 
+import pytest
 from persona.sdk.config import SDKConfig
 from persona.sdk.exceptions import ConfigurationError
 
@@ -162,11 +160,14 @@ class TestSDKConfigFromEnvironment:
         config = SDKConfig.from_environment()
         assert config.default_temperature == 0.5
 
-    @patch.dict("os.environ", {
-        "PERSONA_PROVIDER": "gemini",
-        "PERSONA_COUNT": "7",
-        "PERSONA_TEMPERATURE": "0.8",
-    })
+    @patch.dict(
+        "os.environ",
+        {
+            "PERSONA_PROVIDER": "gemini",
+            "PERSONA_COUNT": "7",
+            "PERSONA_TEMPERATURE": "0.8",
+        },
+    )
     def test_multiple_from_env(self):
         """Test loading multiple values from environment."""
         config = SDKConfig.from_environment()
@@ -194,11 +195,13 @@ class TestSDKConfigFromFile:
     def test_from_file_basic(self, tmp_path):
         """Test loading basic config from file."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 sdk:
   default_provider: openai
   default_count: 5
-""")
+"""
+        )
         config = SDKConfig.from_file(config_file)
         assert config.default_provider == "openai"
         assert config.default_count == 5
@@ -206,7 +209,8 @@ sdk:
     def test_from_file_full(self, tmp_path):
         """Test loading full config from file."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 sdk:
   default_provider: gemini
   default_model: gemini-1.5-pro
@@ -214,7 +218,8 @@ sdk:
   default_complexity: complex
   default_detail_level: detailed
   default_temperature: 0.8
-""")
+"""
+        )
         config = SDKConfig.from_file(config_file)
         assert config.default_provider == "gemini"
         assert config.default_model == "gemini-1.5-pro"
@@ -226,10 +231,12 @@ sdk:
     def test_from_file_without_sdk_key(self, tmp_path):
         """Test loading config without 'sdk' wrapper key."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 default_provider: openai
 default_count: 5
-""")
+"""
+        )
         config = SDKConfig.from_file(config_file)
         assert config.default_provider == "openai"
         assert config.default_count == 5
@@ -285,7 +292,9 @@ class TestSDKConfigFromSources:
         assert config.default_provider == "openai"
         assert config.default_count == 5
 
-    @patch.dict("os.environ", {"PERSONA_COUNT": "10", "PERSONA_PROVIDER": "openai"}, clear=True)
+    @patch.dict(
+        "os.environ", {"PERSONA_COUNT": "10", "PERSONA_PROVIDER": "openai"}, clear=True
+    )
     def test_from_sources_file_and_env(self, tmp_path):
         """Test that environment overrides file."""
         config_file = tmp_path / "config.yaml"

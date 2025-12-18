@@ -1,6 +1,5 @@
 """Tests for TUI validators."""
 
-import pytest
 
 from persona.tui.validators import (
     TerminalSize,

@@ -96,7 +96,7 @@ models:
    ```python
    import instructor
    from litellm import completion
-   
+
    client = instructor.from_litellm(completion)
    ```
 

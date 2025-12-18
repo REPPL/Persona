@@ -55,4 +55,3 @@ Researchers need to compare personas generated with different settings (models, 
 - [UC-004: Compare Persona Variations](../../../../use-cases/briefs/UC-004-compare-variations.md)
 - [F-004: Persona Generation](F-004-persona-generation.md)
 - [F-006: Experiment Management](F-006-experiment-management.md)
-

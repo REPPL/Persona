@@ -1,7 +1,6 @@
 """Tests for plugin base classes."""
 
 import pytest
-
 from persona.core.plugins.base import PluginInfo, PluginRegistry, PluginType
 
 
@@ -218,9 +217,7 @@ class MockPluginRegistryBase:
 
         assert plugin1 is not plugin2
 
-    def test_list_all_returns_plugin_info(
-        self, registry: MockPluginRegistry
-    ) -> None:
+    def test_list_all_returns_plugin_info(self, registry: MockPluginRegistry) -> None:
         """Should return list of PluginInfo objects."""
         plugins = registry.list_all()
 

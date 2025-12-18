@@ -61,4 +61,3 @@ CLI output must be visually clear and informative. Users need progress feedback 
 
 - [F-008: CLI Interface](F-008-cli-interface.md)
 - [ADR-0005: CLI Framework](../../../decisions/adrs/ADR-0005-cli-framework.md)
-

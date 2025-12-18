@@ -5,11 +5,10 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-
 from persona.core.experiments import (
-    ExperimentManager,
-    ExperimentEditor,
     EditHistoryEntry,
+    ExperimentEditor,
+    ExperimentManager,
 )
 
 
@@ -168,11 +167,14 @@ class TestExperimentEditor:
             manager.create("test-exp")
 
             editor = ExperimentEditor(manager)
-            config = editor.set_fields("test-exp", {
-                "count": 5,
-                "provider": "openai",
-                "model": "gpt-4o",
-            })
+            config = editor.set_fields(
+                "test-exp",
+                {
+                    "count": 5,
+                    "provider": "openai",
+                    "model": "gpt-4o",
+                },
+            )
 
             assert config.count == 5
             assert config.provider == "openai"

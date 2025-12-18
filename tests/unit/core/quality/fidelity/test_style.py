@@ -4,7 +4,6 @@ Tests for style checker.
 Tests StyleChecker for style adherence validation.
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.models import FidelityConfig, PromptConstraints

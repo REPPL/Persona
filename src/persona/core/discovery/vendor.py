@@ -117,6 +117,7 @@ class VendorDiscovery:
 
         # Discover custom vendors
         from persona.core.config import VendorLoader
+
         loader = VendorLoader(
             user_dir=self._user_dir,
             project_dir=self._project_dir,

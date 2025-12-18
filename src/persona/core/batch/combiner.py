@@ -16,7 +16,7 @@ from jinja2 import Template
 
 class SeparatorStyle(Enum):
     """Separator style options."""
-    
+
     MINIMAL = "minimal"
     STANDARD = "standard"
     DETAILED = "detailed"
@@ -25,7 +25,7 @@ class SeparatorStyle(Enum):
 @dataclass
 class FileContent:
     """Content from a single file with metadata."""
-    
+
     path: Path
     content: str
     format: str
@@ -37,12 +37,12 @@ class FileContent:
 @dataclass
 class CombinedContent:
     """Combined content from multiple files."""
-    
+
     content: str
     source_count: int
     total_size_bytes: int
     sources: list[dict] = field(default_factory=list)
-    
+
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         return {
@@ -56,10 +56,10 @@ class CombinedContent:
 class FileCombiner:
     """
     Combines multiple files with clear separators.
-    
+
     Inserts metadata-rich separators between files to help
     LLMs understand source boundaries.
-    
+
     Example:
         >>> combiner = FileCombiner()
         >>> result = combiner.combine([
@@ -68,7 +68,7 @@ class FileCombiner:
         ... ])
         >>> print(result.content)
     """
-    
+
     # Default separator templates
     TEMPLATES = {
         SeparatorStyle.MINIMAL: """
@@ -108,7 +108,7 @@ END SOURCE: {{ filename }}
 ---
 """,
     }
-    
+
     def __init__(
         self,
         style: SeparatorStyle = SeparatorStyle.STANDARD,
@@ -117,7 +117,7 @@ END SOURCE: {{ filename }}
     ):
         """
         Initialise the combiner.
-        
+
         Args:
             style: Separator style.
             include_metadata: Whether to include metadata in separators.
@@ -126,14 +126,14 @@ END SOURCE: {{ filename }}
         self._style = style
         self._include_metadata = include_metadata
         self._custom_template = custom_template
-    
+
     def combine(self, files: list[FileContent]) -> CombinedContent:
         """
         Combine multiple files with separators.
-        
+
         Args:
             files: List of file contents to combine.
-        
+
         Returns:
             CombinedContent with combined text and metadata.
         """
@@ -143,12 +143,12 @@ END SOURCE: {{ filename }}
                 source_count=0,
                 total_size_bytes=0,
             )
-        
+
         template = self._get_template()
         combined_parts = []
         sources = []
         total = len(files)
-        
+
         for index, file_content in enumerate(files, 1):
             # Render separator with content
             rendered = template.render(
@@ -156,30 +156,34 @@ END SOURCE: {{ filename }}
                 path=str(file_content.path),
                 format=file_content.format,
                 size_bytes=file_content.size_bytes,
-                modified=file_content.modified.isoformat() if file_content.modified else None,
+                modified=file_content.modified.isoformat()
+                if file_content.modified
+                else None,
                 index=index,
                 total=total,
                 content=file_content.content,
                 metadata=file_content.metadata if self._include_metadata else {},
             )
             combined_parts.append(rendered.strip())
-            
+
             # Track source
-            sources.append({
-                "filename": file_content.path.name,
-                "path": str(file_content.path),
-                "format": file_content.format,
-                "size_bytes": file_content.size_bytes,
-                "index": index,
-            })
-        
+            sources.append(
+                {
+                    "filename": file_content.path.name,
+                    "path": str(file_content.path),
+                    "format": file_content.format,
+                    "size_bytes": file_content.size_bytes,
+                    "index": index,
+                }
+            )
+
         return CombinedContent(
             content="\n\n".join(combined_parts),
             source_count=len(files),
             total_size_bytes=sum(f.size_bytes for f in files),
             sources=sources,
         )
-    
+
     def combine_from_paths(
         self,
         paths: list[Path],
@@ -187,11 +191,11 @@ END SOURCE: {{ filename }}
     ) -> CombinedContent:
         """
         Combine files from paths.
-        
+
         Args:
             paths: File paths to combine.
             base_path: Base path for relative paths.
-        
+
         Returns:
             CombinedContent with combined text.
         """
@@ -200,31 +204,33 @@ END SOURCE: {{ filename }}
             if path.exists() and path.is_file():
                 content = path.read_text(encoding="utf-8")
                 stat = path.stat()
-                
-                files.append(FileContent(
-                    path=path if base_path is None else path.relative_to(base_path),
-                    content=content,
-                    format=self._detect_format(path),
-                    size_bytes=stat.st_size,
-                    modified=datetime.fromtimestamp(stat.st_mtime),
-                ))
-        
+
+                files.append(
+                    FileContent(
+                        path=path if base_path is None else path.relative_to(base_path),
+                        content=content,
+                        format=self._detect_format(path),
+                        size_bytes=stat.st_size,
+                        modified=datetime.fromtimestamp(stat.st_mtime),
+                    )
+                )
+
         return self.combine(files)
-    
+
     def set_style(self, style: SeparatorStyle) -> None:
         """Set separator style."""
         self._style = style
-    
+
     def set_custom_template(self, template: str) -> None:
         """Set a custom separator template."""
         self._custom_template = template
-    
+
     def _get_template(self) -> Template:
         """Get the appropriate template."""
         if self._custom_template:
             return Template(self._custom_template)
         return Template(self.TEMPLATES[self._style])
-    
+
     def _detect_format(self, path: Path) -> str:
         """Detect file format from extension."""
         ext = path.suffix.lower()
@@ -246,11 +252,11 @@ def combine_files(
 ) -> CombinedContent:
     """
     Convenience function to combine files.
-    
+
     Args:
         paths: File paths to combine.
         style: Separator style.
-    
+
     Returns:
         CombinedContent with combined text.
     """

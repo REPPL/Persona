@@ -8,12 +8,10 @@ and feature usage predictions.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.output.registry import (
     BaseFormatterV2,
-    OutputSection,
     SectionConfig,
     register,
 )
@@ -148,7 +146,9 @@ class UsageScenarioGenerator:
             morning_step = JourneyStep(
                 time_context="Morning",
                 action=f"{persona.name} starts the day by {morning_action.lower()}.",
-                interactions=self._derive_interactions(morning_action, pain_points, goals),
+                interactions=self._derive_interactions(
+                    morning_action, pain_points, goals
+                ),
             )
             steps.append(morning_step)
 
@@ -158,7 +158,9 @@ class UsageScenarioGenerator:
             midday_step = JourneyStep(
                 time_context="Midday",
                 action=f"During the workday, {persona.name} focuses on {midday_action.lower()}.",
-                interactions=self._derive_interactions(midday_action, pain_points, goals),
+                interactions=self._derive_interactions(
+                    midday_action, pain_points, goals
+                ),
             )
             steps.append(midday_step)
 
@@ -170,7 +172,9 @@ class UsageScenarioGenerator:
                 interactions=[
                     InteractionPoint(
                         description="Checking progress metrics",
-                        type=InteractionType.DELIGHT if len(goals) <= 3 else InteractionType.NEUTRAL,
+                        type=InteractionType.DELIGHT
+                        if len(goals) <= 3
+                        else InteractionType.NEUTRAL,
                         reason="Seeing measurable progress towards goals",
                     ),
                 ],
@@ -295,14 +299,10 @@ class UsageScenarioGenerator:
             )
 
         if pain_points:
-            insights.append(
-                f"Key friction area to address: {pain_points[0]}."
-            )
+            insights.append(f"Key friction area to address: {pain_points[0]}.")
 
         if behaviours:
-            insights.append(
-                f"Typical usage pattern involves: {behaviours[0].lower()}."
-            )
+            insights.append(f"Typical usage pattern involves: {behaviours[0].lower()}.")
 
         if len(goals) > 3:
             insights.append(
@@ -388,7 +388,9 @@ class UsageFormatter(BaseFormatterV2):
 
                 for interaction in step.interactions:
                     icon = self._get_interaction_icon(interaction.type)
-                    lines.append(f"- {icon} **{interaction.type.value.title()}**: {interaction.description}")
+                    lines.append(
+                        f"- {icon} **{interaction.type.value.title()}**: {interaction.description}"
+                    )
                     if interaction.reason:
                         lines.append(f"  - Reason: {interaction.reason}")
 

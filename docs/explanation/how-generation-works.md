@@ -361,4 +361,3 @@ morning before standup, frustrated by multi-step exports"
 - [F-004: Persona Generation](../development/roadmap/features/completed/F-004-persona-generation.md)
 - [Template Architecture](template-architecture.md)
 - [Reproducibility](reproducibility.md)
-

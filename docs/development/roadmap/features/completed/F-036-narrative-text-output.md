@@ -65,4 +65,3 @@ At her core, Sarah values efficiency and work-life balance...
 
 - [Milestone v0.4.0](../../milestones/v0.4.0.md)
 - [F-005: Output Formatting](F-005-output-formatting.md)
-

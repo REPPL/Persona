@@ -7,10 +7,10 @@ personas through natural language instructions.
 
 from persona.core.refinement.refiner import (
     PersonaRefiner,
-    RefinementSession,
+    RefinementHistory,
     RefinementInstruction,
     RefinementResult,
-    RefinementHistory,
+    RefinementSession,
 )
 
 __all__ = [

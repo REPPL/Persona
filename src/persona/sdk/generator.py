@@ -5,20 +5,19 @@ This module provides the main PersonaGenerator class for
 programmatic persona generation.
 """
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
-from persona.sdk.models import (
-    PersonaConfig,
-    GenerationResultModel,
-    ComplexityLevel,
-    DetailLevel,
-)
 from persona.sdk.exceptions import (
     ConfigurationError,
     DataError,
     GenerationError,
     ProviderError,
+)
+from persona.sdk.models import (
+    GenerationResultModel,
+    PersonaConfig,
 )
 
 
@@ -152,7 +151,7 @@ class PersonaGenerator:
             )
 
         # Import core modules (lazy import to avoid circular deps)
-        from persona.core.generation import GenerationPipeline, GenerationConfig
+        from persona.core.generation import GenerationConfig, GenerationPipeline
 
         # Create core config
         core_config = GenerationConfig(
@@ -173,8 +172,14 @@ class PersonaGenerator:
 
         # Set progress callback wrapper
         if self._progress_callback:
-            steps = ["Loading data", "Loading workflow", "Rendering prompt",
-                     "Generating", "Parsing response", "Complete"]
+            steps = [
+                "Loading data",
+                "Loading workflow",
+                "Rendering prompt",
+                "Generating",
+                "Parsing response",
+                "Complete",
+            ]
             step_index = [0]
 
             def progress_wrapper(message: str) -> None:
@@ -195,6 +200,7 @@ class PersonaGenerator:
             error_msg = str(e).lower()
             if "rate limit" in error_msg:
                 from persona.sdk.exceptions import RateLimitError
+
                 raise RateLimitError(str(e), provider=self._provider) from e
             if "api" in error_msg or "auth" in error_msg:
                 raise ProviderError(str(e), provider=self._provider) from e
@@ -255,10 +261,9 @@ class PersonaGenerator:
         # Get pricing
         pricing = estimator.get_pricing(self._provider, self._model)
 
-        estimated_cost = (
-            (input_tokens / 1_000_000) * pricing.input_price +
-            (output_tokens / 1_000_000) * pricing.output_price
-        )
+        estimated_cost = (input_tokens / 1_000_000) * pricing.input_price + (
+            output_tokens / 1_000_000
+        ) * pricing.output_price
 
         return {
             "input_tokens": input_tokens,

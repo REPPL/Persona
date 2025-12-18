@@ -58,7 +58,7 @@ class VendorConfig(BaseModel):
     name: str
     api_base: str
     models: list[str]
-    
+
     model_config = {"extra": "forbid"}
 
 class ModelConfig(BaseModel):
@@ -68,7 +68,7 @@ class ModelConfig(BaseModel):
     context_window: int = Field(ge=1000)
     max_output: int = Field(ge=100)
     pricing: "PricingConfig"
-    
+
     model_config = {"extra": "forbid"}
 
 class PricingConfig(BaseModel):
@@ -85,9 +85,9 @@ class ExperimentConfig(BaseModel):
     temperature: float = Field(ge=0, le=2, default=0.7)
     max_tokens: int = Field(ge=100, le=16000, default=4000)
     prompt_template: str = "default"
-    
+
     model_config = {"extra": "forbid"}
-    
+
     @field_validator("vendor")
     @classmethod
     def validate_vendor(cls, v: str) -> str:
@@ -110,14 +110,14 @@ class ConfigLoader:
         """Load and validate experiment configuration."""
         with open(path / "config.yaml") as f:
             data = yaml.safe_load(f)
-        
+
         try:
             return ExperimentConfig.model_validate(data)
         except ValidationError as e:
             raise ConfigurationError(
                 f"Invalid experiment configuration in {path}:\n{e}"
             )
-    
+
     def load_vendor(self, vendor_name: str) -> VendorConfig:
         """Load vendor configuration from bundled configs."""
         config_path = self.config_dir / "vendors" / f"{vendor_name}.yaml"
@@ -135,16 +135,16 @@ from typing import Optional
 
 class Settings(BaseSettings):
     """Application settings from environment variables."""
-    
+
     # API Keys (from environment)
     openai_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
     google_ai_api_key: Optional[str] = None
-    
+
     # Defaults
     default_vendor: str = "openai"
     experiments_dir: str = "experiments"
-    
+
     model_config = {
         "env_file": ".env",
         "env_file_encoding": "utf-8",

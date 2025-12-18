@@ -81,10 +81,12 @@ def list_projects(
         console.print("  persona project register my-project /path/to/project")
         return
 
-    console.print(Panel.fit(
-        "[bold]Registered Projects[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Registered Projects[/bold]",
+            border_style="cyan",
+        )
+    )
 
     table = Table(show_header=True, header_style="bold")
     table.add_column("Name", style="cyan")
@@ -107,21 +109,24 @@ def create_project_cmd(
     path: Annotated[
         Optional[Path],
         typer.Option(
-            "--path", "-p",
+            "--path",
+            "-p",
             help="Directory to create project in. Defaults to current directory.",
         ),
     ] = None,
     template: Annotated[
         str,
         typer.Option(
-            "--template", "-t",
+            "--template",
+            "-t",
             help="Project template (basic or research).",
         ),
     ] = "basic",
     description: Annotated[
         Optional[str],
         typer.Option(
-            "--description", "-d",
+            "--description",
+            "-d",
             help="Project description.",
         ),
     ] = None,
@@ -166,7 +171,7 @@ def create_project_cmd(
         console.print(f"[green]✓[/green] Created project: {project_path}")
 
         if not no_register:
-            console.print(f"[green]✓[/green] Registered in global registry")
+            console.print("[green]✓[/green] Registered in global registry")
 
         console.print("\n[bold]Next steps:[/bold]")
         console.print(f"  1. Add data files to {project_path}/data/")
@@ -193,7 +198,8 @@ def register_project(
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Update path if project already registered.",
         ),
     ] = False,
@@ -218,7 +224,9 @@ def register_project(
         raise typer.Exit(1)
 
     # Check for project file
-    has_project_file = (path / "project.yaml").exists() or (path / "persona.yaml").exists()
+    has_project_file = (path / "project.yaml").exists() or (
+        path / "persona.yaml"
+    ).exists()
     if not has_project_file:
         console.print(f"[yellow]Warning:[/yellow] No project.yaml found in {path}")
         console.print("This directory may not be a valid Persona project.")
@@ -228,10 +236,14 @@ def register_project(
     try:
         if force and registry.project_exists(name):
             registry.update_project_path(name, path.resolve())
-            console.print(f"[green]✓[/green] Updated project '{name}': {path.resolve()}")
+            console.print(
+                f"[green]✓[/green] Updated project '{name}': {path.resolve()}"
+            )
         else:
             registry.register_project(name, path.resolve())
-            console.print(f"[green]✓[/green] Registered project '{name}': {path.resolve()}")
+            console.print(
+                f"[green]✓[/green] Registered project '{name}': {path.resolve()}"
+            )
     except ValueError as e:
         console.print(f"[red]Error:[/red] {e}")
         console.print("Use --force to update the path.")
@@ -247,7 +259,8 @@ def unregister_project(
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Skip confirmation.",
         ),
     ] = False,
@@ -283,7 +296,9 @@ def unregister_project(
 def show_project(
     name: Annotated[
         Optional[str],
-        typer.Argument(help="Project name or path. Uses current directory if not specified."),
+        typer.Argument(
+            help="Project name or path. Uses current directory if not specified."
+        ),
     ] = None,
     json_output: Annotated[
         bool,
@@ -323,17 +338,21 @@ def show_project(
         print(json.dumps(project.to_yaml_dict(), indent=2, default=str))
         return
 
-    console.print(Panel.fit(
-        f"[bold]{project.name}[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]{project.name}[/bold]",
+            border_style="cyan",
+        )
+    )
 
     if project.description:
         console.print(f"\n{project.description}")
 
     console.print(f"\n[bold]Path:[/bold] {ctx.project_path}")
     console.print(f"[bold]Template:[/bold] {project.template.value}")
-    console.print(f"[bold]Created:[/bold] {project.created_at.strftime('%Y-%m-%d %H:%M')}")
+    console.print(
+        f"[bold]Created:[/bold] {project.created_at.strftime('%Y-%m-%d %H:%M')}"
+    )
 
     console.print("\n[bold]Defaults:[/bold]")
     console.print(f"  provider: {project.defaults.provider}")
@@ -365,21 +384,24 @@ def add_data_source(
     project: Annotated[
         Optional[str],
         typer.Option(
-            "--project", "-p",
+            "--project",
+            "-p",
             help="Project to add source to. Uses current directory if not specified.",
         ),
     ] = None,
     source_type: Annotated[
         str,
         typer.Option(
-            "--type", "-t",
+            "--type",
+            "-t",
             help="Data type (qualitative, quantitative, mixed, raw).",
         ),
     ] = "raw",
     description: Annotated[
         Optional[str],
         typer.Option(
-            "--description", "-d",
+            "--description",
+            "-d",
             help="Description of the data source.",
         ),
     ] = None,
@@ -437,7 +459,8 @@ def remove_data_source(
     project: Annotated[
         Optional[str],
         typer.Option(
-            "--project", "-p",
+            "--project",
+            "-p",
             help="Project to remove source from. Uses current directory if not specified.",
         ),
     ] = None,
@@ -475,7 +498,8 @@ def init_registry(
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Overwrite existing registry.",
         ),
     ] = False,

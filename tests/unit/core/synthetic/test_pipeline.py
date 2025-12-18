@@ -4,11 +4,9 @@ Unit tests for SyntheticPipeline.
 
 import csv
 import json
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from persona.core.synthetic.pipeline import SyntheticPipeline
 
 
@@ -38,11 +36,13 @@ def mock_provider():
 
     # Mock response
     mock_response = MagicMock()
-    mock_response.content = json.dumps([
-        {"name": "John", "age": "26", "role": "Engineer"},
-        {"name": "Jane", "age": "31", "role": "Designer"},
-        {"name": "Jack", "age": "34", "role": "Manager"},
-    ])
+    mock_response.content = json.dumps(
+        [
+            {"name": "John", "age": "26", "role": "Engineer"},
+            {"name": "Jane", "age": "31", "role": "Designer"},
+            {"name": "Jack", "age": "34", "role": "Manager"},
+        ]
+    )
     mock.generate.return_value = mock_response
 
     return mock
@@ -50,7 +50,9 @@ def mock_provider():
 
 def test_pipeline_init():
     """Test SyntheticPipeline initialisation."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "test-model"
         mock_factory.return_value = mock_provider
@@ -64,7 +66,9 @@ def test_pipeline_init():
 
 def test_pipeline_init_with_model():
     """Test SyntheticPipeline with custom model."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "default-model"
         mock_factory.return_value = mock_provider
@@ -78,7 +82,9 @@ def test_synthesise_basic(temp_csv_input, tmp_path, mock_provider):
     """Test basic synthetic data generation."""
     output_path = tmp_path / "output.csv"
 
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_factory.return_value = mock_provider
 
         pipeline = SyntheticPipeline(provider="ollama")
@@ -108,7 +114,9 @@ def test_synthesise_basic(temp_csv_input, tmp_path, mock_provider):
 
 def test_build_generation_prompt():
     """Test prompt generation."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "test-model"
         mock_factory.return_value = mock_provider
@@ -159,7 +167,9 @@ def test_build_generation_prompt():
 
 def test_parse_llm_response():
     """Test parsing LLM responses."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "test-model"
         mock_factory.return_value = mock_provider
@@ -198,7 +208,9 @@ def test_parse_llm_response():
 
 def test_save_data_csv(tmp_path):
     """Test saving data as CSV."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "test-model"
         mock_factory.return_value = mock_provider
@@ -216,7 +228,7 @@ def test_save_data_csv(tmp_path):
         assert output_path.exists()
 
         # Read and verify
-        with open(output_path, "r", encoding="utf-8") as f:
+        with open(output_path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = list(reader)
 
@@ -227,7 +239,9 @@ def test_save_data_csv(tmp_path):
 
 def test_save_data_json(tmp_path):
     """Test saving data as JSON."""
-    with patch("persona.core.synthetic.pipeline.ProviderFactory.create") as mock_factory:
+    with patch(
+        "persona.core.synthetic.pipeline.ProviderFactory.create"
+    ) as mock_factory:
         mock_provider = MagicMock()
         mock_provider.default_model = "test-model"
         mock_factory.return_value = mock_provider
@@ -245,7 +259,7 @@ def test_save_data_json(tmp_path):
         assert output_path.exists()
 
         # Read and verify
-        with open(output_path, "r", encoding="utf-8") as f:
+        with open(output_path, encoding="utf-8") as f:
             loaded_data = json.load(f)
 
         assert len(loaded_data) == 2

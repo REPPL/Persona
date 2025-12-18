@@ -3,13 +3,12 @@ Tests for output formatting functionality (F-005).
 """
 
 import json
-import pytest
 from pathlib import Path
 
-from persona.core.output import OutputManager, JSONFormatter, MarkdownFormatter
-from persona.core.output.formatters import TextFormatter
 from persona.core.generation.parser import Persona
 from persona.core.generation.pipeline import GenerationResult
+from persona.core.output import JSONFormatter, MarkdownFormatter, OutputManager
+from persona.core.output.formatters import TextFormatter
 
 
 class TestJSONFormatter:

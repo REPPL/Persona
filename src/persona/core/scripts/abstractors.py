@@ -5,9 +5,7 @@ These abstractors ensure that conversation scripts don't expose
 raw quotes or specific incidents from source data.
 """
 
-from dataclasses import dataclass, field
-from typing import Any
-import re
+from dataclasses import dataclass
 
 from persona.core.generation.parser import Persona
 
@@ -39,7 +37,13 @@ class QuoteAbstractor:
     FRUSTRATION_WORDS = {"frustrated", "annoyed", "hate", "terrible", "awful", "broken"}
     POSITIVE_WORDS = {"love", "great", "excellent", "perfect", "amazing", "wonderful"}
     TECHNICAL_WORDS = {"api", "database", "server", "code", "system", "integration"}
-    PROFESSIONAL_WORDS = {"stakeholder", "deliverable", "alignment", "synergy", "metrics"}
+    PROFESSIONAL_WORDS = {
+        "stakeholder",
+        "deliverable",
+        "alignment",
+        "synergy",
+        "metrics",
+    }
 
     def abstract(self, quotes: list[str]) -> AbstractorResult:
         """
@@ -133,27 +137,45 @@ class ScenarioGeneraliser:
         all_text = " ".join(scenarios).lower()
 
         # Time-related patterns
-        if any(word in all_text for word in ["late", "night", "weekend", "overtime", "extra"]):
+        if any(
+            word in all_text
+            for word in ["late", "night", "weekend", "overtime", "extra"]
+        ):
             patterns.append("willing to invest extra time when needed")
 
         # Problem-solving patterns
-        if any(word in all_text for word in ["fix", "solve", "resolve", "debug", "troubleshoot"]):
+        if any(
+            word in all_text
+            for word in ["fix", "solve", "resolve", "debug", "troubleshoot"]
+        ):
             patterns.append("proactive problem-solver")
 
         # Collaboration patterns
-        if any(word in all_text for word in ["team", "collaborate", "together", "help", "support"]):
+        if any(
+            word in all_text
+            for word in ["team", "collaborate", "together", "help", "support"]
+        ):
             patterns.append("values teamwork and collaboration")
 
         # Learning patterns
-        if any(word in all_text for word in ["learn", "research", "study", "understand", "explore"]):
+        if any(
+            word in all_text
+            for word in ["learn", "research", "study", "understand", "explore"]
+        ):
             patterns.append("continuous learner")
 
         # Leadership patterns
-        if any(word in all_text for word in ["lead", "manage", "organize", "coordinate", "delegate"]):
+        if any(
+            word in all_text
+            for word in ["lead", "manage", "organize", "coordinate", "delegate"]
+        ):
             patterns.append("takes initiative in leadership situations")
 
         # Quality patterns
-        if any(word in all_text for word in ["quality", "detail", "careful", "thorough", "review"]):
+        if any(
+            word in all_text
+            for word in ["quality", "detail", "careful", "thorough", "review"]
+        ):
             patterns.append("quality-focused approach")
 
         return AbstractorResult(
@@ -188,11 +210,16 @@ class BehaviourAbstractor:
         all_text = " ".join(behaviours).lower()
 
         # Morning/routine patterns
-        if any(word in all_text for word in ["morning", "first thing", "start", "routine"]):
+        if any(
+            word in all_text for word in ["morning", "first thing", "start", "routine"]
+        ):
             tendencies.append("structured daily routine")
 
         # Multi-tasking patterns
-        if any(word in all_text for word in ["multiple", "juggling", "parallel", "simultaneously"]):
+        if any(
+            word in all_text
+            for word in ["multiple", "juggling", "parallel", "simultaneously"]
+        ):
             tendencies.append("handles multiple priorities")
 
         # Communication patterns
@@ -204,11 +231,16 @@ class BehaviourAbstractor:
             tendencies.append("collaborative working style")
 
         # Planning patterns
-        if any(word in all_text for word in ["plan", "schedule", "organize", "prioritize"]):
+        if any(
+            word in all_text for word in ["plan", "schedule", "organize", "prioritize"]
+        ):
             tendencies.append("plans ahead")
 
         # Analysis patterns
-        if any(word in all_text for word in ["analyz", "dashboard", "data", "metrics", "report"]):
+        if any(
+            word in all_text
+            for word in ["analyz", "dashboard", "data", "metrics", "report"]
+        ):
             tendencies.append("data-informed decision maker")
 
         return AbstractorResult(

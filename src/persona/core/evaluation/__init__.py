@@ -16,16 +16,16 @@ Example:
 """
 
 from persona.core.evaluation.criteria import (
-    EvaluationCriteria,
-    DEFAULT_CRITERIA,
-    COMPREHENSIVE_CRITERIA,
     BATCH_CRITERIA,
+    COMPREHENSIVE_CRITERIA,
+    DEFAULT_CRITERIA,
+    EvaluationCriteria,
 )
 from persona.core.evaluation.judge import PersonaJudge
 from persona.core.evaluation.models import (
+    BatchEvaluationResult,
     CriterionScore,
     EvaluationResult,
-    BatchEvaluationResult,
 )
 
 __all__ = [

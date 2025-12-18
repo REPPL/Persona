@@ -8,7 +8,8 @@ semaphore-based rate limiting, retry logic, and batch processing.
 import asyncio
 import functools
 import time
-from typing import Any, Awaitable, Callable, TypeVar
+from collections.abc import Awaitable, Callable
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
@@ -122,7 +123,9 @@ async def retry_async(
     raise RuntimeError("retry_async failed without exception")
 
 
-def async_timeout(seconds: float) -> Callable[[Callable[..., Awaitable[T]]], Callable[..., Awaitable[T]]]:
+def async_timeout(
+    seconds: float,
+) -> Callable[[Callable[..., Awaitable[T]]], Callable[..., Awaitable[T]]]:
     """
     Decorator to add timeout to async functions.
 
@@ -137,6 +140,7 @@ def async_timeout(seconds: float) -> Callable[[Callable[..., Awaitable[T]]], Cal
         async def long_operation():
             await asyncio.sleep(100)
     """
+
     def decorator(func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T]]:
         @functools.wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> T:
@@ -144,7 +148,9 @@ def async_timeout(seconds: float) -> Callable[[Callable[..., Awaitable[T]]], Cal
                 func(*args, **kwargs),
                 timeout=seconds,
             )
+
         return wrapper
+
     return decorator
 
 

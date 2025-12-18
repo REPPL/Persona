@@ -1,7 +1,6 @@
 """Tests for bias detection models."""
 
 import pytest
-
 from persona.core.quality.bias.models import (
     BiasCategory,
     BiasConfig,

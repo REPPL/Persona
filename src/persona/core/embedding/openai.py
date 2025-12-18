@@ -98,11 +98,11 @@ class OpenAIEmbeddingProvider(EmbeddingProvider):
         if self._client is None:
             try:
                 from openai import OpenAI
+
                 self._client = OpenAI(api_key=self._api_key)
             except ImportError:
                 raise RuntimeError(
-                    "OpenAI package not installed. "
-                    "Install with: pip install openai"
+                    "OpenAI package not installed. " "Install with: pip install openai"
                 )
         return self._client
 

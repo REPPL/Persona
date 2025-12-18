@@ -94,9 +94,7 @@ def list_records(
         )
 
     console.print(table)
-    console.print(
-        f"\n[dim]Total records in database: {trail.count()}[/dim]"
-    )
+    console.print(f"\n[dim]Total records in database: {trail.count()}[/dim]")
 
 
 @app.command("show")
@@ -128,14 +126,17 @@ def show_record(
 
     if json_output:
         import json
+
         print(json.dumps(json.loads(record.model_dump_json()), indent=2))
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]Audit Record[/bold]\n{record.audit_id}",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Audit Record[/bold]\n{record.audit_id}",
+            border_style="cyan",
+        )
+    )
 
     console.print("\n[bold]Session Information:[/bold]")
     console.print(f"  Timestamp: {record.timestamp.isoformat()}")
@@ -319,12 +320,16 @@ def show_config() -> None:
     """
     config = AuditConfig()
 
-    console.print(Panel.fit(
-        "[bold]Audit Trail Configuration[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Audit Trail Configuration[/bold]",
+            border_style="cyan",
+        )
+    )
 
-    console.print(f"\n[bold]Status:[/bold] {'Enabled' if config.enabled else 'Disabled'}")
+    console.print(
+        f"\n[bold]Status:[/bold] {'Enabled' if config.enabled else 'Disabled'}"
+    )
     console.print(f"[bold]Storage:[/bold] {config.store_type}")
     console.print(f"[bold]Path:[/bold] {config.get_store_path()}")
     console.print(f"[bold]Retention:[/bold] {config.retention_days} days")

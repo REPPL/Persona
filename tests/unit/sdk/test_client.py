@@ -1,13 +1,12 @@
 """Tests for PersonaClient SDK wrapper."""
 
-import pytest
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
+import pytest
 from persona.sdk.client import PersonaClient
 from persona.sdk.config import SDKConfig
-from persona.sdk.models import PersonaConfig, GenerationResultModel, PersonaModel
-from persona.sdk.exceptions import ConfigurationError, DataError
+from persona.sdk.exceptions import ConfigurationError
+from persona.sdk.models import GenerationResultModel, PersonaConfig, PersonaModel
 
 
 class TestPersonaClientInit:
@@ -76,7 +75,7 @@ class TestPersonaClientGenerate:
         client = PersonaClient()
         result = client.generate(
             data="./test.csv",
-            config={"complexity": "complex", "detail_level": "detailed"}
+            config={"complexity": "complex", "detail_level": "detailed"},
         )
 
         call_args = mock_generate.call_args
@@ -183,12 +182,14 @@ class TestPersonaClientFromConfigFile:
     def test_from_config_file(self, tmp_path):
         """Test loading client from YAML config file."""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 sdk:
   default_provider: openai
   default_model: gpt-4o
   default_count: 5
-""")
+"""
+        )
 
         client = PersonaClient.from_config_file(config_file)
         assert client.provider == "openai"

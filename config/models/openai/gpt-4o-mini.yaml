@@ -1,7 +1,7 @@
 # OpenAI GPT-4o-mini Configuration
 name: gpt-4o-mini
 provider: openai
-description: "Smaller, faster, cheaper GPT-4o variant"
+description: Smaller, faster, cheaper GPT-4o variant
 
 parameters:
   max_tokens: 4096

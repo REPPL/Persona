@@ -5,8 +5,9 @@ This module provides the main QualityScorer class that orchestrates
 all quality metrics and produces comprehensive quality assessments.
 """
 
+from collections.abc import Callable
 from datetime import datetime
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.config import QualityConfig
@@ -170,15 +171,16 @@ class QualityScorer:
 
         # Average by dimension
         dimension_names = [
-            "completeness", "consistency", "evidence_strength",
-            "distinctiveness", "realism"
+            "completeness",
+            "consistency",
+            "evidence_strength",
+            "distinctiveness",
+            "realism",
         ]
         average_by_dimension: dict[str, float] = {}
         for dim in dimension_names:
             dim_scores = [
-                s.dimensions[dim].score
-                for s in scores
-                if dim in s.dimensions
+                s.dimensions[dim].score for s in scores if dim in s.dimensions
             ]
             average_by_dimension[dim] = (
                 sum(dim_scores) / len(dim_scores) if dim_scores else 0
@@ -208,9 +210,7 @@ class QualityScorer:
         else:
             return QualityLevel.FAILING
 
-    def _build_similarity_matrix(
-        self, personas: list[Persona]
-    ) -> list[list[float]]:
+    def _build_similarity_matrix(self, personas: list[Persona]) -> list[list[float]]:
         """Build NxN similarity matrix for personas."""
         n = len(personas)
         matrix: list[list[float]] = [[0.0] * n for _ in range(n)]
@@ -220,6 +220,7 @@ class QualityScorer:
 
         try:
             from persona.core.comparison.comparator import PersonaComparator
+
             comparator = PersonaComparator()
 
             for i in range(n):

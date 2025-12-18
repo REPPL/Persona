@@ -43,9 +43,7 @@ class BiasConfig:
         weat_effect_threshold: WEAT effect size threshold for reporting.
     """
 
-    methods: list[str] = field(
-        default_factory=lambda: ["lexicon", "embedding", "llm"]
-    )
+    methods: list[str] = field(default_factory=lambda: ["lexicon", "embedding", "llm"])
     categories: list[str] = field(
         default_factory=lambda: ["gender", "racial", "age", "professional"]
     )

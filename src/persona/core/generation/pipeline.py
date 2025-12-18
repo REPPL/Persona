@@ -6,14 +6,14 @@ data loading, prompt rendering, LLM generation, and output parsing.
 """
 
 import asyncio
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Awaitable, Callable
 
 from persona.core.data import DataLoader
-from persona.core.providers import ProviderFactory, LLMProvider, LLMResponse
-from persona.core.prompts import WorkflowLoader, Workflow
-from persona.core.generation.parser import PersonaParser, Persona, ParseResult
+from persona.core.generation.parser import ParseResult, Persona, PersonaParser
+from persona.core.prompts import Workflow, WorkflowLoader
+from persona.core.providers import LLMProvider, LLMResponse, ProviderFactory
 
 
 @dataclass

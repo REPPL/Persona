@@ -49,8 +49,13 @@ class Persona:
         """
         # Extract known fields
         known_fields = {
-            "id", "name", "demographics", "goals",
-            "pain_points", "behaviours", "quotes"
+            "id",
+            "name",
+            "demographics",
+            "goals",
+            "pain_points",
+            "behaviours",
+            "quotes",
         }
 
         # Handle alternate field names
@@ -122,17 +127,12 @@ class PersonaParser:
 
     # Regex patterns for extracting sections
     OUTPUT_PATTERN = re.compile(
-        r"<output>\s*(.*?)\s*</output>",
-        re.DOTALL | re.IGNORECASE
+        r"<output>\s*(.*?)\s*</output>", re.DOTALL | re.IGNORECASE
     )
     REASONING_PATTERN = re.compile(
-        r"<reasoning>\s*(.*?)\s*</reasoning>",
-        re.DOTALL | re.IGNORECASE
+        r"<reasoning>\s*(.*?)\s*</reasoning>", re.DOTALL | re.IGNORECASE
     )
-    JSON_BLOCK_PATTERN = re.compile(
-        r"```(?:json)?\s*(.*?)\s*```",
-        re.DOTALL
-    )
+    JSON_BLOCK_PATTERN = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
 
     def parse(self, response: str) -> ParseResult:
         """
@@ -202,7 +202,7 @@ class PersonaParser:
         brace_end = text.rfind("}")
         if brace_start != -1 and brace_end != -1 and brace_end > brace_start:
             try:
-                return json.loads(text[brace_start:brace_end + 1])
+                return json.loads(text[brace_start : brace_end + 1])
             except json.JSONDecodeError:
                 pass
 
@@ -211,7 +211,7 @@ class PersonaParser:
         bracket_end = text.rfind("]")
         if bracket_start != -1 and bracket_end != -1 and bracket_end > bracket_start:
             try:
-                return json.loads(text[bracket_start:bracket_end + 1])
+                return json.loads(text[bracket_start : bracket_end + 1])
             except json.JSONDecodeError:
                 pass
 

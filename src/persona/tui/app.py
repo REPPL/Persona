@@ -14,7 +14,6 @@ from textual.widgets import Footer, Header
 
 from persona.tui.config import TUIConfig
 from persona.tui.screens.dashboard import DashboardScreen
-from persona.tui.validators import validate_terminal_size
 
 
 class PersonaApp(App):

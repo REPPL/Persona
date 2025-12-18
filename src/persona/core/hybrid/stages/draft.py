@@ -6,7 +6,7 @@ from input data.
 """
 
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.cost import CostTracker
@@ -18,7 +18,7 @@ async def draft_personas(
     config: HybridConfig,
     count: int,
     cost_tracker: CostTracker,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Generate draft personas using local model.
 
@@ -141,7 +141,7 @@ def _build_draft_prompt(input_data: str, count: int) -> str:
 def _parse_personas(
     content: str,
     batch_idx: int = 0,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Parse personas from LLM response.
 

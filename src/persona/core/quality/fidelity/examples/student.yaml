@@ -4,19 +4,19 @@ description: Constraints for generating student personas
 constraints:
   structure:
     required_fields:
-      - name
-      - age
-      - goals
-      - pain_points
+    - name
+    - age
+    - goals
+    - pain_points
     field_types:
       age: integer
       goals: list
 
   content:
     goal_themes:
-      - learning
-      - academic success
-      - career preparation
+    - learning
+    - academic success
+    - career preparation
 
   limits:
     age_range: [16, 25]
@@ -27,6 +27,6 @@ constraints:
     tone: casual
     detail_level: simple
     custom_rules:
-      - Use age-appropriate language
-      - Focus on academic and social challenges
-      - Include both short-term and long-term goals
+    - Use age-appropriate language
+    - Focus on academic and social challenges
+    - Include both short-term and long-term goals

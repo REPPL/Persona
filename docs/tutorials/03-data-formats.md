@@ -358,4 +358,3 @@ Now that you understand data formats:
 - [F-001: Data Loading](../development/roadmap/features/completed/F-001-data-loading.md)
 - [F-029: Empathy Map Input](../development/roadmap/features/completed/F-029-empathy-map-input-format.md)
 - [G-02: Preparing Data](../guides/preparing-data.md)
-

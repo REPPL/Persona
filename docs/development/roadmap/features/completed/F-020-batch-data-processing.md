@@ -58,4 +58,3 @@ Large research projects have hundreds of interview transcripts. The current sing
 - [UC-006: Process Large Datasets](../../../../use-cases/briefs/UC-006-large-datasets.md)
 - [F-001: Data Loading](F-001-data-loading.md)
 - [F-007: Cost Estimation](F-007-cost-estimation.md)
-

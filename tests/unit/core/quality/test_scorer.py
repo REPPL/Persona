@@ -1,14 +1,13 @@
 """Tests for the QualityScorer class."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality import (
-    QualityScorer,
-    QualityConfig,
-    QualityScore,
-    QualityLevel,
     BatchQualityResult,
+    QualityConfig,
+    QualityLevel,
+    QualityScore,
+    QualityScorer,
 )
 
 
@@ -85,7 +84,11 @@ class TestQualityScorer:
         result = scorer.score(low_quality_persona)
 
         assert result.overall_score <= 60  # At boundary or below
-        assert result.level in (QualityLevel.ACCEPTABLE, QualityLevel.POOR, QualityLevel.FAILING)
+        assert result.level in (
+            QualityLevel.ACCEPTABLE,
+            QualityLevel.POOR,
+            QualityLevel.FAILING,
+        )
         assert len(result.dimensions["completeness"].issues) > 0
         assert len(result.dimensions["realism"].issues) > 0
 

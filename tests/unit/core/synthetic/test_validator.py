@@ -3,10 +3,8 @@ Unit tests for SyntheticValidator.
 """
 
 import csv
-from pathlib import Path
 
 import pytest
-
 from persona.core.synthetic.validator import SyntheticValidator
 
 

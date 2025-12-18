@@ -1,7 +1,7 @@
 # Google Gemini 2.5 Flash Configuration
 name: gemini-2.5-flash
 provider: gemini
-description: "Gemini 2.5 Flash - fast and efficient"
+description: Gemini 2.5 Flash - fast and efficient
 
 parameters:
   max_tokens: 4096

@@ -5,13 +5,13 @@ This module provides the PersonaClient class, a high-level wrapper
 around the SDK that simplifies common use cases.
 """
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from persona.sdk.config import SDKConfig
 from persona.sdk.generator import PersonaGenerator
-from persona.sdk.models import PersonaConfig, GenerationResultModel
-from persona.sdk.exceptions import ConfigurationError
+from persona.sdk.models import GenerationResultModel, PersonaConfig
 
 
 class PersonaClient:

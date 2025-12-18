@@ -6,7 +6,6 @@ and tokenise it for diversity analysis.
 """
 
 import re
-from typing import Any
 
 from persona.core.generation.parser import Persona
 
@@ -130,9 +129,6 @@ def tokenise(text: str) -> list[str]:
     tokens = re.findall(r"\b[a-z0-9]+\b", text)
 
     # Filter out very short tokens (< 2 characters) and pure numbers
-    tokens = [
-        t for t in tokens
-        if len(t) >= 2 and not t.isdigit()
-    ]
+    tokens = [t for t in tokens if len(t) >= 2 and not t.isdigit()]
 
     return tokens

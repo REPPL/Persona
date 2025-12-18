@@ -83,7 +83,11 @@ async def get_webhook(
     )
 
 
-@router.delete("/{webhook_id}", response_model=SuccessResponse, dependencies=[Depends(verify_token)])
+@router.delete(
+    "/{webhook_id}",
+    response_model=SuccessResponse,
+    dependencies=[Depends(verify_token)],
+)
 async def delete_webhook(
     webhook_id: str,
     manager: WebhookManager = Depends(get_webhook_manager),

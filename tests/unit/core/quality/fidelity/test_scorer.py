@@ -4,7 +4,6 @@ Tests for fidelity scorer.
 Tests FidelityScorer orchestrator.
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity import (

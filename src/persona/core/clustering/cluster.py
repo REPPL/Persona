@@ -5,10 +5,10 @@ This module provides the PersonaClusterer class for grouping
 similar personas and suggesting consolidation.
 """
 
+import math
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
-import math
 
 from persona.core.generation.parser import Persona
 
@@ -290,10 +290,7 @@ class PersonaClusterer:
         scores["behaviours"] = self._jaccard_similarity(behav_a, behav_b)
 
         # Weighted average
-        total = sum(
-            scores.get(k, 0) * self.weights.get(k, 0)
-            for k in self.weights
-        )
+        total = sum(scores.get(k, 0) * self.weights.get(k, 0) for k in self.weights)
 
         return total
 
@@ -367,10 +364,7 @@ class PersonaClusterer:
                 continue
 
             # Find all personas similar to this pair
-            group = [
-                p for p in personas
-                if p.id in (id_a, id_b)
-            ]
+            group = [p for p in personas if p.id in (id_a, id_b)]
 
             # Find reason for similarity
             reason = self._determine_similarity_reason(group[0], group[1])
@@ -459,8 +453,7 @@ class PersonaClusterer:
             # Merge clusters
             merged = clusters[best_i] + clusters[best_j]
             clusters = [
-                c for idx, c in enumerate(clusters)
-                if idx not in (best_i, best_j)
+                c for idx, c in enumerate(clusters) if idx not in (best_i, best_j)
             ]
             clusters.append(merged)
 
@@ -499,15 +492,14 @@ class PersonaClusterer:
 
         # Initialise: pick k random centroids
         import random
+
         centroids = random.sample(personas, k)
 
         max_iterations = kwargs.get("max_iterations", 10)
 
         for _ in range(max_iterations):
             # Assign personas to nearest centroid
-            assignments: dict[str, list[Persona]] = {
-                c.id: [] for c in centroids
-            }
+            assignments: dict[str, list[Persona]] = {c.id: [] for c in centroids}
 
             for persona in personas:
                 # Find nearest centroid
@@ -535,9 +527,7 @@ class PersonaClusterer:
             centroids = new_centroids
 
         # Build final clusters
-        final_assignments: dict[str, list[Persona]] = {
-            c.id: [] for c in centroids
-        }
+        final_assignments: dict[str, list[Persona]] = {c.id: [] for c in centroids}
 
         for persona in personas:
             best_centroid = centroids[0]
@@ -591,7 +581,8 @@ class PersonaClusterer:
             return 1.0
 
         matches = sum(
-            1 for k in all_keys
+            1
+            for k in all_keys
             if dict_a.get(k) == dict_b.get(k) and k in dict_a and k in dict_b
         )
         return matches / len(all_keys)
@@ -644,7 +635,7 @@ class PersonaClusterer:
         count = 0
 
         for i, pa in enumerate(personas):
-            for pb in personas[i + 1:]:
+            for pb in personas[i + 1 :]:
                 total += self.calculate_similarity(pa, pb)
                 count += 1
 
@@ -659,9 +650,7 @@ class PersonaClusterer:
             return personas[0].name or f"Single: {personas[0].id}"
 
         # Find common characteristics
-        common_goals = self._find_common_items(
-            [set(p.goals or []) for p in personas]
-        )
+        common_goals = self._find_common_items([set(p.goals or []) for p in personas])
         common_pains = self._find_common_items(
             [set(p.pain_points or []) for p in personas]
         )
@@ -684,9 +673,7 @@ class PersonaClusterer:
         characteristics: dict[str, Any] = {}
 
         # Common goals
-        common_goals = self._find_common_items(
-            [set(p.goals or []) for p in personas]
-        )
+        common_goals = self._find_common_items([set(p.goals or []) for p in personas])
         if common_goals:
             characteristics["common_goals"] = list(common_goals)
 

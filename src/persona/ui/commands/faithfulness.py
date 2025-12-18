@@ -35,7 +35,8 @@ def faithfulness(
     source_path: Annotated[
         Path,
         typer.Option(
-            "--source", "-s",
+            "--source",
+            "-s",
             help="Path to source data file (required).",
             exists=True,
         ),
@@ -43,7 +44,8 @@ def faithfulness(
     output_format: Annotated[
         str,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output format: rich, json, markdown.",
         ),
     ] = "rich",
@@ -64,7 +66,8 @@ def faithfulness(
     threshold: Annotated[
         float,
         typer.Option(
-            "--threshold", "-t",
+            "--threshold",
+            "-t",
             help="Similarity threshold for claim support (0-1).",
         ),
     ] = 0.7,
@@ -146,7 +149,9 @@ def faithfulness(
 
     if not personas:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": "No personas found"}, indent=2))
+            print(
+                json.dumps({"success": False, "error": "No personas found"}, indent=2)
+            )
         else:
             console.print("[yellow]No personas found to validate.[/yellow]")
         raise typer.Exit(1)
@@ -156,7 +161,11 @@ def faithfulness(
         source_data = source_path.read_text(encoding="utf-8")
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to load source: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {"success": False, "error": f"Failed to load source: {e}"}, indent=2
+                )
+            )
         else:
             console.print(f"[red]Error loading source data:[/red] {e}")
         raise typer.Exit(1)
@@ -168,16 +177,31 @@ def faithfulness(
             llm_provider_instance.model = llm_model
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to create LLM provider: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {"success": False, "error": f"Failed to create LLM provider: {e}"},
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error creating LLM provider:[/red] {e}")
         raise typer.Exit(1)
 
     try:
-        embedding_provider_instance = EmbeddingProviderFactory.create(embedding_provider)
+        embedding_provider_instance = EmbeddingProviderFactory.create(
+            embedding_provider
+        )
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to create embedding provider: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "success": False,
+                        "error": f"Failed to create embedding provider: {e}",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error creating embedding provider:[/red] {e}")
         raise typer.Exit(1)
@@ -192,7 +216,12 @@ def faithfulness(
         )
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to initialise validator: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {"success": False, "error": f"Failed to initialise validator: {e}"},
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error initialising validator:[/red] {e}")
         raise typer.Exit(1)
@@ -200,7 +229,9 @@ def faithfulness(
     # Validate personas
     if output_format == "rich" and not console._quiet:
         console.print(f"[dim]Persona {__version__}[/dim]\n")
-        console.print(f"[dim]Validating {len(personas)} persona(s) against source data...[/dim]\n")
+        console.print(
+            f"[dim]Validating {len(personas)} persona(s) against source data...[/dim]\n"
+        )
 
     try:
         reports = validator.validate_batch(personas, source_data)
@@ -215,7 +246,9 @@ def faithfulness(
     total_claims = sum(len(r.claims) for r in reports)
     total_supported = sum(r.supported_count for r in reports)
     total_unsupported = sum(r.unsupported_count for r in reports)
-    avg_faithfulness = sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    avg_faithfulness = (
+        sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    )
 
     # Output results
     if output_format == "json":
@@ -241,22 +274,31 @@ def faithfulness(
         if save_to:
             save_to.write_text(output_text)
     elif output_format == "markdown":
-        report = _generate_markdown_report(reports, threshold, use_hhem, show_claims, show_unsupported)
+        report = _generate_markdown_report(
+            reports, threshold, use_hhem, show_claims, show_unsupported
+        )
         print(report)
         if save_to:
             save_to.write_text(report)
     else:
-        _display_rich_output(console, reports, threshold, use_hhem, show_claims, show_unsupported)
+        _display_rich_output(
+            console, reports, threshold, use_hhem, show_claims, show_unsupported
+        )
         if save_to:
-            save_to.write_text(json.dumps({
-                "summary": {
-                    "total_claims": total_claims,
-                    "supported_claims": total_supported,
-                    "unsupported_claims": total_unsupported,
-                    "average_faithfulness": round(avg_faithfulness, 1),
-                },
-                "reports": [_report_to_dict(r, show_claims) for r in reports],
-            }, indent=2))
+            save_to.write_text(
+                json.dumps(
+                    {
+                        "summary": {
+                            "total_claims": total_claims,
+                            "supported_claims": total_supported,
+                            "unsupported_claims": total_unsupported,
+                            "average_faithfulness": round(avg_faithfulness, 1),
+                        },
+                        "reports": [_report_to_dict(r, show_claims) for r in reports],
+                    },
+                    indent=2,
+                )
+            )
 
     # Check minimum score threshold
     if minimum_score is not None:
@@ -279,16 +321,20 @@ def _display_rich_output(
     show_unsupported: bool,
 ) -> None:
     """Display results with Rich formatting."""
-    console.print(Panel.fit(
-        "[bold]Faithfulness Validation Report[/bold]",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Faithfulness Validation Report[/bold]",
+            border_style="blue",
+        )
+    )
 
     # Summary statistics
     total_claims = sum(len(r.claims) for r in reports)
     total_supported = sum(r.supported_count for r in reports)
     total_unsupported = sum(r.unsupported_count for r in reports)
-    avg_faithfulness = sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    avg_faithfulness = (
+        sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    )
 
     summary = Table(show_header=False, box=None)
     summary.add_column("Metric", style="cyan")
@@ -298,7 +344,7 @@ def _display_rich_output(
     summary.add_row("Supported claims", f"[green]{total_supported}[/green]")
     summary.add_row(
         "Unsupported claims",
-        f"[red]{total_unsupported}[/red]" if total_unsupported > 0 else "0"
+        f"[red]{total_unsupported}[/red]" if total_unsupported > 0 else "0",
     )
     summary.add_row("Average faithfulness", _colour_faithfulness(avg_faithfulness))
     summary.add_row("Support threshold", f"{threshold:.1%}")
@@ -330,7 +376,9 @@ def _display_rich_output(
             name,
             str(report.total_claims),
             f"[green]{report.supported_count}[/green]",
-            f"[red]{report.unsupported_count}[/red]" if report.unsupported_count > 0 else "0",
+            f"[red]{report.unsupported_count}[/red]"
+            if report.unsupported_count > 0
+            else "0",
             _colour_faithfulness(report.faithfulness_score),
             status,
         )
@@ -341,19 +389,27 @@ def _display_rich_output(
     if show_unsupported:
         reports_with_issues = [r for r in reports if r.unsupported_count > 0]
         if reports_with_issues:
-            console.print("\n[bold]Unsupported Claims (Potential Hallucinations):[/bold]")
+            console.print(
+                "\n[bold]Unsupported Claims (Potential Hallucinations):[/bold]"
+            )
 
             for report in reports_with_issues:
                 name = report.persona_name or report.persona_id
-                console.print(f"\n[cyan]{name}[/cyan] ({report.unsupported_count} unsupported):")
+                console.print(
+                    f"\n[cyan]{name}[/cyan] ({report.unsupported_count} unsupported):"
+                )
 
                 for claim in report.unsupported_claims[:5]:  # Limit to 5 per persona
-                    console.print(f"  [red]•[/red] [{claim.claim_type.value}] {claim.text}")
+                    console.print(
+                        f"  [red]•[/red] [{claim.claim_type.value}] {claim.text}"
+                    )
                     if claim.source_field:
                         console.print(f"    [dim]Field: {claim.source_field}[/dim]")
 
                 if len(report.unsupported_claims) > 5:
-                    console.print(f"  [dim]... and {len(report.unsupported_claims) - 5} more[/dim]")
+                    console.print(
+                        f"  [dim]... and {len(report.unsupported_claims) - 5} more[/dim]"
+                    )
 
     # Show all claims if requested
     if show_claims:
@@ -365,7 +421,9 @@ def _display_rich_output(
 
             for claim in report.claims:
                 # Find matching result
-                match = next((m for m in report.matches if m.claim.text == claim.text), None)
+                match = next(
+                    (m for m in report.matches if m.claim.text == claim.text), None
+                )
                 if match and match.is_supported:
                     console.print(f"  [green]✓[/green] {claim.text}")
                 else:
@@ -383,7 +441,9 @@ def _generate_markdown_report(
     total_claims = sum(len(r.claims) for r in reports)
     total_supported = sum(r.supported_count for r in reports)
     total_unsupported = sum(r.unsupported_count for r in reports)
-    avg_faithfulness = sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    avg_faithfulness = (
+        sum(r.faithfulness_score for r in reports) / len(reports) if reports else 0
+    )
 
     lines = [
         "# Faithfulness Validation Report",
@@ -421,11 +481,13 @@ def _generate_markdown_report(
     if show_unsupported:
         reports_with_issues = [r for r in reports if r.unsupported_count > 0]
         if reports_with_issues:
-            lines.extend([
-                "",
-                "## Unsupported Claims (Potential Hallucinations)",
-                "",
-            ])
+            lines.extend(
+                [
+                    "",
+                    "## Unsupported Claims (Potential Hallucinations)",
+                    "",
+                ]
+            )
 
             for report in reports_with_issues:
                 name = report.persona_name or report.persona_id

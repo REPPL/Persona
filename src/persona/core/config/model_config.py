@@ -71,7 +71,7 @@ def load_model_config(provider: str, model_name: str) -> ModelParams:
             continue
 
         try:
-            with open(yaml_file, "r", encoding="utf-8") as f:
+            with open(yaml_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
 
             # Check if this config matches the model
@@ -95,7 +95,7 @@ def load_model_config(provider: str, model_name: str) -> ModelParams:
     defaults_file = provider_dir / "defaults.yaml"
     if defaults_file.exists():
         try:
-            with open(defaults_file, "r", encoding="utf-8") as f:
+            with open(defaults_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
             params = data.get("parameters", {})
             return ModelParams(
@@ -148,7 +148,7 @@ def get_default_model(provider: str) -> str:
 
     if defaults_file.exists():
         try:
-            with open(defaults_file, "r", encoding="utf-8") as f:
+            with open(defaults_file, encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
             defaults = data.get("defaults", {})
             return defaults.get(provider, fallback_defaults.get(provider, ""))
@@ -186,15 +186,17 @@ def list_configured_models(provider: Optional[str] = None) -> list[dict]:
                 continue
 
             try:
-                with open(yaml_file, "r", encoding="utf-8") as f:
+                with open(yaml_file, encoding="utf-8") as f:
                     data = yaml.safe_load(f) or {}
 
-                models.append({
-                    "name": data.get("name", yaml_file.stem),
-                    "provider": prov,
-                    "description": data.get("description", ""),
-                    "file": str(yaml_file),
-                })
+                models.append(
+                    {
+                        "name": data.get("name", yaml_file.stem),
+                        "provider": prov,
+                        "description": data.get("description", ""),
+                        "file": str(yaml_file),
+                    }
+                )
             except Exception:
                 continue
 

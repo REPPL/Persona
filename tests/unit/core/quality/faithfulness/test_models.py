@@ -1,6 +1,5 @@
 """Tests for faithfulness models."""
 
-import pytest
 
 from persona.core.quality.faithfulness.models import (
     Claim,

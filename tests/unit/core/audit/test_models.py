@@ -1,10 +1,6 @@
 """Tests for audit trail models (F-123)."""
 
-import sys
-from datetime import datetime
 from pathlib import Path
-
-import pytest
 
 from persona.core.audit.models import (
     AuditConfig,
@@ -168,10 +164,10 @@ class TestAuditRecord:
         """Test audit record with signature."""
         session = SessionInfo.capture_current()
         input_rec = InputRecord(data_hash="abc", record_count=1)
-        generation = GenerationRecord(
-            provider="test", model="test", prompt_hash="def"
+        generation = GenerationRecord(provider="test", model="test", prompt_hash="def")
+        output = OutputRecord(
+            personas_hash="ghi", persona_count=1, generation_time_ms=1
         )
-        output = OutputRecord(personas_hash="ghi", persona_count=1, generation_time_ms=1)
 
         record = AuditRecord(
             audit_id="test-123",
@@ -189,10 +185,10 @@ class TestAuditRecord:
         """Test JSON serialization of audit record."""
         session = SessionInfo.capture_current()
         input_rec = InputRecord(data_hash="abc", record_count=1)
-        generation = GenerationRecord(
-            provider="test", model="test", prompt_hash="def"
+        generation = GenerationRecord(provider="test", model="test", prompt_hash="def")
+        output = OutputRecord(
+            personas_hash="ghi", persona_count=1, generation_time_ms=1
         )
-        output = OutputRecord(personas_hash="ghi", persona_count=1, generation_time_ms=1)
 
         record = AuditRecord(
             audit_id="test-123",

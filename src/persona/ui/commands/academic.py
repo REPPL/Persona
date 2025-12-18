@@ -35,7 +35,8 @@ def academic(
     source_path: Annotated[
         Optional[Path],
         typer.Option(
-            "--source", "-s",
+            "--source",
+            "-s",
             help="Path to source data file for comparison.",
             exists=True,
         ),
@@ -78,7 +79,8 @@ def academic(
     output_format: Annotated[
         str,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output format: rich, json, markdown.",
         ),
     ] = "rich",
@@ -145,7 +147,9 @@ def academic(
 
     if not personas:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": "No personas found"}, indent=2))
+            print(
+                json.dumps({"success": False, "error": "No personas found"}, indent=2)
+            )
         else:
             console.print("[yellow]No personas found to validate.[/yellow]")
         raise typer.Exit(1)
@@ -157,7 +161,12 @@ def academic(
             source_data = source_path.read_text(encoding="utf-8")
         except Exception as e:
             if output_format == "json":
-                print(json.dumps({"success": False, "error": f"Failed to load source: {e}"}, indent=2))
+                print(
+                    json.dumps(
+                        {"success": False, "error": f"Failed to load source: {e}"},
+                        indent=2,
+                    )
+                )
             else:
                 console.print(f"[red]Error loading source data:[/red] {e}")
             raise typer.Exit(1)
@@ -200,7 +209,12 @@ def academic(
         )
     except Exception as e:
         if output_format == "json":
-            print(json.dumps({"success": False, "error": f"Failed to initialise validator: {e}"}, indent=2))
+            print(
+                json.dumps(
+                    {"success": False, "error": f"Failed to initialise validator: {e}"},
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error initialising validator:[/red] {e}")
         raise typer.Exit(1)
@@ -248,20 +262,28 @@ def academic(
             console.print(f"[dim]Persona {__version__}[/dim]\n")
         _display_rich_output(console, result, metrics)
         if save_to:
-            save_to.write_text(json.dumps({
-                "averages": {
-                    "rouge_l": result.average_rouge_l,
-                    "bertscore": result.average_bertscore,
-                    "gpt_similarity": result.average_gpt_similarity,
-                    "geval": result.average_geval,
-                    "overall": result.overall_average,
-                },
-                "reports": [_report_to_dict(r) for r in result.reports],
-            }, indent=2))
+            save_to.write_text(
+                json.dumps(
+                    {
+                        "averages": {
+                            "rouge_l": result.average_rouge_l,
+                            "bertscore": result.average_bertscore,
+                            "gpt_similarity": result.average_gpt_similarity,
+                            "geval": result.average_geval,
+                            "overall": result.overall_average,
+                        },
+                        "reports": [_report_to_dict(r) for r in result.reports],
+                    },
+                    indent=2,
+                )
+            )
 
     # Check minimum score threshold
     if minimum_score is not None:
-        if result.overall_average is not None and result.overall_average < minimum_score:
+        if (
+            result.overall_average is not None
+            and result.overall_average < minimum_score
+        ):
             if output_format != "json":
                 console.print(
                     f"\n[red]Error:[/red] Overall score {result.overall_average:.2f} "
@@ -272,10 +294,12 @@ def academic(
 
 def _display_rich_output(console, result, metrics: list[str]) -> None:
     """Display results with Rich formatting."""
-    console.print(Panel.fit(
-        "[bold]Academic Validation Report[/bold]",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Academic Validation Report[/bold]",
+            border_style="blue",
+        )
+    )
 
     # Summary table
     summary = Table(show_header=False, box=None)
@@ -397,13 +421,15 @@ def _generate_markdown_report(result, metrics: list[str]) -> str:
     if result.overall_average is not None:
         lines.append(f"- **Overall average:** {result.overall_average:.3f}")
 
-    lines.extend([
-        "",
-        "## Average by Metric",
-        "",
-        "| Metric | Score |",
-        "|--------|-------|",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Average by Metric",
+            "",
+            "| Metric | Score |",
+            "|--------|-------|",
+        ]
+    )
 
     if result.average_rouge_l is not None:
         lines.append(f"| ROUGE-L | {result.average_rouge_l:.3f} |")
@@ -414,11 +440,13 @@ def _generate_markdown_report(result, metrics: list[str]) -> str:
     if result.average_geval is not None:
         lines.append(f"| G-eval | {result.average_geval:.3f} |")
 
-    lines.extend([
-        "",
-        "## Individual Scores",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Individual Scores",
+            "",
+        ]
+    )
 
     # Build header
     header = "| Persona |"
@@ -449,7 +477,11 @@ def _generate_markdown_report(result, metrics: list[str]) -> str:
         if "bertscore" in metrics:
             row += f" {report.bertscore.f1:.3f} |" if report.bertscore else " - |"
         if "gpt_similarity" in metrics:
-            row += f" {report.gpt_similarity.similarity:.3f} |" if report.gpt_similarity else " - |"
+            row += (
+                f" {report.gpt_similarity.similarity:.3f} |"
+                if report.gpt_similarity
+                else " - |"
+            )
         if "geval" in metrics:
             row += f" {report.geval.overall:.3f} |" if report.geval else " - |"
 
@@ -480,17 +512,23 @@ def _report_to_dict(report) -> dict:
             "precision": report.rouge_l.precision,
             "recall": report.rouge_l.recall,
             "fmeasure": report.rouge_l.fmeasure,
-        } if report.rouge_l else None,
+        }
+        if report.rouge_l
+        else None,
         "bertscore": {
             "precision": report.bertscore.precision,
             "recall": report.bertscore.recall,
             "f1": report.bertscore.f1,
             "model": report.bertscore.model,
-        } if report.bertscore else None,
+        }
+        if report.bertscore
+        else None,
         "gpt_similarity": {
             "similarity": report.gpt_similarity.similarity,
             "embedding_model": report.gpt_similarity.embedding_model,
-        } if report.gpt_similarity else None,
+        }
+        if report.gpt_similarity
+        else None,
         "geval": {
             "coherence": report.geval.coherence,
             "relevance": report.geval.relevance,
@@ -499,7 +537,9 @@ def _report_to_dict(report) -> dict:
             "overall": report.geval.overall,
             "model": report.geval.model,
             "reasoning": report.geval.reasoning,
-        } if report.geval else None,
+        }
+        if report.geval
+        else None,
     }
 
 

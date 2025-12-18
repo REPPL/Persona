@@ -2,12 +2,9 @@
 Tests for persona generation pipeline (F-004).
 """
 
-import pytest
-from pathlib import Path
 
-from persona.core.generation import GenerationPipeline, PersonaParser, Persona
+from persona.core.generation import GenerationPipeline, Persona, PersonaParser
 from persona.core.generation.pipeline import GenerationConfig, GenerationResult
-from persona.core.generation.parser import ParseResult
 
 
 class TestPersona:
@@ -96,7 +93,7 @@ class TestPersonaParser:
 
     def test_parse_simple_json(self):
         """Test parsing simple JSON response."""
-        response = '''
+        response = """
         {
             "personas": [
                 {
@@ -106,7 +103,7 @@ class TestPersonaParser:
                 }
             ]
         }
-        '''
+        """
 
         parser = PersonaParser()
         result = parser.parse(response)
@@ -116,7 +113,7 @@ class TestPersonaParser:
 
     def test_parse_with_output_tags(self):
         """Test parsing response with output tags."""
-        response = '''
+        response = """
         Here is my analysis.
 
         <output>
@@ -126,7 +123,7 @@ class TestPersonaParser:
             ]
         }
         </output>
-        '''
+        """
 
         parser = PersonaParser()
         result = parser.parse(response)
@@ -136,7 +133,7 @@ class TestPersonaParser:
 
     def test_parse_with_reasoning(self):
         """Test parsing response with reasoning tags."""
-        response = '''
+        response = """
         <reasoning>
         I analyzed the data and found patterns.
         </reasoning>
@@ -144,7 +141,7 @@ class TestPersonaParser:
         <output>
         {"personas": [{"id": "p1", "name": "Bob", "goals": []}]}
         </output>
-        '''
+        """
 
         parser = PersonaParser()
         result = parser.parse(response)
@@ -155,7 +152,7 @@ class TestPersonaParser:
 
     def test_parse_json_in_code_block(self):
         """Test parsing JSON in code block."""
-        response = '''
+        response = """
         Here are the personas:
 
         ```json
@@ -165,7 +162,7 @@ class TestPersonaParser:
             ]
         }
         ```
-        '''
+        """
 
         parser = PersonaParser()
         result = parser.parse(response)
@@ -175,12 +172,12 @@ class TestPersonaParser:
 
     def test_parse_array_of_personas(self):
         """Test parsing array of personas (not wrapped in object)."""
-        response = '''
+        response = """
         [
             {"id": "p1", "name": "Dave", "goals": []},
             {"id": "p2", "name": "Eve", "goals": []}
         ]
-        '''
+        """
 
         parser = PersonaParser()
         result = parser.parse(response)

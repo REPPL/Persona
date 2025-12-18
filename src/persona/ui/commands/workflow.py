@@ -4,7 +4,6 @@ Workflow management CLI commands.
 Commands for listing, creating, and managing custom workflows.
 """
 
-from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
@@ -25,14 +24,16 @@ def list_workflows(
     source: Annotated[
         Optional[str],
         typer.Option(
-            "--source", "-s",
+            "--source",
+            "-s",
             help="Filter by source (builtin, user, project).",
         ),
     ] = None,
     tag: Annotated[
         Optional[str],
         typer.Option(
-            "--tag", "-t",
+            "--tag",
+            "-t",
             help="Filter by tag.",
         ),
     ] = None,
@@ -71,28 +72,34 @@ def list_workflows(
         for workflow_id in loader.list_workflows(source=source, tag=tag):
             try:
                 info = loader.get_info(workflow_id)
-                result["data"]["workflows"].append({
-                    "id": info.id,
-                    "name": info.name,
-                    "source": info.source,
-                    "description": info.description,
-                    "step_count": info.step_count,
-                    "tags": info.tags,
-                })
+                result["data"]["workflows"].append(
+                    {
+                        "id": info.id,
+                        "name": info.name,
+                        "source": info.source,
+                        "description": info.description,
+                        "step_count": info.step_count,
+                        "tags": info.tags,
+                    }
+                )
             except Exception as e:
-                result["data"]["workflows"].append({
-                    "id": workflow_id,
-                    "error": str(e),
-                })
+                result["data"]["workflows"].append(
+                    {
+                        "id": workflow_id,
+                        "error": str(e),
+                    }
+                )
 
         print(json.dumps(result, indent=2))
         return
 
     # Rich output
-    console.print(Panel.fit(
-        "[bold]Available Workflows[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Available Workflows[/bold]",
+            border_style="cyan",
+        )
+    )
 
     workflows = loader.list_workflows(source=source, tag=tag)
 
@@ -129,7 +136,11 @@ def list_workflows(
             console.print(f"  • {info.id}")
             console.print(f"    [dim]{info.name}[/dim]")
             if info.description:
-                desc = info.description[:60] + "..." if len(info.description) > 60 else info.description
+                desc = (
+                    info.description[:60] + "..."
+                    if len(info.description) > 60
+                    else info.description
+                )
                 console.print(f"    [dim]{desc}[/dim]")
             console.print(f"    [cyan]Steps: {info.step_count}[/cyan]")
             if tags_str:
@@ -187,10 +198,12 @@ def show_workflow(
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]{config.name}[/bold] ({config.id})",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]{config.name}[/bold] ({config.id})",
+            border_style="cyan",
+        )
+    )
 
     table = Table(show_header=False, box=None)
     table.add_column("Property", style="bold")
@@ -251,7 +264,9 @@ def create_workflow(
     ] = "",
     template: Annotated[
         str,
-        typer.Option("--template", "-t", help="Template to use (default: builtin/default)."),
+        typer.Option(
+            "--template", "-t", help="Template to use (default: builtin/default)."
+        ),
     ] = "builtin/default",
     provider: Annotated[
         str,
@@ -277,7 +292,7 @@ def create_workflow(
         persona workflow create my-workflow --name "My Workflow"
         persona workflow create healthcare-v2 --name "Healthcare v2" --template builtin/healthcare
     """
-    from persona.core.config import WorkflowConfig, WorkflowStep, CustomWorkflowLoader
+    from persona.core.config import CustomWorkflowLoader, WorkflowConfig, WorkflowStep
 
     console = get_console()
     loader = CustomWorkflowLoader()
@@ -357,7 +372,7 @@ def validate_workflow(
         # Show summary
         try:
             config = loader.load(workflow_id)
-            console.print(f"\n[bold]Summary:[/bold]")
+            console.print("\n[bold]Summary:[/bold]")
             console.print(f"  Steps: {len(config.steps)}")
             console.print(f"  Provider: {config.provider}")
             if config.model:
@@ -400,7 +415,7 @@ def remove_workflow(
     try:
         info = loader.get_info(workflow_id)
         if info.source == "builtin":
-            console.print(f"[red]Error:[/red] Cannot remove built-in workflow.")
+            console.print("[red]Error:[/red] Cannot remove built-in workflow.")
             raise typer.Exit(1)
     except FileNotFoundError:
         console.print(f"[red]Error:[/red] Workflow '{workflow_id}' not found.")
@@ -415,5 +430,5 @@ def remove_workflow(
     if loader.delete(workflow_id):
         console.print(f"[green]✓[/green] Workflow '{workflow_id}' removed.")
     else:
-        console.print(f"[red]Error:[/red] Failed to remove workflow.")
+        console.print("[red]Error:[/red] Failed to remove workflow.")
         raise typer.Exit(1)

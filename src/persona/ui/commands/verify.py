@@ -148,7 +148,9 @@ def verify(
         config_table.add_row("Samples per Model", str(samples))
         config_table.add_row("Voting Strategy", strategy)
         config_table.add_row("Threshold", f"{threshold:.1%}")
-        config_table.add_row("Mode", "Self-Consistency" if self_consistency else "Cross-Model")
+        config_table.add_row(
+            "Mode", "Self-Consistency" if self_consistency else "Cross-Model"
+        )
         config_table.add_row("Execution", "Sequential" if sequential else "Parallel")
         console.print(config_table)
         console.print()
@@ -169,9 +171,7 @@ def verify(
                         )
                     )
                 else:
-                    result = asyncio.run(
-                        verifier.verify(data_path, count=count)
-                    )
+                    result = asyncio.run(verifier.verify(data_path, count=count))
         else:
             if self_consistency:
                 result = asyncio.run(
@@ -182,9 +182,7 @@ def verify(
                     )
                 )
             else:
-                result = asyncio.run(
-                    verifier.verify(data_path, count=count)
-                )
+                result = asyncio.run(verifier.verify(data_path, count=count))
 
         # Display results
         _display_results(console, result, no_progress)
@@ -221,11 +219,13 @@ def _display_results(console, result, quiet: bool = False) -> None:
     status_text.append(f"\nConsistency Score: {result.consistency_score:.2%}")
     status_text.append(f"\nThreshold: {result.config.consistency_threshold:.2%}")
 
-    console.print(Panel(
-        status_text,
-        title="[bold]Verification Result[/bold]",
-        border_style="green" if result.passed else "red",
-    ))
+    console.print(
+        Panel(
+            status_text,
+            title="[bold]Verification Result[/bold]",
+            border_style="green" if result.passed else "red",
+        )
+    )
 
     if not quiet:
         # Metrics table
@@ -263,14 +263,12 @@ def _display_results(console, result, quiet: bool = False) -> None:
             disputed += f" (+{len(result.disputed_attributes) - 5} more)"
 
         attr_table.add_row(
-            "Agreed",
-            str(len(result.agreed_attributes)),
-            agreed or "[dim]none[/dim]"
+            "Agreed", str(len(result.agreed_attributes)), agreed or "[dim]none[/dim]"
         )
         attr_table.add_row(
             "Disputed",
             str(len(result.disputed_attributes)),
-            disputed or "[dim]none[/dim]"
+            disputed or "[dim]none[/dim]",
         )
 
         console.print(attr_table)

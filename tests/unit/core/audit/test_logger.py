@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from persona.core.audit.logger import AuditLogger
 from persona.core.audit.models import AuditConfig
 

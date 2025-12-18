@@ -329,4 +329,3 @@ Now that you can validate personas:
 
 - Shin, J., Hedderich, M. A., Lucero, A., & Oulasvirta, A. (2024). Understanding Human-AI Workflows for Generating Personas. *Designing Interactive Systems Conference (DIS)*. https://doi.org/10.1145/3643834.3660729
 - LLM Generated Persona is a Promise with a Catch. *arXiv:2503.16527*
-

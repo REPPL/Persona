@@ -9,13 +9,13 @@ from typing import Any
 
 import httpx
 
-from persona.core.config.vendor import VendorConfig, AuthType
+from persona.core.config.vendor import AuthType, VendorConfig
 from persona.core.providers.base import (
+    AuthenticationError,
     LLMProvider,
     LLMResponse,
-    AuthenticationError,
-    RateLimitError,
     ModelNotFoundError,
+    RateLimitError,
 )
 
 
@@ -230,14 +230,10 @@ class CustomVendorProvider(LLMProvider):
                 response = client.post(url, headers=headers, json=payload)
 
             if response.status_code == 401:
-                raise AuthenticationError(
-                    f"Invalid API key for {self._config.name}"
-                )
+                raise AuthenticationError(f"Invalid API key for {self._config.name}")
 
             if response.status_code == 429:
-                raise RateLimitError(
-                    f"Rate limit exceeded for {self._config.name}"
-                )
+                raise RateLimitError(f"Rate limit exceeded for {self._config.name}")
 
             if response.status_code not in (200, 201):
                 try:
@@ -262,9 +258,7 @@ class CustomVendorProvider(LLMProvider):
                 f"after {self._config.timeout}s"
             )
         except httpx.RequestError as e:
-            raise RuntimeError(
-                f"{self._config.name} API request failed: {e}"
-            )
+            raise RuntimeError(f"{self._config.name} API request failed: {e}")
 
     def test_connection(self) -> dict[str, Any]:
         """

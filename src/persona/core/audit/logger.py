@@ -6,9 +6,8 @@ Main interface for recording audit trails during generation.
 
 import hashlib
 import json
-import time
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Optional
 
@@ -166,7 +165,7 @@ class AuditLogger:
         # Create audit record
         record = AuditRecord(
             audit_id=audit_id,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(UTC),
             tool_version=tool_version,
             session=self._session_info,
             input=InputRecord(
@@ -252,7 +251,7 @@ class AuditLogger:
         from datetime import timedelta
 
         days = retention_days or self.config.retention_days
-        cutoff_date = datetime.utcnow().replace(
+        cutoff_date = datetime.now(UTC).replace(
             hour=0, minute=0, second=0, microsecond=0
         )
         cutoff_date = cutoff_date - timedelta(days=days)

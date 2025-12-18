@@ -1,7 +1,7 @@
 # OpenAI GPT-4o Configuration
 name: gpt-4o
 provider: openai
-description: "Most capable GPT-4 model, optimised for speed and quality"
+description: Most capable GPT-4 model, optimised for speed and quality
 
 parameters:
   max_tokens: 4096

@@ -1,11 +1,10 @@
 """Tests for embedding provider factory."""
 
 import pytest
-
 from persona.core.embedding.base import EmbeddingProvider, EmbeddingResponse
 from persona.core.embedding.factory import (
-    EmbeddingFactory,
     _PROVIDER_REGISTRY,
+    EmbeddingFactory,
     get_embedding_provider,
 )
 from persona.core.embedding.openai import OpenAIEmbeddingProvider

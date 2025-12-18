@@ -4,12 +4,10 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from persona.core.config.workflow import (
+    CustomWorkflowLoader,
     WorkflowConfig,
     WorkflowStep,
-    WorkflowInfo,
-    CustomWorkflowLoader,
     get_builtin_workflows,
 )
 
@@ -75,8 +73,15 @@ class TestWorkflowConfig:
             temperature=0.5,
             max_tokens=8192,
             steps=[
-                WorkflowStep(name="extract", template="builtin/default", output="themes"),
-                WorkflowStep(name="synthesise", template="builtin/default", input="themes", output="personas"),
+                WorkflowStep(
+                    name="extract", template="builtin/default", output="themes"
+                ),
+                WorkflowStep(
+                    name="synthesise",
+                    template="builtin/default",
+                    input="themes",
+                    output="personas",
+                ),
             ],
             variables={"complexity": "complex"},
         )
@@ -172,7 +177,8 @@ class TestWorkflowConfigYaml:
         """Test loading config from YAML file."""
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "workflow.yaml"
-            path.write_text("""
+            path.write_text(
+                """
 id: test-workflow
 name: Test Workflow
 provider: openai
@@ -182,7 +188,8 @@ steps:
     output: personas
 variables:
   complexity: simple
-""")
+"""
+            )
             config = WorkflowConfig.from_yaml(path)
 
             assert config.id == "test-workflow"
@@ -265,13 +272,15 @@ class TestCustomWorkflowLoader:
             user_dir.mkdir()
 
             # Create custom workflow
-            (user_dir / "custom.yaml").write_text("""
+            (user_dir / "custom.yaml").write_text(
+                """
 id: custom
 name: Custom
 steps:
   - name: step
     template: t
-""")
+"""
+            )
 
             loader = CustomWorkflowLoader(
                 user_dir=user_dir,
@@ -333,14 +342,16 @@ steps:
             user_dir = Path(tmpdir) / "user"
             user_dir.mkdir()
 
-            (user_dir / "custom.yaml").write_text("""
+            (user_dir / "custom.yaml").write_text(
+                """
 id: custom
 name: Custom Workflow
 provider: openai
 steps:
   - name: generate
     template: builtin/default
-""")
+"""
+            )
 
             loader = CustomWorkflowLoader(
                 user_dir=user_dir,

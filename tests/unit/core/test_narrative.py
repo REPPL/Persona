@@ -3,7 +3,7 @@ Tests for narrative text output (F-036).
 """
 
 import pytest
-
+from persona.core.generation.parser import Persona
 from persona.core.output.narrative import (
     FirstPersonNarrativeFormatter,
     NarrativeConfig,
@@ -11,8 +11,7 @@ from persona.core.output.narrative import (
     Perspective,
     ThirdPersonNarrativeFormatter,
 )
-from persona.core.output.registry import OutputSection, SectionConfig
-from persona.core.generation.parser import Persona
+from persona.core.output.registry import SectionConfig
 
 
 @pytest.fixture
@@ -199,7 +198,9 @@ class TestNarrativeFormatter:
         assert "Alex" in result
         assert "get things done" in result.lower()
 
-    def test_format_multiple_separates_with_divider(self, sample_persona, minimal_persona):
+    def test_format_multiple_separates_with_divider(
+        self, sample_persona, minimal_persona
+    ):
         """Test format_multiple separates personas with divider."""
         formatter = NarrativeFormatter()
         result = formatter.format_multiple([sample_persona, minimal_persona])

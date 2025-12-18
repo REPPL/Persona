@@ -23,10 +23,10 @@ Release planning and milestone documentation.
 | [v1.5.0](v1.5.0.md) | Hybrid Pipeline | 1 | v1.4.0 | ✅ Complete |
 | [v1.6.0](v1.6.0.md) | Academic Validation | 2 | v1.5.0 | ✅ Complete |
 | [v1.7.0](v1.7.0.md) | Research Compliance | 5 | v1.6.0 | ✅ Complete |
-| [v1.8.0](v1.8.0.md) | Technical Debt | 0 | v1.7.0 | 📋 Planned |
-| [v1.9.0](v1.9.0.md) | Experiment Infrastructure | 2 | v1.8.0 | 📋 Planned |
+| [v1.8.0](v1.8.0.md) | Technical Debt | 0 | v1.7.0 | ✅ Complete |
+| [v1.9.0](v1.9.0.md) | Experiment Infrastructure | 2 | v1.8.0 | ✅ Complete |
 
-**Total: 117 complete features, 2 planned features**
+**Total: 119 complete features, 1 active feature (F-091)**
 
 ## Dependency Graph
 
@@ -66,10 +66,10 @@ v0.1.0 (Foundation) ✅
     v1.7.0 (Research Compliance) ✅
         │
         ↓
-    v1.8.0 (Technical Debt) 📋
+    v1.8.0 (Technical Debt) ✅
         │
         ↓
-    v1.9.0 (Experiment Infrastructure) 📋
+    v1.9.0 (Experiment Infrastructure) ✅
 ```
 
 ## User Interface Roadmap

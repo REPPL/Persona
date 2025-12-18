@@ -1,7 +1,6 @@
 """Unit tests for hybrid pipeline."""
 
 import pytest
-
 from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.pipeline import HybridPipeline, HybridResult
 

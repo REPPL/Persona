@@ -10,7 +10,7 @@ Learning-oriented guides that help you get started with Persona.
 | [Understanding Output](02-understanding-output.md) | Interpret and evaluate generated personas | Beginner | 10 min |
 | [Working with Data Formats](03-data-formats.md) | Prepare data in CSV, JSON, Markdown, YAML | Beginner | 15 min |
 | [Comparing Providers](04-comparing-providers.md) | Compare output across LLM models | Intermediate | 20 min |
-| [Building a Library](05-building-library.md) | Manage personas across projects | Intermediate | 25 min |
+| [Building a Library](05-building-library.md) | Organise research across projects | Intermediate | 20 min |
 | [Validating Quality](06-validating-quality.md) | Ensure personas reflect source data | Advanced | 30 min |
 
 ## What You'll Learn

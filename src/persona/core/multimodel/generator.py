@@ -5,9 +5,9 @@ supporting same-provider and cross-provider configurations.
 """
 
 from dataclasses import dataclass, field
-from typing import Any
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -21,6 +21,7 @@ class ModelSpec:
         temperature: Optional temperature override.
         max_tokens: Optional max tokens override.
     """
+
     provider: str
     model: str
     weight: float = 1.0
@@ -89,6 +90,7 @@ class ModelOutput:
         raw_response: Optional raw LLM response.
         error: Optional error message if generation failed.
     """
+
     model_spec: ModelSpec
     personas: list[dict[str, Any]] = field(default_factory=list)
     tokens_input: int = 0
@@ -131,6 +133,7 @@ class MultiModelResult:
         consolidated_personas: Personas after consolidation (for consensus mode).
         timestamp: When generation completed.
     """
+
     model_outputs: list[ModelOutput] = field(default_factory=list)
     execution_mode: str = "parallel"
     total_tokens_input: int = 0
@@ -240,9 +243,9 @@ class MultiModelGenerator:
 
         # Import strategy classes here to avoid circular imports
         from persona.core.multimodel.strategies import (
+            ConsensusStrategy,
             ParallelStrategy,
             SequentialStrategy,
-            ConsensusStrategy,
         )
 
         # Select execution strategy
@@ -317,14 +320,16 @@ class MultiModelGenerator:
         """Mock persona generation for testing."""
         personas = []
         for i in range(count):
-            personas.append({
-                "id": f"persona-{i+1}",
-                "name": f"Persona {i+1} ({model.model})",
-                "role": "User",
-                "goals": ["Goal 1", "Goal 2"],
-                "frustrations": ["Frustration 1"],
-                "model_source": f"{model.provider}:{model.model}",
-            })
+            personas.append(
+                {
+                    "id": f"persona-{i+1}",
+                    "name": f"Persona {i+1} ({model.model})",
+                    "role": "User",
+                    "goals": ["Goal 1", "Goal 2"],
+                    "frustrations": ["Frustration 1"],
+                    "model_source": f"{model.provider}:{model.model}",
+                }
+            )
         return personas
 
     def _estimate_cost(

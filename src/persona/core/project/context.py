@@ -70,7 +70,11 @@ class ProjectContext:
             reference, data_source_name = reference.rsplit(":", 1)
 
         # Determine if this is a path or a name
-        if reference.startswith("/") or reference.startswith("./") or reference.startswith(".."):
+        if (
+            reference.startswith("/")
+            or reference.startswith("./")
+            or reference.startswith("..")
+        ):
             # It's a path
             project_path = Path(reference).resolve()
         else:
@@ -207,7 +211,7 @@ def is_project_reference(value: str) -> bool:
     # If it contains path separators or file extensions, it's probably a path
     if "/" in value or "\\" in value:
         return False
-    if "." in value and not ":" in value:
+    if "." in value and ":" not in value:
         # Has extension, probably a file
         return False
 

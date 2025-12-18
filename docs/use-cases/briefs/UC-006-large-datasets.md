@@ -20,6 +20,10 @@ P0 (Critical)
 
 v0.7.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed and configured
@@ -29,12 +33,12 @@ v0.7.0
 
 ## Success Criteria
 
-- [ ] Parallel processing with visual progress bar
-- [ ] Combined cost estimation shown before processing
-- [ ] User confirmation required before starting batch
-- [ ] Resumable processing on failure
-- [ ] Consolidated output with per-file attribution
-- [ ] Rate limiting handled gracefully
+- [x] Parallel processing with visual progress bar
+- [x] Combined cost estimation shown before processing
+- [x] User confirmation required before starting batch
+- [x] Resumable processing on failure
+- [x] Consolidated output with per-file attribution
+- [x] Rate limiting handled gracefully
 
 ## Derives Features
 

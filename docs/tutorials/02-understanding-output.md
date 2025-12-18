@@ -251,4 +251,3 @@ Now that you understand the output:
 - [Getting Started](01-getting-started.md)
 - [Persona Schema Reference](../reference/persona-schema.md)
 - [How Generation Works](../explanation/how-generation-works.md)
-

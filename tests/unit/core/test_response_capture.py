@@ -2,12 +2,10 @@
 Tests for full LLM response capture (F-042).
 """
 
-import json
-import pytest
 import tempfile
 from datetime import datetime
-from pathlib import Path
 
+import pytest
 from persona.core.output.response_capture import (
     RequestCapture,
     ResponseCapture,

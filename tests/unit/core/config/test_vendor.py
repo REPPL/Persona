@@ -7,12 +7,11 @@ from unittest.mock import patch
 
 import pytest
 import yaml
-
 from persona.core.config.vendor import (
-    VendorConfig,
-    VendorLoader,
-    VendorEndpoints,
     AuthType,
+    VendorConfig,
+    VendorEndpoints,
+    VendorLoader,
 )
 
 
@@ -262,7 +261,10 @@ class TestVendorConfigUrl:
         )
 
         url = config.build_url("chat", deployment="gpt-4")
-        assert url == "https://my.openai.azure.com/openai/deployments/gpt-4/chat/completions"
+        assert (
+            url
+            == "https://my.openai.azure.com/openai/deployments/gpt-4/chat/completions"
+        )
 
     def test_build_url_with_api_version(self):
         """Test URL building with API version."""
@@ -312,13 +314,16 @@ class TestVendorConfigYaml:
     def test_from_yaml(self):
         """Test loading config from YAML file."""
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            yaml.safe_dump({
-                "id": "test-vendor",
-                "name": "Test Vendor",
-                "api_base": "https://api.example.com",
-                "auth_type": "bearer",
-                "auth_env": "TEST_API_KEY",
-            }, f)
+            yaml.safe_dump(
+                {
+                    "id": "test-vendor",
+                    "name": "Test Vendor",
+                    "api_base": "https://api.example.com",
+                    "auth_type": "bearer",
+                    "auth_env": "TEST_API_KEY",
+                },
+                f,
+            )
             f.flush()
 
             config = VendorConfig.from_yaml(Path(f.name))

@@ -1,14 +1,14 @@
 """Tests for API key protection (F-051)."""
 
 import logging
-import pytest
 
+import pytest
 from persona.core.security.keys import (
+    KeyMaskingFilter,
     SecureString,
+    format_key_for_display,
     mask_api_key,
     redact_api_keys,
-    KeyMaskingFilter,
-    format_key_for_display,
 )
 
 
@@ -21,7 +21,7 @@ class TestMaskApiKey:
         masked = mask_api_key(key)
         assert masked.startswith("sk-ant-")
         assert "***" in masked
-        assert not "abc123" in masked
+        assert "abc123" not in masked
 
     def test_masks_openai_key(self):
         """Masks OpenAI API key correctly."""

@@ -6,11 +6,12 @@ based on evidence strength from source data.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Literal
+from typing import Any
 
 
 class ConfidenceLevel(Enum):
     """Confidence level for an attribute."""
+
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -38,6 +39,7 @@ class AttributeConfidence:
         evidence_sources: List of sources providing evidence.
         reasoning: Human-readable reasoning for confidence level.
     """
+
     attribute: str
     value: Any
     confidence: ConfidenceLevel
@@ -70,6 +72,7 @@ class PersonaConfidence:
         low_confidence_count: Number of low confidence attributes.
         confidence_score: Numeric score (0.0 to 1.0).
     """
+
     persona_id: str
     overall_confidence: ConfidenceLevel
     attribute_confidences: list[AttributeConfidence] = field(default_factory=list)
@@ -132,8 +135,15 @@ class ConfidenceScorer:
 
     # Key attributes to analyse
     KEY_ATTRIBUTES = [
-        "role", "name", "goals", "frustrations", "background",
-        "demographics", "behaviours", "needs", "pain_points",
+        "role",
+        "name",
+        "goals",
+        "frustrations",
+        "background",
+        "demographics",
+        "behaviours",
+        "needs",
+        "pain_points",
     ]
 
     def __init__(
@@ -179,22 +189,17 @@ class ConfidenceScorer:
 
         # Calculate counts
         high_count = sum(
-            1 for a in attribute_confidences
-            if a.confidence == ConfidenceLevel.HIGH
+            1 for a in attribute_confidences if a.confidence == ConfidenceLevel.HIGH
         )
         medium_count = sum(
-            1 for a in attribute_confidences
-            if a.confidence == ConfidenceLevel.MEDIUM
+            1 for a in attribute_confidences if a.confidence == ConfidenceLevel.MEDIUM
         )
         low_count = sum(
-            1 for a in attribute_confidences
-            if a.confidence == ConfidenceLevel.LOW
+            1 for a in attribute_confidences if a.confidence == ConfidenceLevel.LOW
         )
 
         # Calculate overall confidence
-        overall = self._calculate_overall(
-            high_count, medium_count, low_count
-        )
+        overall = self._calculate_overall(high_count, medium_count, low_count)
 
         # Calculate numeric score
         score = self._calculate_score(attribute_confidences)
@@ -223,10 +228,7 @@ class ConfidenceScorer:
         Returns:
             List of PersonaConfidence objects.
         """
-        return [
-            self.score_persona(p, source_data)
-            for p in personas
-        ]
+        return [self.score_persona(p, source_data) for p in personas]
 
     def _score_attribute(
         self,
@@ -242,9 +244,7 @@ class ConfidenceScorer:
             evidence_count = len(sources)
         elif source_data:
             # Search for evidence in source data
-            sources, evidence_count = self._find_evidence(
-                attribute, value, source_data
-            )
+            sources, evidence_count = self._find_evidence(attribute, value, source_data)
         else:
             # No source data - assume medium confidence
             sources = []
@@ -331,9 +331,7 @@ class ConfidenceScorer:
             ConfidenceLevel.LOW: 0.2,
         }
 
-        total = sum(
-            weights[a.confidence] for a in attribute_confidences
-        )
+        total = sum(weights[a.confidence] for a in attribute_confidences)
         return total / len(attribute_confidences)
 
 

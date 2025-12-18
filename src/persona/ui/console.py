@@ -10,7 +10,6 @@ from enum import IntEnum
 
 from rich.console import Console
 
-
 # Standard output width for clean display
 MAX_WIDTH = 100
 

@@ -1,7 +1,6 @@
 """Tests for lexicon-based bias detection."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.bias.lexicon import LexiconMatcher
 from persona.core.quality.bias.models import BiasCategory, Severity
@@ -18,42 +17,46 @@ class TestLexiconMatcher:
     @pytest.fixture
     def biased_persona(self):
         """Create a persona with bias indicators."""
-        return Persona.from_dict({
-            "id": "test-1",
-            "name": "Test Person",
-            "demographics": {
-                "age": 30,
-                "gender": "female",
-                "occupation": "nurse",
-            },
-            "behaviours": [
-                "She is very emotional and caring",
-                "Acts nurturing towards children",
-            ],
-            "goals": ["Maintain work-life balance"],
-            "pain_points": ["Too sensitive for leadership roles"],
-            "quote": "I'm naturally good at caring for others",
-        })
+        return Persona.from_dict(
+            {
+                "id": "test-1",
+                "name": "Test Person",
+                "demographics": {
+                    "age": 30,
+                    "gender": "female",
+                    "occupation": "nurse",
+                },
+                "behaviours": [
+                    "She is very emotional and caring",
+                    "Acts nurturing towards children",
+                ],
+                "goals": ["Maintain work-life balance"],
+                "pain_points": ["Too sensitive for leadership roles"],
+                "quote": "I'm naturally good at caring for others",
+            }
+        )
 
     @pytest.fixture
     def clean_persona(self):
         """Create a persona without obvious bias."""
-        return Persona.from_dict({
-            "id": "test-2",
-            "name": "Clean Person",
-            "demographics": {
-                "age": 35,
-                "gender": "female",
-                "occupation": "software engineer",
-            },
-            "behaviours": [
-                "Works systematically on complex problems",
-                "Collaborates effectively with team",
-            ],
-            "goals": ["Build scalable systems"],
-            "pain_points": ["Limited time for deep work"],
-            "quote": "I enjoy solving challenging technical problems",
-        })
+        return Persona.from_dict(
+            {
+                "id": "test-2",
+                "name": "Clean Person",
+                "demographics": {
+                    "age": 35,
+                    "gender": "female",
+                    "occupation": "software engineer",
+                },
+                "behaviours": [
+                    "Works systematically on complex problems",
+                    "Collaborates effectively with team",
+                ],
+                "goals": ["Build scalable systems"],
+                "pain_points": ["Limited time for deep work"],
+                "quote": "I enjoy solving challenging technical problems",
+            }
+        )
 
     def test_lexicon_loads(self, matcher):
         """Test that lexicon loads successfully."""
@@ -152,26 +155,31 @@ class TestLexiconMatcher:
 
     def test_analyse_multiple_categories(self, matcher):
         """Test analysis across multiple categories."""
-        persona = Persona.from_dict({
-            "id": "test-3",
-            "name": "Multi Bias",
-            "demographics": {
-                "age": 65,
-                "occupation": "retired",
-            },
-            "behaviours": [
-                "Is very emotional",  # Gender stereotype
-                "Technophobic and forgetful",  # Age stereotype
-            ],
-            "goals": [],
-            "pain_points": [],
-        })
+        persona = Persona.from_dict(
+            {
+                "id": "test-3",
+                "name": "Multi Bias",
+                "demographics": {
+                    "age": 65,
+                    "occupation": "retired",
+                },
+                "behaviours": [
+                    "Is very emotional",  # Gender stereotype
+                    "Technophobic and forgetful",  # Age stereotype
+                ],
+                "goals": [],
+                "pain_points": [],
+            }
+        )
 
         findings = matcher.analyse(persona, ["gender", "age"])
 
         # Should find both gender and age biases
         categories_found = {f.category for f in findings}
-        assert BiasCategory.GENDER in categories_found or BiasCategory.AGE in categories_found
+        assert (
+            BiasCategory.GENDER in categories_found
+            or BiasCategory.AGE in categories_found
+        )
 
     def test_confidence_scores(self, matcher, biased_persona):
         """Test that findings have appropriate confidence scores."""

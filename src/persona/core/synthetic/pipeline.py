@@ -18,7 +18,6 @@ from persona.core.providers import ProviderFactory
 from persona.core.synthetic.analyser import DataAnalyser
 from persona.core.synthetic.models import (
     DataSchema,
-    GenerationConfig,
     SyntheticResult,
 )
 from persona.core.synthetic.validator import SyntheticValidator
@@ -209,13 +208,17 @@ class SyntheticPipeline:
         ]
 
         if preserve_distribution:
-            prompt_parts.append("4. Preserve the statistical distributions described below")
+            prompt_parts.append(
+                "4. Preserve the statistical distributions described below"
+            )
 
-        prompt_parts.extend([
-            "",
-            "# Schema Definition",
-            "",
-        ])
+        prompt_parts.extend(
+            [
+                "",
+                "# Schema Definition",
+                "",
+            ]
+        )
 
         # Add column definitions
         for col in schema.columns:
@@ -228,7 +231,9 @@ class SyntheticPipeline:
                 prompt_parts.append(f"- Null rate: {null_rate:.1%}")
 
             if col.sample_values:
-                prompt_parts.append(f"- Example values: {', '.join(str(v) for v in col.sample_values[:3])}")
+                prompt_parts.append(
+                    f"- Example values: {', '.join(str(v) for v in col.sample_values[:3])}"
+                )
 
             if col.categorical_distribution and preserve_distribution:
                 prompt_parts.append("- Distribution:")
@@ -251,20 +256,22 @@ class SyntheticPipeline:
 
             prompt_parts.append("")
 
-        prompt_parts.extend([
-            f"Generate {count} synthetic records as a JSON array.",
-            "Each record should be an object with the column names as keys.",
-            "Ensure NO PII is included - use only fictional data.",
-            "",
-            "Format your response as valid JSON only, no additional text:",
-            "[",
-            "  {",
-            '    "' + schema.columns[0].column_name + '": "value",',
-            "    ...",
-            "  },",
-            "  ...",
-            "]",
-        ])
+        prompt_parts.extend(
+            [
+                f"Generate {count} synthetic records as a JSON array.",
+                "Each record should be an object with the column names as keys.",
+                "Ensure NO PII is included - use only fictional data.",
+                "",
+                "Format your response as valid JSON only, no additional text:",
+                "[",
+                "  {",
+                '    "' + schema.columns[0].column_name + '": "value",',
+                "    ...",
+                "  },",
+                "  ...",
+                "]",
+            ]
+        )
 
         return "\n".join(prompt_parts)
 
@@ -306,7 +313,7 @@ class SyntheticPipeline:
             else:
                 raise ValueError("Response is not a list or dict")
 
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError:
             # Fallback: try to find JSON array in text
             start_idx = response.find("[")
             end_idx = response.rfind("]")

@@ -2,16 +2,16 @@
 Cluster command for grouping similar personas.
 """
 
+import json
 from pathlib import Path
 from typing import Annotated, Optional
-import json
 
 import typer
 from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
-from persona.core.clustering import PersonaClusterer, ClusterMethod
+from persona.core.clustering import ClusterMethod, PersonaClusterer
 from persona.ui.console import get_console
 
 cluster_app = typer.Typer(
@@ -87,11 +87,16 @@ def cluster(
     except ValueError:
         valid_methods = ", ".join(m.value for m in ClusterMethod)
         if json_output:
-            print(json.dumps({
-                "command": "cluster",
-                "success": False,
-                "error": f"Invalid method: {method}. Valid methods: {valid_methods}",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "cluster",
+                        "success": False,
+                        "error": f"Invalid method: {method}. Valid methods: {valid_methods}",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Invalid method:[/red] {method}")
             console.print(f"Valid methods: {valid_methods}")
@@ -102,22 +107,32 @@ def cluster(
         personas = _load_personas(persona_path)
     except Exception as e:
         if json_output:
-            print(json.dumps({
-                "command": "cluster",
-                "success": False,
-                "error": str(e),
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "cluster",
+                        "success": False,
+                        "error": str(e),
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Error loading personas:[/red] {e}")
         raise typer.Exit(1)
 
     if len(personas) < 2:
         if json_output:
-            print(json.dumps({
-                "command": "cluster",
-                "success": False,
-                "error": "Need at least 2 personas to cluster",
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "cluster",
+                        "success": False,
+                        "error": "Need at least 2 personas to cluster",
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print("[yellow]Need at least 2 personas to cluster.[/yellow]")
         raise typer.Exit(1)
@@ -133,30 +148,42 @@ def cluster(
 
     if not result.success:
         if json_output:
-            print(json.dumps({
-                "command": "cluster",
-                "success": False,
-                "error": result.error,
-            }, indent=2))
+            print(
+                json.dumps(
+                    {
+                        "command": "cluster",
+                        "success": False,
+                        "error": result.error,
+                    },
+                    indent=2,
+                )
+            )
         else:
             console.print(f"[red]Clustering failed:[/red] {result.error}")
         raise typer.Exit(1)
 
     if json_output:
-        print(json.dumps({
-            "command": "cluster",
-            "version": __version__,
-            "success": True,
-            "data": result.to_dict(),
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "command": "cluster",
+                    "version": __version__,
+                    "success": True,
+                    "data": result.to_dict(),
+                },
+                indent=2,
+            )
+        )
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]Persona Clustering[/bold]\n"
-        f"{len(personas)} personas → {result.cluster_count} clusters",
-        border_style="blue",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]Persona Clustering[/bold]\n"
+            f"{len(personas)} personas → {result.cluster_count} clusters",
+            border_style="blue",
+        )
+    )
 
     # Summary
     summary_table = Table(show_header=False, box=None)
@@ -168,8 +195,7 @@ def cluster(
     summary_table.add_row("Method", result.method.value)
     summary_table.add_row("Threshold", f"{threshold:.0%}")
     summary_table.add_row(
-        "Consolidation suggestions",
-        str(len(result.consolidation_suggestions))
+        "Consolidation suggestions", str(len(result.consolidation_suggestions))
     )
 
     console.print(summary_table)
@@ -216,7 +242,9 @@ def cluster(
             f"group(s) to reduce redundancy.[/yellow]"
         )
     else:
-        console.print(f"\n[green]Clustering complete: {result.cluster_count} groups identified.[/green]")
+        console.print(
+            f"\n[green]Clustering complete: {result.cluster_count} groups identified.[/green]"
+        )
 
 
 def _load_personas(path: Path):

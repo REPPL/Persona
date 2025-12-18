@@ -52,4 +52,3 @@ Available models change frequently (new releases, deprecations). Users need to k
 
 - [Milestone v0.5.0](../../milestones/v0.5.0.md)
 - [Model Cards](../../../../reference/model-cards.md)
-

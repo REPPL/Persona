@@ -40,7 +40,9 @@ class PersonaConfig(BaseModel):
         )
     """
 
-    count: int = Field(default=3, ge=1, le=20, description="Number of personas to generate")
+    count: int = Field(
+        default=3, ge=1, le=20, description="Number of personas to generate"
+    )
     complexity: ComplexityLevel = Field(
         default=ComplexityLevel.MODERATE,
         description="Generation complexity level",
@@ -124,7 +126,9 @@ class PersonaModel(BaseModel):
     title: str = Field(default="", description="Persona title or role")
     goals: list[str] = Field(default_factory=list, description="Persona goals")
     pain_points: list[str] = Field(default_factory=list, description="Pain points")
-    behaviours: list[str] = Field(default_factory=list, description="Observed behaviours")
+    behaviours: list[str] = Field(
+        default_factory=list, description="Observed behaviours"
+    )
     quotes: list[str] = Field(default_factory=list, description="Representative quotes")
     demographics: dict[str, Any] = Field(
         default_factory=dict,
@@ -315,7 +319,7 @@ class GenerationResultModel(BaseModel):
         if persona.quotes:
             lines.append("## Quotes")
             for quote in persona.quotes:
-                lines.append(f"> \"{quote}\"")
+                lines.append(f'> "{quote}"')
                 lines.append("")
 
         return "\n".join(lines)

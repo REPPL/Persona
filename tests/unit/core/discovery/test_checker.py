@@ -1,16 +1,14 @@
 """Tests for model availability checking (F-056)."""
 
-import pytest
-from unittest.mock import Mock, patch
 
 from persona.core.discovery.checker import (
-    ModelChecker,
+    DEPRECATED_MODELS,
+    MODEL_ALTERNATIVES,
     ModelAvailability,
+    ModelChecker,
     ModelStatus,
     check_model,
     warn_if_deprecated,
-    DEPRECATED_MODELS,
-    MODEL_ALTERNATIVES,
 )
 
 
@@ -121,10 +119,12 @@ class TestModelChecker:
     def test_check_multiple(self):
         """Checks multiple models."""
         checker = ModelChecker()
-        results = checker.check_multiple([
-            ("gpt-4o", "openai"),
-            ("claude-2.0", "anthropic"),
-        ])
+        results = checker.check_multiple(
+            [
+                ("gpt-4o", "openai"),
+                ("claude-2.0", "anthropic"),
+            ]
+        )
 
         assert len(results) == 2
         assert "openai:gpt-4o" in results

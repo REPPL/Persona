@@ -8,7 +8,6 @@ from typing import Any
 
 from persona.core.embedding.base import EmbeddingProvider
 
-
 # Registry of available providers
 _PROVIDER_REGISTRY: dict[str, type[EmbeddingProvider]] = {}
 

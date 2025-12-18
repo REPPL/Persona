@@ -6,18 +6,17 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-from pydantic import ValidationError as PydanticValidationError
-
 from persona.sdk.models import (
     ComplexityLevel,
     DetailLevel,
-    PersonaConfig,
     ExperimentConfig,
+    ExperimentModel,
+    GenerationResultModel,
+    PersonaConfig,
     PersonaModel,
     TokenUsageModel,
-    GenerationResultModel,
-    ExperimentModel,
 )
+from pydantic import ValidationError as PydanticValidationError
 
 
 class TestComplexityLevel:

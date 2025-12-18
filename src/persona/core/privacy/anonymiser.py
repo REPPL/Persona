@@ -5,7 +5,6 @@ This module provides anonymisation functionality for detected PII using
 various strategies (redact, replace, hash).
 """
 
-import hashlib
 from typing import Any
 
 from persona.core.privacy.entities import (
@@ -146,7 +145,6 @@ class PIIAnonymiser:
         Returns:
             Text with PII replaced.
         """
-        from presidio_anonymizer.entities import OperatorConfig
 
         # Convert PIIEntity to Presidio format
         analyzer_results = self._convert_entities(entities)

@@ -2,12 +2,10 @@
 Configuration management CLI commands.
 """
 
-from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 from rich.panel import Panel
-from rich.table import Table
 
 from persona.ui.console import get_console
 from persona.ui.interactive import ConfigWizard, is_interactive_supported
@@ -32,11 +30,14 @@ def config_callback(ctx: typer.Context) -> None:
     """
     # Check if running interactively with no subcommand
     from persona.ui.cli import is_interactive
+
     if ctx.invoked_subcommand is None:
         if is_interactive():
             if not is_interactive_supported():
                 console = get_console()
-                console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
+                console.print(
+                    "[yellow]Interactive mode not supported in non-TTY environment.[/yellow]"
+                )
                 raise typer.Exit(1)
 
             wizard = ConfigWizard()
@@ -46,6 +47,7 @@ def config_callback(ctx: typer.Context) -> None:
 
             # Apply the configuration
             from persona.core.config.global_config import get_config_manager
+
             console = get_console()
             manager = get_config_manager()
 
@@ -70,7 +72,8 @@ def init_config(
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Overwrite existing configuration.",
         ),
     ] = False,
@@ -111,7 +114,8 @@ def show_config(
     source: Annotated[
         bool,
         typer.Option(
-            "--source", "-s",
+            "--source",
+            "-s",
             help="Show configuration sources.",
         ),
     ] = False,
@@ -141,17 +145,21 @@ def show_config(
         print(json.dumps(config.model_dump(mode="json"), indent=2))
         return
 
-    console.print(Panel.fit(
-        "[bold]Effective Configuration[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Effective Configuration[/bold]",
+            border_style="cyan",
+        )
+    )
 
     if source:
         console.print("\n[bold]Configuration Sources:[/bold]")
         global_path = get_global_config_path()
         project_path = get_project_config_path()
 
-        console.print(f"  Global:  {global_path} {'[green]✓[/green]' if global_path.exists() else '[dim]not found[/dim]'}")
+        console.print(
+            f"  Global:  {global_path} {'[green]✓[/green]' if global_path.exists() else '[dim]not found[/dim]'}"
+        )
         if project_path:
             console.print(f"  Project: {project_path} [green]✓[/green]")
         else:
@@ -226,7 +234,8 @@ def set_config_value(
     project: Annotated[
         bool,
         typer.Option(
-            "--project", "-p",
+            "--project",
+            "-p",
             help="Set in project config instead of global config.",
         ),
     ] = False,
@@ -265,14 +274,16 @@ def reset_config(
     project: Annotated[
         bool,
         typer.Option(
-            "--project", "-p",
+            "--project",
+            "-p",
             help="Reset project config instead of global config.",
         ),
     ] = False,
     force: Annotated[
         bool,
         typer.Option(
-            "--force", "-f",
+            "--force",
+            "-f",
             help="Skip confirmation.",
         ),
     ] = False,
@@ -323,14 +334,16 @@ def show_paths() -> None:
     project_path = get_project_config_path()
 
     console.print("[bold]Configuration Paths:[/bold]")
-    console.print(f"\n  Global config:")
+    console.print("\n  Global config:")
     console.print(f"    {global_path}")
-    console.print(f"    {'[green]exists[/green]' if global_path.exists() else '[dim]not created[/dim]'}")
+    console.print(
+        f"    {'[green]exists[/green]' if global_path.exists() else '[dim]not created[/dim]'}"
+    )
 
-    console.print(f"\n  Project config:")
+    console.print("\n  Project config:")
     if project_path:
         console.print(f"    {project_path}")
-        console.print(f"    [green]exists[/green]")
+        console.print("    [green]exists[/green]")
     else:
         console.print("    [dim]not found (search from cwd to root)[/dim]")
 
@@ -346,7 +359,8 @@ def edit_config(
     project: Annotated[
         bool,
         typer.Option(
-            "--project", "-p",
+            "--project",
+            "-p",
             help="Edit project config instead of global config.",
         ),
     ] = False,
@@ -366,8 +380,12 @@ def edit_config(
     console = get_console()
 
     if not is_interactive_supported():
-        console.print("[yellow]Interactive mode not supported in non-TTY environment.[/yellow]")
-        console.print("Use 'persona config set <path> <value>' for non-interactive configuration.")
+        console.print(
+            "[yellow]Interactive mode not supported in non-TTY environment.[/yellow]"
+        )
+        console.print(
+            "Use 'persona config set <path> <value>' for non-interactive configuration."
+        )
         raise typer.Exit(1)
 
     editor = ConfigEditor(console=console, project_level=project)
@@ -378,6 +396,7 @@ def edit_config(
 
     # Apply changes
     from persona.core.config.global_config import get_config_manager
+
     manager = get_config_manager()
 
     changes_made = False

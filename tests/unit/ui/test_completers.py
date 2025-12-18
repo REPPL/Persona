@@ -4,16 +4,14 @@ Tests for shell completers (F-095).
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from persona.ui.completers import (
-    complete_provider,
-    complete_model,
-    complete_format,
-    complete_workflow,
     complete_complexity,
     complete_detail_level,
+    complete_format,
     complete_log_level,
+    complete_model,
+    complete_provider,
+    complete_workflow,
 )
 
 

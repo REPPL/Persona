@@ -5,7 +5,6 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-
 from persona.sdk import AsyncExperimentSDK, ExperimentConfig, PersonaConfig
 from persona.sdk.exceptions import ConfigurationError, DataError
 
@@ -319,10 +318,12 @@ class TestAsyncExperimentSDKGenerate:
         """Test agenerate with data files."""
         with tempfile.TemporaryDirectory() as tmpdir:
             sdk = AsyncExperimentSDK(tmpdir)
-            await sdk.acreate(ExperimentConfig(
-                name="gen-test",
-                provider="anthropic",
-            ))
+            await sdk.acreate(
+                ExperimentConfig(
+                    name="gen-test",
+                    provider="anthropic",
+                )
+            )
 
             source = Path(tmpdir) / "interviews.csv"
             source.write_text("participant,quote\nP1,I need speed\n")

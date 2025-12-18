@@ -10,7 +10,9 @@ As a researcher, I want to compare personas generated with different settings, s
 
 ## Trigger
 
-CLI command: `persona compare <id1> <id2>`
+CLI command: `persona compare <path>`
+
+Where `<path>` is a directory containing persona JSON files, or a specific persona JSON file. Optional flags allow comparing specific personas within a collection using `--persona-a` and `--persona-b`.
 
 ## Priority
 
@@ -20,6 +22,10 @@ P1 (Important)
 
 v0.3.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed and configured
@@ -28,11 +34,11 @@ v0.3.0
 
 ## Success Criteria
 
-- [ ] User can compare two personas side-by-side
-- [ ] Attribute-level diff highlighting shows differences
-- [ ] Similarity score calculated and displayed
-- [ ] Comparison report can be exported
-- [ ] Works across experiments and models
+- [x] User can compare two personas side-by-side
+- [x] Attribute-level diff highlighting shows differences
+- [x] Similarity score calculated and displayed
+- [x] Comparison report can be exported
+- [x] Works across experiments and models
 
 ## Derives Features
 

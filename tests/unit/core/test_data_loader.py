@@ -2,10 +2,10 @@
 Tests for data loading functionality (F-001).
 """
 
-import pytest
 from pathlib import Path
 
-from persona.core.data import DataLoader, CSVLoader, JSONLoader, TextLoader
+import pytest
+from persona.core.data import CSVLoader, DataLoader, JSONLoader, TextLoader
 
 
 class TestDataLoader:

@@ -4,15 +4,15 @@ Tests for async utilities module.
 
 import asyncio
 import time
-import pytest
 
+import pytest
 from persona.core.async_utils import (
-    AsyncRateLimiter,
-    retry_async,
-    async_timeout,
-    gather_with_concurrency,
     AsyncBatchProcessor,
     AsyncProgressTracker,
+    AsyncRateLimiter,
+    async_timeout,
+    gather_with_concurrency,
+    retry_async,
 )
 
 

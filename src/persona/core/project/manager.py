@@ -8,7 +8,6 @@ Persona projects.
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -253,8 +252,9 @@ class ProjectManager:
         name = self._metadata.name if self._metadata else project_dir.name
         desc = self._metadata.description if self._metadata else ""
         readme.write_text(
-            f"# {name}\n\n"
-            f"{desc}\n\n" if desc else f"# {name}\n\n"
+            f"# {name}\n\n" f"{desc}\n\n"
+            if desc
+            else f"# {name}\n\n"
             "## Getting Started\n\n"
             "1. Add your data files to `data/`\n"
             "2. Run `persona generate --from " + name + "`\n"
@@ -367,8 +367,9 @@ class ProjectManager:
         name = self._metadata.name if self._metadata else project_dir.name
         desc = self._metadata.description if self._metadata else ""
         readme.write_text(
-            f"# {name}\n\n"
-            f"{desc}\n\n" if desc else f"# {name}\n\n"
+            f"# {name}\n\n" f"{desc}\n\n"
+            if desc
+            else f"# {name}\n\n"
             "## Getting Started\n\n"
             "1. Add raw data to `data/raw/`\n"
             "2. Optionally pre-process into `data/processed/`\n"

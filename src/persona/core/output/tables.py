@@ -9,12 +9,10 @@ import csv
 import io
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.output.registry import (
     BaseFormatterV2,
-    OutputSection,
     SectionConfig,
     register,
 )
@@ -341,7 +339,9 @@ class LaTeXTableFormatter(BaseTableFormatter):
         # Header row
         if self._config.include_header:
             escaped_headers = [self._escape_latex(h) for h in headers]
-            lines.append(" & ".join(f"\\textbf{{{h}}}" for h in escaped_headers) + " \\\\")
+            lines.append(
+                " & ".join(f"\\textbf{{{h}}}" for h in escaped_headers) + " \\\\"
+            )
             lines.append("\\hline")
 
         # Data rows
@@ -423,13 +423,17 @@ class PersonaComparisonTable:
         formatter = CSVTableFormatter(config=config)
         return formatter.format_multiple(self._personas)
 
-    def to_latex(self, caption: str = "Persona Comparison", label: str = "tab:personas") -> str:
+    def to_latex(
+        self, caption: str = "Persona Comparison", label: str = "tab:personas"
+    ) -> str:
         """Generate LaTeX table."""
         config = TableConfig(format=TableOutputFormat.LATEX, columns=self._columns)
         formatter = LaTeXTableFormatter(config=config, caption=caption, label=label)
         return formatter.format_multiple(self._personas)
 
-    def attribute_view(self, attribute: str, format: TableOutputFormat = TableOutputFormat.MARKDOWN) -> str:
+    def attribute_view(
+        self, attribute: str, format: TableOutputFormat = TableOutputFormat.MARKDOWN
+    ) -> str:
         """
         Generate a single-attribute view table.
 

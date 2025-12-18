@@ -72,4 +72,3 @@ Lycett, M., Cundle, M., Grasso, L., Meechao, K., & Reppel, A. (2025). Materialis
 - [UC-009: Empathy Mapping](../../../../use-cases/briefs/UC-009-empathy-mapping.md)
 - [F-029: Empathy Map Input Format](F-029-empathy-map-input-format.md)
 - [F-005: Output Formatting](F-005-output-formatting.md)
-

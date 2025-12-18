@@ -6,8 +6,7 @@ with a more maintainable and testable pattern.
 """
 
 import threading
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass
 
 
 @dataclass

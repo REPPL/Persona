@@ -5,15 +5,19 @@ This module provides the BatchProcessor class for processing
 multiple files and generating personas in batch operations.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from persona.core.data import DataLoader
-from persona.core.generation import GenerationPipeline, GenerationConfig, GenerationResult
+from persona.core.generation import (
+    GenerationConfig,
+    GenerationPipeline,
+)
 from persona.core.generation.parser import Persona
-from persona.core.providers import ProviderFactory, LLMProvider
+from persona.core.providers import LLMProvider, ProviderFactory
 
 
 @dataclass
@@ -125,7 +129,9 @@ class BatchResult:
             "total_tokens": self.total_tokens,
             "total_time_seconds": self.total_time,
             "started_at": self.started_at.isoformat() if self.started_at else None,
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "completed_at": self.completed_at.isoformat()
+            if self.completed_at
+            else None,
             "files": [r.to_dict() for r in self.file_results],
         }
 
@@ -231,9 +237,7 @@ class BatchProcessor:
                     break
 
         result.completed_at = datetime.now()
-        result.total_time = (
-            result.completed_at - result.started_at
-        ).total_seconds()
+        result.total_time = (result.completed_at - result.started_at).total_seconds()
 
         return result
 
@@ -319,15 +323,19 @@ class BatchProcessor:
                 tokens = self._loader.count_tokens(data)
                 total_tokens += tokens
 
-                file_estimates.append({
-                    "file": str(file_path),
-                    "tokens": tokens,
-                })
+                file_estimates.append(
+                    {
+                        "file": str(file_path),
+                        "tokens": tokens,
+                    }
+                )
             except Exception as e:
-                file_estimates.append({
-                    "file": str(file_path),
-                    "error": str(e),
-                })
+                file_estimates.append(
+                    {
+                        "file": str(file_path),
+                        "error": str(e),
+                    }
+                )
 
         # Estimate output tokens
         output_per_file = 800 * cfg.personas_per_file

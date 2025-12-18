@@ -1,7 +1,6 @@
 """Tests for academic validation models."""
 
 import pytest
-
 from persona.core.quality.academic.models import (
     AcademicValidationReport,
     BatchAcademicValidationReport,

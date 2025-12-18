@@ -3,9 +3,8 @@
 from unittest.mock import Mock
 
 import pytest
-
 from persona.core.generation.parser import Persona
-from persona.core.quality.faithfulness.models import Claim, ClaimType
+from persona.core.quality.faithfulness.models import ClaimType
 from persona.core.quality.faithfulness.validator import FaithfulnessValidator
 
 
@@ -45,7 +44,10 @@ class TestFaithfulnessValidator:
         )
 
         # Should gracefully fall back
-        assert validator.hhem_classifier is None or not validator.hhem_classifier.is_available()
+        assert (
+            validator.hhem_classifier is None
+            or not validator.hhem_classifier.is_available()
+        )
 
     def test_set_support_threshold_valid(self):
         """Test setting valid support threshold."""

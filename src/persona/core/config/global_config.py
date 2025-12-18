@@ -51,7 +51,9 @@ class DefaultsConfig(BaseModel):
     """Default generation settings."""
 
     provider: str = Field(default="anthropic", description="Default LLM provider")
-    model: Optional[str] = Field(default=None, description="Default model (uses provider default if not set)")
+    model: Optional[str] = Field(
+        default=None, description="Default model (uses provider default if not set)"
+    )
     complexity: str = Field(default="moderate", description="Complexity level")
     detail_level: str = Field(default="standard", description="Detail level")
     workflow: str = Field(default="default", description="Default workflow")
@@ -61,7 +63,9 @@ class DefaultsConfig(BaseModel):
 class BudgetConfig(BaseModel):
     """Budget limits for cost control."""
 
-    per_run: Optional[Decimal] = Field(default=None, description="Maximum cost per generation run")
+    per_run: Optional[Decimal] = Field(
+        default=None, description="Maximum cost per generation run"
+    )
     daily: Optional[Decimal] = Field(default=None, description="Daily budget limit")
     monthly: Optional[Decimal] = Field(default=None, description="Monthly budget limit")
 
@@ -70,14 +74,20 @@ class OutputConfig(BaseModel):
     """Output preferences."""
 
     format: str = Field(default="json", description="Default output format")
-    include_readme: bool = Field(default=True, description="Generate README with outputs")
-    timestamp_folders: bool = Field(default=True, description="Use timestamped output folders")
+    include_readme: bool = Field(
+        default=True, description="Generate README with outputs"
+    )
+    timestamp_folders: bool = Field(
+        default=True, description="Use timestamped output folders"
+    )
 
 
 class LoggingConfig(BaseModel):
     """Logging configuration."""
 
-    level: str = Field(default="info", description="Log level (debug, info, warning, error)")
+    level: str = Field(
+        default="info", description="Log level (debug, info, warning, error)"
+    )
     format: str = Field(default="console", description="Log format (console, json)")
     file: Optional[str] = Field(default=None, description="Log file path")
 
@@ -182,7 +192,11 @@ class ConfigManager:
         """Deep merge two dictionaries."""
         result = base.copy()
         for key, value in override.items():
-            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            if (
+                key in result
+                and isinstance(result[key], dict)
+                and isinstance(value, dict)
+            ):
                 result[key] = self._merge_dict(result[key], value)
             else:
                 result[key] = value
@@ -195,7 +209,9 @@ class ConfigManager:
 
         # Layer 2: Global config
         global_config = self.load_global()
-        config_dict = self._merge_dict(config_dict, global_config.model_dump(exclude_none=True))
+        config_dict = self._merge_dict(
+            config_dict, global_config.model_dump(exclude_none=True)
+        )
 
         # Layer 3: Project config
         project_config = self.load_project()

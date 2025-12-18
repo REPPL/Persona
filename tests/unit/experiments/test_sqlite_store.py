@@ -3,7 +3,6 @@ Unit tests for SQLite experiment store.
 """
 
 import pytest
-
 from persona.core.experiments import SQLiteExperimentStore
 
 

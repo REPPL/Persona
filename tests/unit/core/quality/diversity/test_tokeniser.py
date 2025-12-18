@@ -1,6 +1,5 @@
 """Unit tests for tokeniser module."""
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.diversity.tokeniser import extract_persona_text, tokenise

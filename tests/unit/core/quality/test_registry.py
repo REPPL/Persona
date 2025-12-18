@@ -3,7 +3,6 @@
 from typing import TYPE_CHECKING
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.base import MetricCategory, QualityMetric
 from persona.core.quality.config import QualityConfig

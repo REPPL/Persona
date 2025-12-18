@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-
 # Platform detection
 PLATFORM = sys.platform  # 'win32', 'darwin', 'linux'
 IS_WINDOWS = PLATFORM == "win32"
@@ -127,6 +126,7 @@ def get_temp_dir() -> Path:
         Platform-specific temp directory with persona subdirectory.
     """
     import tempfile
+
     return Path(tempfile.gettempdir()) / "persona"
 
 
@@ -237,6 +237,7 @@ def find_executable(name: str) -> Optional[Path]:
         Path to executable or None if not found.
     """
     import shutil
+
     result = shutil.which(name)
     return Path(result) if result else None
 

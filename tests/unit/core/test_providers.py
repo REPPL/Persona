@@ -3,14 +3,12 @@ Tests for LLM provider functionality (F-002).
 """
 
 import pytest
-
 from persona.core.providers import (
-    LLMProvider,
-    LLMResponse,
-    ProviderFactory,
-    OpenAIProvider,
     AnthropicProvider,
     GeminiProvider,
+    LLMResponse,
+    OpenAIProvider,
+    ProviderFactory,
 )
 from persona.core.providers.base import (
     AuthenticationError,

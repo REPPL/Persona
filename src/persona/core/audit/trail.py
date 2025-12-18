@@ -170,39 +170,43 @@ class AuditTrail:
         writer = csv.writer(output)
 
         # Write header
-        writer.writerow([
-            "audit_id",
-            "timestamp",
-            "tool_version",
-            "user",
-            "platform",
-            "provider",
-            "model",
-            "data_hash",
-            "prompt_hash",
-            "personas_hash",
-            "persona_count",
-            "generation_time_ms",
-            "has_signature",
-        ])
+        writer.writerow(
+            [
+                "audit_id",
+                "timestamp",
+                "tool_version",
+                "user",
+                "platform",
+                "provider",
+                "model",
+                "data_hash",
+                "prompt_hash",
+                "personas_hash",
+                "persona_count",
+                "generation_time_ms",
+                "has_signature",
+            ]
+        )
 
         # Write rows
         for record in records:
-            writer.writerow([
-                record.audit_id,
-                record.timestamp.isoformat(),
-                record.tool_version,
-                record.session.user,
-                record.session.platform,
-                record.generation.provider,
-                record.generation.model,
-                record.input.data_hash[:16] + "...",  # Truncate hash
-                record.generation.prompt_hash[:16] + "...",
-                record.output.personas_hash[:16] + "...",
-                record.output.persona_count,
-                record.output.generation_time_ms,
-                "yes" if record.signature else "no",
-            ])
+            writer.writerow(
+                [
+                    record.audit_id,
+                    record.timestamp.isoformat(),
+                    record.tool_version,
+                    record.session.user,
+                    record.session.platform,
+                    record.generation.provider,
+                    record.generation.model,
+                    record.input.data_hash[:16] + "...",  # Truncate hash
+                    record.generation.prompt_hash[:16] + "...",
+                    record.output.personas_hash[:16] + "...",
+                    record.output.persona_count,
+                    record.output.generation_time_ms,
+                    "yes" if record.signature else "no",
+                ]
+            )
 
         return output.getvalue()
 

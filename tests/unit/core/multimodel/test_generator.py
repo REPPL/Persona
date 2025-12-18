@@ -1,12 +1,11 @@
 """Tests for multi-model generator (F-066)."""
 
 import pytest
-
 from persona.core.multimodel.generator import (
-    MultiModelGenerator,
-    ModelSpec,
-    MultiModelResult,
     ModelOutput,
+    ModelSpec,
+    MultiModelGenerator,
+    MultiModelResult,
     generate_multi_model,
 )
 

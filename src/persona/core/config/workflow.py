@@ -20,14 +20,20 @@ class WorkflowStep(BaseModel):
     )
 
     name: str = Field(..., description="Step name")
-    template: str = Field(..., description="Template reference (builtin/name or custom/name)")
+    template: str = Field(
+        ..., description="Template reference (builtin/name or custom/name)"
+    )
     model: str | None = Field(default=None, description="Model to use for this step")
     provider: str | None = Field(default=None, description="Provider for this step")
-    input: str | None = Field(default=None, description="Input from previous step output")
+    input: str | None = Field(
+        default=None, description="Input from previous step output"
+    )
     output: str | None = Field(default=None, description="Output name for next steps")
     temperature: float | None = Field(default=None, description="Sampling temperature")
     max_tokens: int | None = Field(default=None, description="Maximum tokens")
-    variables: dict[str, Any] = Field(default_factory=dict, description="Step-specific variables")
+    variables: dict[str, Any] = Field(
+        default_factory=dict, description="Step-specific variables"
+    )
 
 
 class WorkflowConfig(BaseModel):
@@ -52,16 +58,21 @@ class WorkflowConfig(BaseModel):
     max_tokens: int = Field(default=4096, description="Default max tokens")
 
     # Steps
-    steps: list[WorkflowStep] = Field(default_factory=list, description="Workflow steps")
+    steps: list[WorkflowStep] = Field(
+        default_factory=list, description="Workflow steps"
+    )
 
     # Variables available to all steps
-    variables: dict[str, Any] = Field(default_factory=dict, description="Default variables")
+    variables: dict[str, Any] = Field(
+        default_factory=dict, description="Default variables"
+    )
 
     @field_validator("id")
     @classmethod
     def validate_id(cls, v: str) -> str:
         """Validate workflow ID format."""
         import re
+
         if not re.match(r"^[a-zA-Z][a-zA-Z0-9._-]*$", v):
             raise ValueError(
                 "Workflow ID must start with a letter and contain only "
@@ -124,7 +135,9 @@ class WorkflowConfig(BaseModel):
         return {
             "provider": step.provider or self.provider,
             "model": step.model or self.model,
-            "temperature": step.temperature if step.temperature is not None else self.temperature,
+            "temperature": step.temperature
+            if step.temperature is not None
+            else self.temperature,
             "max_tokens": step.max_tokens or self.max_tokens,
             "variables": {**self.variables, **step.variables},
         }
@@ -421,6 +434,7 @@ class CustomWorkflowLoader:
 
         # Check steps have templates
         from persona.core.config.template import TemplateLoader
+
         template_loader = TemplateLoader()
 
         for step in config.steps:

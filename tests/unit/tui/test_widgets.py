@@ -1,6 +1,5 @@
 """Tests for TUI widgets."""
 
-import pytest
 from decimal import Decimal
 
 from persona.tui.widgets.cost_tracker import CostTracker

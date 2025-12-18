@@ -4,7 +4,6 @@ Tests for fidelity models.
 Tests Violation, PromptConstraints, FidelityConfig, and FidelityReport models.
 """
 
-import pytest
 
 from persona.core.quality.fidelity.models import (
     FidelityConfig,
@@ -192,9 +191,13 @@ class TestFidelityReport:
     def test_critical_violations_property(self):
         """Test critical violations property."""
         violations = [
-            Violation(dimension="structure", description="Test", severity=Severity.CRITICAL),
+            Violation(
+                dimension="structure", description="Test", severity=Severity.CRITICAL
+            ),
             Violation(dimension="content", description="Test", severity=Severity.HIGH),
-            Violation(dimension="style", description="Test", severity=Severity.CRITICAL),
+            Violation(
+                dimension="style", description="Test", severity=Severity.CRITICAL
+            ),
         ]
 
         report = FidelityReport(
@@ -215,7 +218,9 @@ class TestFidelityReport:
     def test_high_violations_property(self):
         """Test high violations property."""
         violations = [
-            Violation(dimension="structure", description="Test", severity=Severity.CRITICAL),
+            Violation(
+                dimension="structure", description="Test", severity=Severity.CRITICAL
+            ),
             Violation(dimension="content", description="Test", severity=Severity.HIGH),
             Violation(dimension="style", description="Test", severity=Severity.HIGH),
         ]
@@ -238,9 +243,15 @@ class TestFidelityReport:
     def test_violation_by_dimension(self):
         """Test violation counts by dimension."""
         violations = [
-            Violation(dimension="structure", description="Test", severity=Severity.CRITICAL),
-            Violation(dimension="structure", description="Test", severity=Severity.HIGH),
-            Violation(dimension="content", description="Test", severity=Severity.MEDIUM),
+            Violation(
+                dimension="structure", description="Test", severity=Severity.CRITICAL
+            ),
+            Violation(
+                dimension="structure", description="Test", severity=Severity.HIGH
+            ),
+            Violation(
+                dimension="content", description="Test", severity=Severity.MEDIUM
+            ),
         ]
 
         report = FidelityReport(

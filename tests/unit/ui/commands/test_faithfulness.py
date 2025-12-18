@@ -3,11 +3,10 @@ Tests for the faithfulness validation CLI command (F-118).
 """
 
 import json
-import pytest
-from pathlib import Path
-from typer.testing import CliRunner
 
+import pytest
 from persona.ui.cli import app
+from typer.testing import CliRunner
 
 
 @pytest.fixture
@@ -85,7 +84,12 @@ class TestFaithfulnessCommand:
         """Test faithfulness with non-existent source path."""
         result = runner.invoke(
             app,
-            ["faithfulness", str(sample_persona), "--source", "/nonexistent/source.txt"],
+            [
+                "faithfulness",
+                str(sample_persona),
+                "--source",
+                "/nonexistent/source.txt",
+            ],
         )
         assert result.exit_code != 0
 
@@ -181,12 +185,12 @@ class TestFaithfulnessHelpers:
 
     def test_report_to_dict_structure(self):
         """Test report to dict conversion."""
-        from persona.ui.commands.faithfulness import _report_to_dict
         from persona.core.quality.faithfulness.models import (
             Claim,
             ClaimType,
             FaithfulnessReport,
         )
+        from persona.ui.commands.faithfulness import _report_to_dict
 
         # Create minimal report
         claim = Claim(
@@ -214,8 +218,8 @@ class TestFaithfulnessHelpers:
 
     def test_report_to_dict_without_claims(self):
         """Test report to dict without all claims."""
-        from persona.ui.commands.faithfulness import _report_to_dict
         from persona.core.quality.faithfulness.models import FaithfulnessReport
+        from persona.ui.commands.faithfulness import _report_to_dict
 
         report = FaithfulnessReport(
             persona_id="p1",

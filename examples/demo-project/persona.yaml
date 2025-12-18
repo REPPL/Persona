@@ -15,12 +15,12 @@ defaults:
 
 # Data sources
 data:
-  - name: interviews
-    path: data/interviews.csv
-    type: qualitative
-    description: Developer interview transcripts
+- name: interviews
+  path: data/interviews.csv
+  type: qualitative
+  description: Developer interview transcripts
 
-  - name: survey
-    path: data/survey-responses.json
-    type: quantitative
-    description: Developer productivity survey responses
+- name: survey
+  path: data/survey-responses.json
+  type: quantitative
+  description: Developer productivity survey responses

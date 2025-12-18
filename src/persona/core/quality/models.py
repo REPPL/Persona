@@ -161,15 +161,18 @@ class BatchQualityResult:
     def passing_count(self) -> int:
         """Get count of personas with acceptable or better quality."""
         return sum(
-            1 for s in self.scores
-            if s.level in (QualityLevel.EXCELLENT, QualityLevel.GOOD, QualityLevel.ACCEPTABLE)
+            1
+            for s in self.scores
+            if s.level
+            in (QualityLevel.EXCELLENT, QualityLevel.GOOD, QualityLevel.ACCEPTABLE)
         )
 
     @property
     def failing_count(self) -> int:
         """Get count of personas with poor or failing quality."""
         return sum(
-            1 for s in self.scores
+            1
+            for s in self.scores
             if s.level in (QualityLevel.POOR, QualityLevel.FAILING)
         )
 

@@ -456,4 +456,3 @@ Persona uses provider-specific mechanisms for JSON output:
 - [Configuration Reference](configuration-reference.md) - Configuration options
 - [F-002: LLM Provider Abstraction](../development/roadmap/features/completed/F-002-llm-provider-abstraction.md)
 - [F-011: Multi-Provider Support](../development/roadmap/features/completed/F-011-multi-provider-llm-support.md)
-

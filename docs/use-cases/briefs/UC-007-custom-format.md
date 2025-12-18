@@ -20,6 +20,10 @@ P2 (Nice to have)
 
 v0.5.0
 
+## Status
+
+✅ **Implemented** (v1.7.5)
+
 ## Preconditions
 
 - Persona is installed and configured
@@ -28,12 +32,12 @@ v0.5.0
 
 ## Success Criteria
 
-- [ ] User can select from template library
-- [ ] Custom template creation supported
-- [ ] Templates shareable/exportable
-- [ ] Domain-specific defaults available (UX, marketing, product)
-- [ ] Template validation before use
-- [ ] Preview template output before generation
+- [x] User can select from template library
+- [x] Custom template creation supported
+- [x] Templates shareable/exportable
+- [x] Domain-specific defaults available (UX, marketing, product)
+- [x] Template validation before use
+- [x] Preview template output before generation
 
 ## Derives Features
 

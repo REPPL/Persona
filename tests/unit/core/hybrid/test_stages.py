@@ -1,8 +1,10 @@
 """Unit tests for hybrid pipeline stages."""
 
-import pytest
 
-from persona.core.hybrid.stages.filter import get_evaluation_score, get_evaluation_feedback
+from persona.core.hybrid.stages.filter import (
+    get_evaluation_feedback,
+    get_evaluation_score,
+)
 
 
 def test_get_evaluation_score_with_evaluation():

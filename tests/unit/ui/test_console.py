@@ -2,10 +2,8 @@
 Tests for console utilities (F-086).
 """
 
-import os
-import pytest
 
-from persona.ui.console import Verbosity, PersonaConsole, get_console
+from persona.ui.console import PersonaConsole, Verbosity, get_console
 
 
 class TestVerbosity:

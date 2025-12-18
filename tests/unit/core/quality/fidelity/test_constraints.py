@@ -4,7 +4,6 @@ Tests for constraint validator.
 Tests ConstraintValidator for numeric constraint validation.
 """
 
-import pytest
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.constraints import ConstraintValidator

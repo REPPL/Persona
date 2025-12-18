@@ -6,7 +6,7 @@ This module provides health check functionality.
 
 from datetime import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from persona import __version__
 from persona.api.dependencies import ConfigDep

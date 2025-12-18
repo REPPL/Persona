@@ -8,7 +8,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from persona.api.dependencies import ConfigDep, verify_token
 from persona.api.models.requests import GenerateRequest
-from persona.api.models.responses import ErrorResponse, GenerateResponse, JobStatusResponse
+from persona.api.models.responses import (
+    GenerateResponse,
+    JobStatusResponse,
+)
 from persona.api.services.generation import GenerationService
 
 router = APIRouter(prefix="/api/v1", tags=["generation"])
@@ -19,7 +22,9 @@ def get_generation_service(request: Request) -> GenerationService:
     return request.app.state.generation_service
 
 
-@router.post("/generate", response_model=GenerateResponse, dependencies=[Depends(verify_token)])
+@router.post(
+    "/generate", response_model=GenerateResponse, dependencies=[Depends(verify_token)]
+)
 async def create_generation(
     request: GenerateRequest,
     config: ConfigDep,

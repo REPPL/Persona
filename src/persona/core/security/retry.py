@@ -8,11 +8,10 @@ and circuit breaker pattern implementation.
 import asyncio
 import random
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, TypeVar
-
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
@@ -141,7 +140,11 @@ class ErrorClassifier:
         if "context" in error_str and ("long" in error_str or "length" in error_str):
             return ErrorType.CONTEXT_TOO_LONG
 
-        if "auth" in error_str or "unauthorized" in error_str or "forbidden" in error_str:
+        if (
+            "auth" in error_str
+            or "unauthorized" in error_str
+            or "forbidden" in error_str
+        ):
             return ErrorType.AUTH_FAILURE
 
         if "invalid" in error_str or "bad request" in error_str:
@@ -230,12 +233,14 @@ class RetryStrategy:
     jitter: bool = True
     jitter_range: float = 0.1  # 10% jitter
 
-    retryable_errors: set[ErrorType] = field(default_factory=lambda: {
-        ErrorType.NETWORK_TIMEOUT,
-        ErrorType.RATE_LIMIT,
-        ErrorType.SERVER_ERROR,
-        ErrorType.CONNECTION_ERROR,
-    })
+    retryable_errors: set[ErrorType] = field(
+        default_factory=lambda: {
+            ErrorType.NETWORK_TIMEOUT,
+            ErrorType.RATE_LIMIT,
+            ErrorType.SERVER_ERROR,
+            ErrorType.CONNECTION_ERROR,
+        }
+    )
 
     def calculate_delay(self, attempt: int, retry_after: float | None = None) -> float:
         """
@@ -252,7 +257,7 @@ class RetryStrategy:
             return retry_after
 
         # Exponential backoff
-        delay = self.initial_delay * (self.exponential_base ** attempt)
+        delay = self.initial_delay * (self.exponential_base**attempt)
         delay = min(delay, self.max_delay)
 
         # Add jitter
@@ -281,8 +286,8 @@ class RetryStrategy:
 class CircuitState(Enum):
     """State of a circuit breaker."""
 
-    CLOSED = "closed"      # Normal operation
-    OPEN = "open"          # Failing, reject requests
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failing, reject requests
     HALF_OPEN = "half_open"  # Testing recovery
 
 

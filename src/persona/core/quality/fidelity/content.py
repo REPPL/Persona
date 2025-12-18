@@ -5,7 +5,6 @@ This module validates that personas contain required keywords, themes,
 and content elements as specified in the prompt.
 """
 
-from typing import Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.fidelity.models import PromptConstraints, Severity, Violation

@@ -3,11 +3,10 @@ Tests for the academic validation CLI command (F-117).
 """
 
 import json
-import pytest
-from pathlib import Path
-from typer.testing import CliRunner
 
+import pytest
 from persona.ui.cli import app
+from typer.testing import CliRunner
 
 
 @pytest.fixture
@@ -137,11 +136,17 @@ class TestAcademicCommand:
         assert result.exit_code != 0
         # Check that error mentions source or require - the output varies
         output_lower = result.output.lower()
-        assert "require" in output_lower or "source" in output_lower or "error" in output_lower
+        assert (
+            "require" in output_lower
+            or "source" in output_lower
+            or "error" in output_lower
+        )
 
     def test_academic_all_metrics_flag(self, runner, sample_persona):
         """Test --all flag attempts all metrics."""
-        result = runner.invoke(app, ["academic", str(sample_persona), "--all", "--help"])
+        result = runner.invoke(
+            app, ["academic", str(sample_persona), "--all", "--help"]
+        )
         # Just verify the flag is accepted
         assert "--all" in result.output
 

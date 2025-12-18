@@ -1,7 +1,6 @@
 """Tests for PII detector."""
 
 import pytest
-
 from persona.core.privacy.detector import PIIDetector
 
 

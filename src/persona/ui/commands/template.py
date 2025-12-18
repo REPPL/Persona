@@ -9,8 +9,8 @@ from typing import Annotated, Optional
 
 import typer
 from rich.panel import Panel
-from rich.table import Table
 from rich.syntax import Syntax
+from rich.table import Table
 
 from persona.ui.console import get_console
 
@@ -26,14 +26,16 @@ def list_templates(
     source: Annotated[
         Optional[str],
         typer.Option(
-            "--source", "-s",
+            "--source",
+            "-s",
             help="Filter by source (builtin, user, project).",
         ),
     ] = None,
     tag: Annotated[
         Optional[str],
         typer.Option(
-            "--tag", "-t",
+            "--tag",
+            "-t",
             help="Filter by tag.",
         ),
     ] = None,
@@ -72,28 +74,34 @@ def list_templates(
         for template_id in loader.list_templates(source=source, tag=tag):
             try:
                 info = loader.get_info(template_id)
-                result["data"]["templates"].append({
-                    "id": info.id,
-                    "name": info.metadata.name,
-                    "source": info.source,
-                    "description": info.metadata.description,
-                    "tags": info.metadata.tags,
-                    "variables": info.variables,
-                })
+                result["data"]["templates"].append(
+                    {
+                        "id": info.id,
+                        "name": info.metadata.name,
+                        "source": info.source,
+                        "description": info.metadata.description,
+                        "tags": info.metadata.tags,
+                        "variables": info.variables,
+                    }
+                )
             except Exception as e:
-                result["data"]["templates"].append({
-                    "id": template_id,
-                    "error": str(e),
-                })
+                result["data"]["templates"].append(
+                    {
+                        "id": template_id,
+                        "error": str(e),
+                    }
+                )
 
         print(json.dumps(result, indent=2))
         return
 
     # Rich output
-    console.print(Panel.fit(
-        "[bold]Available Templates[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Available Templates[/bold]",
+            border_style="cyan",
+        )
+    )
 
     templates = loader.list_templates(source=source, tag=tag)
 
@@ -130,7 +138,11 @@ def list_templates(
             console.print(f"  • {info.id}")
             console.print(f"    [dim]{info.metadata.name}[/dim]")
             if info.metadata.description:
-                console.print(f"    [dim]{info.metadata.description[:60]}...[/dim]" if len(info.metadata.description) > 60 else f"    [dim]{info.metadata.description}[/dim]")
+                console.print(
+                    f"    [dim]{info.metadata.description[:60]}...[/dim]"
+                    if len(info.metadata.description) > 60
+                    else f"    [dim]{info.metadata.description}[/dim]"
+                )
             if tags_str:
                 console.print(f"    [cyan]Tags: {tags_str}[/cyan]")
 
@@ -144,7 +156,8 @@ def show_template(
     content: Annotated[
         bool,
         typer.Option(
-            "--content", "-c",
+            "--content",
+            "-c",
             help="Show full template content.",
         ),
     ] = False,
@@ -204,10 +217,12 @@ def show_template(
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]{info.metadata.name}[/bold] ({info.id})",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]{info.metadata.name}[/bold] ({info.id})",
+            border_style="cyan",
+        )
+    )
 
     table = Table(show_header=False, box=None)
     table.add_column("Property", style="bold")
@@ -240,7 +255,9 @@ def show_template(
     # Content
     if content:
         console.print("\n[bold]Content:[/bold]")
-        syntax = Syntax(loader.load(template_id), "jinja2", theme="monokai", line_numbers=True)
+        syntax = Syntax(
+            loader.load(template_id), "jinja2", theme="monokai", line_numbers=True
+        )
         console.print(syntax)
 
 
@@ -392,14 +409,15 @@ def test_template(
     # Show required variables
     try:
         required_vars = loader.get_variables(template_id)
-        console.print(f"\n[bold]Required variables:[/bold]")
+        console.print("\n[bold]Required variables:[/bold]")
         for var in sorted(required_vars):
             status = "[green]✓[/green]" if var in test_vars else "[yellow]○[/yellow]"
             console.print(f"  {status} {var}")
 
         # Show preview
         console.print("\n[bold]Rendered preview (first 500 chars):[/bold]")
-        from jinja2 import Environment, BaseLoader
+        from jinja2 import BaseLoader, Environment
+
         content = loader.load(template_id)
         env = Environment(loader=BaseLoader())
         template = env.from_string(content)
@@ -450,7 +468,9 @@ def import_template(
     ],
     template_id: Annotated[
         Optional[str],
-        typer.Option("--id", help="Custom template ID (uses filename if not provided)."),
+        typer.Option(
+            "--id", help="Custom template ID (uses filename if not provided)."
+        ),
     ] = None,
     project_level: Annotated[
         bool,
@@ -519,7 +539,7 @@ def remove_template(
     try:
         info = loader.get_info(template_id)
         if info.source == "builtin":
-            console.print(f"[red]Error:[/red] Cannot remove built-in template.")
+            console.print("[red]Error:[/red] Cannot remove built-in template.")
             raise typer.Exit(1)
     except FileNotFoundError:
         console.print(f"[red]Error:[/red] Template '{template_id}' not found.")
@@ -534,7 +554,7 @@ def remove_template(
     if loader.delete(template_id):
         console.print(f"[green]✓[/green] Template '{template_id}' removed.")
     else:
-        console.print(f"[red]Error:[/red] Failed to remove template.")
+        console.print("[red]Error:[/red] Failed to remove template.")
         raise typer.Exit(1)
 
 
@@ -575,7 +595,7 @@ def _extract_body(content: str) -> str:
     if end_idx is None:
         return content
 
-    return "\n".join(lines[end_idx + 1:])
+    return "\n".join(lines[end_idx + 1 :])
 
 
 def _default_template_body() -> str:

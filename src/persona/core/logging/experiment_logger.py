@@ -4,16 +4,17 @@ Logs all experiment events to JSON Lines format for
 debugging, analysis, and reproducibility.
 """
 
+import json
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
-import json
 
 
 class LogLevel(Enum):
     """Log severity levels."""
+
     DEBUG = "debug"
     INFO = "info"
     WARN = "warn"
@@ -22,6 +23,7 @@ class LogLevel(Enum):
 
 class EventType(Enum):
     """Standard event types for experiments."""
+
     EXPERIMENT_STARTED = "experiment_started"
     EXPERIMENT_COMPLETED = "experiment_completed"
     EXPERIMENT_FAILED = "experiment_failed"
@@ -54,6 +56,7 @@ class LogEvent:
         payload: Additional event data.
         message: Human-readable message.
     """
+
     timestamp: str
     level: LogLevel
     event: EventType
@@ -163,7 +166,7 @@ class ExperimentLogger:
     ) -> LogEvent:
         """Create a log event."""
         return LogEvent(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             level=level,
             event=event,
             experiment_id=experiment_id or self.experiment_id,
@@ -212,9 +215,7 @@ class ExperimentLogger:
         message: str = "",
     ) -> LogEvent:
         """Log a debug event."""
-        log_event = self._create_event(
-            LogLevel.DEBUG, event, payload, message
-        )
+        log_event = self._create_event(LogLevel.DEBUG, event, payload, message)
         self._write_event(log_event)
         return log_event
 
@@ -225,9 +226,7 @@ class ExperimentLogger:
         message: str = "",
     ) -> LogEvent:
         """Log an info event."""
-        log_event = self._create_event(
-            LogLevel.INFO, event, payload, message
-        )
+        log_event = self._create_event(LogLevel.INFO, event, payload, message)
         self._write_event(log_event)
         return log_event
 
@@ -238,9 +237,7 @@ class ExperimentLogger:
         message: str = "",
     ) -> LogEvent:
         """Log a warning event."""
-        log_event = self._create_event(
-            LogLevel.WARN, event, payload, message
-        )
+        log_event = self._create_event(LogLevel.WARN, event, payload, message)
         self._write_event(log_event)
         return log_event
 
@@ -251,9 +248,7 @@ class ExperimentLogger:
         message: str = "",
     ) -> LogEvent:
         """Log an error event."""
-        log_event = self._create_event(
-            LogLevel.ERROR, event, payload, message
-        )
+        log_event = self._create_event(LogLevel.ERROR, event, payload, message)
         self._write_event(log_event)
         return log_event
 
@@ -357,7 +352,7 @@ def log_event(
         Created LogEvent.
     """
     return LogEvent(
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         level=level,
         event=event,
         experiment_id=experiment_id,
@@ -376,7 +371,7 @@ def read_log_file(path: Path) -> list[LogEvent]:
         List of LogEvent objects.
     """
     events = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:

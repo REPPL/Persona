@@ -1,19 +1,18 @@
 """Tests for error handling and retry logic (F-058)."""
 
-import asyncio
 import time
-import pytest
 
+import pytest
 from persona.core.security.retry import (
-    ErrorType,
-    ErrorClassifier,
-    RetryStrategy,
-    RetryableError,
-    PermanentError,
     CircuitBreaker,
     CircuitBreakerConfig,
     CircuitState,
+    ErrorClassifier,
+    ErrorType,
+    PermanentError,
+    RetryableError,
     RetryExecutor,
+    RetryStrategy,
 )
 
 

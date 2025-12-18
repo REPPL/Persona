@@ -1,11 +1,10 @@
 """Tests for SQLite audit store (F-123)."""
 
 import tempfile
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-
 from persona.core.audit.models import (
     AuditRecord,
     GenerationRecord,
@@ -100,17 +99,17 @@ class TestSqliteStore:
 
     def test_list_with_date_filter(self, store):
         """Test listing records with date filtering."""
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         yesterday = now - timedelta(days=1)
         tomorrow = now + timedelta(days=1)
 
         # Create record with timestamp
         session = SessionInfo(user="test", platform="Linux", python_version="3.12.0")
         input_rec = InputRecord(data_hash="abc", record_count=1)
-        generation = GenerationRecord(
-            provider="test", model="test", prompt_hash="def"
+        generation = GenerationRecord(provider="test", model="test", prompt_hash="def")
+        output = OutputRecord(
+            personas_hash="ghi", persona_count=1, generation_time_ms=1
         )
-        output = OutputRecord(personas_hash="ghi", persona_count=1, generation_time_ms=1)
 
         record = AuditRecord(
             audit_id="test-1",
@@ -196,16 +195,16 @@ class TestSqliteStore:
 
     def test_prune(self, store):
         """Test pruning old records."""
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         old_date = now - timedelta(days=200)
 
         # Create old record
         session = SessionInfo(user="test", platform="Linux", python_version="3.12.0")
         input_rec = InputRecord(data_hash="abc", record_count=1)
-        generation = GenerationRecord(
-            provider="test", model="test", prompt_hash="def"
+        generation = GenerationRecord(provider="test", model="test", prompt_hash="def")
+        output = OutputRecord(
+            personas_hash="ghi", persona_count=1, generation_time_ms=1
         )
-        output = OutputRecord(personas_hash="ghi", persona_count=1, generation_time_ms=1)
 
         old_record = AuditRecord(
             audit_id="old-record",

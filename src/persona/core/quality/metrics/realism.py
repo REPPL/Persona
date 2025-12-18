@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, Any
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.base import QualityMetric
-from persona.core.quality.config import QualityConfig
 from persona.core.quality.models import DimensionScore
 
 if TYPE_CHECKING:
@@ -31,10 +30,23 @@ class RealismMetric(QualityMetric):
 
     # Generic/placeholder names to flag
     GENERIC_NAMES: set[str] = {
-        "user", "persona", "customer", "person", "test",
-        "example", "john doe", "jane doe", "placeholder",
-        "user 1", "user 2", "persona 1", "persona 2",
-        "sample", "demo", "test user", "default",
+        "user",
+        "persona",
+        "customer",
+        "person",
+        "test",
+        "example",
+        "john doe",
+        "jane doe",
+        "placeholder",
+        "user 1",
+        "user 2",
+        "persona 1",
+        "persona 2",
+        "sample",
+        "demo",
+        "test user",
+        "default",
     }
 
     # Artificial-sounding quote patterns
@@ -179,9 +191,11 @@ class RealismMetric(QualityMetric):
 
         # Check age-occupation coherence
         age = persona.demographics.get("age") or persona.demographics.get("age_range")
-        occupation = persona.demographics.get("occupation") or persona.demographics.get(
-            "role"
-        ) or persona.demographics.get("job")
+        occupation = (
+            persona.demographics.get("occupation")
+            or persona.demographics.get("role")
+            or persona.demographics.get("job")
+        )
 
         if age and occupation:
             age_str = str(age).lower()
@@ -189,8 +203,16 @@ class RealismMetric(QualityMetric):
 
             # Flag unrealistic age-occupation combinations
             young_ages = ["16", "17", "18", "19", "20", "21"]
-            senior_roles = ["ceo", "chief", "director", "vp", "vice president",
-                          "president", "managing director", "founder"]
+            senior_roles = [
+                "ceo",
+                "chief",
+                "director",
+                "vp",
+                "vice president",
+                "president",
+                "managing director",
+                "founder",
+            ]
 
             if any(a in age_str for a in young_ages):
                 if any(role in occ_str for role in senior_roles):
@@ -265,9 +287,22 @@ class RealismMetric(QualityMetric):
 
         # Check for natural speech markers (contractions, fillers)
         natural_markers = [
-            "I'm", "I've", "I'd", "don't", "can't", "won't",
-            "it's", "that's", "there's", "we're", "they're",
-            "...", "actually", "really", "just", "like",
+            "I'm",
+            "I've",
+            "I'd",
+            "don't",
+            "can't",
+            "won't",
+            "it's",
+            "that's",
+            "there's",
+            "we're",
+            "they're",
+            "...",
+            "actually",
+            "really",
+            "just",
+            "like",
         ]
         has_natural_marker = any(
             marker.lower() in quote.lower() for marker in natural_markers

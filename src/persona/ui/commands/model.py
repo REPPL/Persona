@@ -5,7 +5,6 @@ Commands for listing, adding, and removing custom model configurations.
 """
 
 from decimal import Decimal
-from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
@@ -26,7 +25,8 @@ def list_models(
     provider: Annotated[
         Optional[str],
         typer.Option(
-            "--provider", "-p",
+            "--provider",
+            "-p",
             help="Filter by provider.",
         ),
     ] = None,
@@ -55,7 +55,7 @@ def list_models(
     """
     import json
 
-    from persona.core.config import ModelLoader, get_builtin_models, get_all_models
+    from persona.core.config import ModelLoader, get_builtin_models
 
     console = get_console()
     loader = ModelLoader()
@@ -73,31 +73,37 @@ def list_models(
         for model_id in loader.list_models(provider=provider):
             try:
                 config = loader.load(model_id)
-                result["data"]["custom"].append({
-                    "id": config.id,
-                    "name": config.name,
-                    "provider": config.provider,
-                    "context_window": config.context_window,
-                    "max_output": config.max_output,
-                    "pricing": {
-                        "input": float(config.pricing.input),
-                        "output": float(config.pricing.output),
-                    },
-                })
+                result["data"]["custom"].append(
+                    {
+                        "id": config.id,
+                        "name": config.name,
+                        "provider": config.provider,
+                        "context_window": config.context_window,
+                        "max_output": config.max_output,
+                        "pricing": {
+                            "input": float(config.pricing.input),
+                            "output": float(config.pricing.output),
+                        },
+                    }
+                )
             except Exception as e:
-                result["data"]["custom"].append({
-                    "id": model_id,
-                    "error": str(e),
-                })
+                result["data"]["custom"].append(
+                    {
+                        "id": model_id,
+                        "error": str(e),
+                    }
+                )
 
         print(json.dumps(result, indent=2))
         return
 
     # Rich output
-    console.print(Panel.fit(
-        "[bold]Available Models[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Available Models[/bold]",
+            border_style="cyan",
+        )
+    )
 
     # Built-in models
     if not custom_only:
@@ -175,10 +181,12 @@ def show_model(
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]{config.name}[/bold] ({config.id})",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]{config.name}[/bold] ({config.id})",
+            border_style="cyan",
+        )
+    )
 
     table = Table(show_header=False, box=None)
     table.add_column("Property", style="bold")
@@ -204,10 +212,16 @@ def show_model(
     # Capabilities
     console.print("\n[bold]Capabilities:[/bold]")
     caps = config.capabilities
-    console.print(f"  Structured output: {'[green]✓[/green]' if caps.structured_output else '[red]✗[/red]'}")
+    console.print(
+        f"  Structured output: {'[green]✓[/green]' if caps.structured_output else '[red]✗[/red]'}"
+    )
     console.print(f"  Vision: {'[green]✓[/green]' if caps.vision else '[red]✗[/red]'}")
-    console.print(f"  Function calling: {'[green]✓[/green]' if caps.function_calling else '[red]✗[/red]'}")
-    console.print(f"  Streaming: {'[green]✓[/green]' if caps.streaming else '[red]✗[/red]'}")
+    console.print(
+        f"  Function calling: {'[green]✓[/green]' if caps.function_calling else '[red]✗[/red]'}"
+    )
+    console.print(
+        f"  Streaming: {'[green]✓[/green]' if caps.streaming else '[red]✗[/red]'}"
+    )
 
 
 @model_app.command("add")
@@ -250,7 +264,9 @@ def add_model(
     ] = None,
     project_level: Annotated[
         bool,
-        typer.Option("--project", help="Save to project directory instead of user directory."),
+        typer.Option(
+            "--project", help="Save to project directory instead of user directory."
+        ),
     ] = False,
     force: Annotated[
         bool,
@@ -342,7 +358,7 @@ def remove_model(
     if loader.delete(model_id):
         console.print(f"[green]✓[/green] Model '{model_id}' removed.")
     else:
-        console.print(f"[red]Error:[/red] Failed to remove model.")
+        console.print("[red]Error:[/red] Failed to remove model.")
         raise typer.Exit(1)
 
 
@@ -351,7 +367,8 @@ def show_pricing(
     provider: Annotated[
         Optional[str],
         typer.Option(
-            "--provider", "-p",
+            "--provider",
+            "-p",
             help="Filter by provider.",
         ),
     ] = None,
@@ -382,25 +399,29 @@ def show_pricing(
 
     # Get built-in pricing
     for pricing in PricingData.list_models(provider=provider):
-        all_pricing.append({
-            "model": pricing.model,
-            "provider": pricing.provider,
-            "input": float(pricing.input_price),
-            "output": float(pricing.output_price),
-            "source": "builtin",
-        })
+        all_pricing.append(
+            {
+                "model": pricing.model,
+                "provider": pricing.provider,
+                "input": float(pricing.input_price),
+                "output": float(pricing.output_price),
+                "source": "builtin",
+            }
+        )
 
     # Get custom model pricing
     for model_id in loader.list_models(provider=provider):
         try:
             config = loader.load(model_id)
-            all_pricing.append({
-                "model": config.id,
-                "provider": config.provider,
-                "input": float(config.pricing.input),
-                "output": float(config.pricing.output),
-                "source": "custom",
-            })
+            all_pricing.append(
+                {
+                    "model": config.id,
+                    "provider": config.provider,
+                    "input": float(config.pricing.input),
+                    "output": float(config.pricing.output),
+                    "source": "custom",
+                }
+            )
         except Exception:
             continue
 
@@ -436,14 +457,16 @@ def discover_models(
     provider: Annotated[
         Optional[str],
         typer.Option(
-            "--provider", "-p",
+            "--provider",
+            "-p",
             help="Filter by provider.",
         ),
     ] = None,
     refresh: Annotated[
         bool,
         typer.Option(
-            "--refresh", "-r",
+            "--refresh",
+            "-r",
             help="Force refresh of cached results.",
         ),
     ] = False,
@@ -469,10 +492,12 @@ def discover_models(
     console = get_console()
 
     if not json_output:
-        console.print(Panel.fit(
-            "[bold]Discovering Models[/bold]",
-            border_style="cyan",
-        ))
+        console.print(
+            Panel.fit(
+                "[bold]Discovering Models[/bold]",
+                border_style="cyan",
+            )
+        )
         console.print()
 
     discovery = ModelDiscovery()
@@ -487,15 +512,17 @@ def discover_models(
             },
         }
         for result in results:
-            output["data"]["models"].append({
-                "id": result.model_id,
-                "name": result.name,
-                "status": result.status.value,
-                "provider": result.provider,
-                "source": result.source,
-                "context_window": result.context_window,
-                "deprecation_message": result.deprecation_message,
-            })
+            output["data"]["models"].append(
+                {
+                    "id": result.model_id,
+                    "name": result.name,
+                    "status": result.status.value,
+                    "provider": result.provider,
+                    "source": result.source,
+                    "context_window": result.context_window,
+                    "deprecation_message": result.deprecation_message,
+                }
+            )
         print(json.dumps(output, indent=2))
         return
 
@@ -517,7 +544,9 @@ def discover_models(
             else:
                 status_icon = "[red]✗[/red]"
 
-            context = f" ({result.context_window:,} ctx)" if result.context_window else ""
+            context = (
+                f" ({result.context_window:,} ctx)" if result.context_window else ""
+            )
             source = f" [{result.source}]" if result.source != "builtin" else ""
             console.print(f"  {status_icon} {result.model_id}{context}{source}")
 
@@ -527,7 +556,9 @@ def discover_models(
     # Summary
     available = len([r for r in results if r.status == ModelStatus.AVAILABLE])
     deprecated = len([r for r in results if r.status == ModelStatus.DEPRECATED])
-    console.print(f"\n[bold]Summary:[/bold] {available} available, {deprecated} deprecated")
+    console.print(
+        f"\n[bold]Summary:[/bold] {available} available, {deprecated} deprecated"
+    )
 
 
 @model_app.command("check")
@@ -539,7 +570,8 @@ def check_model(
     provider: Annotated[
         Optional[str],
         typer.Option(
-            "--provider", "-p",
+            "--provider",
+            "-p",
             help="Provider hint.",
         ),
     ] = None,

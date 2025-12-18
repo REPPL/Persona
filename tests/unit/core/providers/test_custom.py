@@ -1,17 +1,16 @@
 """Tests for CustomVendorProvider."""
 
 import os
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 import pytest
-
-from persona.core.config.vendor import VendorConfig, AuthType
-from persona.core.providers.custom import CustomVendorProvider
+from persona.core.config.vendor import AuthType, VendorConfig
 from persona.core.providers.base import (
     AuthenticationError,
-    RateLimitError,
     ModelNotFoundError,
+    RateLimitError,
 )
+from persona.core.providers.custom import CustomVendorProvider
 
 
 class TestCustomVendorProviderInit:
@@ -242,7 +241,9 @@ class TestCustomVendorProviderRequest:
         assert payload["model"] == "claude-3"
         assert payload["messages"] == [{"role": "user", "content": "Hello"}]
         assert payload["max_tokens"] == 100
-        assert "temperature" not in payload  # Anthropic format doesn't include temp in build
+        assert (
+            "temperature" not in payload
+        )  # Anthropic format doesn't include temp in build
 
     def test_build_request_o1_model_no_temperature(self):
         """Test temperature is excluded for o1 models."""
@@ -278,10 +279,12 @@ class TestCustomVendorProviderResponse:
         provider = CustomVendorProvider(config)
 
         data = {
-            "choices": [{
-                "message": {"content": "Hello there!"},
-                "finish_reason": "stop",
-            }],
+            "choices": [
+                {
+                    "message": {"content": "Hello there!"},
+                    "finish_reason": "stop",
+                }
+            ],
             "model": "gpt-4",
             "usage": {
                 "prompt_tokens": 10,
@@ -369,10 +372,12 @@ class TestCustomVendorProviderGenerate:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "choices": [{
-                "message": {"content": "Generated response"},
-                "finish_reason": "stop",
-            }],
+            "choices": [
+                {
+                    "message": {"content": "Generated response"},
+                    "finish_reason": "stop",
+                }
+            ],
             "model": "default",
             "usage": {"prompt_tokens": 10, "completion_tokens": 20},
         }
@@ -459,10 +464,12 @@ class TestCustomVendorProviderTestConnection:
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "choices": [{
-                "message": {"content": "OK"},
-                "finish_reason": "stop",
-            }],
+            "choices": [
+                {
+                    "message": {"content": "OK"},
+                    "finish_reason": "stop",
+                }
+            ],
             "model": "test-model",
             "usage": {"prompt_tokens": 5, "completion_tokens": 1},
         }

@@ -2,22 +2,20 @@
 Tests for persona generation variations (F-033, F-034, F-035).
 """
 
-import pytest
 from dataclasses import dataclass
 
+import pytest
 from persona.core.generation import (
+    COMPLEXITY_SPECS,
+    DETAIL_SPECS,
     ComplexityLevel,
     DetailLevel,
-    ComplexitySpec,
-    DetailSpec,
     PersonaVariation,
     VariationMatrix,
     VariationResult,
     VariationValidator,
-    COMPLEXITY_SPECS,
-    DETAIL_SPECS,
-    estimate_tokens,
     estimate_cost,
+    estimate_tokens,
 )
 
 
@@ -484,7 +482,9 @@ class TestTokenAndCostEstimation:
     def test_estimate_tokens(self):
         """Test token estimation for variations."""
         v_simple = PersonaVariation("V1", ComplexityLevel.SIMPLE, DetailLevel.MINIMAL)
-        v_complex = PersonaVariation("V6", ComplexityLevel.COMPLEX, DetailLevel.DETAILED)
+        v_complex = PersonaVariation(
+            "V6", ComplexityLevel.COMPLEX, DetailLevel.DETAILED
+        )
 
         simple_tokens = estimate_tokens(1000, v_simple)
         complex_tokens = estimate_tokens(1000, v_complex)

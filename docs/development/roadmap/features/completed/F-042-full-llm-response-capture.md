@@ -64,4 +64,3 @@ For debugging, auditing, and research purposes, users need access to the complet
 
 - [Milestone v0.4.0](../../milestones/v0.4.0.md)
 - [F-032: Reasoning Capture](F-032-reasoning-capture.md)
-

@@ -69,7 +69,8 @@ def check_fidelity(
     output_format: Annotated[
         str,
         typer.Option(
-            "--output", "-o",
+            "--output",
+            "-o",
             help="Output format: rich, json, markdown.",
         ),
     ] = "rich",
@@ -276,7 +277,9 @@ def _display_rich_report(console, report) -> None:
             ("Low", low, "dim"),
         ]:
             if violations:
-                console.print(f"\n[{color}]{severity_name} ({len(violations)})[/{color}]")
+                console.print(
+                    f"\n[{color}]{severity_name} ({len(violations)})[/{color}]"
+                )
                 for v in violations:
                     field_info = f" ({v.field})" if v.field else ""
                     console.print(f"  • {v.description}{field_info}")

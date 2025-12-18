@@ -6,8 +6,8 @@ to identify similarities, differences, and overlaps.
 """
 
 from persona.core.comparison.comparator import (
-    PersonaComparator,
     ComparisonResult,
+    PersonaComparator,
     SimilarityScore,
 )
 

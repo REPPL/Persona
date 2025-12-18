@@ -7,15 +7,14 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from persona.ui.interactive import (
-    InteractivePrompts,
-    GenerateWizard,
-    ConfigWizard,
     ConfigEditor,
-    is_interactive_supported,
+    ConfigWizard,
+    GenerateWizard,
+    InteractivePrompts,
     get_configured_providers,
     get_models_for_provider,
+    is_interactive_supported,
 )
 
 
@@ -509,7 +508,10 @@ class TestConfigEditor:
         """Test editing output section."""
         mock_manager.return_value.load.return_value = mock_config
         mock_select.return_value.ask.side_effect = ["output", "yaml"]
-        mock_confirm.return_value.ask.side_effect = [False, False]  # include_readme, timestamp
+        mock_confirm.return_value.ask.side_effect = [
+            False,
+            False,
+        ]  # include_readme, timestamp
 
         result = editor.run()
 
@@ -642,7 +644,10 @@ class TestConfigEditor:
         mock_provider.return_value = "anthropic"
         mock_model.return_value = "claude-sonnet-4-20250514"
         mock_text.return_value.ask.return_value = "3"  # Same count
-        mock_select.return_value.ask.side_effect = ["moderate", "standard"]  # Same values
+        mock_select.return_value.ask.side_effect = [
+            "moderate",
+            "standard",
+        ]  # Same values
 
         result = editor._edit_defaults(mock_config)
 

@@ -5,11 +5,10 @@ This module provides the PersonaRefiner class for iteratively
 refining personas through natural language instructions.
 """
 
+import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
-import copy
-import json
 
 from persona.core.generation.parser import Persona
 
@@ -74,10 +73,7 @@ class RefinementResult:
             "changes": self.changes,
             "version": self.version,
             "error": self.error,
-            "instruction": (
-                self.instruction.to_dict()
-                if self.instruction else None
-            ),
+            "instruction": (self.instruction.to_dict() if self.instruction else None),
         }
 
 
@@ -179,12 +175,12 @@ class RefinementSession:
         """
         # Truncate any redo history
         if self.history.current_version < len(self.history.versions) - 1:
-            self.history.versions = (
-                self.history.versions[:self.history.current_version + 1]
-            )
-            self.history.instructions = (
-                self.history.instructions[:self.history.current_version]
-            )
+            self.history.versions = self.history.versions[
+                : self.history.current_version + 1
+            ]
+            self.history.instructions = self.history.instructions[
+                : self.history.current_version
+            ]
 
         # Add new version
         self.history.versions.append(copy.deepcopy(persona))

@@ -1,17 +1,14 @@
 """Tests for model configuration loader."""
 
-import tempfile
 from pathlib import Path
 
-import pytest
 import yaml
-
 from persona.core.config.model_config import (
     ModelParams,
-    load_model_config,
-    get_model_params,
     get_default_model,
+    get_model_params,
     list_configured_models,
+    load_model_config,
 )
 
 
@@ -67,18 +64,23 @@ class TestLoadModelConfig:
         config_dir.mkdir(parents=True)
 
         config_file = config_dir / "gpt-4o.yaml"
-        config_file.write_text(yaml.dump({
-            "name": "gpt-4o",
-            "provider": "openai",
-            "description": "Test GPT-4o",
-            "parameters": {
-                "max_tokens": 8192,
-                "temperature": 0.5,
-            },
-        }))
+        config_file.write_text(
+            yaml.dump(
+                {
+                    "name": "gpt-4o",
+                    "provider": "openai",
+                    "description": "Test GPT-4o",
+                    "parameters": {
+                        "max_tokens": 8192,
+                        "temperature": 0.5,
+                    },
+                }
+            )
+        )
 
         # Temporarily patch get_config_dir
         import persona.core.config.model_config as mc
+
         original_get_config_dir = mc.get_config_dir
 
         try:
@@ -127,6 +129,7 @@ class TestListConfiguredModels:
     def test_returns_empty_when_no_config(self):
         """Test returns empty list when no config directory."""
         import persona.core.config.model_config as mc
+
         original_get_config_dir = mc.get_config_dir
 
         try:

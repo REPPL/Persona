@@ -1,10 +1,7 @@
 """Tests for project models."""
 
-from datetime import datetime
-from pathlib import Path
 
 import pytest
-
 from persona.core.project.models import (
     DataSource,
     DataSourceType,

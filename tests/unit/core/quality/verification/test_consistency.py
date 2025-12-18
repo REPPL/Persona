@@ -1,10 +1,8 @@
 """Tests for consistency checking."""
 
 import pytest
-
 from persona.core.generation.parser import Persona
 from persona.core.quality.verification.consistency import ConsistencyChecker
-from persona.core.quality.verification.models import ConsistencyMetrics
 
 
 class MockEmbeddingProvider:
@@ -214,7 +212,7 @@ class TestConsistencyChecker:
 
         # Only 2 have goals
         assert details["goals"].present_count == 2
-        assert details["goals"].agreement_score == pytest.approx(2/3)
+        assert details["goals"].agreement_score == pytest.approx(2 / 3)
 
     def test_persona_to_text(self):
         """Test persona text conversion."""

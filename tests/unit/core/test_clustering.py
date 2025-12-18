@@ -3,15 +3,14 @@ Tests for persona clustering functionality (F-027).
 """
 
 import pytest
-
-from persona.core.generation.parser import Persona
 from persona.core.clustering import (
-    PersonaClusterer,
     Cluster,
     ClusterResult,
     ConsolidationSuggestion,
+    PersonaClusterer,
 )
 from persona.core.clustering.cluster import ClusterMethod
+from persona.core.generation.parser import Persona
 
 
 class TestConsolidationSuggestion:
@@ -61,10 +60,7 @@ class TestConsolidationSuggestion:
 
     def test_many_personas_merged_name(self):
         """Test merged name with many personas."""
-        personas = [
-            Persona(id=f"p{i}", name=f"Person{i}", goals=[])
-            for i in range(5)
-        ]
+        personas = [Persona(id=f"p{i}", name=f"Person{i}", goals=[]) for i in range(5)]
 
         suggestion = ConsolidationSuggestion(
             personas=personas,
@@ -202,9 +198,7 @@ class TestClusterResult:
 
     def test_cluster_count(self):
         """Test cluster count property."""
-        clusters = [
-            Cluster(id=f"c{i}", personas=[]) for i in range(3)
-        ]
+        clusters = [Cluster(id=f"c{i}", personas=[]) for i in range(3)]
 
         result = ClusterResult(success=True, clusters=clusters)
         assert result.cluster_count == 3

@@ -1,14 +1,12 @@
 """Tests for token usage logging (F-077)."""
 
 import json
-from datetime import datetime, timezone
-
-import pytest
+from datetime import UTC, datetime
 
 from persona.core.logging.token_usage import (
-    TokenUsageLogger,
-    TokenUsage,
     TokenBreakdown,
+    TokenUsage,
+    TokenUsageLogger,
     TokenUsageSummary,
     log_token_usage,
 )
@@ -367,9 +365,27 @@ class TestTokenUsageLogger:
         """Can get aggregated summary."""
         logger = TokenUsageLogger()
 
-        logger.log(step="generation", model="claude", input_tokens=10000, output_tokens=2000, cost_usd=0.15)
-        logger.log(step="validation", model="claude", input_tokens=5000, output_tokens=500, cost_usd=0.05)
-        logger.log(step="generation", model="gpt-4", input_tokens=8000, output_tokens=1500, cost_usd=0.12)
+        logger.log(
+            step="generation",
+            model="claude",
+            input_tokens=10000,
+            output_tokens=2000,
+            cost_usd=0.15,
+        )
+        logger.log(
+            step="validation",
+            model="claude",
+            input_tokens=5000,
+            output_tokens=500,
+            cost_usd=0.05,
+        )
+        logger.log(
+            step="generation",
+            model="gpt-4",
+            input_tokens=8000,
+            output_tokens=1500,
+            cost_usd=0.12,
+        )
 
         summary = logger.get_summary()
 
@@ -382,9 +398,27 @@ class TestTokenUsageLogger:
         """Summary aggregates by step."""
         logger = TokenUsageLogger()
 
-        logger.log(step="generation", model="claude", input_tokens=10000, output_tokens=2000, cost_usd=0.15)
-        logger.log(step="generation", model="claude", input_tokens=10000, output_tokens=2000, cost_usd=0.15)
-        logger.log(step="validation", model="claude", input_tokens=5000, output_tokens=500, cost_usd=0.05)
+        logger.log(
+            step="generation",
+            model="claude",
+            input_tokens=10000,
+            output_tokens=2000,
+            cost_usd=0.15,
+        )
+        logger.log(
+            step="generation",
+            model="claude",
+            input_tokens=10000,
+            output_tokens=2000,
+            cost_usd=0.15,
+        )
+        logger.log(
+            step="validation",
+            model="claude",
+            input_tokens=5000,
+            output_tokens=500,
+            cost_usd=0.05,
+        )
 
         summary = logger.get_summary()
 
@@ -397,9 +431,27 @@ class TestTokenUsageLogger:
         """Summary aggregates by model."""
         logger = TokenUsageLogger()
 
-        logger.log(step="test", model="claude", input_tokens=10000, output_tokens=2000, cost_usd=0.15)
-        logger.log(step="test", model="gpt-4", input_tokens=8000, output_tokens=1500, cost_usd=0.12)
-        logger.log(step="test", model="claude", input_tokens=5000, output_tokens=1000, cost_usd=0.08)
+        logger.log(
+            step="test",
+            model="claude",
+            input_tokens=10000,
+            output_tokens=2000,
+            cost_usd=0.15,
+        )
+        logger.log(
+            step="test",
+            model="gpt-4",
+            input_tokens=8000,
+            output_tokens=1500,
+            cost_usd=0.12,
+        )
+        logger.log(
+            step="test",
+            model="claude",
+            input_tokens=5000,
+            output_tokens=1000,
+            cost_usd=0.08,
+        )
 
         summary = logger.get_summary()
 
@@ -451,8 +503,22 @@ class TestTokenUsageLogger:
         """Can export to CSV format."""
         logger = TokenUsageLogger()
 
-        logger.log(step="step1", model="model1", provider="provider1", input_tokens=100, output_tokens=50, cost_usd=0.01)
-        logger.log(step="step2", model="model2", provider="provider2", input_tokens=200, output_tokens=100, cost_usd=0.02)
+        logger.log(
+            step="step1",
+            model="model1",
+            provider="provider1",
+            input_tokens=100,
+            output_tokens=50,
+            cost_usd=0.01,
+        )
+        logger.log(
+            step="step2",
+            model="model2",
+            provider="provider2",
+            input_tokens=200,
+            output_tokens=100,
+            cost_usd=0.02,
+        )
 
         csv = logger.to_csv()
         lines = csv.strip().split("\n")
@@ -495,6 +561,6 @@ class TestLogTokenUsageConvenience:
 
         # Verify timestamp is recent (within last minute)
         timestamp = datetime.fromisoformat(usage.timestamp.replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         diff = (now - timestamp).total_seconds()
         assert diff < 60

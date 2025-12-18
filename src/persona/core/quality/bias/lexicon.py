@@ -6,7 +6,6 @@ persona content against curated bias lexicons like HolisticBias.
 """
 
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -48,7 +47,7 @@ class LexiconMatcher:
         if not lexicon_path.exists():
             raise FileNotFoundError(f"Lexicon not found: {lexicon_path}")
 
-        with open(lexicon_path, "r", encoding="utf-8") as f:
+        with open(lexicon_path, encoding="utf-8") as f:
             return json.load(f)
 
     def _extract_persona_text(self, persona: Persona) -> dict[str, str]:

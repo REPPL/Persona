@@ -8,18 +8,17 @@ experiment management.
 from pathlib import Path
 from typing import Any
 
-from persona.sdk.models import (
-    ExperimentConfig,
-    ExperimentModel,
-    PersonaConfig,
-    GenerationResultModel,
-)
 from persona.sdk.exceptions import (
     ConfigurationError,
     DataError,
-    ValidationError,
 )
 from persona.sdk.generator import PersonaGenerator
+from persona.sdk.models import (
+    ExperimentConfig,
+    ExperimentModel,
+    GenerationResultModel,
+    PersonaConfig,
+)
 
 
 class ExperimentSDK:
@@ -279,10 +278,13 @@ class ExperimentSDK:
         if not exp.data_dir.exists():
             return []
 
-        return sorted([
-            f for f in Path(exp.data_dir).iterdir()
-            if f.is_file() and not f.name.startswith(".")
-        ])
+        return sorted(
+            [
+                f
+                for f in Path(exp.data_dir).iterdir()
+                if f.is_file() and not f.name.startswith(".")
+            ]
+        )
 
     def generate(
         self,
@@ -356,10 +358,7 @@ class ExperimentSDK:
         if not exp.outputs_dir.exists():
             return []
 
-        return sorted([
-            d for d in Path(exp.outputs_dir).iterdir()
-            if d.is_dir()
-        ])
+        return sorted([d for d in Path(exp.outputs_dir).iterdir() if d.is_dir()])
 
     def get_statistics(self, experiment_name: str) -> dict[str, Any]:
         """
@@ -380,9 +379,7 @@ class ExperimentSDK:
         data_files = self.list_data(experiment_name)
 
         # Calculate total size
-        total_data_size = sum(
-            f.stat().st_size for f in data_files if f.is_file()
-        )
+        total_data_size = sum(f.stat().st_size for f in data_files if f.is_file())
 
         return {
             "name": exp.name,

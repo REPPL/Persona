@@ -6,7 +6,7 @@ quality metrics must implement, enabling a pluggable metrics architecture.
 """
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.config import QualityConfig

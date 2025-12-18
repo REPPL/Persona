@@ -4,7 +4,6 @@ Vendor management CLI commands.
 Commands for listing, adding, testing, and removing custom LLM vendors.
 """
 
-from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
@@ -46,8 +45,8 @@ def list_vendors(
     """
     import json
 
-    from persona.core.providers import ProviderFactory
     from persona.core.config import VendorLoader
+    from persona.core.providers import ProviderFactory
 
     console = get_console()
     loader = VendorLoader()
@@ -79,19 +78,23 @@ def list_vendors(
                 if not configured_only or vendor_info["configured"]:
                     result["data"]["custom"].append(vendor_info)
             except Exception as e:
-                result["data"]["custom"].append({
-                    "id": vendor_id,
-                    "error": str(e),
-                })
+                result["data"]["custom"].append(
+                    {
+                        "id": vendor_id,
+                        "error": str(e),
+                    }
+                )
 
         print(json.dumps(result, indent=2))
         return
 
     # Rich output
-    console.print(Panel.fit(
-        "[bold]Available Vendors[/bold]",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]Available Vendors[/bold]",
+            border_style="cyan",
+        )
+    )
 
     # Built-in providers
     console.print("\n[bold]Built-in Providers:[/bold]")
@@ -171,10 +174,12 @@ def show_vendor(
         return
 
     # Rich output
-    console.print(Panel.fit(
-        f"[bold]{config.name}[/bold] ({config.id})",
-        border_style="cyan",
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold]{config.name}[/bold] ({config.id})",
+            border_style="cyan",
+        )
+    )
 
     table = Table(show_header=False, box=None)
     table.add_column("Property", style="bold")
@@ -189,7 +194,9 @@ def show_vendor(
     if config.auth_env:
         table.add_row("Auth Env", config.auth_env)
     table.add_row("Default Model", config.default_model or "[dim]none[/dim]")
-    table.add_row("Models", ", ".join(config.models) if config.models else "[dim]none[/dim]")
+    table.add_row(
+        "Models", ", ".join(config.models) if config.models else "[dim]none[/dim]"
+    )
     table.add_row("Timeout", f"{config.timeout}s")
     table.add_row("Request Format", config.request_format)
     table.add_row("Response Format", config.response_format)
@@ -197,7 +204,9 @@ def show_vendor(
     if config.is_configured():
         table.add_row("Status", "[green]Configured[/green]")
     else:
-        table.add_row("Status", f"[yellow]Not configured[/yellow] (set {config.auth_env})")
+        table.add_row(
+            "Status", f"[yellow]Not configured[/yellow] (set {config.auth_env})"
+        )
 
     console.print(table)
 
@@ -222,7 +231,9 @@ def add_vendor(
     ] = None,
     auth_type: Annotated[
         str,
-        typer.Option("--auth-type", help="Authentication type (bearer, header, query, none)."),
+        typer.Option(
+            "--auth-type", help="Authentication type (bearer, header, query, none)."
+        ),
     ] = "bearer",
     auth_env: Annotated[
         Optional[str],
@@ -238,7 +249,9 @@ def add_vendor(
     ] = None,
     project_level: Annotated[
         bool,
-        typer.Option("--project", help="Save to project directory instead of user directory."),
+        typer.Option(
+            "--project", help="Save to project directory instead of user directory."
+        ),
     ] = False,
     force: Annotated[
         bool,
@@ -256,7 +269,7 @@ def add_vendor(
             --auth-env AZURE_OPENAI_API_KEY \\
             --default-model gpt-4
     """
-    from persona.core.config import VendorConfig, VendorLoader, AuthType
+    from persona.core.config import AuthType, VendorConfig, VendorLoader
 
     console = get_console()
     loader = VendorLoader()
@@ -303,7 +316,9 @@ def add_vendor(
     console.print(f"  Config saved to: {path}")
 
     if auth_env and not config.is_configured():
-        console.print(f"\n[yellow]Note:[/yellow] Set {auth_env} to configure authentication.")
+        console.print(
+            f"\n[yellow]Note:[/yellow] Set {auth_env} to configure authentication."
+        )
 
 
 @vendor_app.command("remove")
@@ -341,7 +356,7 @@ def remove_vendor(
     if loader.delete(vendor_id):
         console.print(f"[green]✓[/green] Vendor '{vendor_id}' removed.")
     else:
-        console.print(f"[red]Error:[/red] Failed to remove vendor.")
+        console.print("[red]Error:[/red] Failed to remove vendor.")
         raise typer.Exit(1)
 
 
@@ -400,18 +415,18 @@ def test_vendor(
 
     # Rich output
     if result.get("success") is True:
-        console.print(f"\n[green]✓[/green] Connection successful!")
+        console.print("\n[green]✓[/green] Connection successful!")
         console.print(f"  Model: {result.get('response_model', 'unknown')}")
         console.print(f"  Tokens used: {result.get('response_tokens', 'unknown')}")
     elif result.get("configured") is False:
-        console.print(f"\n[yellow]○[/yellow] Not configured")
+        console.print("\n[yellow]○[/yellow] Not configured")
         if "error" in result:
             console.print(f"  {result['error']}")
     elif "error" in result:
-        console.print(f"\n[red]✗[/red] Connection failed")
+        console.print("\n[red]✗[/red] Connection failed")
         console.print(f"  Error: {result['error']}")
     else:
-        console.print(f"\n[green]✓[/green] Vendor configured")
+        console.print("\n[green]✓[/green] Vendor configured")
         console.print(f"  Available models: {', '.join(result.get('models', []))}")
 
 
@@ -420,7 +435,8 @@ def discover_vendors(
     refresh: Annotated[
         bool,
         typer.Option(
-            "--refresh", "-r",
+            "--refresh",
+            "-r",
             help="Force refresh of cached results.",
         ),
     ] = False,
@@ -446,10 +462,12 @@ def discover_vendors(
     console = get_console()
 
     if not json_output:
-        console.print(Panel.fit(
-            "[bold]Discovering Vendors[/bold]",
-            border_style="cyan",
-        ))
+        console.print(
+            Panel.fit(
+                "[bold]Discovering Vendors[/bold]",
+                border_style="cyan",
+            )
+        )
         console.print()
 
     discovery = VendorDiscovery()
@@ -464,16 +482,18 @@ def discover_vendors(
             },
         }
         for result in results:
-            output["data"]["vendors"].append({
-                "id": result.vendor_id,
-                "name": result.name,
-                "status": result.status.value,
-                "source": result.source,
-                "message": result.message,
-                "base_url": result.base_url,
-                "response_time_ms": result.response_time_ms,
-                "models": result.models,
-            })
+            output["data"]["vendors"].append(
+                {
+                    "id": result.vendor_id,
+                    "name": result.name,
+                    "status": result.status.value,
+                    "source": result.source,
+                    "message": result.message,
+                    "base_url": result.base_url,
+                    "response_time_ms": result.response_time_ms,
+                    "models": result.models,
+                }
+            )
         print(json.dumps(output, indent=2))
         return
 
@@ -486,9 +506,13 @@ def discover_vendors(
     if available:
         console.print("[bold green]Available:[/bold green]")
         for result in available:
-            response_time = f" ({result.response_time_ms:.0f}ms)" if result.response_time_ms else ""
+            response_time = (
+                f" ({result.response_time_ms:.0f}ms)" if result.response_time_ms else ""
+            )
             models_info = f" - {len(result.models)} models" if result.models else ""
-            console.print(f"  [green]✓[/green] {result.name} ({result.vendor_id}){response_time}{models_info}")
+            console.print(
+                f"  [green]✓[/green] {result.name} ({result.vendor_id}){response_time}{models_info}"
+            )
             if result.message:
                 console.print(f"    [dim]{result.message}[/dim]")
 
@@ -514,4 +538,6 @@ def discover_vendors(
                 console.print(f"    [dim]{result.message}[/dim]")
 
     # Summary
-    console.print(f"\n[bold]Summary:[/bold] {len(available)} available, {len(not_configured)} not configured, {len(unavailable)} unavailable")
+    console.print(
+        f"\n[bold]Summary:[/bold] {len(available)} available, {len(not_configured)} not configured, {len(unavailable)} unavailable"
+    )

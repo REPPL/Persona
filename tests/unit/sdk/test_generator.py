@@ -5,8 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-
-from persona.sdk import PersonaGenerator, PersonaConfig
+from persona.sdk import PersonaConfig, PersonaGenerator
 from persona.sdk.exceptions import (
     ConfigurationError,
     DataError,
@@ -301,10 +300,7 @@ class TestPersonaGeneratorIntegration:
                 mock_result.source_files = [data_file]
                 mock_instance.generate.return_value = mock_result
 
-                result = generator.generate(
-                    data_file,
-                    config=PersonaConfig(count=3)
-                )
+                result = generator.generate(data_file, config=PersonaConfig(count=3))
 
                 assert len(result.personas) == 1
                 assert result.personas[0].name == "Test User"

@@ -5,7 +5,6 @@ Provides comprehensive bias detection using lexicon-based,
 embedding-based (WEAT), and LLM-based methods.
 """
 
-import json
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -16,7 +15,6 @@ from rich.table import Table
 from persona.ui.commands.quality_base import (
     QualityOutputFormatter,
     colour_score,
-    create_summary_table,
     display_version_header,
     handle_error,
     load_personas,
@@ -115,7 +113,6 @@ def check_bias(
     console = get_console()
     formatter = QualityOutputFormatter(console, output_format, save_to)
 
-    from persona import __version__
     from persona.core.providers import ProviderFactory
     from persona.core.quality.bias import BiasConfig, BiasDetector
 

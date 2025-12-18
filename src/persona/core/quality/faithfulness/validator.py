@@ -17,7 +17,6 @@ from persona.core.quality.faithfulness.matcher import SourceMatcher
 from persona.core.quality.faithfulness.models import (
     Claim,
     FaithfulnessReport,
-    SourceMatch,
 )
 
 logger = logging.getLogger(__name__)

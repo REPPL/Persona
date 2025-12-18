@@ -8,7 +8,7 @@ in various formats: JSON/YAML, system prompt, and Jinja2 template.
 from abc import ABC, abstractmethod
 from typing import Any
 
-from jinja2 import Environment, BaseLoader
+from jinja2 import BaseLoader, Environment
 
 from persona.core.scripts.models import CharacterCard, ScriptFormat
 
@@ -111,7 +111,9 @@ class SystemPromptFormatter(BaseScriptFormatter):
         # Pain points section
         if card.psychological_profile.pain_points:
             lines.append("## Frustrations")
-            lines.append("You experience these frustrations (express them when relevant):")
+            lines.append(
+                "You experience these frustrations (express them when relevant):"
+            )
             for pain in card.psychological_profile.pain_points:
                 lines.append(f"- {pain}")
             lines.append("")
@@ -119,7 +121,9 @@ class SystemPromptFormatter(BaseScriptFormatter):
         # Communication style section
         lines.append("## Communication Style")
         lines.append(f"**Tone**: {card.communication_style.tone}")
-        lines.append(f"**Vocabulary Level**: {card.communication_style.vocabulary_level}")
+        lines.append(
+            f"**Vocabulary Level**: {card.communication_style.vocabulary_level}"
+        )
         if card.communication_style.speech_patterns:
             lines.append("")
             lines.append("**Speech patterns**:")
@@ -172,7 +176,7 @@ class Jinja2TemplateFormatter(BaseScriptFormatter):
     context like conversation history.
     """
 
-    DEFAULT_TEMPLATE = '''You are {{ identity.name }}{% if identity.title %}, {{ identity.title }}{% endif %}.
+    DEFAULT_TEMPLATE = """You are {{ identity.name }}{% if identity.title %}, {{ identity.title }}{% endif %}.
 
 {% if identity.demographics_summary %}
 Background: {{ identity.demographics_summary }}
@@ -236,7 +240,7 @@ Previous messages:
 {% endif %}
 
 [{{ provenance.synthetic_marker }}]
-'''
+"""
 
     def __init__(self, custom_template: str | None = None) -> None:
         """
