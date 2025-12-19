@@ -34,6 +34,7 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-016](./R-016-experiment-project-organisation.md) | Experiment & Project Organisation | Complete | - |
 | [R-017](./R-017-remote-data-ingestion.md) | Remote Data Ingestion | Complete | - |
 | [R-018](./R-018-documentation-audit-and-automation.md) | Documentation Audit & Automation | Complete | - |
+| [R-019](./R-019-project-automation-implementation.md) | Project Automation Implementation | Complete | - |
 
 ---
 
@@ -59,6 +60,9 @@ Quick reference showing which features each research document informs:
 | R-014 | v1.6.0 | F-117, F-118 (Academic validation, hallucination) |
 | R-015 | v1.6.0+ | F-106, F-119, F-121 (Quality metrics, bias, diversity) |
 | R-016 | v1.8.0+ | F-124, F-125 (Experiment management, lineage) |
+| R-017 | v1.10.0 | F-126 (URL data ingestion) |
+| R-018 | v1.10.0+ | F-127 (Documentation, project automation) |
+| R-019 | v1.10.0 | F-127 (Project automation infrastructure) |
 
 ## Research Methodology
 

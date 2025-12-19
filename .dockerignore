@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+.eggs/
+*.egg-info/
+*.egg
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Build
+build/
+dist/
+*.whl
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Output and data
+output/
+outputs/
+data/
+*.csv
+*.json
+!pyproject.toml
+!package.json
+
+# Documentation build
+site/
+.mkdocs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+
+# Working files
+.work/
+
+# Docker (don't include Docker files in context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore

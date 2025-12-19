@@ -25,8 +25,9 @@ All features for Persona, organised by milestone and status.
 | v1.7.0 Research Compliance | 5 | ✅ Complete |
 | v1.8.0 Technical Debt | 0 | ✅ Complete |
 | v1.9.0 Experiment Infrastructure | 2 | ✅ Complete |
+| v1.10.0 Remote Data & Automation | 2 | 📋 Planned |
 
-**Total: 119 complete, 0 planned**
+**Total: 119 complete, 2 planned (1 active, 1 queued)**
 
 ---
 
@@ -278,6 +279,15 @@ Refactoring-only release with no feature specifications. See [v1.8.0 milestone](
 |----|---------|----------|
 | [F-124](completed/F-124-experiment-management.md) | Experiment Management System | Research Infrastructure |
 | [F-125](completed/F-125-data-lineage-provenance.md) | Data Lineage & Provenance | Research Infrastructure |
+
+---
+
+## v1.10.0 - Remote Data & Automation 📋 Planned
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-126](active/F-126-url-data-ingestion.md) | URL Data Ingestion | Data | 🔄 Active |
+| [F-127](planned/F-127-project-automation.md) | Project Automation Infrastructure | DevOps | 📋 Planned |
 
 ---
 

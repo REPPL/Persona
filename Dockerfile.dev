@@ -1,0 +1,40 @@
+# Persona Development Dockerfile
+# Full development environment with hot reload
+#
+# Build: docker build -f Dockerfile.dev -t persona:dev .
+# Run:   docker compose -f docker-compose.dev.yml up
+
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install development dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash --uid 1000 persona
+
+# Install persona with all dependencies
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+
+RUN pip install --no-cache-dir -e ".[all]"
+
+# Switch to non-root user
+USER persona
+
+# Create directories
+RUN mkdir -p /app/data /app/output
+
+# Environment
+ENV PERSONA_LOG_LEVEL=DEBUG
+ENV PYTHONUNBUFFERED=1
+
+# Expose API port
+EXPOSE 8000
+
+# Default command: start API server with hot reload
+CMD ["persona", "serve", "--host", "0.0.0.0", "--port", "8000", "--reload"]

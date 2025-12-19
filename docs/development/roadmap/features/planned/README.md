@@ -6,9 +6,10 @@ Features designed and ready for implementation.
 
 | ID | Feature | Category | Priority | Status |
 |----|---------|----------|----------|--------|
-| [F-091](../active/F-091-url-data-ingestion.md) | URL Data Ingestion | Data | P1 | 🔄 Active |
+| [F-126](../active/F-126-url-data-ingestion.md) | URL Data Ingestion | Data | P1 | 🔄 Active |
+| [F-127](F-127-project-automation.md) | Project Automation Infrastructure | DevOps | P1 | 📋 Planned |
 
-*Note: F-091 is currently in progress - see [Active Features](../active/).*
+*Note: F-126 is currently in progress - see [Active Features](../active/).*
 
 ---
 

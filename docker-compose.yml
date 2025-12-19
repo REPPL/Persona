@@ -1,0 +1,58 @@
+# Persona Production Docker Compose
+#
+# Usage:
+#   docker compose up -d              # Start services
+#   docker compose logs -f            # View logs
+#   docker compose down               # Stop services
+#
+# With local models:
+#   docker compose --profile local up -d
+
+services:
+  api:
+    build: .
+    container_name: persona-api
+    ports:
+      - "8000:8000"
+    environment:
+      # API keys - set in .env or environment
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      # API configuration
+      - PERSONA_API_AUTH_TOKEN=${PERSONA_API_AUTH_TOKEN:-}
+      - PERSONA_LOG_LEVEL=${PERSONA_LOG_LEVEL:-INFO}
+      - PERSONA_DEFAULT_PROVIDER=${PERSONA_DEFAULT_PROVIDER:-anthropic}
+      # Optional: connect to local Ollama
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama:11434}
+    volumes:
+      - persona-data:/app/data
+      - persona-output:/app/output
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Ollama for local models
+  # Activate with: docker compose --profile local up
+  ollama:
+    image: ollama/ollama:latest
+    container_name: persona-ollama
+    profiles:
+      - local
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  persona-data:
+    name: persona-data
+  persona-output:
+    name: persona-output
+  ollama-models:
+    name: persona-ollama-models

@@ -1,0 +1,91 @@
+# Release Workflow
+# Creates GitHub releases when version tags are pushed
+#
+# Trigger: Push tag matching v*
+# Creates: GitHub Release with changelog
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for changelog
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: pip
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[test]"
+
+    - name: Run tests
+      run: |
+        pytest tests/ -m "not real_api" --quiet
+
+    - name: Get version from tag
+      id: version
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Get previous tag
+        PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+        if [ -z "$PREV_TAG" ]; then
+          echo "body=Initial release" >> $GITHUB_OUTPUT
+        else
+          # Generate changelog from commits
+          CHANGELOG=$(git log --oneline $PREV_TAG..HEAD --pretty=format:"- %s" | head -50)
+          # Handle multiline output
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "body<<$EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ steps.version.outputs.version }}
+        body: |
+          ## What's Changed
+
+          ${{ steps.changelog.outputs.body }}
+
+          ## Installation
+
+          ```bash
+          pip install git+https://github.com/REPPL/Persona.git@${{ steps.version.outputs.version }}
+          ```
+
+          Or clone and install:
+
+          ```bash
+          git clone https://github.com/REPPL/Persona.git
+          cd Persona
+          git checkout ${{ steps.version.outputs.version }}
+          pip install -e ".[all]"
+          ```
+        draft: false
+        prerelease: ${{ contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

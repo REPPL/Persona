@@ -1,0 +1,52 @@
+# Persona Development Docker Compose
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml up -d    # Start
+#   docker compose -f docker-compose.dev.yml logs -f  # Logs
+#   docker compose -f docker-compose.dev.yml down     # Stop
+#
+# Features:
+#   - Source code mounted for hot reload
+#   - Full development dependencies
+#   - Debug logging enabled
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: persona-dev
+    ports:
+      - "8000:8000"
+    environment:
+      # API keys - set in .env or environment
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      # Development configuration
+      - PERSONA_LOG_LEVEL=DEBUG
+      - PERSONA_DEFAULT_PROVIDER=${PERSONA_DEFAULT_PROVIDER:-anthropic}
+      # Optional: connect to local Ollama
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama:11434}
+    volumes:
+      # Mount source for hot reload
+      - ./src:/app/src:ro
+      - ./templates:/app/templates:ro
+      # Persistent data
+      - ./data:/app/data
+      - ./output:/app/output
+    restart: unless-stopped
+
+  # Ollama for testing local models
+  ollama:
+    image: ollama/ollama:latest
+    container_name: persona-ollama-dev
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models-dev:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-models-dev:
+    name: persona-ollama-models-dev
