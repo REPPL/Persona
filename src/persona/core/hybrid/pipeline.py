@@ -222,6 +222,7 @@ class HybridPipeline:
         Synchronous wrapper for generate().
 
         This is a convenience method for non-async contexts.
+        Must NOT be called from within an async context.
 
         Args:
             input_data: Raw input data (text or structured data).
@@ -229,19 +230,23 @@ class HybridPipeline:
 
         Returns:
             HybridResult with generated personas and execution metadata.
+
+        Raises:
+            RuntimeError: If called from within an async context.
         """
         import asyncio
 
-        # Try to get existing event loop
+        # Check if we're in an async context
         try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            # No loop running, create new one
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            result = loop.run_until_complete(self.generate(input_data, count))
-            loop.close()
-            return result
-        else:
-            # Loop already running, create task
-            return loop.create_task(self.generate(input_data, count))
+            asyncio.get_running_loop()
+            raise RuntimeError(
+                "Cannot call generate_sync() from async context. "
+                "Use 'await pipeline.generate(...)' instead."
+            )
+        except RuntimeError as e:
+            # If the error is about no running loop, that's what we want
+            if "no running event loop" not in str(e).lower():
+                raise
+
+        # Run the async function
+        return asyncio.run(self.generate(input_data, count))

@@ -11,18 +11,19 @@ import httpx
 
 from persona.core.providers.base import (
     AuthenticationError,
-    LLMProvider,
     LLMResponse,
     ModelNotFoundError,
     RateLimitError,
 )
+from persona.core.providers.http_base import HTTPProvider
 
 
-class AnthropicProvider(LLMProvider):
+class AnthropicProvider(HTTPProvider):
     """
     Anthropic provider implementation.
 
     Supports Claude 3.5, Claude 4, and Claude Opus 4.5 models.
+    Uses HTTP connection pooling for improved performance.
 
     Example:
         provider = AnthropicProvider()
@@ -52,6 +53,7 @@ class AnthropicProvider(LLMProvider):
         Args:
             api_key: Optional API key. If not provided, reads from environment.
         """
+        super().__init__()
         self._api_key = api_key or os.getenv(self.ENV_VAR)
 
     @property
@@ -100,8 +102,9 @@ class AnthropicProvider(LLMProvider):
         }
 
         try:
-            with httpx.Client(timeout=120.0) as client:
-                response = client.post(self.API_URL, headers=headers, json=payload)
+            # Use pooled HTTP client
+            client = self.get_sync_client()
+            response = client.post(self.API_URL, headers=headers, json=payload)
 
             if response.status_code == 401:
                 raise AuthenticationError("Invalid Anthropic API key")
@@ -169,10 +172,9 @@ class AnthropicProvider(LLMProvider):
         }
 
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
-                response = await client.post(
-                    self.API_URL, headers=headers, json=payload
-                )
+            # Use pooled HTTP client
+            client = await self.get_async_client()
+            response = await client.post(self.API_URL, headers=headers, json=payload)
 
             if response.status_code == 401:
                 raise AuthenticationError("Invalid Anthropic API key")

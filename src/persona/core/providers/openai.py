@@ -11,18 +11,19 @@ import httpx
 
 from persona.core.providers.base import (
     AuthenticationError,
-    LLMProvider,
     LLMResponse,
     ModelNotFoundError,
     RateLimitError,
 )
+from persona.core.providers.http_base import HTTPProvider
 
 
-class OpenAIProvider(LLMProvider):
+class OpenAIProvider(HTTPProvider):
     """
     OpenAI provider implementation.
 
     Supports GPT-4, GPT-4o, and other OpenAI chat models.
+    Uses HTTP connection pooling for improved performance.
 
     Example:
         provider = OpenAIProvider()
@@ -51,6 +52,7 @@ class OpenAIProvider(LLMProvider):
         Args:
             api_key: Optional API key. If not provided, reads from environment.
         """
+        super().__init__()
         self._api_key = api_key or os.getenv(self.ENV_VAR)
 
     @property
@@ -102,8 +104,9 @@ class OpenAIProvider(LLMProvider):
             payload["temperature"] = temperature
 
         try:
-            with httpx.Client(timeout=120.0) as client:
-                response = client.post(self.API_URL, headers=headers, json=payload)
+            # Use pooled HTTP client
+            client = self.get_sync_client()
+            response = client.post(self.API_URL, headers=headers, json=payload)
 
             if response.status_code == 401:
                 raise AuthenticationError("Invalid OpenAI API key")
@@ -169,10 +172,9 @@ class OpenAIProvider(LLMProvider):
             payload["temperature"] = temperature
 
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
-                response = await client.post(
-                    self.API_URL, headers=headers, json=payload
-                )
+            # Use pooled HTTP client
+            client = await self.get_async_client()
+            response = await client.post(self.API_URL, headers=headers, json=payload)
 
             if response.status_code == 401:
                 raise AuthenticationError("Invalid OpenAI API key")

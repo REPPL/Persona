@@ -59,8 +59,10 @@ class GenerationResult:
         model: Model used for generation.
         provider: Provider used.
         source_files: List of input files processed.
+        url_sources: List of URL sources (when loading from URLs).
         prompt: The rendered prompt used.
         raw_response: The full LLM response.
+        config: The generation configuration used.
     """
 
     personas: list[Persona]
@@ -70,8 +72,10 @@ class GenerationResult:
     model: str = ""
     provider: str = ""
     source_files: list[Path] = field(default_factory=list)
+    url_sources: list = field(default_factory=list)  # List of URLSource objects
     prompt: str = ""
     raw_response: str = ""
+    config: "GenerationConfig | None" = None
 
 
 class GenerationPipeline:

@@ -284,3 +284,115 @@ class TestOutputManager:
         md_content = md_path.read_text()
         assert "# Alice" in md_content
         assert "Learn Python" in md_content
+
+    def test_save_with_url_sources(self, tmp_path: Path):
+        """Test saving result with URL sources generates attribution.md."""
+        from datetime import datetime
+
+        from persona.core.data import Attribution, URLSource
+
+        manager = OutputManager(base_dir=tmp_path)
+
+        # Create URL source with attribution
+        attribution = Attribution(
+            title="Test Dataset",
+            creators=["Test Organisation"],
+            source_url="https://example.com/data.csv",
+            licence="CC-BY-4.0",
+            access_date=datetime.now(),
+        )
+
+        url_source = URLSource(
+            original_url="https://example.com/data.csv",
+            resolved_url="https://example.com/data.csv",
+            content_type="text/csv",
+            fetched_at=datetime.now(),
+            size_bytes=1024,
+            sha256="abc123",
+            terms_accepted=True,
+            attribution=attribution,
+        )
+
+        result = GenerationResult(
+            personas=[Persona(id="p001", name="Test")],
+            model="test",
+            provider="test",
+            url_sources=[url_source],
+        )
+
+        output_dir = manager.save(result, name="test-attribution")
+
+        # Check attribution.md exists
+        attribution_path = output_dir / "attribution.md"
+        assert attribution_path.exists()
+
+        content = attribution_path.read_text()
+        assert "# Data Attribution" in content
+        assert "Test Dataset" in content
+        assert "CC-BY-4.0" in content
+
+    def test_save_with_url_sources_no_attribution(self, tmp_path: Path):
+        """Test saving URL sources without attribution falls back to basic info."""
+        from datetime import datetime
+
+        from persona.core.data import URLSource
+
+        manager = OutputManager(base_dir=tmp_path)
+
+        url_source = URLSource(
+            original_url="https://example.com/data.csv",
+            resolved_url="https://cdn.example.com/data.csv",
+            content_type="text/csv",
+            fetched_at=datetime.now(),
+            size_bytes=2048,
+            sha256="def456",
+            terms_accepted=True,
+        )
+
+        result = GenerationResult(
+            personas=[Persona(id="p001", name="Test")],
+            model="test",
+            provider="test",
+            url_sources=[url_source],
+        )
+
+        output_dir = manager.save(result, name="test-basic-attribution")
+
+        attribution_path = output_dir / "attribution.md"
+        assert attribution_path.exists()
+
+        content = attribution_path.read_text()
+        assert "https://example.com/data.csv" in content
+        assert "Resolved URL" in content
+
+    def test_metadata_includes_url_sources(self, tmp_path: Path):
+        """Test that metadata.json includes URL sources."""
+        from datetime import datetime
+
+        from persona.core.data import URLSource
+
+        manager = OutputManager(base_dir=tmp_path)
+
+        url_source = URLSource(
+            original_url="https://example.com/data.csv",
+            resolved_url="https://example.com/data.csv",
+            content_type="text/csv",
+            fetched_at=datetime.now(),
+            size_bytes=512,
+            sha256="xyz789",
+            terms_accepted=True,
+        )
+
+        result = GenerationResult(
+            personas=[Persona(id="p001", name="Test")],
+            model="test",
+            provider="test",
+            url_sources=[url_source],
+        )
+
+        output_dir = manager.save(result, name="test-url-metadata")
+        metadata = manager.load_metadata(output_dir)
+
+        assert "url_sources" in metadata
+        assert len(metadata["url_sources"]) == 1
+        assert metadata["url_sources"][0]["original_url"] == "https://example.com/data.csv"

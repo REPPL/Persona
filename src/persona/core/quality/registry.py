@@ -259,6 +259,50 @@ class MetricRegistry:
         """
         return name in self._metrics
 
+    def get_all_metrics(
+        self,
+        config: QualityConfig | None = None,
+        **kwargs: Any,
+    ) -> dict[str, QualityMetric]:
+        """
+        Get instances of all registered metrics.
+
+        Args:
+            config: Optional quality configuration for all metrics.
+            **kwargs: Additional arguments passed to metric constructors.
+
+        Returns:
+            Dictionary mapping metric names to instances.
+
+        Example:
+            registry = MetricRegistry()
+            metrics = registry.get_all_metrics(config)
+
+            for name, metric in metrics.items():
+                score = metric.evaluate(persona)
+        """
+        return {name: self.get(name, config, **kwargs) for name in self.list_names()}
+
+    def get_builtin_metrics(
+        self,
+        config: QualityConfig | None = None,
+        **kwargs: Any,
+    ) -> dict[str, QualityMetric]:
+        """
+        Get instances of all built-in metrics.
+
+        Args:
+            config: Optional quality configuration for all metrics.
+            **kwargs: Additional arguments passed to metric constructors.
+
+        Returns:
+            Dictionary mapping metric names to instances.
+        """
+        return {
+            name: self.get(name, config, **kwargs)
+            for name in self.get_builtin_names()
+        }
+
     def get_builtin_names(self) -> list[str]:
         """
         Get names of built-in metrics.
