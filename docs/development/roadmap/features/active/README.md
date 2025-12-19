@@ -4,9 +4,7 @@ Features currently being implemented.
 
 ## Currently Active
 
-| ID | Feature | Category | Priority | Milestone |
-|----|---------|----------|----------|-----------|
-| [F-126](F-126-url-data-ingestion.md) | URL Data Ingestion | Data | P1 | v1.10.0 |
+No features are currently in active development. All features through v1.11.0 have been completed.
 
 ## How Features Move Here
 
@@ -21,3 +19,4 @@ Features currently being implemented.
 - [Features Index](../README.md)
 - [Planned Features](../planned/)
 - [Completed Features](../completed/)
+

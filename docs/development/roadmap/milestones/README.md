@@ -25,10 +25,10 @@ Release planning and milestone documentation.
 | [v1.7.0](v1.7.0.md) | Research Compliance | 5 | v1.6.0 | ✅ Complete |
 | [v1.8.0](v1.8.0.md) | Technical Debt | 0 | v1.7.0 | ✅ Complete |
 | [v1.9.0](v1.9.0.md) | Experiment Infrastructure | 2 | v1.8.0 | ✅ Complete |
-| [v1.10.0](v1.10.0.md) | Remote Data & Automation | 2 | v1.9.0 | 📋 Planned |
-| [v1.11.0](v1.11.0.md) | Code Quality & Architecture | 8 | v1.10.0 | 📋 Planned |
+| [v1.10.0](v1.10.0.md) | Remote Data & Automation | 2 | v1.9.0 | ✅ Complete |
+| [v1.11.0](v1.11.0.md) | Code Quality & Architecture | 8 | v1.10.0 | ✅ Complete |
 
-**Total: 119 complete features, 10 planned features**
+**Total: 129 complete features**
 
 ## Dependency Graph
 
@@ -74,10 +74,10 @@ v0.1.0 (Foundation) ✅
     v1.9.0 (Experiment Infrastructure) ✅
         │
         ↓
-    v1.10.0 (Remote Data & Automation) 📋
+    v1.10.0 (Remote Data & Automation) ✅
         │
         ↓
-    v1.11.0 (Code Quality & Architecture) 📋
+    v1.11.0 (Code Quality & Architecture) ✅
 ```
 
 ## User Interface Roadmap

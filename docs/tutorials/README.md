@@ -12,6 +12,7 @@ Learning-oriented guides that help you get started with Persona.
 | [Comparing Providers](04-comparing-providers.md) | Compare output across LLM models | Intermediate | 20 min |
 | [Building a Library](05-building-library.md) | Organise research across projects | Intermediate | 20 min |
 | [Validating Quality](06-validating-quality.md) | Ensure personas reflect source data | Advanced | 30 min |
+| [External Datasets](07-external-datasets.md) | Load data from remote URLs | Advanced | 25 min |
 
 ## What You'll Learn
 

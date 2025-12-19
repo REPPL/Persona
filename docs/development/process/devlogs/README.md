@@ -61,6 +61,8 @@ Devlogs capture:
 | [v1.7.5](v1.7.5-devlog.md) | Patch Release | Complete |
 | [v1.8.0](v1.8.0-devlog.md) | Technical Debt | Complete |
 | [v1.9.0](v1.9.0-devlog.md) | Experiment Infrastructure | Complete |
+| [v1.10.0](v1.10.0/) | Remote Data & Automation | Complete |
+| [v1.11.0](v1.11.0/) | Code Quality & Architecture | Complete |
 
 ---
 
