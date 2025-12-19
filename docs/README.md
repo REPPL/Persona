@@ -11,7 +11,7 @@ Welcome to the Persona documentation hub. This documentation is organised using 
 persona check
 
 # Create your first experiment
-persona create experiment
+persona experiment create my-research
 
 # Generate personas
 persona generate --from my-experiment

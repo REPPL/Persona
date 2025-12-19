@@ -32,6 +32,8 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-014](./R-014-shin-et-al-gap-analysis.md) | Shin et al. DIS 2024 Gap Analysis | Complete | - |
 | [R-015](./R-015-quality-metrics-taxonomy.md) | Quality Metrics Taxonomy | Complete | - |
 | [R-016](./R-016-experiment-project-organisation.md) | Experiment & Project Organisation | Complete | - |
+| [R-017](./R-017-remote-data-ingestion.md) | Remote Data Ingestion | Complete | - |
+| [R-018](./R-018-documentation-audit-and-automation.md) | Documentation Audit & Automation | Complete | - |
 
 ---
 

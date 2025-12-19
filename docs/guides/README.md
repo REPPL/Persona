@@ -16,6 +16,9 @@ Task-oriented guides for accomplishing specific goals with Persona.
 | [Design Integration](design-integration.md) | Export personas to Figma, Miro, and presentations | Integration |
 | [SDK Patterns](sdk-patterns.md) | Common patterns for Python SDK usage | Development |
 | [CI/CD Integration](ci-cd-integration.md) | Automate persona generation in pipelines | Advanced |
+| [Advanced Features](advanced-features.md) | Hidden commands for power users | Advanced |
+| [REST API](rest-api.md) | HTTP API reference and usage | Development |
+| [Deployment](deployment.md) | Docker and production deployment | Operations |
 | [Error Handling](error-handling.md) | Handle errors and edge cases | Problem-solving |
 | [Troubleshooting](troubleshooting.md) | Diagnose and fix common issues | Problem-solving |
 
