@@ -26,7 +26,7 @@ Release planning and milestone documentation.
 | [v1.8.0](v1.8.0.md) | Technical Debt | 0 | v1.7.0 | ✅ Complete |
 | [v1.9.0](v1.9.0.md) | Experiment Infrastructure | 2 | v1.8.0 | ✅ Complete |
 
-**Total: 119 complete features, 1 active feature (F-091)**
+**Total: 119 complete features, 1 active feature (F-126)**
 
 ## Dependency Graph
 

@@ -267,14 +267,31 @@ persona models [OPTIONS]
 Initialise a new Persona project.
 
 ```bash
-persona init [PATH]
+persona init [NAME] [OPTIONS]
 ```
 
+**Arguments:**
+
+- `NAME` (optional) - Project name (creates directory with this name)
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `--path`, `-p` | PATH | Parent directory for project (defaults to current directory) |
+
 Creates the recommended directory structure:
-- `experiments/` - Experiment storage
 - `data/` - Source data files
+- `output/` - Generated personas
 - `templates/` - Custom templates
 - `persona.yaml` - Project configuration
+
+**Examples:**
+
+```bash
+persona init my-research
+persona init my-research --path ~/projects/
+```
 
 ---
 

@@ -4,7 +4,7 @@ Features that have been implemented and shipped.
 
 ## Summary
 
-**117 features completed** across milestones v0.1.0 through v1.7.0.
+**119 features completed** across milestones v0.1.0 through v1.9.0.
 
 See the [Features Index](../README.md) for the complete list organised by milestone.
 
