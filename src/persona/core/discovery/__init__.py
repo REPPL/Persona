@@ -24,6 +24,14 @@ from persona.core.discovery.vendor import (
     VendorDiscovery,
     VendorStatus,
 )
+from persona.core.discovery.ollama_models import (
+    ModelComparisonResult,
+    ModelTestStatus,
+    OllamaModelRegistry,
+    OllamaTestedModel,
+    compare_ollama_models,
+    get_untested_models,
+)
 
 __all__ = [
     # Vendor discovery
@@ -40,4 +48,11 @@ __all__ = [
     "AvailabilityStatus",
     "check_model",
     "warn_if_deprecated",
+    # Ollama model comparison
+    "OllamaModelRegistry",
+    "ModelComparisonResult",
+    "ModelTestStatus",
+    "OllamaTestedModel",
+    "compare_ollama_models",
+    "get_untested_models",
 ]

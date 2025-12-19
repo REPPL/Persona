@@ -139,6 +139,45 @@ The main SDK module provides the high-level interface for persona generation.
       members:
         - GeminiProvider
 
+## Discovery Module
+
+### Model Discovery
+
+::: persona.core.discovery
+    options:
+      show_root_heading: true
+      members:
+        - ModelDiscovery
+        - VendorDiscovery
+        - ModelChecker
+
+### Ollama Model Comparison
+
+Compare tested Ollama models with available models from a running Ollama instance.
+
+::: persona.core.discovery.ollama_models
+    options:
+      show_root_heading: true
+      members:
+        - compare_ollama_models
+        - get_untested_models
+        - OllamaModelRegistry
+        - ModelComparisonResult
+
+**Example usage:**
+
+```python
+from persona.core.discovery import compare_ollama_models, get_untested_models
+
+# Check for new untested models (prints alert if found)
+result = compare_ollama_models()
+if result.has_untested_models:
+    print(f"New models to test: {result.untested_models}")
+
+# Get just the list of untested models
+untested = get_untested_models()
+```
+
 ## Exception Types
 
 ::: persona.sdk.exceptions

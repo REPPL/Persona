@@ -26,8 +26,9 @@ All features for Persona, organised by milestone and status.
 | v1.8.0 Technical Debt | 0 | ✅ Complete |
 | v1.9.0 Experiment Infrastructure | 2 | ✅ Complete |
 | v1.10.0 Remote Data & Automation | 2 | 📋 Planned |
+| v1.11.0 Code Quality & Architecture | 8 | 📋 Planned |
 
-**Total: 119 complete, 2 planned (1 active, 1 queued)**
+**Total: 119 complete, 10 planned (1 active, 9 queued)**
 
 ---
 
@@ -288,6 +289,23 @@ Refactoring-only release with no feature specifications. See [v1.8.0 milestone](
 |----|---------|----------|--------|
 | [F-126](active/F-126-url-data-ingestion.md) | URL Data Ingestion | Data | 🔄 Active |
 | [F-127](planned/F-127-project-automation.md) | Project Automation Infrastructure | DevOps | 📋 Planned |
+
+---
+
+## v1.11.0 - Code Quality & Architecture 📋 Planned
+
+Refactoring milestone focused on internal quality improvements.
+
+| ID | Feature | Category | Status |
+|----|---------|----------|--------|
+| [F-128](planned/F-128-json-parsing-consolidation.md) | JSON Parsing Utility Consolidation | Refactoring | 📋 Planned |
+| [F-129](planned/F-129-provider-connection-pooling.md) | Provider HTTP Connection Pooling | Performance | 📋 Planned |
+| [F-130](planned/F-130-hybrid-stage-abstraction.md) | Hybrid Pipeline Stage Abstraction | Architecture | 📋 Planned |
+| [F-131](planned/F-131-persona-typeddict.md) | TypedDict for Persona Structures | Type Safety | 📋 Planned |
+| [F-132](planned/F-132-event-loop-standardisation.md) | Event Loop Management Standardisation | Async | 📋 Planned |
+| [F-133](planned/F-133-metric-registry-integration.md) | Quality Metric Registry Integration | Architecture | 📋 Planned |
+| [F-134](planned/F-134-hybrid-stage-tests.md) | Hybrid Stage Unit Tests | Testing | 📋 Planned |
+| [F-135](planned/F-135-asyncio-migration.md) | Deprecated asyncio API Migration | Maintenance | 📋 Planned |
 
 ---
 
