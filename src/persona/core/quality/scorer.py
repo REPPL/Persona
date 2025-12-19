@@ -11,17 +11,13 @@ from typing import TYPE_CHECKING
 
 from persona.core.generation.parser import Persona
 from persona.core.quality.config import QualityConfig
-from persona.core.quality.metrics.completeness import CompletenessMetric
-from persona.core.quality.metrics.consistency import ConsistencyMetric
-from persona.core.quality.metrics.distinctiveness import DistinctivenessMetric
-from persona.core.quality.metrics.evidence import EvidenceStrengthMetric
-from persona.core.quality.metrics.realism import RealismMetric
 from persona.core.quality.models import (
     BatchQualityResult,
     DimensionScore,
     QualityLevel,
     QualityScore,
 )
+from persona.core.quality.registry import MetricRegistry, get_registry
 
 if TYPE_CHECKING:
     from persona.core.evidence.linker import EvidenceReport
@@ -47,11 +43,17 @@ class QualityScorer:
         # Batch scoring with cross-comparison
         result = scorer.score_batch(personas)
         print(f"Average: {result.average_score}/100")
+
+        # Use custom registry with additional metrics
+        registry = MetricRegistry()
+        registry.register("custom", CustomMetric, "Custom metric")
+        scorer = QualityScorer(registry=registry)
     """
 
     def __init__(
         self,
         config: QualityConfig | None = None,
+        registry: MetricRegistry | None = None,
         progress_callback: Callable[[str], None] | None = None,
     ) -> None:
         """
@@ -59,9 +61,11 @@ class QualityScorer:
 
         Args:
             config: Quality configuration. Defaults to standard config.
+            registry: Metric registry. Defaults to global registry.
             progress_callback: Optional callback for progress updates.
         """
         self.config = config or QualityConfig()
+        self.registry = registry or get_registry()
         self._progress = progress_callback or (lambda x: None)
 
         # Validate configuration
@@ -69,12 +73,15 @@ class QualityScorer:
         if errors:
             raise ValueError(f"Invalid configuration: {', '.join(errors)}")
 
-        # Initialise metrics
-        self._completeness = CompletenessMetric(self.config)
-        self._consistency = ConsistencyMetric(self.config)
-        self._evidence = EvidenceStrengthMetric(self.config)
-        self._distinctiveness = DistinctivenessMetric(self.config)
-        self._realism = RealismMetric(self.config)
+        # Initialise metrics from registry
+        self._metrics = self.registry.get_builtin_metrics(self.config)
+
+        # Create named accessors for backward compatibility
+        self._completeness = self._metrics.get("completeness")
+        self._consistency = self._metrics.get("consistency")
+        self._evidence = self._metrics.get("evidence_strength")
+        self._distinctiveness = self._metrics.get("distinctiveness")
+        self._realism = self._metrics.get("realism")
 
     def score(
         self,

@@ -11,18 +11,19 @@ import httpx
 
 from persona.core.providers.base import (
     AuthenticationError,
-    LLMProvider,
     LLMResponse,
     ModelNotFoundError,
     RateLimitError,
 )
+from persona.core.providers.http_base import HTTPProvider
 
 
-class GeminiProvider(LLMProvider):
+class GeminiProvider(HTTPProvider):
     """
     Google Gemini provider implementation.
 
     Supports Gemini 1.5 Pro, Gemini 2.0, and other Gemini models.
+    Uses HTTP connection pooling for improved performance.
 
     Example:
         provider = GeminiProvider()
@@ -48,6 +49,7 @@ class GeminiProvider(LLMProvider):
         Args:
             api_key: Optional API key. If not provided, reads from environment.
         """
+        super().__init__()
         self._api_key = api_key or os.getenv(self.ENV_VAR)
 
     @property
@@ -97,8 +99,9 @@ class GeminiProvider(LLMProvider):
         }
 
         try:
-            with httpx.Client(timeout=120.0) as client:
-                response = client.post(url, headers=headers, json=payload)
+            # Use pooled HTTP client
+            client = self.get_sync_client()
+            response = client.post(url, headers=headers, json=payload)
 
             if response.status_code == 401 or response.status_code == 403:
                 raise AuthenticationError("Invalid Google API key")
@@ -172,8 +175,9 @@ class GeminiProvider(LLMProvider):
         }
 
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
-                response = await client.post(url, headers=headers, json=payload)
+            # Use pooled HTTP client
+            client = await self.get_async_client()
+            response = await client.post(url, headers=headers, json=payload)
 
             if response.status_code == 401 or response.status_code == 403:
                 raise AuthenticationError("Invalid Google API key")

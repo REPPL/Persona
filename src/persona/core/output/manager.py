@@ -91,6 +91,10 @@ class OutputManager:
         # Save personas
         self._save_personas(output_dir, result.personas)
 
+        # Save attribution for URL sources
+        if result.url_sources:
+            self._save_attribution(output_dir, result.url_sources)
+
         return output_dir
 
     def _create_output_dir(self, name: str | None = None) -> Path:
@@ -109,7 +113,7 @@ class OutputManager:
 
     def _save_metadata(self, output_dir: Path, result: GenerationResult) -> None:
         """Save generation metadata."""
-        metadata = {
+        metadata: dict[str, Any] = {
             "generated_at": datetime.now().isoformat(),
             "provider": result.provider,
             "model": result.model,
@@ -119,6 +123,15 @@ class OutputManager:
             "total_tokens": result.input_tokens + result.output_tokens,
             "source_files": [str(f) for f in result.source_files],
         }
+
+        # Include URL sources if present
+        if result.url_sources:
+            url_source_data = []
+            for source in result.url_sources:
+                if hasattr(source, 'to_dict'):
+                    url_source_data.append(source.to_dict())
+            if url_source_data:
+                metadata["url_sources"] = url_source_data
 
         metadata_path = output_dir / "metadata.json"
         metadata_path.write_text(
@@ -213,3 +226,50 @@ class OutputManager:
 
         with open(metadata_path, encoding="utf-8") as f:
             return json.load(f)
+
+    def _save_attribution(self, output_dir: Path, url_sources: list) -> None:
+        """
+        Save attribution file for URL sources.
+
+        Generates an attribution.md file documenting the external data sources
+        used in persona generation, including licence and usage requirements.
+
+        Args:
+            output_dir: Output directory.
+            url_sources: List of URLSource objects.
+        """
+        lines = [
+            "# Data Attribution",
+            "",
+            "This persona generation used data from external sources.",
+            "",
+        ]
+
+        for source in url_sources:
+            # Get attribution if available
+            if hasattr(source, 'attribution') and source.attribution:
+                attribution = source.attribution
+                lines.append(attribution.to_markdown())
+                lines.append("")
+            else:
+                # Basic attribution from URL source metadata
+                lines.append(f"## {source.original_url}")
+                lines.append("")
+                if hasattr(source, 'resolved_url') and source.resolved_url != source.original_url:
+                    lines.append(f"- **Resolved URL:** {source.resolved_url}")
+                if hasattr(source, 'fetched_at'):
+                    lines.append(f"- **Fetched:** {source.fetched_at.isoformat()}")
+                if hasattr(source, 'content_type') and source.content_type:
+                    lines.append(f"- **Content Type:** {source.content_type}")
+                if hasattr(source, 'size_bytes'):
+                    lines.append(f"- **Size:** {source.size_bytes} bytes")
+                lines.append("")
+
+        lines.extend([
+            "---",
+            "",
+            "*Users must credit the original data sources when using generated personas.*",
+        ])
+
+        attribution_path = output_dir / "attribution.md"
+        attribution_path.write_text("\n".join(lines), encoding="utf-8")

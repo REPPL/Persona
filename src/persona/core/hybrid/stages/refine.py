@@ -13,6 +13,7 @@ from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.cost import CostTracker
 from persona.core.hybrid.stages.filter import get_evaluation_feedback
 from persona.core.providers import ProviderFactory
+from persona.core.utils import JSONExtractor
 
 
 async def refine_personas(
@@ -178,53 +179,11 @@ def _parse_refined_persona(
     Returns:
         Refined persona dictionary.
     """
-    # Clean up content
-    content = content.strip()
+    # Use unified JSON extractor with original as fallback
+    data = JSONExtractor.extract_json_object(content, fallback=original)
 
-    # Remove markdown code blocks
-    if content.startswith("```"):
-        lines = content.split("\n")
-        start_idx = 0
-        end_idx = len(lines)
+    # Ensure ID matches original
+    if "id" in original and data is not original:
+        data["id"] = original["id"]
 
-        for i, line in enumerate(lines):
-            if line.strip().startswith("```"):
-                if start_idx == 0:
-                    start_idx = i + 1
-                else:
-                    end_idx = i
-                    break
-
-        content = "\n".join(lines[start_idx:end_idx])
-
-    # Try to parse as JSON
-    try:
-        data = json.loads(content)
-
-        if isinstance(data, dict):
-            # Ensure ID matches original
-            if "id" in original:
-                data["id"] = original["id"]
-            return data
-        else:
-            # Not a dict, return original
-            return original
-
-    except json.JSONDecodeError:
-        # Try to find JSON object in text
-        start_idx = content.find("{")
-        end_idx = content.rfind("}")
-
-        if start_idx != -1 and end_idx != -1:
-            json_str = content[start_idx : end_idx + 1]
-            try:
-                data = json.loads(json_str)
-                if isinstance(data, dict):
-                    if "id" in original:
-                        data["id"] = original["id"]
-                    return data
-            except json.JSONDecodeError:
-                pass
-
-        # Parsing failed, return original
-        return original
+    return data

@@ -5,10 +5,11 @@ This module provides the Persona data model and parsing logic
 for extracting personas from LLM responses.
 """
 
-import json
 import re
 from dataclasses import dataclass, field
 from typing import Any
+
+from persona.core.utils import JSONExtractor
 
 
 @dataclass
@@ -132,7 +133,6 @@ class PersonaParser:
     REASONING_PATTERN = re.compile(
         r"<reasoning>\s*(.*?)\s*</reasoning>", re.DOTALL | re.IGNORECASE
     )
-    JSON_BLOCK_PATTERN = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
 
     def parse(self, response: str) -> ParseResult:
         """
@@ -150,8 +150,8 @@ class PersonaParser:
         # Extract output section
         raw_output = self._extract_output(response)
 
-        # Parse JSON from output
-        json_data = self._extract_json(raw_output or response)
+        # Parse JSON from output using unified extractor
+        json_data = JSONExtractor.extract_json(raw_output or response)
 
         # Convert to personas
         personas = self._parse_personas(json_data)
@@ -176,47 +176,6 @@ class PersonaParser:
         if match:
             return match.group(1).strip()
         return ""
-
-    def _extract_json(self, text: str) -> dict[str, Any] | list[Any]:
-        """Extract and parse JSON from text."""
-        # Try to find JSON in code blocks first
-        match = self.JSON_BLOCK_PATTERN.search(text)
-        if match:
-            try:
-                return json.loads(match.group(1))
-            except json.JSONDecodeError:
-                pass
-
-        # Try to find raw JSON object or array
-        # Look for the outermost { } or [ ]
-        text = text.strip()
-
-        # Try parsing the whole thing as JSON
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            pass
-
-        # Try to find JSON object
-        brace_start = text.find("{")
-        brace_end = text.rfind("}")
-        if brace_start != -1 and brace_end != -1 and brace_end > brace_start:
-            try:
-                return json.loads(text[brace_start : brace_end + 1])
-            except json.JSONDecodeError:
-                pass
-
-        # Try to find JSON array
-        bracket_start = text.find("[")
-        bracket_end = text.rfind("]")
-        if bracket_start != -1 and bracket_end != -1 and bracket_end > bracket_start:
-            try:
-                return json.loads(text[bracket_start : bracket_end + 1])
-            except json.JSONDecodeError:
-                pass
-
-        # Return empty dict if nothing found
-        return {}
 
     def _parse_personas(self, data: dict[str, Any] | list[Any]) -> list[Persona]:
         """Parse personas from JSON data."""

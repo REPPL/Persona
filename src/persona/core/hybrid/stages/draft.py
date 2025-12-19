@@ -5,12 +5,12 @@ This stage uses local Ollama models to generate initial persona drafts
 from input data.
 """
 
-import json
 from typing import Any
 
 from persona.core.hybrid.config import HybridConfig
 from persona.core.hybrid.cost import CostTracker
 from persona.core.providers import ProviderFactory
+from persona.core.utils import JSONExtractor
 
 
 async def draft_personas(
@@ -152,50 +152,8 @@ def _parse_personas(
     Returns:
         List of persona dictionaries.
     """
-    # Clean up content
-    content = content.strip()
-
-    # Remove markdown code blocks
-    if content.startswith("```"):
-        lines = content.split("\n")
-        start_idx = 0
-        end_idx = len(lines)
-
-        for i, line in enumerate(lines):
-            if line.strip().startswith("```"):
-                if start_idx == 0:
-                    start_idx = i + 1
-                else:
-                    end_idx = i
-                    break
-
-        content = "\n".join(lines[start_idx:end_idx])
-
-    # Try to parse as JSON
-    try:
-        data = json.loads(content)
-
-        if isinstance(data, list):
-            personas = data
-        elif isinstance(data, dict):
-            # Single persona, wrap in list
-            personas = [data]
-        else:
-            return []
-
-    except json.JSONDecodeError:
-        # Try to find JSON array in text
-        start_idx = content.find("[")
-        end_idx = content.rfind("]")
-
-        if start_idx != -1 and end_idx != -1:
-            json_str = content[start_idx : end_idx + 1]
-            try:
-                personas = json.loads(json_str)
-            except json.JSONDecodeError:
-                return []
-        else:
-            return []
+    # Use unified JSON extractor
+    personas = JSONExtractor.extract_json_array(content)
 
     # Ensure each persona has required fields
     validated_personas = []

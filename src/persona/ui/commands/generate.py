@@ -350,25 +350,46 @@ def generate(
 
     console.print(f"[dim]Persona {__version__}[/dim]\n")
 
-    # Resolve data path (supports experiment names)
-    try:
-        resolved_path = _resolve_data_path(data_path)
-        if resolved_path != data_path:
-            console.print(f"[dim]Resolved '{data_path}' → {resolved_path}[/dim]")
-        data_path = resolved_path
-    except FileNotFoundError as e:
-        console.print(f"[red]Error:[/red] {e}")
-        raise typer.Exit(1)
-
-    # Load data
-    console.print(f"[bold]Loading data from:[/bold] {data_path}")
+    # Resolve data path (supports experiment names and URLs)
     loader = DataLoader()
+    path_str = str(data_path)
+    url_sources = []
 
-    try:
-        data, _files = loader.load_path(data_path)
-    except Exception as e:
-        console.print(f"[red]Error loading data:[/red] {e}")
-        raise typer.Exit(1)
+    # Check if it's a URL before trying to resolve as file path
+    if loader.is_url(path_str):
+        console.print(f"[bold]Loading data from URL:[/bold] {path_str}")
+        try:
+            data, url_sources = loader.load_path(
+                path_str,
+                accept_terms=accept_terms,
+                no_cache=no_cache,
+            )
+            # Show URL source info
+            for source in url_sources:
+                if hasattr(source, 'resolved_url') and source.resolved_url != path_str:
+                    console.print(f"[dim]Resolved to: {source.resolved_url}[/dim]")
+        except Exception as e:
+            console.print(f"[red]Error loading URL:[/red] {e}")
+            raise typer.Exit(1)
+    else:
+        # Resolve data path (supports experiment names)
+        try:
+            resolved_path = _resolve_data_path(data_path)
+            if resolved_path != data_path:
+                console.print(f"[dim]Resolved '{data_path}' -> {resolved_path}[/dim]")
+            data_path = resolved_path
+        except FileNotFoundError as e:
+            console.print(f"[red]Error:[/red] {e}")
+            raise typer.Exit(1)
+
+        # Load local data
+        console.print(f"[bold]Loading data from:[/bold] {data_path}")
+
+        try:
+            data, _files = loader.load_path(data_path)
+        except Exception as e:
+            console.print(f"[red]Error loading data:[/red] {e}")
+            raise typer.Exit(1)
 
     # Show data summary
     token_count = loader.count_tokens(data)
@@ -508,6 +529,11 @@ def generate(
         pipeline = GenerationPipeline()
         pipeline.set_progress_callback(progress_callback)
         result = pipeline.generate(config)
+
+        # Add URL sources if present (from URL data loading)
+        if url_sources:
+            result.url_sources = url_sources
+
         progress_handler.finish(
             personas=result.personas,
             input_tokens=result.input_tokens,
