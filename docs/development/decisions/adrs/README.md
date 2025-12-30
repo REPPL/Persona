@@ -46,6 +46,35 @@ Documented architecture and design decisions for Persona.
 | [ADR-0021](ADR-0021-programmatic-api.md) | Programmatic API Design | Accepted |
 | [ADR-0022](ADR-0022-interactive-cli-library.md) | Interactive CLI Library Selection | Accepted |
 
+### Retroactive Decisions (v1.2.0 - v1.11.0)
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| [ADR-0023](ADR-0023-plugin-system-architecture.md) | Plugin System Architecture | Accepted |
+| [ADR-0024](ADR-0024-tui-dashboard-architecture.md) | TUI Dashboard Architecture | Accepted |
+| [ADR-0025](ADR-0025-ollama-provider-integration.md) | Ollama Provider Integration | Accepted |
+| [ADR-0026](ADR-0026-hybrid-pipeline-strategy.md) | Hybrid Pipeline Strategy | Accepted |
+| [ADR-0027](ADR-0027-data-lineage-implementation.md) | Data Lineage Implementation | Accepted |
+| [ADR-0028](ADR-0028-pii-detection-strategy.md) | PII Detection Strategy | Accepted |
+
+### Robustness Decisions
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| [ADR-0029](ADR-0029-error-handling-strategy.md) | Error Handling Strategy | Planned |
+| [ADR-0030](ADR-0030-async-execution-model.md) | Async Execution Model | Planned |
+| [ADR-0031](ADR-0031-caching-architecture.md) | Caching Architecture | Planned |
+| [ADR-0032](ADR-0032-performance-baseline-commitment.md) | Performance Baseline Commitment | Planned |
+| [ADR-0033](ADR-0033-deprecation-policy.md) | Deprecation Policy | Planned |
+
+### Future-Proofing Decisions
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| [ADR-0034](ADR-0034-breaking-changes-policy.md) | v2.0.0 Breaking Changes Policy | Planned |
+| [ADR-0035](ADR-0035-webui-technology-selection.md) | WebUI Technology Selection | Planned |
+| [ADR-0036](ADR-0036-multi-tenancy-architecture.md) | Multi-Tenancy Architecture | Planned |
+
 ## ADR Format
 
 ```markdown

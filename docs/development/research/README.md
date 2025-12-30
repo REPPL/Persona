@@ -35,6 +35,21 @@ This directory contains comprehensive research notes on key technical areas. Eac
 | [R-017](./R-017-remote-data-ingestion.md) | Remote Data Ingestion | Complete | - |
 | [R-018](./R-018-documentation-audit-and-automation.md) | Documentation Audit & Automation | Complete | - |
 | [R-019](./R-019-project-automation-implementation.md) | Project Automation Implementation | Complete | - |
+| [R-020](./R-020-webui-framework-selection.md) | WebUI Framework Selection | Complete | ADR-0035 |
+| [R-021](./R-021-multi-user-collaboration.md) | Multi-User & Team Collaboration | Complete | ADR-0036 |
+| [R-022](./R-022-performance-benchmarking.md) | Performance Benchmarking Methodology | Complete | ADR-0032 |
+| [R-023](./R-023-caching-strategies.md) | Caching Strategies for LLM Responses | Complete | ADR-0031 |
+| [R-024](./R-024-cross-provider-consistency.md) | Cross-Provider Consistency Analysis | Complete | - |
+| [R-025](./R-025-batch-processing-optimisation.md) | Batch Processing Optimisation | Complete | ADR-0030 |
+| [R-026](./R-026-error-recovery-degradation.md) | Error Recovery & Graceful Degradation | Complete | ADR-0029 |
+| [R-027](./R-027-plugin-development-patterns.md) | Plugin Development Patterns | Complete | ADR-0023 |
+| [R-028](./R-028-model-fine-tuning-integration.md) | Model Fine-Tuning Integration | Complete | - |
+| [R-029](./R-029-bias-detection-cross-validation.md) | Bias Detection Cross-Validation | Complete | - |
+| [R-030](./R-030-analytics-usage-tracking.md) | Analytics & Usage Tracking | Complete | - |
+| [R-031](./R-031-cloud-deployment-patterns.md) | Cloud Deployment Patterns | Complete | - |
+| [R-032](./R-032-persona-evolution-versioning.md) | Persona Evolution & Versioning | Complete | - |
+| [R-033](./R-033-multi-modal-input-support.md) | Multi-Modal Input Support | Complete | - |
+| [R-034](./R-034-realtime-collaborative-generation.md) | Real-Time Collaborative Generation | Complete | - |
 
 ---
 

@@ -68,6 +68,7 @@ Retrospectives document:
 | [v1.9.0](v1.9.0-retrospective.md) | Experiment Infrastructure | Complete |
 | [v1.10.0](v1.10.0/) | Remote Data & Automation | Complete |
 | [v1.11.0](v1.11.0/) | Code Quality & Architecture | Complete |
+| [v1.11.1](v1.11.1/) | Comprehensive Roadmap Enhancement | Complete |
 
 ---
 

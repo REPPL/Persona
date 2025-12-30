@@ -25,8 +25,14 @@ Feature-centric roadmap for Persona development.
 | v1.7.0 | Research Compliance | 5 | ✅ Complete |
 | v1.8.0 | Technical Debt | 0 | ✅ Complete |
 | v1.9.0 | Experiment Infrastructure | 2 | ✅ Complete |
+| v1.10.0 | Remote Data & Automation | 2 | ✅ Complete |
+| v1.11.0 | Code Quality & Architecture | 8 | ✅ Complete |
+| v1.12.0 | Analytics & Observability | 5 | 📋 Planned |
+| v1.13.0 | Developer Experience | 5 | 📋 Planned |
+| v1.14.0 | Quality Assurance | 5 | 📋 Planned |
+| v2.0.0 | Collaboration & Scale | 5 | 📋 Planned |
 
-**Total: 119 complete features, 0 planned features**
+**Total: 135 complete features, 20 planned features**
 
 ## Roadmap Structure
 

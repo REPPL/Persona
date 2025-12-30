@@ -27,8 +27,12 @@ All features for Persona, organised by milestone and status.
 | v1.9.0 Experiment Infrastructure | 2 | ✅ Complete |
 | v1.10.0 Remote Data & Automation | 2 | ✅ Complete |
 | v1.11.0 Code Quality & Architecture | 8 | ✅ Complete |
+| v1.12.0 Analytics & Observability | 5 | 📋 Planned |
+| v1.13.0 Developer Experience | 5 | 📋 Planned |
+| v1.14.0 Quality Assurance | 5 | 📋 Planned |
+| v2.0.0 Collaboration & Scale | 5 | 📋 Planned |
 
-**Total: 129 complete, 0 planned**
+**Total: 135 complete, 20 planned**
 
 ---
 
@@ -306,6 +310,54 @@ Refactoring milestone focused on internal quality improvements.
 | [F-133](completed/F-133-metric-registry-integration.md) | Quality Metric Registry Integration | Architecture |
 | [F-134](completed/F-134-hybrid-stage-tests.md) | Hybrid Stage Unit Tests | Testing |
 | [F-135](completed/F-135-asyncio-migration.md) | Deprecated asyncio API Migration | Maintenance |
+
+---
+
+## v1.12.0 - Analytics & Observability 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-136](planned/F-136-performance-baseline-dashboard.md) | Performance Baseline Dashboard | Observability |
+| [F-137](planned/F-137-quality-trend-dashboard.md) | Quality Trend Dashboard | Observability |
+| [F-138](planned/F-138-batch-progress-tracking.md) | Batch Generation Progress Tracking | UX |
+| [F-139](planned/F-139-benchmark-cli.md) | Benchmark CLI Commands | DevOps |
+| [F-140](planned/F-140-cost-analytics-dashboard.md) | Cost Analytics Dashboard | Observability |
+
+---
+
+## v1.13.0 - Developer Experience 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-141](planned/F-141-plugin-development-cli.md) | Plugin Development CLI | DX |
+| [F-142](planned/F-142-response-caching-layer.md) | Response Caching Layer | Performance |
+| [F-143](planned/F-143-migration-guide-generator.md) | Migration Guide Generator | DX |
+| [F-144](planned/F-144-plugin-testing-utilities.md) | Plugin Testing Utilities | DX |
+| [F-145](planned/F-145-config-validation-enhancement.md) | Configuration Validation Enhancement | DX |
+
+---
+
+## v1.14.0 - Quality Assurance 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-146](planned/F-146-cross-provider-consistency.md) | Cross-Provider Consistency Report | Quality |
+| [F-147](planned/F-147-bias-detection-multi-method.md) | Bias Detection Multi-Method | Compliance |
+| [F-148](planned/F-148-persona-diff-tool.md) | Persona Diff Tool | UX |
+| [F-149](planned/F-149-audit-log-export.md) | Audit Log Export | Compliance |
+| [F-150](planned/F-150-quality-gate-ci.md) | Quality Gate CI Integration | DevOps |
+
+---
+
+## v2.0.0 - Collaboration & Scale 📋 Planned
+
+| ID | Feature | Category |
+|----|---------|----------|
+| [F-151](planned/F-151-team-workspace-support.md) | Team Workspace Support | Collaboration |
+| [F-152](planned/F-152-role-based-access-control.md) | Role-Based Access Control | Security |
+| [F-153](planned/F-153-persona-sharing-publishing.md) | Persona Sharing & Publishing | Collaboration |
+| [F-154](planned/F-154-cloud-storage-integration.md) | Cloud Storage Integration | Infrastructure |
+| [F-155](planned/F-155-webui-foundation.md) | WebUI Foundation | UX |
 
 ---
 

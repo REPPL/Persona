@@ -27,8 +27,12 @@ Release planning and milestone documentation.
 | [v1.9.0](v1.9.0.md) | Experiment Infrastructure | 2 | v1.8.0 | ✅ Complete |
 | [v1.10.0](v1.10.0.md) | Remote Data & Automation | 2 | v1.9.0 | ✅ Complete |
 | [v1.11.0](v1.11.0.md) | Code Quality & Architecture | 8 | v1.10.0 | ✅ Complete |
+| [v1.12.0](v1.12.0.md) | Analytics & Observability | 5 | v1.11.0 | 📋 Planned |
+| [v1.13.0](v1.13.0.md) | Developer Experience | 5 | v1.12.0 | 📋 Planned |
+| [v1.14.0](v1.14.0.md) | Quality Assurance | 5 | v1.13.0 | 📋 Planned |
+| [v2.0.0](v2.0.0.md) | Collaboration & Scale | 5 | v1.14.0 | 📋 Planned |
 
-**Total: 129 complete features**
+**Total: 135 complete features, 20 planned features**
 
 ## Dependency Graph
 
@@ -123,6 +127,18 @@ v1.10.0 ──────  Remote Data & Automation
 
 v1.11.0 ──────  Code Quality & Architecture
                 Refactoring + Type safety + Performance
+
+v1.12.0 ──────  Analytics & Observability (Planned)
+                Performance baselines, quality trends, cost analytics
+
+v1.13.0 ──────  Developer Experience (Planned)
+                Plugin CLI, migration guides, response caching
+
+v1.14.0 ──────  Quality Assurance (Planned)
+                Cross-provider consistency, bias cross-validation
+
+v2.0.0  ──────  Collaboration & Scale (Planned)
+                Team workspaces, RBAC, cloud storage
 ```
 
 ## Milestone Format
